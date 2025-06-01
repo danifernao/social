@@ -1,6 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
+/**
+ * Muestra una ayuda contextual con las reglas básicas y ejemplos para
+ * formatear texto utilizando Markdown en las publicaciones y comentarios.
+ */
 export function MarkdownHelp() {
     return (
         <Popover>
