@@ -77,7 +77,7 @@ const EntryListItem = forwardRef<HTMLDivElement, EntryListItemProps>(({ entry },
                 <EntryListItemReactions entry={entry} />
                 {entry.type === 'post' && routeName !== 'post.show' && (
                     <div className="ml-auto">
-                        <Link href={`/post/${entry.id}#comment`} className={buttonVariants({ variant: 'outline' })} title="Comentar">
+                        <Link href={`/post/${entry.id}#comments`} className={buttonVariants({ variant: 'outline' })} title="Comentar">
                             {(entry as Post).comments_count} <MessageSquare />
                         </Link>
                     </div>

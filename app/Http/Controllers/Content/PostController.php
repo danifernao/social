@@ -21,7 +21,7 @@ class PostController extends Controller
     public function create(Request $request)
     {
         $data = $request->validate([
-            'content' => 'required|string|max:140'
+            'content' => 'required|string|max:3000'
         ]);
 
         $auth_user = $request->user();

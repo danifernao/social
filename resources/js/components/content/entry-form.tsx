@@ -7,6 +7,7 @@ import { useContext, useEffect, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { toast } from 'sonner';
 import EntryFormErrors from './entry-form-errors';
+import { MarkdownHelp } from './entry-form-markdown-help';
 
 interface EntryFormProps {
     entry?: Entry; // Una entrada existente, la cual puede ser una publicación o un comentario.
@@ -109,10 +110,12 @@ export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
                 onChange={(e) => setData('content', e.target.value)}
                 disabled={processing}
                 placeholder="¿En qué estás pensando?"
+                maxLength={3000}
             />
 
-            <div className="flex justify-end">
-                <Button type="submit" disabled={processing}>
+            <div className="flex items-center gap-4">
+                <MarkdownHelp />
+                <Button type="submit" className="ml-auto" disabled={processing}>
                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                     {formType === 'post' ? 'Publicar' : 'Comentar'}
                 </Button>

@@ -11,6 +11,7 @@
 - **Publicaciones y comentarios**
     - Permite publicar contenido con soporte básico para Markdown.
     - Se puede **mencionar a otros usuarios** y usar **hashtags**.
+    - Se puede **reaccionar** con **emojis**.
 - **Inicio**
     - Muestra publicaciones recientes de los usuarios seguidos.
 - **Perfiles públicos**
