@@ -1,0 +1,58 @@
+import EntryForm from '@/components/content/entry-form';
+import EntryList from '@/components/content/entry-list';
+import ListLoadMore from '@/components/content/list-load-more';
+import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
+import { usePaginatedData } from '@/hooks/use-paginated-data';
+import AppLayout from '@/layouts/app-layout';
+import { ContentInner } from '@/layouts/content/inner-layout';
+import type { BreadcrumbItem, Post } from '@/types';
+import { Head, usePage } from '@inertiajs/react';
+
+interface Posts {
+    data: Post[]; // Lista de publicaciones.
+    next_cursor: string; // Cursor para la siguiente página de publicaciones.
+}
+
+// Ruta de navegación actual usada como migas de pan.
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Inicio',
+        href: route('home.show'),
+    },
+];
+
+/**
+ * Muestra la página de inicio del usuario autenticado.
+ */
+export default function Home() {
+    // Accede la lista de publicaciones proporcionada por Inertia.
+    const { posts } = usePage<{ posts: Posts }>().props;
+
+    // Usa el hook de paginación para gestionar la lista de publicaciones.
+    const {
+        items: entries, // Lista de publicaciones actuales.
+        cursor, // Cursor para la siguiente página de publicaciones.
+        processing, // Indica si se está cargando más publicaciones.
+        loadMore, // Función para cargar más publicaciones.
+        handleEntryChanges, // Función para actualizar la lista de publicaciones.
+        firstItemId, // ID de la primera publicación agregada a la lista después de llamar a "loadMore".
+    } = usePaginatedData<Post>({
+        initialItems: posts.data, // Lista inicial de publicaciones.
+        initialCursor: posts.next_cursor, // Cursor inicial.
+        fetchUrl: route('home.show'), // Ruta para solicitar más publicaciones.
+        propKey: 'posts', // Nombre de la propiedad que devuelve Inertia con los datos a usar.
+    });
+
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Inicio" />
+            <ContentInner>
+                <EntryListUpdateContext.Provider value={handleEntryChanges}>
+                    <EntryForm />
+                    <EntryList anchorId={firstItemId} entries={entries} />
+                </EntryListUpdateContext.Provider>
+                {cursor && <ListLoadMore type="post" isProcessing={processing} onClick={loadMore} />}
+            </ContentInner>
+        </AppLayout>
+    );
+}
