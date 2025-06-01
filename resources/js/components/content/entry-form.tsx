@@ -67,7 +67,10 @@ export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
                 console.error(errors);
             },
             onFinish: () => {
-                setData('content', '');
+                const hasValidationErrors = Object.keys(errors).length > 0;
+                if (!hasValidationErrors) {
+                    setData('content', '');
+                }
             },
         });
 

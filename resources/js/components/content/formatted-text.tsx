@@ -5,6 +5,7 @@ import * as mention from 'linkify-plugin-mention';
 import Linkify from 'linkify-react';
 import React, { useEffect, useRef, useState } from 'react';
 import Markdown from 'react-markdown';
+import remarkBreaks from 'remark-breaks';
 import { Button } from '../ui/button';
 
 interface Props {
@@ -94,26 +95,29 @@ export default function FormattedText({ text }: Props) {
         <div className="relative">
             <div ref={contentRef} className={cn(baseClass, expanded ? 'max-h-full' : 'max-h-[300px]')}>
                 <Markdown
-                    allowedElements={['strong', 'em', 'blockquote', 'code', 'pre', 'ul', 'ol', 'li', 'img', 'p']}
+                    remarkPlugins={[remarkBreaks]}
+                    allowedElements={['strong', 'em', 'blockquote', 'code', 'pre', 'ul', 'ol', 'li', 'img', 'p', 'br']}
                     components={{
                         p: ({ node, children }) => (
-                            <p>
+                            <p className="mb-4 last:mb-0">
                                 <Linkify options={options}>{children}</Linkify>
                             </p>
                         ),
                         strong: ({ children }) => <strong>{children}</strong>,
                         em: ({ children }) => <em>{children}</em>,
-                        blockquote: ({ children }) => <blockquote className="text-muted-foreground border-l-4 pl-4 italic">{children}</blockquote>,
+                        blockquote: ({ children }) => (
+                            <blockquote className="text-muted-foreground mb-4 border-l-4 pl-4 italic last:mb-0">{children}</blockquote>
+                        ),
                         pre({ children }) {
-                            return <pre className="bg-muted overflow-x-auto rounded p-2 text-sm">{children}</pre>;
+                            return <pre className="bg-muted mb-4 overflow-x-auto rounded p-2 text-sm last:mb-0">{children}</pre>;
                         },
                         code({ children }) {
                             return <code className="bg-muted rounded px-1 text-sm">{children}</code>;
                         },
-                        ul: ({ children }) => <ul className="list-inside list-disc">{children}</ul>,
-                        ol: ({ children }) => <ol className="list-inside list-decimal">{children}</ol>,
+                        ul: ({ children }) => <ul className="mb-4 list-inside list-disc pl-4 last:mb-0">{children}</ul>,
+                        ol: ({ children }) => <ol className="mb-4 list-inside list-decimal pl-4 last:mb-0">{children}</ol>,
                         li: ({ children }) => <li>{children}</li>,
-                        img: ({ src, alt }) => <img src={src ?? ''} alt={alt ?? ''} className="h-auto max-w-full rounded" />,
+                        img: ({ src, alt }) => <img src={src ?? ''} alt={alt ?? ''} className="mb-4 h-auto max-w-full rounded last:mb-0" />,
                     }}
                 >
                     {text}
