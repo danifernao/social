@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Content;
+namespace App\Http\Controllers\Social;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\User;
 use App\Notifications\NewMention;
@@ -33,40 +35,39 @@ class PostController extends Controller
         ]);
 
         // Agrega el usuario autenticado a la publicación.
-        $post->user = $auth_user;
+        $post->setRelation('user', $auth_user);
 
         // Extrae los usuarios mencionados en la publicación.
-        $mentionedUsers = MentionParser::extractMentionedUsers($data['content']);
+        $mentioned_users = MentionParser::extractMentionedUsers($data['content']);
 
-        // Filtra menciones si el usuario autenticado no es administrador.
-        if (!$auth_user->isAdmin()) {
-            $mentionedUsers = $auth_user->filterMentionables($mentionedUsers);
-        } else {
-            // Si es administrador, puede mencionar a quien desee, menos a sí mismo.
-            $mentionedUsers = $mentionedUsers->reject(fn ($user) => $user->id === $auth_user->id);
-        }
+        // Filtra menciones de usuarios con bloqueos.
+        $mentioned_users = $auth_user->filterMentionables($mentioned_users);
 
         // Envía notificación a los usuarios mencionados.
-        foreach ($mentionedUsers as $user) {
+        foreach ($mentioned_users as $user) {
             $user->notify(new NewMention($auth_user, 'post', $post->id));
         }
 
-        return back()->with('post', $post);
+        // Prepara el recurso y lo convierte en un arreglo.
+        $post_data = (new PostResource($post))->resolve();
+
+        return back()->with('post', $post_data);
     }
 
     /**
      * Muestra una publicación específica con sus comentarios.
+     * 
+     * @param Post $post Publicación que se va a mostrar.
      */
     public function show(Request $request, Post $post)
     {
         $user = $request->user();
 
-        // Si está autenticado y no es administrador, verifica bloqueos mutuos.
-        if ($user && !$user->isAdmin()) {
+        // Si está autenticado, verifica bloqueos mutuos.
+        if ($user) {
             $author = $post->user()->first();
-
             if ($user->hasBlockedOrBeenBlockedBy($author)) {
-                abort(404); // No puede ver la publicación.
+                abort(403); // No puede ver la publicación.
             }
         }
 
@@ -78,15 +79,15 @@ class PostController extends Controller
         $cursor = $request->query('cursor');
 
         // Consulta de comentarios.
-        $commentsQuery = $post->comments()->with('user')->oldest();
+        $comments_query = $post->comments()->with('user')->oldest();
 
-        // Aplica exclusiones si el usuario autenticado no es administrador.
-        if ($user && !$user->isAdmin()) {
-            $excludedIds = $user->excludedUserIds();
-            $commentsQuery->whereNotIn('user_id', $excludedIds);
+        // Excluye comentarios de usuarios con bloqueos mutuos.
+        if ($user) {
+            $excluded_ids = $user->excludedUserIds();
+            $comments_query->whereNotIn('user_id', $excluded_ids);
         }
 
-        $comments = $commentsQuery->cursorPaginate(15, ['*'], 'cursor', $cursor);
+        $comments = $comments_query->cursorPaginate(15, ['*'], 'cursor', $cursor);
 
         // Agrega las reacciones a cada comentario.
         $comments->setCollection(
@@ -97,13 +98,15 @@ class PostController extends Controller
         );
 
         return Inertia::render('post/index', [
-            'post' => $post,
-            'comments' => $comments,
+            'post' => (new PostResource($post))->resolve(),
+            'comments' => CommentResource::collection($comments),
         ]);
     }
 
     /**
      * Actualiza una publicación existente.
+     * 
+     * @param Post $post Publicación que se va a actualizar.
      */
     public function update(Request $request, Post $post)
     {
@@ -118,11 +121,16 @@ class PostController extends Controller
 
         $post->load('user');
 
-        return back()->with('post', $post);
+        // Prepara el recurso y lo convierte en un arreglo.
+        $post_data = (new PostResource($post))->resolve();
+
+        return back()->with('post', $post_data);
     }
 
     /**
      * Elimina una publicación.
+     * 
+     * @param Post $post Publicación que se va a eliminar.
      */
     public function delete(Request $request, Post $post)
     {
@@ -137,6 +145,6 @@ class PostController extends Controller
             return redirect()->route('profile.show', $post->user->username);
         }
 
-        return back()->with('status', 'deleted');
+        return back()->with('status', 'post-deleted');
     }
 }

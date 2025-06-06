@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Content;
+namespace App\Http\Controllers\Social;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PostResource;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -21,28 +23,33 @@ class ProfileController extends Controller
     {
         $auth_user = $request->user();
 
+        // Si está autenticado, verifica si ha sido bloqueado.
+        if ($auth_user && $user->hasBlocked($auth_user)) {
+          abort(403); // No puede ver la publicación.
+        }
+
         // Carga el conteo de seguidores y seguidos del usuario cuyo perfil se está viendo.
         $user->loadCount(['followers', 'follows']);
 
         // Determina si el usuario autenticado sigue al perfil visitado.
         if ($auth_user && $auth_user->id !== $user->id) {
-            $user->isFollowing = $auth_user->follows()
+            $user->is_followed = $auth_user->follows()
                 ->where('followed_id', $user->id)
                 ->exists();
         } else {
-            $user->isFollowing = null; // No aplica para uno mismo o usuarios no autenticados.
+            $user->is_followed = null; // No aplica para uno mismo o usuarios no autenticados.
         }
 
-        $isBlocked = false;
+        $is_blocked = false;
 
         // Determina si el perfil está bloqueado desde la perspectiva del usuario autenticado.
-        if ($auth_user && $auth_user->id !== $user->id && !$auth_user->isAdmin()) {
-            $isBlocked = in_array($user->id, $auth_user->excludedUserIds());
+        if ($auth_user && $auth_user->id !== $user->id) {
+            $is_blocked = in_array($user->id, $auth_user->excludedUserIds());
         }
 
         $cursor = $request->query('cursor');
 
-        if ($isBlocked) {
+        if ($is_blocked) {
             // Si hay bloqueo mutuo, no se deben mostrar publicaciones.
             $posts = collect([])->forPage(1, 7); // Crea una colección vacía paginada.
             $posts = new CursorPaginator(
@@ -71,12 +78,9 @@ class ProfileController extends Controller
             );
         }
 
-        // Se pasa esta marca al frontend para ocultar interacciones si es necesario.
-        $user->isBlocked = !$auth_user || $auth_user->id === $user->id ? null : $isBlocked;
-
         return Inertia::render('profile/index', [
-            'user' => $user,
-            'posts' => $posts,
+            'user' => (new UserResource($user))->resolve(),
+            'posts' => PostResource::collection($posts),
         ]);
     }
 }

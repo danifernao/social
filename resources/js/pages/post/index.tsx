@@ -5,26 +5,16 @@ import ListLoadMore from '@/components/content/list-load-more';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import { usePaginatedData } from '@/hooks/use-paginated-data';
 import AppLayout from '@/layouts/app-layout';
-import { ContentInner } from '@/layouts/content/inner-layout';
-import type { Auth, BreadcrumbItem, Comment, Post } from '@/types';
+import { AppContentLayout } from '@/layouts/app/app-content-layout';
+import type { Auth, BreadcrumbItem, Comment, Comments, Post } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-
-interface PageProps {
-    auth: Auth; // Usuario autenticado.
-    post: Post; // Publicación actual.
-    comments: {
-        data: Comment[]; // Lista de comentarios asociados a la publicación.
-        next_cursor: string; // Cursor para la siguiente página de comentarios.
-    };
-    [key: string]: any;
-}
 
 /**
  * Muestra la página de una publicación y sus comentarios.
  */
 export default function Home() {
     // Accede al usuario autenticado, la publicación y los comentarios proporcionados por Inertia.
-    const { auth, post, comments } = usePage<PageProps>().props;
+    const { auth, post, comments } = usePage<{ auth: Auth; post: Post; comments: Comments }>().props;
 
     // Determina si hay un usuario autenticado.
     const isAuth = !!auth.user;
@@ -38,7 +28,7 @@ export default function Home() {
         firstItemId, // ID del primer comentario agregado a la lista después de llamar a "loadMore".
     } = usePaginatedData<Comment>({
         initialItems: comments.data, // Lista inicial de comentarios.
-        initialCursor: comments.next_cursor, // Cursor inicial.
+        initialCursor: comments.meta.next_cursor, // Cursor inicial.
         fetchUrl: route('post.show', { post: post.id }), // Ruta para solicitar más comentarios.
         propKey: 'comments', // Nombre de la propiedad que devuelve Inertia con los datos a usar.
     });
@@ -58,7 +48,7 @@ export default function Home() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Publicación" />
-            <ContentInner>
+            <AppContentLayout>
                 <article className="flex flex-col gap-8">
                     <EntryListItem entry={post} />
                     <section id="comments" className="flex flex-col gap-8">
@@ -74,7 +64,7 @@ export default function Home() {
                         </EntryListUpdateContext.Provider>
                     </section>
                 </article>
-            </ContentInner>
+            </AppContentLayout>
         </AppLayout>
     );
 }

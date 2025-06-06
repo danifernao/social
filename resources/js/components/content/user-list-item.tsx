@@ -15,12 +15,12 @@ export default function UserListItem({ user }: UserListItemProps) {
     return (
         <div className="bg-card text-card-foreground flex gap-6 rounded-xl border px-6 py-6 shadow-sm">
             <div className="flex flex-1 items-center justify-center gap-3">
-                <UserAvatar size="s10" url={user.avatar_url} username={user.username} />
+                <UserAvatar className="h-10 w-10" user={user} />
                 <div className="flex-1 font-semibold">
                     <Link href={`/user/${user.username}`}>{user.username}</Link>
                 </div>
             </div>
-            {user.isFollowing !== null && (
+            {user.is_followed !== null && (
                 <div className="flex items-center justify-center gap-4">
                     <UserFollowBtn user={user} />
                 </div>

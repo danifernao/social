@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -41,13 +43,39 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        // Obtiene las credenciales de la solicitud.
+        $credentials = $this->only('email', 'password');
+
+        // Busca usuario por correo.
+        $user = User::where('email', $credentials['email'])->first();
+
+        // Verifica si el usuario existe, está activo y la contraseña es correcta
+        if (! $user || ! $user->is_active || ! Hash::check($credentials['password'], $user->password)) {
             RateLimiter::hit($this->throttleKey());
+
+            // Mensaje distinto si la cuenta está desactivada.
+            if (! $user->is_active) {
+                throw ValidationException::withMessages([
+                    'email' => 'Tu cuenta está desactivada.',
+                ]);
+            }
 
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);
         }
+
+        // Si todo está bien, intenta iniciar sesión.
+        Auth::login($user, $this->boolean('remember'));
+
+
+        /*if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed'),
+            ]);
+        }*/
 
         RateLimiter::clear($this->throttleKey());
     }

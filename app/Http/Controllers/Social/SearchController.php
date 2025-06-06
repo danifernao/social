@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Content;
+namespace App\Http\Controllers\Social;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PostResource;
+use App\Http\Resources\UserResource;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -23,8 +25,8 @@ class SearchController extends Controller
         $cursor = $request->get('cursor');
         $auth_user = $request->user();
 
-        // Si el usuario no es administrador, se excluyen usuarios bloqueados o bloqueantes.
-        $excludedIds = $auth_user->isAdmin() ? [] : $auth_user->excludedUserIds();
+        // Se excluyen usuarios con bloqueos.
+        $excluded_ids = $auth_user->excludedUserIds();
 
         /**
          * BÚSQUEDA DE USUARIOS
@@ -33,26 +35,24 @@ class SearchController extends Controller
             $users = User::query()
                 ->when($query, fn ($q) =>
                     $q->where('username', 'like', "%{$query}%")) // Filtro por nombre de usuario.
-                ->when(!$auth_user->isAdmin(), fn ($q) =>
-                    $q->whereNotIn('id', $excludedIds) // Excluye bloqueados.
-                )
+                ->whereNotIn('id', $excluded_ids) // Excluye bloqueados.
                 ->orderBy('username')
                 ->cursorPaginate(15, ['*'], 'cursor', $cursor);
 
             // IDs de usuarios devueltos por la búsqueda.
-            $userIds = $users->pluck('id');
+            $user_ids = $users->pluck('id');
 
             // Verifica cuáles de esos usuarios son seguidos por el usuario autenticado.
-            $followedIds = $auth_user->follows()
-                ->whereIn('followed_id', $userIds)
+            $followed_ids = $auth_user->follows()
+                ->whereIn('followed_id', $user_ids)
                 ->pluck('followed_id')
                 ->toArray();
 
-            // Añade propiedad isFollowing al usuario para saber si el autenticado ya lo sigue.
+            // Añade propiedad is_followed al usuario para saber si el autenticado ya lo sigue.
             $users->setCollection(
-                $users->getCollection()->map(function ($user) use ($auth_user, $followedIds) {
-                    $user->isFollowing = $auth_user->id !== $user->id
-                        ? in_array($user->id, $followedIds)
+                $users->getCollection()->map(function ($user) use ($auth_user, $followed_ids) {
+                    $user->is_followed = $auth_user->id !== $user->id
+                        ? in_array($user->id, $followed_ids)
                         : null; // NULL para sí mismo.
 
                     return $user;
@@ -62,34 +62,30 @@ class SearchController extends Controller
             return Inertia::render('search/index', [
                 'type' => 'user',
                 'query' => $query,
-                'results' => $users,
+                'results' => UserResource::collection($users),
             ]);
         }
 
         /**
          * BÚSQUEDA DE PUBLICACIONES
          */
-        $postsQuery = Post::with('user')
+        $posts_query = Post::with('user')
             ->withCount('comments')
+            ->whereNotIn('user_id', $excluded_ids) // Excluye publicaciones bloqueadas.
             ->latest();
 
         if ($hashtag) {
             $escaped = preg_quote($hashtag, '/');
             // Busca el hashtag como palabra independiente (no parte de otra palabra).
-            $postsQuery->whereRaw(
+            $posts_query->whereRaw(
                 "content REGEXP ?",
                 ["#[[:alnum:]_]*{$escaped}(?![[:alnum:]_])"]
             );
         } elseif ($query) {
-            $postsQuery->where('content', 'like', "%{$query}%");
+            $posts_query->where('content', 'like', "%{$query}%");
         }
 
-        // Excluye publicaciones de usuarios bloqueados.
-        if (!$auth_user->isAdmin()) {
-            $postsQuery->whereNotIn('user_id', $excludedIds);
-        }
-
-        $posts = $postsQuery->cursorPaginate(7, ['*'], 'cursor', $cursor);
+        $posts = $posts_query->cursorPaginate(7, ['*'], 'cursor', $cursor);
 
         // Añade las reacciones de cada publicación.
         $posts->setCollection(
@@ -102,8 +98,8 @@ class SearchController extends Controller
         return Inertia::render('search/index', [
             'type' => 'post',
             'query' => $hashtag ?? $query,
-            'results' => $posts,
-            'isHashtag' => (bool) $hashtag, // Flag para el frontend.
+            'results' => PostResource::collection($posts),
+            'isHashtag' => (bool) $hashtag,
         ]);
     }
 }

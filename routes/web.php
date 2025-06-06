@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\Content\CommentController;
-use App\Http\Controllers\Content\BlockUserController;
-use App\Http\Controllers\Content\FollowController;
-use App\Http\Controllers\Content\HomeController;
-use App\Http\Controllers\Content\NotificationController;
-use App\Http\Controllers\Content\PostController;
-use App\Http\Controllers\Content\ProfileController;
-use App\Http\Controllers\Content\ReactionController;
-use App\Http\Controllers\Content\SearchController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Social\BlockUserController;
+use App\Http\Controllers\Social\CommentController;
+use App\Http\Controllers\Social\FollowController;
+use App\Http\Controllers\Social\HomeController;
+use App\Http\Controllers\Social\NotificationController;
+use App\Http\Controllers\Social\PostController;
+use App\Http\Controllers\Social\ProfileController;
+use App\Http\Controllers\Social\ReactionController;
+use App\Http\Controllers\Social\SearchController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -16,14 +17,16 @@ Route::get('/', function () {
     if (Auth::check()) {
         return redirect()->route('home.show');
     }
-    return Inertia::render('auth/login');
+    return Inertia::render('auth/login', [
+        'canResetPassword' => true,
+    ]);
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/home', [HomeController::class, 'show'])->name('home.show');
 
-    Route::get('/user/{user}/following', [FollowController::class, 'following'])->name('follow.following');
-    Route::get('/user/{user}/followers', [FollowController::class, 'followers'])->name('follow.followers');
+    Route::get('/user/{user}/following', [FollowController::class, 'showFollowing'])->name('follow.following');
+    Route::get('/user/{user}/followers', [FollowController::class, 'showFollowers'])->name('follow.followers');
     Route::post('/user/{user}/follow', [FollowController::class, 'toggle'])->name('follow.toggle');
 
     Route::post('/user/{user}/block', [BlockUserController::class, 'toggle'])->name('user.block');
@@ -44,6 +47,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'show'])->name('notification.show');
     Route::patch('/notifications/read', [NotificationController::class, 'markAllAsRead'])->name('notification.markAllAsRead');
     Route::patch('/notifications/read/{id}', [NotificationController::class, 'markOneAsRead'])->name('notification.markOneAsRead');
+
+    Route::redirect('admin', 'admin/users');
+    Route::get('admin/users', [UserController::class, 'show'])->name('admin.user.show');
+    Route::get('admin/{user}', [UserController::class, 'edit'])->name('admin.user.edit');
+    Route::patch('admin/{user}', [UserController::class, 'update'])->name('admin.user.update');
 });
 
 Route::get('/user/{user}', [ProfileController::class, 'show'])->name('profile.show');

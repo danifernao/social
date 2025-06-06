@@ -25,9 +25,6 @@ const EntryListItem = forwardRef<HTMLDivElement, EntryListItemProps>(({ entry },
     // Determina si el usuario autenticado es el autor de la entrada.
     const isOwner = auth.user && entry.user_id === auth.user.id;
 
-    // Determina si el usuario autenticado tiene rol de administrador.
-    const isAdmin = auth.user && auth.user.role === 'admin';
-
     // Función que convierte una fecha ISO en formato corto y legible.
     const formatDate = (date: string) => {
         return format(parseISO(date), 'dd/MM/yyyy h:mm a');
@@ -43,7 +40,7 @@ const EntryListItem = forwardRef<HTMLDivElement, EntryListItemProps>(({ entry },
         <article ref={ref} className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border px-6 py-6 shadow-sm">
             <header className="flex gap-4">
                 <div className="flex flex-1 items-center justify-center gap-3">
-                    <UserAvatar size="s10" url={entry.user.avatar_url} username={entry.user.username} />
+                    <UserAvatar user={entry.user} />
                     <div className="flex-1 font-semibold">
                         <Link href={`/user/${entry.user.username}`}>{entry.user.username}</Link>
                     </div>
@@ -63,7 +60,7 @@ const EntryListItem = forwardRef<HTMLDivElement, EntryListItemProps>(({ entry },
                             <time dateTime={entry.created_at}>{distanceToNow}</time>
                         )}
                     </div>
-                    {(isOwner || isAdmin) && (
+                    {(isOwner || auth.user?.can_moderate) && (
                         <div>
                             <EntryItemOptions entry={entry} />
                         </div>

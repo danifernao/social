@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Content;
+namespace App\Http\Controllers\Social;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comment;

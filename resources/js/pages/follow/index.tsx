@@ -3,8 +3,8 @@ import ListLoadMore from '@/components/content/list-load-more';
 import UserList from '@/components/content/user-list';
 import { usePaginatedData } from '@/hooks/use-paginated-data';
 import AppLayout from '@/layouts/app-layout';
-import { ContentInner } from '@/layouts/content/inner-layout';
-import type { Auth, BreadcrumbItem, User } from '@/types';
+import { AppContentLayout } from '@/layouts/app/app-content-layout';
+import type { Auth, BreadcrumbItem, User, Users } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 
 interface PageProps {
@@ -14,11 +14,6 @@ interface PageProps {
     followers: Users; // Lista de seguidores.
     routeName: string; // Nombre de la ruta actual de la página.
     [key: string]: any;
-}
-
-interface Users {
-    data: User[]; // Lista de seguidos o seguidores.
-    next_cursor: string; // Cursor para la siguiente página de usuarios.
 }
 
 /**
@@ -37,7 +32,7 @@ export default function Follow() {
         loadMore, // Función para cargar más usuarios.
     } = usePaginatedData<User>({
         initialItems: pageName === 'following' ? following.data : followers.data, // Lista inicial de usuarios.
-        initialCursor: pageName === 'following' ? following.next_cursor : followers.next_cursor, // Cursor inicial.
+        initialCursor: pageName === 'following' ? following.meta.next_cursor : followers.meta.next_cursor, // Cursor inicial.
         fetchUrl: route(routeName, { user: user.username }), // Ruta para solicitar más usuarios.
         propKey: 'users', // Nombre de la propiedad que devuelve Inertia con los datos a usar.
     });
@@ -57,11 +52,11 @@ export default function Follow() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`${pageName === 'following' ? 'Seguidos por' : 'Seguidores de'} ${user.username}`} />
-            <ContentInner>
+            <AppContentLayout>
                 <FollowNav pageName={pageName} username={user.username} />
                 <UserList users={users} />
                 {cursor && <ListLoadMore type="user" isProcessing={processing} onClick={loadMore} />}
-            </ContentInner>
+            </AppContentLayout>
         </AppLayout>
     );
 }

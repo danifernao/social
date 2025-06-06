@@ -1,8 +1,7 @@
+import { usePostAction } from '@/hooks/use-post-action';
 import { type User } from '@/types';
-import { router } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { getAnimatedButtonClasses } from '@/utils/buttonHelpers';
+import { LoaderCircle, UserMinus, UserPlus } from 'lucide-react';
 import { Button } from '../ui/button';
 
 interface UserFollowBtnProps {
@@ -13,27 +12,18 @@ interface UserFollowBtnProps {
  * Muestra el botón para seguir o dejar de seguir a un usuario.
  */
 export default function UserFollowBtn({ user }: UserFollowBtnProps) {
-    const [isProcessing, setIsProcessing] = useState(false);
-
-    const toggleFollow = () => {
-        setIsProcessing(true);
-        router.post(
-            route('follow.toggle', { user: user.username }),
-            {},
-            {
-                preserveScroll: true,
-                onError: (errors) => {
-                    toast('¡Ups! Error inesperado.');
-                    console.error(errors);
-                },
-                onFinish: () => setIsProcessing(false),
-            },
-        );
-    };
+    const { isProcessing, execute } = usePostAction();
+    const { iconClass, textClass } = getAnimatedButtonClasses(isProcessing);
 
     return (
-        <Button onClick={toggleFollow} disabled={isProcessing}>
-            {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />} {user.isFollowing ? 'Dejar de seguir' : 'Seguir'}
+        <Button
+            className="group relative gap-0 overflow-hidden"
+            onClick={() => execute('follow.toggle', { user: user.username })}
+            disabled={isProcessing}
+        >
+            {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+            {user.is_followed ? <UserMinus className={iconClass} /> : <UserPlus className={iconClass} />}
+            <span className={textClass}>{user.is_followed ? 'Dejar de seguir' : 'Seguir'}</span>
         </Button>
     );
 }

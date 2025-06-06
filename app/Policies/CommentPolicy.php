@@ -10,7 +10,7 @@ class CommentPolicy
 {
     /**
      * Determina si un usuario puede actualizar un comentario.
-     * Solo el autor del comentario o un administrador pueden actualizarlo.
+     * Solo el autor del comentario o un moderador pueden actualizarlo.
      *
      * @param User $user Usuario que intenta hacer la acción.
      * @param Comment $comment Comentario sobre el que se realiza la acción.
@@ -18,12 +18,12 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment): bool
     {
-        return $user->id === $comment->user_id || $user->isAdmin();
+        return $user->id === $comment->user_id || $user->canModerate();
     }
 
     /**
      * Determina si un usuario puede eliminar un comentario.
-     * Solo el autor del comentario o un administrador pueden eliminarlo.
+     * Solo el autor del comentario o un moderador pueden eliminarlo.
      *
      * @param User $user Usuario que intenta hacer la acción.
      * @param Comment $comment Comentario sobre el que se realiza la acción.
@@ -31,6 +31,6 @@ class CommentPolicy
      */
     public function delete(User $user, Comment $comment): bool
     {
-        return $user->id === $comment->user_id || $user->isAdmin();
+        return $user->id === $comment->user_id || $user->canModerate();
     }
 }

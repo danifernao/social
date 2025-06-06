@@ -4,7 +4,7 @@ import SearchSearchResults from '@/components/content/search-results';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import { usePaginatedData } from '@/hooks/use-paginated-data';
 import AppLayout from '@/layouts/app-layout';
-import { ContentInner } from '@/layouts/content/inner-layout';
+import { AppContentLayout } from '@/layouts/app/app-content-layout';
 import type { BreadcrumbItem, Post, SearchResults, SearchType, User } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
@@ -41,7 +41,7 @@ export default function Search() {
         resetProps, // Función para restablecer la lista y el cursor a sus valores iniciales.
     } = usePaginatedData<Post | User>({
         initialItems: props.results.data, // Lista inicial de resultados.
-        initialCursor: props.results.next_cursor, // Cursor inicial.
+        initialCursor: props.results.meta.next_cursor, // Cursor inicial.
         fetchUrl: route('search.show', { type, query }), // Ruta para solicitar más resultados.
         propKey: 'results', // Nombre de la propiedad que devuelve Inertia con los datos a usar.
     });
@@ -81,18 +81,18 @@ export default function Search() {
             resetProps();
             shouldReset.current = false;
         }
-    }, [props.results.data, props.results.next_cursor]);
+    }, [props.results.data, props.results.meta.next_cursor]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Buscar" />
-            <ContentInner>
+            <AppContentLayout>
                 {!isHashtag ? <SearchBar type={type} query={query} onSubmit={onSubmit} /> : <h2 className="text-2xl">#{query}</h2>}
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>
                     <SearchSearchResults anchorId={firstItemId} results={type === 'post' ? (results as Post[]) : (results as User[])} />
                 </EntryListUpdateContext.Provider>
                 {cursor && <ListLoadMore type="post" isProcessing={processing} onClick={loadMore} />}
-            </ContentInner>
+            </AppContentLayout>
         </AppLayout>
     );
 }

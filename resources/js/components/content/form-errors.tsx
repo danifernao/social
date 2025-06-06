@@ -1,14 +1,14 @@
 import { TriangleAlert } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 
-interface EntryFormErrorsProps {
+interface FormErrorsProps {
     errors: Record<string, string>;
 }
 
 /**
  * Lista los errores presentados al diligenciar un formulario.
  */
-export default function EntryFormErrors({ errors }: EntryFormErrorsProps) {
+export default function FormErrors({ errors }: FormErrorsProps) {
     return (
         <>
             {Object.keys(errors).length > 0 && (

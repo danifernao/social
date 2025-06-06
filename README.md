@@ -26,8 +26,8 @@
     - Soporte de etiquetas `#hashtag`.
 - **Notificaciones** _(en desarrollo)_
     - Se está trabajando en el sistema de notificaciones.
-- **Panel de administración** _(próximamente)_
-    - Funcionalidades administrativas para gestión de usuarios.
+- **Panel de administración** _(en desarrollo)_
+    - Se está trabajando en las funcionalidades administrativas para gestión de usuarios.
 
 ## Instalación
 
@@ -40,4 +40,5 @@
 docker compose up --build
 ```
 
-5. Abre el navegador web y visita la dirección `http://localhost/`.
+5. Abre el navegador web y visita la dirección `http://localhost/` para visualizar la aplicación.
+6. Visita la dirección `http://localhost:8025/` para acceder a MailHog.

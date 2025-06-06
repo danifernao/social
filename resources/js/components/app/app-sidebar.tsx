@@ -4,12 +4,11 @@ import { NavUser } from '@/components/app/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type Auth, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Bell, Home, LogIn, Search, User, UserPlus, Users } from 'lucide-react';
+import { Bell, Home, LogIn, Search, User, UserCog, UserPlus, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 
 export function AppSidebar() {
-    const { auth } = usePage<{ auth: Auth }>().props;
-    const username = auth.user ? auth.user.username : null;
+    const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
 
     const navAuth = [
         {
@@ -19,7 +18,7 @@ export function AppSidebar() {
         },
         {
             title: 'Perfil',
-            href: `/user/${username}`,
+            href: `/user/${auth.user?.username}`,
             icon: User,
         },
         {
@@ -29,14 +28,25 @@ export function AppSidebar() {
         },
         {
             title: 'Conexiones',
-            href: `/user/${username}/following`,
+            href: `/user/${auth.user?.username}/following`,
             icon: Users,
+            isActive: ['follow.following', 'follow.followers'].includes(routeName),
         },
         {
             title: 'Notificaciones',
             href: `/notifications`,
             icon: Bell,
         },
+        ...(auth.user?.can_moderate
+            ? [
+                  {
+                      title: 'Administración',
+                      href: '/admin',
+                      icon: UserCog,
+                      isActive: ['admin.user.show', 'admin.user.edit'].includes(routeName),
+                  },
+              ]
+            : []),
     ];
 
     const navGuest = [

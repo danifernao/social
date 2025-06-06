@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Content;
+namespace App\Http\Controllers\Social;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -23,12 +24,12 @@ class HomeController extends Controller
         // Consulta para obtener las publicaciones con el autor y contador de comentarios.
         $query = Post::with('user')->withCount('comments');
 
-        // Si el autenticado no es administrador, filtra solo las publicaciones de sí mismo y de quienes sigue.
-        if (!$user->isAdmin()) {
-            $followingIds = $user->followedUserIds();
-            $followingIds[] = $user->id; // Esto incluye sus propias publicaciones.
+        // Si el usuario no es moderador, filtra solo las publicaciones de sí mismo y de quienes sigue.
+        if (!$user->canModerate()) {
+            $following_ids = $user->followedUserIds();
+            $following_ids[] = $user->id; // Esto incluye sus propias publicaciones.
 
-            $query->whereIn('user_id', $followingIds);
+            $query->whereIn('user_id', $following_ids);
         }
 
         // Obtiene las publicaciones.
@@ -44,7 +45,7 @@ class HomeController extends Controller
         );
 
         return Inertia::render('home/index', [
-            'posts' => $posts,
+            'posts' => PostResource::collection($posts),
         ]);
     }
 }

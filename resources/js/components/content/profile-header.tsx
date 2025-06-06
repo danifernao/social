@@ -1,7 +1,8 @@
-import type { User } from '@/types';
-import { Link } from '@inertiajs/react';
+import type { Auth, User } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
+import UserAdminBtn from './user-admin-btn';
 import UserAvatar from './user-avatar';
-import BlockButton from './user-block-btn';
+import UserBlockBtn from './user-block-btn';
 import UserFollowBtn from './user-follow-btn';
 
 interface ProfileHeaderProps {
@@ -13,22 +14,29 @@ interface ProfileHeaderProps {
  * junto con los botones para seguirlo y bloquearlo.
  */
 export default function ProfileHeader({ user }: ProfileHeaderProps) {
+    const { auth } = usePage<{ auth: Auth }>().props;
+
     return (
-        <div className="flex items-center gap-4">
-            <UserAvatar size="s24" url={user.avatar_url} username={user.username} />
-            <div className="flex flex-1 flex-col gap-1">
-                <div className="flex flex-1 items-center justify-center gap-4">
-                    <h1 className="flex-1 text-4xl">@{user.username}</h1>
-                    <div className="flex flex-wrap gap-3">
-                        {user.isFollowing !== null && !user.isBlocked && <UserFollowBtn user={user} />}
-                        {user.isBlocked !== null && <BlockButton user={user} />}
+        <div className="flex gap-1">
+            <div className="flex flex-1 flex-col gap-4">
+                <UserAvatar className="h-24 w-24 text-4xl" user={user} />
+                <div className="flex flex-1 flex-col gap-1">
+                    <div className="flex flex-col gap-4">
+                        <h1 className="flex-1 text-3xl">@{user.username}</h1>
+                    </div>
+                    <div className="flex gap-3">
+                        <Link href={`/user/${user.username}/following`}>{user.follows_count} seguidos</Link>
+                        <Link href={`/user/${user.username}/followers`}>{user.followers_count} seguidores</Link>
                     </div>
                 </div>
-                <div className="flex gap-3">
-                    <Link href={`/user/${user.username}/following`}>{user.follows_count} seguidos</Link>
-                    <Link href={`/user/${user.username}/followers`}>{user.followers_count} seguidores</Link>
-                </div>
             </div>
+            {auth.user && auth.user.id !== user.id && (
+                <div className="flex flex-wrap justify-end gap-2">
+                    {!user.is_blocked && !user.has_blocked && <UserFollowBtn user={user} />}
+                    {auth.user.role !== 'admin' && user.role !== 'admin' && !user.has_blocked && <UserBlockBtn user={user} />}
+                    {auth.user.role === 'admin' && <UserAdminBtn user={user} />}
+                </div>
+            )}
         </div>
     );
 }

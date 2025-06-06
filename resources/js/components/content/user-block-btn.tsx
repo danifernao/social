@@ -1,42 +1,25 @@
+import { usePostAction } from '@/hooks/use-post-action';
 import { User } from '@/types';
-import { router } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { getAnimatedButtonClasses } from '@/utils/buttonHelpers';
+import { LoaderCircle, Lock, LockOpen } from 'lucide-react';
 import { Button } from '../ui/button';
 
-interface BlockButtonProps {
+interface UserBlockBtnProps {
     user: User; // El usuario sobre el cual se aplicará el bloqueo o desbloqueo.
 }
 
 /**
  * Muestra el botón para bloquear o desbloquear a un usuario.
  */
-export default function BlockButton({ user }: BlockButtonProps) {
-    const [isProcessing, setIsProcessing] = useState(false);
-
-    const handleClick = () => {
-        setIsProcessing(true);
-
-        router.post(
-            route('user.block', { user: user.username }),
-            {},
-            {
-                preserveScroll: true,
-                onError: (errors) => {
-                    toast('¡Ups! Error inesperado.');
-                    console.error(errors);
-                },
-                onFinish: () => {
-                    setIsProcessing(false);
-                },
-            },
-        );
-    };
+export default function UserBlockBtn({ user }: UserBlockBtnProps) {
+    const { isProcessing, execute } = usePostAction();
+    const { iconClass, textClass } = getAnimatedButtonClasses(isProcessing);
 
     return (
-        <Button onClick={handleClick} disabled={isProcessing} variant="destructive">
-            {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />} {user.isBlocked ? 'Desbloquear' : 'Bloquear'}
+        <Button className="group relative gap-0 overflow-hidden" onClick={() => execute('user.block', { user: user.id })} disabled={isProcessing}>
+            {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+            {user.is_blocked ? <LockOpen className={iconClass} /> : <Lock className={iconClass} />}
+            <span className={textClass}>{user.is_blocked ? 'Desbloquear' : 'Bloquear'}</span>
         </Button>
     );
 }

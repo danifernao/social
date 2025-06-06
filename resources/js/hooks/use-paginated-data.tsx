@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 
 interface UsePaginatedProps<T> {
     initialItems: T[]; // Lista inicial de elementos.
-    initialCursor: string; // Cursor inicial de paginación.
+    initialCursor: string | null; // Cursor inicial de paginación.
     fetchUrl: string; // URL que se usará para obtener más datos.
     propKey: string; // Clave con la que se recibe la nueva página desde los props.
     isEntry?: boolean; // Habilita el método "handleChanges" para actualizar la lista de publicaciones o comentarios.
@@ -17,7 +17,7 @@ export function usePaginatedData<T>({ initialItems, initialCursor, fetchUrl, pro
     const [items, setItems] = useState<T[]>(initialItems);
 
     // Cursor actual de paginación.
-    const [cursor, setCursor] = useState<string>(initialCursor);
+    const [cursor, setCursor] = useState<string | null>(initialCursor);
 
     // Estado que indica si la carga de elementos está en curso.
     const [processing, setProcessing] = useState<boolean>(false);
@@ -39,9 +39,7 @@ export function usePaginatedData<T>({ initialItems, initialCursor, fetchUrl, pro
                     // Extrae los nuevos datos y el siguiente cursor desde las propiedades de la página.
                     const pageData = (page.props as any)[propKey];
                     const newItems = pageData?.data ?? [];
-                    const next = pageData?.next_cursor ?? null;
-
-                    console.log(propKey);
+                    const next = pageData?.meta.next_cursor ?? null;
 
                     // Combina los nuevos elementos con los previos, evitando duplicados por ID.
                     setItems((prev) => {

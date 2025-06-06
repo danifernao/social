@@ -5,26 +5,16 @@ import ProfileHeader from '@/components/content/profile-header';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import { usePaginatedData } from '@/hooks/use-paginated-data';
 import AppLayout from '@/layouts/app-layout';
-import { ContentInner } from '@/layouts/content/inner-layout';
-import type { Auth, BreadcrumbItem, Post, User } from '@/types';
+import { AppContentLayout } from '@/layouts/app/app-content-layout';
+import type { Auth, BreadcrumbItem, Post, Posts, User } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-
-interface PageProps {
-    auth: Auth; // Usuario autenticado.
-    user: User; // Usuario del perfil visitado.
-    posts: {
-        data: Post[]; // Lista de publicaciones del usuario del perfil.
-        next_cursor: string; // Cursor para la siguiente página de publicaciones.
-    };
-    [key: string]: any;
-}
 
 /**
  * Muestra la página de perfil de un usuario.
  */
 export default function Profile() {
     // Accede al usuario autenticado, al usuario del perfil y a la lista de publicaciones proporcionados por Inertia.
-    const { auth, user, posts } = usePage<PageProps>().props;
+    const { auth, user, posts } = usePage<{ auth: Auth; user: User; posts: Posts }>().props;
 
     // Determina si el usuario autenticado está visitando su propio perfil.
     const isOwner = auth.user && user.id === auth.user.id;
@@ -38,7 +28,7 @@ export default function Profile() {
         firstItemId, // ID de la primera publicación agregada a la lista después de llamar a "loadMore".
     } = usePaginatedData<Post>({
         initialItems: posts.data, // Lista inicial de publicaciones.
-        initialCursor: posts.next_cursor, // Cursor inicial.
+        initialCursor: posts.meta.next_cursor, // Cursor inicial.
         fetchUrl: route('profile.show', { user: user.username }), // Ruta para solicitar más publicaciones.
         propKey: 'posts', // Nombre de la propiedad que devuelve Inertia con los datos a usar.
         isEntry: true, // Indica que se está trabajando con entradas tipo "Entry" (publicación o comentario).
@@ -55,14 +45,14 @@ export default function Profile() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Perfil de ${user.username}`} />
-            <ContentInner>
+            <AppContentLayout>
                 <ProfileHeader user={user} />
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>
                     {isOwner && <EntryForm />}
                     <EntryList anchorId={firstItemId} entries={entries} />
                 </EntryListUpdateContext.Provider>
                 {cursor && <ListLoadMore type="post" isProcessing={processing} onClick={loadMore} />}
-            </ContentInner>
+            </AppContentLayout>
         </AppLayout>
     );
 }

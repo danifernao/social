@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 /**
  * Modelo que representa a un usuario autenticado en el sistema.
  */
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -55,6 +55,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
     }
 
@@ -63,10 +64,10 @@ class User extends Authenticatable
      *
      * @return string
      */
-    public function getRouteKeyName()
+    /*public function getRouteKeyName()
     {
         return 'username';
-    }
+    }*/
 
     /**
      * Atributo computado: tipo del modelo, útil para el frontend.
@@ -86,27 +87,6 @@ class User extends Authenticatable
     public function getAvatarUrlAttribute(): ?string
     {
         return $this->avatar_path ? asset('storage/' . $this->avatar_path) : null;
-    }
-
-    /**
-     * Controla el acceso a la dirección de correo electrónico del usuario.
-     * Solo lo revela si el usuario autenticado es el mismo o un administrador.
-     *
-     * @param string $value
-     * @return string|null
-     */
-    public function getEmailAttribute($value)
-    {
-        $auth = auth()->user();
-
-        if (!$auth) return null;
-        
-        // Solo puede ver el email si es el mismo usuario o un administrador.
-        if ($auth->id === $this->id || $auth->isAdmin()) {
-            return $value;
-        }
-
-        return null;
     }
 
     /**
@@ -176,6 +156,51 @@ class User extends Authenticatable
     }
 
     /**
+     * Determina si el usuario tiene rol de moderador.
+     *
+     * @return bool
+     */
+    public function isMod(): bool
+    {
+        return $this->role === 'mod';
+    }
+
+    /**
+     * Determina si el usuario puede moderar.
+     *
+     * @return bool
+     */
+    public function canModerate(): bool
+    {
+        return $this->role === 'admin' || $this->role === 'mod';
+    }
+
+    /**
+     * Determina si el usuario puede gestionar a otro usuario.
+     *
+     * @return bool
+     */
+    public function canActOn(User $user): bool
+    {
+        // No puede actuar sobre sí mismo.
+        if ($this->id === $user->id) {
+            return false;
+        }
+
+        // Un administrador puede actuar sobre cualquiera.
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        // Un moderador puede actuar sobre otros, excepto administradores.
+        if ($this->isMod() && !$user->isAdmin()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Devuelve los IDs de usuarios seguidos por este usuario.
      *
      * @return array<int>
@@ -186,7 +211,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Marca cada usuario de una colección con la propiedad "isFollowing".
+     * Marca cada usuario de una colección con la propiedad "is_followed".
      * Si el usuario es el mismo que el autenticado, se marca como "null".
      *
      * @param Collection<int, User> $users
@@ -194,12 +219,12 @@ class User extends Authenticatable
      */
     public function markFollowStateForCollection(Collection $users): Collection
     {
-        $followedIds = $this->followedUserIds();
+        $followed_ids = $this->followedUserIds();
 
-        return $users->map(function ($user) use ($followedIds) {
-            $user->isFollowing = $user->id === $this->id
+        return $users->map(function ($user) use ($followed_ids) {
+            $user->is_followed = $user->id === $this->id
                 ? null
-                : in_array($user->id, $followedIds);
+                : in_array($user->id, $followed_ids);
 
             return $user;
         });
@@ -236,11 +261,6 @@ class User extends Authenticatable
      */
     public function toggleBlock(User $user): bool
     {
-        if ($this->id === $user->id) {
-            // No puede bloquearse a sí mismo.
-            return false;
-        }
-
         if ($this->hasBlocked($user)) {
             $this->blockedUsers()->detach($user->id);
             return true; // Desbloqueado.

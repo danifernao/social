@@ -6,8 +6,8 @@ import { LoaderCircle } from 'lucide-react';
 import { useContext, useEffect, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { toast } from 'sonner';
-import EntryFormErrors from './entry-form-errors';
 import { MarkdownHelp } from './entry-form-markdown-help';
+import FormErrors from './form-errors';
 
 interface EntryFormProps {
     entry?: Entry; // Una entrada existente, la cual puede ser una publicación o un comentario.
@@ -100,7 +100,7 @@ export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
 
     return (
         <form onSubmit={submitForm} className="space-y-3">
-            <EntryFormErrors errors={errors} />
+            <FormErrors errors={errors} />
 
             <TextareaAutosize
                 className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"

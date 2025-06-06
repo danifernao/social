@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Content;
+namespace App\Http\Controllers\Social;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\NotificationResource;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -18,7 +19,7 @@ class NotificationController extends Controller
         $notifications = $request->user()->notifications()->latest()->cursorPaginate(15, ['*'], 'cursor', $cursor);
 
         return Inertia::render('notification/index', [
-            'notifications' => $notifications,
+            'notifications' => NotificationResource::collection($notifications),
         ]);
     }
 
@@ -29,7 +30,7 @@ class NotificationController extends Controller
     {
         $request->user()->unreadNotifications->markAsRead();
 
-        return back();
+        return back()->with('status', 'marked-as-read');
     }
 
     /**
@@ -42,6 +43,6 @@ class NotificationController extends Controller
         $notification = $request->user()->notifications()->findOrFail($id);
         $notification->markAsRead();
 
-        return back();
+        return back()->with('status', 'marked-as-read');
     }
 }

@@ -10,7 +10,7 @@ class PostPolicy
 {
     /**
      * Determina si un usuario puede actualizar una publicación.
-     * Solo el autor de la publicación o un administrador pueden actualizarla.
+     * Solo el autor de la publicación o un moderador pueden actualizarla.
      *
      * @param User $user Usuario que intenta realizar la acción.
      * @param Post $post Publicación sobre la que se realiza la acción.
@@ -18,12 +18,12 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
-        return $user->id === $post->user_id || $user->isAdmin();
+        return $user->id === $post->user_id || $user->canModerate();
     }
 
     /**
      * Determina si un usuario puede eliminar una publicación.
-     * Solo el autor de la publicación o un administrador pueden eliminarla.
+     * Solo el autor de la publicación o un moderador pueden eliminarla.
      *
      * @param User $user Usuario que intenta realizar la acción.
      * @param Post $post Publicación sobre la que se realiza la acción.
@@ -31,6 +31,6 @@ class PostPolicy
      */
     public function delete(User $user, Post $post): bool
     {
-        return $user->id === $post->user_id || $user->isAdmin();
+        return $user->id === $post->user_id || $user->canModerate();
     }
 }
