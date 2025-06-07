@@ -22,9 +22,6 @@ export function usePaginatedData<T>({ initialItems, initialCursor, fetchUrl, pro
     // Estado que indica si la carga de elementos está en curso.
     const [processing, setProcessing] = useState<boolean>(false);
 
-    // ID del primer nuevo elemento agregado después de un "loadMore", útil para anclas.
-    const [firstItemId, setFirstItemId] = useState<number | null>(null);
-
     // Obtiene más elementos usando el cursor actual.
     const loadMore = () => {
         setProcessing(true);
@@ -50,12 +47,6 @@ export function usePaginatedData<T>({ initialItems, initialCursor, fetchUrl, pro
 
                     // Actualiza el cursor para la siguiente página.
                     setCursor(next);
-
-                    // Guarda el ID del primer nuevo elemento (si lo hay).
-                    if (newItems.length > 0) {
-                        const firstNew = newItems[0] as any;
-                        if (firstNew?.id) setFirstItemId(firstNew.id);
-                    }
                 },
                 onError: (errors) => {
                     toast('¡Ups! Error inesperado.');
@@ -100,7 +91,6 @@ export function usePaginatedData<T>({ initialItems, initialCursor, fetchUrl, pro
     const resetProps = () => {
         setItems(initialItems);
         setCursor(initialCursor);
-        setFirstItemId(null);
     };
 
     return {
@@ -109,7 +99,6 @@ export function usePaginatedData<T>({ initialItems, initialCursor, fetchUrl, pro
         processing,
         loadMore,
         resetProps,
-        firstItemId,
         updateItems,
         handleEntryChanges,
     };

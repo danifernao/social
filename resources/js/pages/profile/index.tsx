@@ -25,7 +25,6 @@ export default function Profile() {
         processing, // Indica si se está cargando más publicaciones.
         loadMore, // Función para cargar más publicaciones.
         handleEntryChanges, // Función para actualizar la lista de publicaciones.
-        firstItemId, // ID de la primera publicación agregada a la lista después de llamar a "loadMore".
     } = usePaginatedData<Post>({
         initialItems: posts.data, // Lista inicial de publicaciones.
         initialCursor: posts.meta.next_cursor, // Cursor inicial.
@@ -49,9 +48,9 @@ export default function Profile() {
                 <ProfileHeader user={user} />
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>
                     {isOwner && <EntryForm />}
-                    <EntryList anchorId={firstItemId} entries={entries} />
+                    <EntryList entries={entries} />
                 </EntryListUpdateContext.Provider>
-                {cursor && <ListLoadMore type="post" isProcessing={processing} onClick={loadMore} />}
+                <ListLoadMore type="post" cursor={cursor} isProcessing={processing} onClick={loadMore} />
             </AppContentLayout>
         </AppLayout>
     );

@@ -36,6 +36,13 @@ export default function AdminUserTable({ users, previous, next }: Props) {
     // Estado local para el término de búsqueda.
     const [query, setQuery] = useState(queryParams.get('query') || '');
 
+    // Nombres para cada rol de usuario.
+    const roles = {
+        admin: 'Administrador',
+        mod: 'Moderador',
+        user: 'Usuario',
+    };
+
     // Gestiona el formulario de búsqueda.
     const handleSearch = (e: React.FormEvent) => {
         const params = new URLSearchParams();
@@ -148,7 +155,7 @@ export default function AdminUserTable({ users, previous, next }: Props) {
                                     <TableCell>{user.username}</TableCell>
                                     <TableCell className={addTextColor(user.email_verified_at)}>{user.email_verified_at ? 'Sí' : 'No'}</TableCell>
                                     <TableCell className={addTextColor(user.is_active)}>{user.is_active ? 'Sí' : 'No'}</TableCell>
-                                    <TableCell>{user.role}</TableCell>
+                                    <TableCell>{roles[user.role]}</TableCell>
                                     <TableCell>{formatDate(user.created_at)}</TableCell>
                                     <TableCell>
                                         {canActOnUser(user) && (

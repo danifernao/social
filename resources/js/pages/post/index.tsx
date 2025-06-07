@@ -25,7 +25,6 @@ export default function Home() {
         processing, // Indica si se está cargando más comentarios.
         loadMore, // Función para cargar más comentarios.
         handleEntryChanges, // Función para actualizar la lista de comentarios.
-        firstItemId, // ID del primer comentario agregado a la lista después de llamar a "loadMore".
     } = usePaginatedData<Comment>({
         initialItems: comments.data, // Lista inicial de comentarios.
         initialCursor: comments.meta.next_cursor, // Cursor inicial.
@@ -56,8 +55,8 @@ export default function Home() {
                             {post.comments_count > 0 && (
                                 <>
                                     <h2>{post.comments_count} comentarios:</h2>
-                                    <EntryList anchorId={firstItemId} entries={entries} />
-                                    {cursor && <ListLoadMore type="comment" isProcessing={processing} onClick={loadMore} />}
+                                    <EntryList entries={entries} />
+                                    <ListLoadMore type="comment" cursor={cursor} isProcessing={processing} onClick={loadMore} autoClick={false} />
                                 </>
                             )}
                             {isAuth && <EntryForm postId={post.id} />}

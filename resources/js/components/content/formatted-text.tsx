@@ -117,7 +117,9 @@ export default function FormattedText({ text }: Props) {
                         ul: ({ children }) => <ul className="mb-4 list-inside list-disc pl-4 last:mb-0">{children}</ul>,
                         ol: ({ children }) => <ol className="mb-4 list-inside list-decimal pl-4 last:mb-0">{children}</ol>,
                         li: ({ children }) => <li>{children}</li>,
-                        img: ({ src, alt }) => <img src={src ?? ''} alt={alt ?? ''} className="mb-4 h-auto max-w-full rounded last:mb-0" />,
+                        img: ({ src, alt }) => (
+                            <img src={src ?? ''} alt={alt ?? ''} loading="lazy" className="mb-4 aspect-[4/3] h-auto max-w-full rounded last:mb-0" />
+                        ),
                     }}
                 >
                     {text}

@@ -113,7 +113,7 @@ class PostController extends Controller
         $this->authorize('update', $post);
 
         $request->validate([
-            'content' => 'required|string|max:140',
+            'content' => 'required|string|max:3000',
         ]);
 
         $post->content = $request->content;

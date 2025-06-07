@@ -61,17 +61,11 @@ export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
                 setEntryFromResponse(pageProp);
 
                 // Limpia el contenido del formulario.
-                reset();
+                setData('content', '');
             },
             onError: (errors) => {
                 toast('¡Ups! Error inesperado.');
                 console.error(errors);
-            },
-            onFinish: () => {
-                const hasValidationErrors = Object.keys(errors).length > 0;
-                if (!hasValidationErrors) {
-                    setData('content', '');
-                }
             },
         });
 

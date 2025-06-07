@@ -55,7 +55,7 @@ export default function Follow() {
             <AppContentLayout>
                 <FollowNav pageName={pageName} username={user.username} />
                 <UserList users={users} />
-                {cursor && <ListLoadMore type="user" isProcessing={processing} onClick={loadMore} />}
+                <ListLoadMore type="user" cursor={cursor} isProcessing={processing} onClick={loadMore} />
             </AppContentLayout>
         </AppLayout>
     );

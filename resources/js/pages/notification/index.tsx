@@ -73,7 +73,7 @@ export default function Notifications() {
             <AppContentLayout>
                 <NotificationHeader markAsRead={markAsRead} isProcessing={isMarkReadProcessing} />
                 <NotificationList notifications={notificationsList} />
-                {cursor && <ListLoadMore type="notification" isProcessing={processing} onClick={loadMore} />}
+                <ListLoadMore type="notification" cursor={cursor} isProcessing={processing} onClick={loadMore} />
             </AppContentLayout>
         </AppLayout>
     );

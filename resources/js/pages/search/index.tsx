@@ -37,7 +37,6 @@ export default function Search() {
         processing, // Indica si se está cargando más resultados.
         loadMore, // Función para cargar más resultados.
         handleEntryChanges, // Función para actualizar la lista de publicaciones.
-        firstItemId, // ID de la primera publicación agregada a la lista después de llamar a "loadMore".
         resetProps, // Función para restablecer la lista y el cursor a sus valores iniciales.
     } = usePaginatedData<Post | User>({
         initialItems: props.results.data, // Lista inicial de resultados.
@@ -89,9 +88,9 @@ export default function Search() {
             <AppContentLayout>
                 {!isHashtag ? <SearchBar type={type} query={query} onSubmit={onSubmit} /> : <h2 className="text-2xl">#{query}</h2>}
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>
-                    <SearchSearchResults anchorId={firstItemId} results={type === 'post' ? (results as Post[]) : (results as User[])} />
+                    <SearchSearchResults results={type === 'post' ? (results as Post[]) : (results as User[])} />
                 </EntryListUpdateContext.Provider>
-                {cursor && <ListLoadMore type="post" isProcessing={processing} onClick={loadMore} />}
+                <ListLoadMore type="post" cursor={cursor} isProcessing={processing} onClick={loadMore} />
             </AppContentLayout>
         </AppLayout>
     );

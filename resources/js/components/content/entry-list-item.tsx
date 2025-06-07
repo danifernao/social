@@ -3,7 +3,6 @@ import { Link, usePage } from '@inertiajs/react';
 import { format, formatDistanceToNow, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { MessageSquare } from 'lucide-react';
-import { forwardRef } from 'react';
 import { buttonVariants } from '../ui/button';
 import EntryItemOptions from './entry-list-item-options';
 import EntryListItemReactions from './entry-list-item-reactions';
@@ -18,7 +17,7 @@ interface EntryListItemProps {
  * Muestra una entrada, la cual puede ser una publicación o un comentario.
  * Se usa "forwardRef" para permitir el manejo de referencias externas, como por ejemplo para el desplazamiento automático.
  */
-const EntryListItem = forwardRef<HTMLDivElement, EntryListItemProps>(({ entry }, ref) => {
+export default function EntryListItem({ entry }: EntryListItemProps) {
     // Accede al usuario autenticado y a la ruta actual proporcionados por Inertia.
     const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
 
@@ -37,7 +36,7 @@ const EntryListItem = forwardRef<HTMLDivElement, EntryListItemProps>(({ entry },
     });
 
     return (
-        <article ref={ref} className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border px-6 py-6 shadow-sm">
+        <article className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border px-6 py-6 shadow-sm">
             <header className="flex gap-4">
                 <div className="flex flex-1 items-center justify-center gap-3">
                     <UserAvatar user={entry.user} />
@@ -82,6 +81,4 @@ const EntryListItem = forwardRef<HTMLDivElement, EntryListItemProps>(({ entry },
             </footer>
         </article>
     );
-});
-
-export default EntryListItem;
+}
