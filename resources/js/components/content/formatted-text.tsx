@@ -1,9 +1,11 @@
+import remarkYoutube from '@/lib/remark-youtube';
 import { cn } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
 import * as hashtag from 'linkify-plugin-hashtag';
 import * as mention from 'linkify-plugin-mention';
 import Linkify from 'linkify-react';
 import React, { useEffect, useRef, useState } from 'react';
+import type { Components } from 'react-markdown';
 import Markdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import { Button } from '../ui/button';
@@ -11,6 +13,11 @@ import { Button } from '../ui/button';
 interface Props {
     text: string; // El texto que será formateado y mostrado.
 }
+
+// Define un tipo que extienda Components permitiendo claves extra (como "youtube").
+type ExtendedComponents = Components & {
+    [key: string]: React.ComponentType<any>;
+};
 
 /**
  * Muestra un texto formateado:
@@ -52,19 +59,58 @@ export default function FormattedText({ text }: Props) {
         );
     };
 
+    // Opciones de configuración para Linkify.
     const options = {
         defaultProtocol: 'https', // Protocolo por defecto para URLs sin uno explícito.
         plugins: [mention, hashtag], // Plugins para detectar menciones y etiquetas.
         render: {
             mention: renderInertiaLink, // Menciones usan enlace interno.
             hashtag: renderInertiaLink, // Etiquetas usan enlace interno.
-            url: renderExternalLink, // URLs usan enlace externo.
         },
         // Convierte el "href" según el tipo de enlace para generar rutas internas amigables.
         formatHref: (href: string, type: string) => {
             if (type === 'mention') return `/user/${href.substring(1)}`; // Quita el "@" y crea ruta a usuario.
             if (type === 'hashtag') return `/hashtag/${href.substring(1)}`; // Quita el "#" y crea ruta a etiqueta.
             return href; // Para URLs normales no cambia.
+        },
+    };
+
+    // Define los componentes personalizados para la representación de Markdown.
+    const components: ExtendedComponents = {
+        p: ({ node, children }) => (
+            <p className="mb-4 last:mb-0">
+                <Linkify options={options}>{children}</Linkify>
+            </p>
+        ),
+        a: ({ href, children }) => (
+            <a href={href} className={linkClass} target="_blank" rel="noopener noreferrer">
+                {children}
+            </a>
+        ),
+        strong: ({ children }) => <strong>{children}</strong>,
+        em: ({ children }) => <em>{children}</em>,
+        blockquote: ({ children }) => <blockquote className="text-muted-foreground mb-4 border-l-4 pl-4 italic last:mb-0">{children}</blockquote>,
+        pre({ children }) {
+            return <pre className="bg-muted mb-4 overflow-x-auto rounded p-2 text-sm last:mb-0">{children}</pre>;
+        },
+        code({ children }) {
+            return <code className="bg-muted rounded px-1 text-sm">{children}</code>;
+        },
+        ul: ({ children }) => <ul className="mb-4 list-inside list-disc pl-4 last:mb-0">{children}</ul>,
+        ol: ({ children }) => <ol className="mb-4 list-inside list-decimal pl-4 last:mb-0">{children}</ol>,
+        li: ({ children }) => <li>{children}</li>,
+        img: ({ src, alt }) => (
+            <img src={src ?? ''} alt={alt ?? ''} loading="lazy" className="mb-4 aspect-[4/3] h-auto max-w-full rounded last:mb-0" />
+        ),
+        youtube: ({ id }) => {
+            return (
+                <iframe
+                    src={`https://www.youtube.com/embed/${id}`}
+                    allowFullScreen
+                    loading="lazy"
+                    className="mb-4 aspect-video h-full w-full rounded border-0 last:mb-0"
+                />
+            );
         },
     };
 
@@ -95,32 +141,9 @@ export default function FormattedText({ text }: Props) {
         <div className="relative">
             <div ref={contentRef} className={cn(baseClass, expanded ? 'max-h-full' : 'max-h-[300px]')}>
                 <Markdown
-                    remarkPlugins={[remarkBreaks]}
-                    allowedElements={['strong', 'em', 'blockquote', 'code', 'pre', 'ul', 'ol', 'li', 'img', 'p', 'br']}
-                    components={{
-                        p: ({ node, children }) => (
-                            <p className="mb-4 last:mb-0">
-                                <Linkify options={options}>{children}</Linkify>
-                            </p>
-                        ),
-                        strong: ({ children }) => <strong>{children}</strong>,
-                        em: ({ children }) => <em>{children}</em>,
-                        blockquote: ({ children }) => (
-                            <blockquote className="text-muted-foreground mb-4 border-l-4 pl-4 italic last:mb-0">{children}</blockquote>
-                        ),
-                        pre({ children }) {
-                            return <pre className="bg-muted mb-4 overflow-x-auto rounded p-2 text-sm last:mb-0">{children}</pre>;
-                        },
-                        code({ children }) {
-                            return <code className="bg-muted rounded px-1 text-sm">{children}</code>;
-                        },
-                        ul: ({ children }) => <ul className="mb-4 list-inside list-disc pl-4 last:mb-0">{children}</ul>,
-                        ol: ({ children }) => <ol className="mb-4 list-inside list-decimal pl-4 last:mb-0">{children}</ol>,
-                        li: ({ children }) => <li>{children}</li>,
-                        img: ({ src, alt }) => (
-                            <img src={src ?? ''} alt={alt ?? ''} loading="lazy" className="mb-4 aspect-[4/3] h-auto max-w-full rounded last:mb-0" />
-                        ),
-                    }}
+                    remarkPlugins={[remarkBreaks, remarkYoutube]}
+                    allowedElements={['p', 'a', 'br', 'strong', 'em', 'blockquote', 'code', 'pre', 'ul', 'ol', 'li', 'img', 'youtube']}
+                    components={components}
                 >
                     {text}
                 </Markdown>
