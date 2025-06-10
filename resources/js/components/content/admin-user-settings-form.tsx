@@ -96,7 +96,11 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <p>Establece si el usuario es administrador, moderador o un usuario regular.</p>
-                        <Select value={data.new_role} onValueChange={(value: 'user' | 'mod' | 'admin') => setData('new_role', value)}>
+                        <Select
+                            value={data.new_role}
+                            onValueChange={(value: 'user' | 'mod' | 'admin') => setData('new_role', value)}
+                            disabled={processing}
+                        >
                             <SelectTrigger className="w-[200px]">
                                 <SelectValue placeholder="Selecciona un rol" />
                             </SelectTrigger>
@@ -138,12 +142,14 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                         placeholder="Nuevo correo electrónico"
                         value={data.new_email ?? ''}
                         onChange={(e) => setData('new_email', e.target.value)}
+                        disabled={processing}
                     />
                     <div className="flex items-center gap-2">
                         <Checkbox
                             id="email-verification-link"
                             checked={data.email_verification_link}
                             onCheckedChange={(checked) => setData('email_verification_link', !!checked)}
+                            disabled={processing}
                         />
                         <label htmlFor="email-verification-link">Enviar correo electrónico de verificación de cuenta.</label>
                     </div>
@@ -166,6 +172,7 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                             id="pass-reset-link"
                             checked={data.pass_reset_link}
                             onCheckedChange={(checked) => setData('pass_reset_link', !!checked)}
+                            disabled={processing}
                         />
                         <label htmlFor="pass-reset-link">Enviar correo electrónico de restablecimiento de contraseña.</label>
                     </div>
@@ -176,19 +183,38 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                 </CardContent>
             </Card>
 
-            {/* Activación / Desactivación de cuenta */}
+            {/* Habilitación / Inhabilitación de inicio de sesión */}
             <Card>
                 <CardHeader>
-                    <CardTitle>{isActive ? 'Desactivar' : 'Activar'} cuenta</CardTitle>
+                    <CardTitle>{isActive ? 'Inhabilitar' : 'Habilitar'} cuenta</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <p>{isActive ? 'Desactiva la cuenta del usuario y cierra todas sus sesiones' : 'Activa la cuenta de un usuario'}.</p>
+                    <p>
+                        {isActive ? 'Inhabilita el inicio de sesión y borra las sesiones existentes' : 'Habilita el inicio de sesión'} de la cuenta de
+                        usuario.
+                    </p>
                     <Button type="button" onClick={() => handleAction('toggle_account_status')} disabled={processing}>
                         {processing && data.action === 'toggle_account_status' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {isActive ? 'Desactivar' : 'Activar'}
+                        {isActive ? 'Inhabilitar' : 'Habilitar'}
                     </Button>
                 </CardContent>
             </Card>
+
+            {/* Eliminación de cuenta */}
+            {auth.user.is_admin && !user.is_admin && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Eliminar cuenta</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p>Elimina la cuenta de usuario y todos los datos asociados a ella.</p>
+                        <Button type="button" variant="destructive" onClick={() => handleAction('delete_account')} disabled={processing}>
+                            {processing && data.action === 'delete_account' && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                            Eliminar
+                        </Button>
+                    </CardContent>
+                </Card>
+            )}
 
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogContent>

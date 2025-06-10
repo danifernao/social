@@ -4,13 +4,15 @@ import AppLayout from '@/layouts/app-layout';
 import { AppContentLayout } from '@/layouts/app/app-content-layout';
 import type { BreadcrumbItem, Users } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
+import { toast } from 'sonner';
 
 /**
  *
  */
 export default function UsersIndex() {
-    // Accede la lista de usuarios proporcionada por Inertia.
-    const { users } = usePage<{ users: Users }>().props;
+    // Accede la lista de usuarios y a un mensaje, si existe, proporcionados por Inertia.
+    const { users, message } = usePage<{ users: Users; message: string }>().props;
 
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
@@ -19,6 +21,13 @@ export default function UsersIndex() {
             href: route('admin.user.show'),
         },
     ];
+
+    useEffect(() => {
+        // Si se ha proporcionado un mensaje, lo muestra.
+        if (message) {
+            toast(message);
+        }
+    }, []);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

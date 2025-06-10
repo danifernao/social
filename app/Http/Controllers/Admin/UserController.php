@@ -80,8 +80,11 @@ class UserController extends Controller
             abort(403);
         }
 
+        // Prepara el recurso y lo convierte en un arreglo.
+        $user_data = (new UserResource($user))->resolve();
+
         return Inertia::render('admin/users/edit', [
-            'user' => $user
+            'user' => $user_data
         ]);
     }
 
@@ -101,7 +104,7 @@ class UserController extends Controller
         }
         
         $request->validate([
-            'action' => ['required', Rule::in(['change_role', 'reset_info', 'change_email', 'reset_password', 'toggle_account_status'])],
+            'action' => ['required', Rule::in(['change_role', 'reset_info', 'change_email', 'reset_password', 'toggle_account_status', 'delete_account'])],
             'pass_confirmation' => ['required', 'string'],
         ]);
 
@@ -119,7 +122,9 @@ class UserController extends Controller
             case 'reset_password':
                 return $this->resetPassword($request, $user);
             case 'toggle_account_status':
-                return $this->toggleAccountStatus($request, $user);
+                return $this->toggleAccountStatus($user);
+            case 'delete_account':
+                return $this->deleteAccount($request, $user);
             default:
                 return back()->with('status', 'no-action-performed');
         }
@@ -248,21 +253,50 @@ class UserController extends Controller
     }
 
     /**
-     * Desactiva / activa una cuenta de usuario.
+     * Inhabilita / habilita a un usuario.
      * 
-     * @param User $user Cuenta de usuario que se va a desactivar.
+     * @param User $user Usuario que se va a inhabilitar / habilitar.
      */
-    private function toggleAccountStatus(Request $request, User $user)
+    private function toggleAccountStatus(User $user)
     {
-        // Activa / desactiva la cuenta del usuario.
+        // Inhabilita o habilita a un usuario.
         $user->is_active = !$user->is_active;
         $user->save();
 
-        // Si se desactivó la cuenta, elimina todas las sesiones activas del usuario.
+        // Si se inhabilitó al usuario, elimina todas las sesiones activas del usuario.
         if (!$user->is_active) {
             DB::table('sessions')->where('user_id', $user->id)->delete();
         }
 
         return back()->with('status', $user->is_active ? 'activated' : 'deactivated');
+    }
+
+    /**
+     * Elimina una cuenta de usuario.
+     * 
+     * @param User $user Usuario que se va a eliminar.
+     */
+    public function deleteAccount(Request $request, User $user)
+    {
+        // Si quien realiza la acción no es administrador, deniega el acceso.
+        if (!$request->user()->isAdmin()) {
+            return back()->withErrors([
+                'message' => 'No tienes los permisos suficientes para eliminar la cuenta.',
+            ]);
+        }
+
+        if ($user->isAdmin()) {
+            return back()->withErrors([
+                'message' => 'No puedes eliminar a otro administrador.',
+            ]);
+        }
+        
+        // Elimina todas las sesiones activas del usuario.
+        DB::table('sessions')->where('user_id', $user->id)->delete();
+
+        // Elimina al ususario.
+        $user->delete();
+
+        return redirect()->route('admin.user.show')->with('message', 'Usuario eliminado.');
     }
 }
