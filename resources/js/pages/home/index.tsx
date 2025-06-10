@@ -12,7 +12,7 @@ import { Head, usePage } from '@inertiajs/react';
  * Muestra la página de inicio del usuario autenticado.
  */
 export default function Home() {
-    // Accede la lista de publicaciones proporcionada por Inertia.
+    // Captura la lista de publicaciones proporcionada por Inertia.
     const { posts } = usePage<{ posts: Posts }>().props;
 
     // Usa el hook de paginación para gestionar la lista de publicaciones.

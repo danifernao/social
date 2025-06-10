@@ -13,7 +13,7 @@ import { Head, usePage } from '@inertiajs/react';
  * Muestra la página de perfil de un usuario.
  */
 export default function Profile() {
-    // Accede al usuario autenticado, al usuario del perfil y a la lista de publicaciones proporcionados por Inertia.
+    // Captura el usuario autenticado, el usuario del perfil y la lista de publicaciones proporcionados por Inertia.
     const { auth, user, posts } = usePage<{ auth: Auth; user: User; posts: Posts }>().props;
 
     // Determina si el usuario autenticado está visitando su propio perfil.

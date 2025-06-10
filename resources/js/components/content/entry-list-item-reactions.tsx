@@ -12,7 +12,7 @@ interface EntryListItemReactionsProps {
 }
 
 export default function EntryListItemReactions({ entry }: EntryListItemReactionsProps) {
-    // Accede al usuario autenticado proporcionado por Inertia.
+    // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;
 
     // Estado que almacena la lista de reacciones asociadas a la entrada.

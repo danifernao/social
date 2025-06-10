@@ -12,7 +12,7 @@ interface NotificationListItemProps {
  * Muestra una notificación y la marca como leída al hacer clic en ella.
  */
 export default function NotificationListItem({ notification }: NotificationListItemProps) {
-    // Accede al token CSRF proporcionado por Inertia.
+    // Captura el token CSRF proporcionado por Inertia.
     // Este token es necesario para que Laravel acepte la solicitud PATCH.
     const { csrfToken } = usePage<{ csrfToken: string }>().props;
 

@@ -14,6 +14,7 @@ interface ProfileHeaderProps {
  * junto con los botones para seguirlo y bloquearlo.
  */
 export default function ProfileHeader({ user }: ProfileHeaderProps) {
+    // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;
 
     return (

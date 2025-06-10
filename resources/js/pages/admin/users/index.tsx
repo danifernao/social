@@ -11,7 +11,7 @@ import { toast } from 'sonner';
  *
  */
 export default function UsersIndex() {
-    // Accede la lista de usuarios y a un mensaje, si existe, proporcionados por Inertia.
+    // Captura la lista de usuarios y el mensaje, si existe, proporcionados por Inertia.
     const { users, message } = usePage<{ users: Users; message: string }>().props;
 
     // Ruta de navegación actual usada como migas de pan.

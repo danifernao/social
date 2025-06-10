@@ -20,7 +20,7 @@ interface PageProps {
  * Muestra la página de seguidos o seguidores de un usuario.
  */
 export default function Follow() {
-    // Accede las propiedades de la página proporcionadas por Inertia.
+    // Captura las propiedades de la página proporcionadas por Inertia.
     const { auth, user, following, followers, routeName } = usePage<PageProps>().props;
 
     const pageName = routeName === 'follow.following' ? 'following' : 'followers';

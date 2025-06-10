@@ -13,7 +13,7 @@ import { toast } from 'sonner';
  * Muestra la página de notificaciones del usuario autenticado.
  */
 export default function Notifications() {
-    // Accede la lista de notificaciones proporcionada por Inertia.
+    // Captura la lista de notificaciones proporcionada por Inertia.
     const { notifications } = usePage<{ notifications: Notifications }>().props;
 
     // Estado local que indica si está en curso el proceso de marcar las notificaciones como leídas.

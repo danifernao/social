@@ -19,7 +19,7 @@ interface AdminUserSettingsFormProps {
  * Muestra el formulario para la gestión del usuario.
  */
 export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormProps) {
-    // Accede al usuario autenticado proporcionado por Inertia.
+    // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;
 
     // Estado para controlar si el diálogo de confirmación está abierto.

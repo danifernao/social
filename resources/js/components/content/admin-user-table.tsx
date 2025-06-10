@@ -18,7 +18,7 @@ interface Props {
  * Lista a todos los usuarios registrados en la red para su administración.
  */
 export default function AdminUserTable({ users, previous, next }: Props) {
-    // Accede al URL de la página y al usuario autenticado proporcionados por Inertia.
+    // Captura la URL de la página y el usuario autenticado proporcionados por Inertia.
     const {
         url,
         props: { auth },

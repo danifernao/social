@@ -13,7 +13,7 @@ import { Head, usePage } from '@inertiajs/react';
  * Muestra la página de una publicación y sus comentarios.
  */
 export default function Home() {
-    // Accede al usuario autenticado, la publicación y los comentarios proporcionados por Inertia.
+    // Captura el usuario autenticado, la publicación y los comentarios proporcionados por Inertia.
     const { auth, post, comments } = usePage<{ auth: Auth; post: Post; comments: Comments }>().props;
 
     // Determina si hay un usuario autenticado.

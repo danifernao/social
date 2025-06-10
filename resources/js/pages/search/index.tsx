@@ -21,7 +21,7 @@ interface PageProps {
  * Muestra la página de resultados de una búsqueda o de una etiqueta.
  */
 export default function Search() {
-    // Accede las propiedades de la página proporcionadas por Inertia.
+    // Captura las propiedades de la página proporcionadas por Inertia.
     const { props } = usePage<PageProps>();
 
     // Estado local para el tipo de búsqueda ('post' o 'user') y el término de búsqueda.

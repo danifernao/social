@@ -9,6 +9,7 @@ import { Head, Link, usePage } from '@inertiajs/react';
  *
  */
 export default function UsersEdit() {
+    // Captura el usuario proporcionado por Inertia.
     const { user } = usePage<{ user: User }>().props;
 
     const breadcrumbs: BreadcrumbItem[] = [

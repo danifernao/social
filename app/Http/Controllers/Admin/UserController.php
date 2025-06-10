@@ -285,6 +285,7 @@ class UserController extends Controller
             ]);
         }
 
+        // Si se está tratando de eliminar a otro administrador, deniega el acceso.
         if ($user->isAdmin()) {
             return back()->withErrors([
                 'message' => 'No puedes eliminar a otro administrador.',

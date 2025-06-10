@@ -18,7 +18,7 @@ interface EntryListItemProps {
  * Se usa "forwardRef" para permitir el manejo de referencias externas, como por ejemplo para el desplazamiento automático.
  */
 export default function EntryListItem({ entry }: EntryListItemProps) {
-    // Accede al usuario autenticado y a la ruta actual proporcionados por Inertia.
+    // Captura el usuario autenticado y la ruta actual proporcionados por Inertia.
     const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
 
     // Determina si el usuario autenticado es el autor de la entrada.

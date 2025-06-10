@@ -8,7 +8,7 @@ interface EmptyMessageProps {
  * Muestra un mensaje dependiendo de la ruta actual de la página.
  */
 export default function EmptyMessage({ custom = '' }: EmptyMessageProps) {
-    // Accede a la ruta actual de la pagina proporcionada por Inertia.
+    // Captura la ruta actual de la pagina proporcionada por Inertia.
     const { routeName } = usePage<{ routeName: string }>().props;
 
     let message = custom;
