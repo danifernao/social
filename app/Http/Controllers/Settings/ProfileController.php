@@ -70,6 +70,13 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        // Si el usuario es administrador, prohíbe la acción.
+        if ($user->isAdmin()) {
+            return back()->withErrors([
+                'password' => 'Esta cuenta es administrativa, no se puede eliminar.',
+            ]);
+        }
+
         Auth::logout();
 
         $user->delete();

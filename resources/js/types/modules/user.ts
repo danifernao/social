@@ -2,7 +2,7 @@ export interface User {
     type: 'user';
     id: number;
     username: string;
-    email: string | null;
+    email: string;
     avatar_url: string | null;
     email_verified_at: string | null;
     is_followed?: boolean | null;
