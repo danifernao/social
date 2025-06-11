@@ -41,6 +41,10 @@ export default function Profile() {
         },
     ];
 
+    /* useEchoNotification(`users.${auth.user.id}`, (notification) => {
+        console.log(notification);
+    }); */
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Perfil de ${user.username}`} />

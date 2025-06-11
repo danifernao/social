@@ -61,14 +61,12 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Usa el campo "username" para la resolución de rutas en lugar del ID.
-     *
-     * @return string
+     * Los canales por los que el usuario recibe las notificaciones emitidas.
      */
-    /*public function getRouteKeyName()
+    public function receivesBroadcastNotificationsOn(): string
     {
-        return 'username';
-    }*/
+        return 'users.' . $this->id;
+    }
 
     /**
      * Atributo computado: tipo del modelo, útil para el frontend.

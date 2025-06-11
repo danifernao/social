@@ -54,7 +54,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             // Mensaje distinto si la cuenta está desactivada.
-            if (! $user->is_active) {
+            if ($user && ! $user->is_active) {
                 throw ValidationException::withMessages([
                     'email' => 'Tu cuenta está desactivada.',
                 ]);

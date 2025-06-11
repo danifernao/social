@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
 
 /**
@@ -16,20 +17,19 @@ class NewFollower extends Notification
     /**
      * Crea una nueva instancia de la notificación.
      *
-     * @param User $follower  El usuario que comenzó a seguir.
+     * @param User $follower El seguidor.
      */
-    public function __construct(public User $follower) { }
+    public function __construct(public User $follower){}
 
     /**
      * Define los canales por los que se enviará la notificación.
-     * En este caso, solo se guarda en la base de datos.
      *
      * @param object $notifiable El usuario que recibirá la notificación.
      * @return array<string>
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'broadcast'];
     }
 
     /**
@@ -49,5 +49,26 @@ class NewFollower extends Notification
                 ],
             ],
         ];
+    }
+
+    /** 
+     * Define el contenido que se enviará al cliente mediante WebSocket cuando se emita la notificación.
+     * 
+     * @param object $notifiable El usuario que recibirá la notificación.
+     * @return BroadcastMessage Objeto que encapsula los datos que se transmitirán por WebSocket.
+     */
+    public function toBroadcast(object $notifiable): BroadcastMessage
+    {
+        return new BroadcastMessage([
+            'unread' => true,
+        ]);
+    }
+
+    /** 
+     * Nombre de la notificación que escucha el cliente.
+     */
+    public function broadcastType(): string
+    {
+        return 'notification.new_follower';
     }
 }
