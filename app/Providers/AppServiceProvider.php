@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Models\User;
 use App\Observers\UserObserver;
+use App\Observers\DatabaseNotificationObserver;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -37,5 +39,8 @@ class AppServiceProvider extends ServiceProvider
 
         // Registra el observador de usuarios.
         User::observe(UserObserver::class);
+
+        // Registra el observador de notificaciones.
+        DatabaseNotification::observe(DatabaseNotificationObserver::class);
     }
 }

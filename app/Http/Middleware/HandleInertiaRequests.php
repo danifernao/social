@@ -43,7 +43,9 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'name' => config('app.name'),
-            'quote' => ['message' => trim($message), 'author' => trim($author)],
+            'routeName' => $request->route()?->getName(),
+            'status' => fn () => $request->session()->get('status'),
+            'csrfToken' => csrf_token(),
             'auth' => [
                 'user' => $request->user()
                     ? (new UserResource($request->user()))->resolve()
@@ -56,9 +58,8 @@ class HandleInertiaRequests extends Middleware
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'post' => fn () => $request->session()->get('post'),
             'comment' => fn () => $request->session()->get('comment'),
-            'status' => fn () => $request->session()->get('status'),
-            'routeName' => $request->route()?->getName(),
-            'csrfToken' => csrf_token(),
+            'unreadNotisCount' => fn () => $request->user()?->unreadNotifications()->count() ?? 0,
+            'quote' => ['message' => trim($message), 'author' => trim($author)],
         ];
     }
 }

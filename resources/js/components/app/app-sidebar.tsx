@@ -22,7 +22,7 @@ export function AppSidebar() {
             icon: User,
         },
         {
-            title: 'Buscar',
+            title: 'Explorar',
             href: `/search`,
             icon: Search,
         },
@@ -33,6 +33,7 @@ export function AppSidebar() {
             isActive: ['follow.following', 'follow.followers'].includes(routeName),
         },
         {
+            name: 'notifications',
             title: 'Notificaciones',
             href: `/notifications`,
             icon: Bell,

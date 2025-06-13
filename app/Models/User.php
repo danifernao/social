@@ -61,14 +61,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Los canales por los que el usuario recibe las notificaciones emitidas.
-     */
-    public function receivesBroadcastNotificationsOn(): string
-    {
-        return 'users.' . $this->id;
-    }
-
-    /**
      * Atributo computado: tipo del modelo, útil para el frontend.
      *
      * @return string
