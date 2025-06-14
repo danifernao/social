@@ -8,6 +8,7 @@ services:
       - /var/www/html/vendor
     ports:
       - 80:80
+      - 8080:8080
     depends_on:
       - mysql
   node:
@@ -31,7 +32,7 @@ services:
   phpmyadmin:
     image: phpmyadmin
     ports:
-      - 8080:80
+      - 8888:80
     environment:
       - PMA_HOST=mysql
       - PMA_port=3306

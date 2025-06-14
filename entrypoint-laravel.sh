@@ -19,6 +19,9 @@ php artisan storage:link
 # Ejecuta en segundo plano los procesos que manejan las colas de Laravel.
 php artisan queue:listen --tries=1 &
 
+# Inicia el servidor WebSocket de Reverb en segundo plano.
+php artisan reverb:start &
+
 # Ejecuta pail como usuario www-data para evitar problemas de permisos.
 su -s /bin/sh www-data -c "php artisan pail --timeout=0" &
 

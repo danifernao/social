@@ -7,8 +7,6 @@ import { useEffect, useState } from 'react';
  * Muestra el contador de notificaciones no leídas.
  */
 export default function NotificationBadge() {
-    return null;
-
     // Captura el usuario autenticado proporcionado por Inertia.
     const { auth, unreadNotisCount, routeName } = usePage<{ auth: Auth; unreadNotisCount: number; routeName: string }>().props;
 
