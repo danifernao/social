@@ -36,7 +36,7 @@
 1. Asegúrate de tener instalado [Docker](https://www.docker.com/products/docker-desktop/) y que el servicio esté en ejecución.
 2. Descarga o clona este repositorio y accede a la carpeta del proyecto.
 3. Renombra el archivo `.env.example` a `.env`.
-4. Abre la terminal y ejecuta lo siguiente para instalar y levantar los contenedores:
+4. Abre la terminal y ejecuta lo siguiente para instalar las dependencias y levantar los contenedores:
 
 ```
 docker compose up --build
