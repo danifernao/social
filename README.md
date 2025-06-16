@@ -52,7 +52,7 @@ docker compose up --build
 - [PHP 8.3](https://www.php.net/downloads)
 - [Composer](https://getcomposer.org/download/)
 - Servidor [MySQL 9.3](https://dev.mysql.com/downloads/mysql/) iniciado con base de datos creada.
-- [Node.js](https://nodejs.org/en/download)
+- [Node.js](https://nodejs.org/es/download)
 - [MailHog 1.0.1](https://github.com/mailhog/MailHog/releases/tag/v1.0.1) en ejecución.
 
 #### Instalación y configuración
