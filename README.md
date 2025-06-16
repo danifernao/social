@@ -36,7 +36,7 @@
 1. Asegúrate de tener instalado [Docker](https://www.docker.com/products/docker-desktop/) y que el servicio esté en ejecución.
 2. Descarga o clona este repositorio y accede a la carpeta del proyecto.
 3. Renombra el archivo `.env.example` a `.env`.
-4. Abre el terminal y ejecuta lo siguiente para instalar y levantar los contenedores:
+4. Abre la terminal y ejecuta lo siguiente para instalar y levantar los contenedores:
 
 ```
 docker compose up --build
@@ -49,7 +49,7 @@ docker compose up --build
 
 #### Requisitos
 
-- [PHP 8.4](https://www.php.net/downloads)
+- [PHP 8.3](https://www.php.net/downloads)
 - [Composer](https://getcomposer.org/download/)
 - Servidor [MySQL 9.3](https://dev.mysql.com/downloads/mysql/) iniciado con base de datos creada.
 - [Node.js](https://nodejs.org/en/download)
@@ -94,7 +94,7 @@ php artisan storage:link
 php artisan migrate
 ```
 
-5. Ejecuta lo siguiente para instalar las dependencias JavaScript:
+8. Ejecuta lo siguiente para instalar las dependencias JavaScript:
 
 ```
 npm install
@@ -108,20 +108,26 @@ npm install
 php artisan queue:listen
 ```
 
-2. Abre otra terminal y ejecuta lo siguiente para iniciar el servidor web:
+2. Abre otra terminal y ejecuta lo siguiente para iniciar el servidor WebSocket de Reverb:
+
+```
+php artisan reverb:start
+```
+
+3. En una tercera terminal, ejecuta lo siguiente para iniciar el servidor web:
 
 ```
 php artisan serve
 ```
 
-3. En una tercera terminal, ejecuta lo siguiente para iniciar el entorno de desarrollo de Vite:
+4. En otra terminal, ejecuta lo siguiente para iniciar el entorno de desarrollo de Vite:
 
 ```
 npm run dev
 ```
 
-4. Abre `http://localhost:8000/` en tu navegador para visualizar la aplicación.
-5. Abre `http://localhost:8025/` para acceder a MailHog.
+5. Abre `http://localhost:8000/` en tu navegador para visualizar la aplicación.
+6. Abre `http://localhost:8025/` para acceder a MailHog.
 
 ## Consideraciones
 
