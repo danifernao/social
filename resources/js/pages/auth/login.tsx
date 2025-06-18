@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
 
+import { useTranslation } from 'react-i18next';
+
 type LoginForm = {
     email: string;
     password: string;
@@ -22,6 +24,8 @@ interface LoginProps {
 }
 
 export default function Login({ status, canResetPassword }: LoginProps) {
+    const { t } = useTranslation('auth');
+
     const { data, setData, post, processing, errors, reset } = useForm<Required<LoginForm>>({
         email: '',
         password: '',
@@ -36,13 +40,13 @@ export default function Login({ status, canResetPassword }: LoginProps) {
     };
 
     return (
-        <AuthLayout title="Inicia sesión en tu cuenta" description="Ingresa tu correo electrónico y contraseña para iniciar sesión.">
-            <Head title="Iniciar sesión" />
+        <AuthLayout title={t('title.login')} description={t('description.login')}>
+            <Head title={t('meta.title.login')} />
 
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Correo electrónico</Label>
+                        <Label htmlFor="email">{t('field.email')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -52,17 +56,17 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             autoComplete="email"
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
-                            placeholder="correo@ejemplo.com"
+                            placeholder={t('placeholder.email')}
                         />
                         <InputError message={errors.email} />
                     </div>
 
                     <div className="grid gap-2">
                         <div className="flex items-center">
-                            <Label htmlFor="password">Contraseña</Label>
+                            <Label htmlFor="password">{t('field.password')}</Label>
                             {canResetPassword && (
                                 <TextLink href={route('password.request')} className="ml-auto text-sm" tabIndex={5}>
-                                    ¿Olvidaste tu contraseña?
+                                    {t('link.resetPassword')}
                                 </TextLink>
                             )}
                         </div>
@@ -74,7 +78,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             autoComplete="current-password"
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
-                            placeholder="Contraseña"
+                            placeholder={t('placeholder.password')}
                         />
                         <InputError message={errors.password} />
                     </div>
@@ -87,19 +91,19 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             onClick={() => setData('remember', !data.remember)}
                             tabIndex={3}
                         />
-                        <Label htmlFor="remember">Recuérdame</Label>
+                        <Label htmlFor="remember">{t('field.rememberMe')}</Label>
                     </div>
 
                     <Button type="submit" className="mt-4 w-full" tabIndex={4} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Iniciar sesión
+                        {t('button.login')}
                     </Button>
                 </div>
 
                 <div className="text-muted-foreground text-center text-sm">
-                    ¿No tienes una cuenta?{' '}
+                    {t('message.noAccountYet')}{' '}
                     <TextLink href={route('register')} tabIndex={5}>
-                        Regístrate
+                        {t('link.register')}
                     </TextLink>
                 </div>
             </form>

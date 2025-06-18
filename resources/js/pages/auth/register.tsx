@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
 
+import { useTranslation } from 'react-i18next';
+
 type RegisterForm = {
     username: string;
     email: string;
@@ -17,6 +19,8 @@ type RegisterForm = {
 };
 
 export default function Register() {
+    const { t } = useTranslation('auth');
+
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
         username: '',
         email: '',
@@ -32,12 +36,12 @@ export default function Register() {
     };
 
     return (
-        <AuthLayout title="Crea una cuenta" description="Ingresa tus datos a continuación para crear tu cuenta.">
-            <Head title="Registrar cuenta" />
+        <AuthLayout title={t('title.register')} description={t('description.register')}>
+            <Head title={t('meta.title.register')} />
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="username">Nombre de usuario</Label>
+                        <Label htmlFor="username">{t('field.username')}</Label>
                         <Input
                             id="username"
                             type="text"
@@ -48,13 +52,13 @@ export default function Register() {
                             value={data.username}
                             onChange={(e) => setData('username', e.target.value)}
                             disabled={processing}
-                            placeholder="Nombre de usuario"
+                            placeholder={t('placeholder.username')}
                         />
                         <InputError message={errors.username} className="mt-2" />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Correo electrónico</Label>
+                        <Label htmlFor="email">{t('field.email')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -64,13 +68,13 @@ export default function Register() {
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
                             disabled={processing}
-                            placeholder="correo@ejemplo.com"
+                            placeholder={t('placeholder.email')}
                         />
                         <InputError message={errors.email} />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password">Contraseña</Label>
+                        <Label htmlFor="password">{t('field.password')}</Label>
                         <Input
                             id="password"
                             type="password"
@@ -80,13 +84,13 @@ export default function Register() {
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             disabled={processing}
-                            placeholder="Contraseña"
+                            placeholder={t('placeholder.password')}
                         />
                         <InputError message={errors.password} />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password_confirmation">Confirmar contraseña</Label>
+                        <Label htmlFor="password_confirmation">{t('field.passwordConfirmation')}</Label>
                         <Input
                             id="password_confirmation"
                             type="password"
@@ -96,21 +100,21 @@ export default function Register() {
                             value={data.password_confirmation}
                             onChange={(e) => setData('password_confirmation', e.target.value)}
                             disabled={processing}
-                            placeholder="Confirmar contraseña"
+                            placeholder={t('placeholder.password')}
                         />
                         <InputError message={errors.password_confirmation} />
                     </div>
 
                     <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Crear cuenta
+                        {t('button.register')}
                     </Button>
                 </div>
 
                 <div className="text-muted-foreground text-center text-sm">
-                    ¿Ya tienes una cuenta?{' '}
+                    {t('message.alreadyHaveAccount')}{' '}
                     <TextLink href={route('login')} tabIndex={6}>
-                        Inicia sesión
+                        {t('link.login')}
                     </TextLink>
                 </div>
             </form>

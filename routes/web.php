@@ -17,9 +17,7 @@ Route::get('/', function () {
     if (Auth::check()) {
         return redirect()->route('home.show');
     }
-    return Inertia::render('auth/login', [
-        'canResetPassword' => true,
-    ]);
+    return Inertia::render('welcome');
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
