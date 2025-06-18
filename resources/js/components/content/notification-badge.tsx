@@ -1,7 +1,7 @@
 import { Auth } from '@/types';
-import { router, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import { useEcho } from '@laravel/echo-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 /**
  * Muestra el contador de notificaciones no leídas.
@@ -20,15 +20,6 @@ export default function NotificationBadge() {
     useEcho(`notifications.${auth.user.id}`, ['.UnreadNotificationsCountUpdated'], (event: { user_id: number; unread_count: number }) => {
         setUnreadCount(event.unread_count);
     });
-
-    // Fuerza recarga de unreadNotisCount cuando se entra a la página Notificaciones.
-    useEffect(() => {
-        if (routeName === 'notification.show') {
-            router.reload({
-                only: ['unreadNotisCount'],
-            });
-        }
-    }, [routeName]);
 
     // Si no hay notificaciones no leídas, no muestra nada.
     if (unreadCount <= 0) return null;
