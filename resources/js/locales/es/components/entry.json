@@ -50,13 +50,14 @@
       "title": "Reaccionar",
       "add": "Reaccionar con {{emoji}}",
       "remove": "Quitar reacción"
-    }
+    },
+    "comment": "Comentar"
   },
   "markdown": {
     "help": "¿Cómo usar Markdown?",
     "introduction": "Puedes usar <0>Markdown</0> para dar formato a tu texto:",
     "description": {
-      "heading": "Descripción",
+      "header": "Descripción",
       "bold": "Negrita:",
       "italic": "Cursiva:",
       "link": "Enlace:",
@@ -69,7 +70,7 @@
       "youtube": "Video de YouTube:"
     },
     "example": {
-      "heading": "Ejemplo",
+      "header": "Ejemplo",
       "bold": "**negrita**",
       "italic": "*cursiva*",
       "link": "[Descripción](URL)",

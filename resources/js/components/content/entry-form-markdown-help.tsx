@@ -24,8 +24,8 @@ export function MarkdownHelp() {
                 <table className="w-full table-auto border-collapse text-sm">
                     <thead>
                         <tr>
-                            <th className="pr-4 pb-2 text-left font-medium">{t('markdown.description.heading')}</th>
-                            <th className="pb-2 text-left font-medium">{t('markdown.example.heading')}</th>
+                            <th className="pr-4 pb-2 text-left font-medium">{t('markdown.description.header')}</th>
+                            <th className="pb-2 text-left font-medium">{t('markdown.example.header')}</th>
                         </tr>
                     </thead>
                     <tbody className="[&_td]:py-1 [&_td]:pr-4 [&_td]:align-top">
