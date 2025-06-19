@@ -75,11 +75,9 @@ class SearchController extends Controller
             ->latest();
 
         if ($hashtag) {
-            $escaped = preg_quote($hashtag, '/');
-            // Busca el hashtag como palabra independiente (no parte de otra palabra).
-            $posts_query->whereRaw(
-                "content REGEXP ?",
-                ["#[[:alnum:]_]*{$escaped}(?![[:alnum:]_])"]
+            // Filtra las publicaciones por la etiqueta dada.
+            $posts_query->whereHas('hashtags', fn ($q) =>
+                $q->where('name', mb_strtolower($hashtag))
             );
         } elseif ($query) {
             $posts_query->where('content', 'like', "%{$query}%");

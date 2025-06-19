@@ -100,7 +100,7 @@ export default function Register() {
                             value={data.password_confirmation}
                             onChange={(e) => setData('password_confirmation', e.target.value)}
                             disabled={processing}
-                            placeholder={t('placeholder.password')}
+                            placeholder={t('placeholder.passwordConfirmation')}
                         />
                         <InputError message={errors.password_confirmation} />
                     </div>

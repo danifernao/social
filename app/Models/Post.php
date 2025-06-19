@@ -68,4 +68,14 @@ class Post extends Model
     {
         return $this->morphMany(Reaction::class, 'reactionable');
     }
+
+    /**
+     * Relación: etiquetas asociadas a la publicación.
+     *
+     * @return BelongsToMany<Hashtag>
+     */
+    public function hashtags()
+    {
+        return $this->belongsToMany(Hashtag::class);
+    }
 }

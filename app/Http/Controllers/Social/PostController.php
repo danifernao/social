@@ -8,6 +8,7 @@ use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\User;
 use App\Notifications\NewMention;
+use App\Services\HashtagService;
 use App\Utils\MentionParser;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -16,6 +17,8 @@ use Inertia\Inertia;
 class PostController extends Controller
 {
     use AuthorizesRequests;
+
+    public function __construct(protected HashtagService $hashtagService) {}
 
     /**
      * Crea una nueva publicación.
@@ -36,6 +39,9 @@ class PostController extends Controller
 
         // Agrega el usuario autenticado a la publicación.
         $post->setRelation('user', $auth_user);
+
+        // Registra las etiquetas usadas en la publicación.
+        $this->hashtagService->sync($post);
 
         // Extrae los usuarios mencionados en la publicación.
         $mentioned_users = MentionParser::extractMentionedUsers($data['content']);
@@ -121,6 +127,9 @@ class PostController extends Controller
 
         $post->load('user');
 
+        // Actualiza las etiquetas usadas en la publicación.
+        $this->hashtagService->sync($post);
+
         // Prepara el recurso y lo convierte en un arreglo.
         $post_data = (new PostResource($post))->resolve();
 
@@ -137,6 +146,9 @@ class PostController extends Controller
         $this->authorize('delete', $post);
 
         $post->delete();
+
+        // Enlimina las etiquetas usadas en la publicación.
+        $this->hashtagService->detachAndClean($post);
 
         $referer = $request->header('referer');
 

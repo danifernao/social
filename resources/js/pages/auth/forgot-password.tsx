@@ -10,7 +10,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
 
+import { Trans, useTranslation } from 'react-i18next';
+
 export default function ForgotPassword({ status }: { status?: string }) {
+    const { t } = useTranslation('auth');
+
     const { data, setData, post, processing, errors } = useForm<Required<{ email: string }>>({
         email: '',
     });
@@ -22,15 +26,15 @@ export default function ForgotPassword({ status }: { status?: string }) {
     };
 
     return (
-        <AuthLayout title="¿Olvidaste tu contraseña?" description="Ingresa tu correo para recibir un enlace de restablecimiento de contraseña.">
-            <Head title="¿Olvidaste tu contraseña?" />
+        <AuthLayout title={t('title.forgotPassword')} description={t('description.forgotPassword')}>
+            <Head title={t('meta.title.forgotPassword')} />
 
             {status && <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>}
 
             <div className="space-y-6">
                 <form onSubmit={submit}>
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Correo electrónico</Label>
+                        <Label htmlFor="email">{t('field.email')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -39,7 +43,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                             value={data.email}
                             autoFocus
                             onChange={(e) => setData('email', e.target.value)}
-                            placeholder="correo@ejemplo.com"
+                            placeholder={t('placeholder.email')}
                         />
 
                         <InputError message={errors.email} />
@@ -48,14 +52,16 @@ export default function ForgotPassword({ status }: { status?: string }) {
                     <div className="my-6 flex items-center justify-start">
                         <Button className="w-full" disabled={processing}>
                             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            Enviar enlace para restablecer contraseña
+                            {t('button.forgotPassword')}
                         </Button>
                     </div>
                 </form>
 
                 <div className="text-muted-foreground space-x-1 text-center text-sm">
-                    <span>O bien, vuelve a</span>
-                    <TextLink href={route('login')}>iniciar sesión</TextLink>
+                    <Trans i18nKey="message.goBack" ns="auth">
+                        <span></span>
+                        <TextLink href={route('login')}></TextLink>
+                    </Trans>
                 </div>
             </div>
         </AuthLayout>

@@ -9,7 +9,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
 
+import { useTranslation } from 'react-i18next';
+
 export default function ConfirmPassword() {
+    const { t } = useTranslation('auth');
+
     const { data, setData, post, processing, errors, reset } = useForm<Required<{ password: string }>>({
         password: '',
     });
@@ -23,21 +27,18 @@ export default function ConfirmPassword() {
     };
 
     return (
-        <AuthLayout
-            title="Confirma tu contraseña"
-            description="Esta es una zona segura de la aplicación. Por favor, confirma tu contraseña antes de continuar."
-        >
-            <Head title="Confirmar contraseña" />
+        <AuthLayout title={t('title.confirmPassword')} description={t('description.confirmPassword')}>
+            <Head title={t('meta.title.confirmPassword')} />
 
             <form onSubmit={submit}>
                 <div className="space-y-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="password">Contraseña</Label>
+                        <Label htmlFor="password">{t('field.password')}</Label>
                         <Input
                             id="password"
                             type="password"
                             name="password"
-                            placeholder="Contraseña"
+                            placeholder={t('placeholder.password')}
                             autoComplete="current-password"
                             value={data.password}
                             autoFocus
@@ -50,7 +51,7 @@ export default function ConfirmPassword() {
                     <div className="flex items-center">
                         <Button className="w-full" disabled={processing}>
                             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            Confirmar contraseña
+                            {t('button.confirmPassword')}
                         </Button>
                     </div>
                 </div>
