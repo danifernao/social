@@ -1,0 +1,85 @@
+{
+  "general": {
+    "error": "¡Ups! Error inesperado."
+  },
+  "form": {
+    "placeholder": {
+      "textarea": "¿En qué estás pensando?"
+    },
+    "button": {
+      "post": "Publicar",
+      "comment": "Comentar"
+    }
+  },
+  "entry": {
+    "edited": "Editado",
+    "options": {
+      "title": "Opciones",
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "dialog": {
+      "edit": {
+        "post": {
+          "title": "Editar publicación",
+          "description": "Edita el contenido de tu publicación."
+        },
+        "comment": {
+          "title": "Editar comentario",
+          "description": "Edita el contenido de tu comentario."
+        }
+      },
+      "delete": {
+        "post": {
+          "title": "Eliminar publicación",
+          "description": "¿Estás seguro de eliminar esta publicación? Esta acción es irreversible.",
+          "success": "Publicación eliminada"
+        },
+        "comment": {
+          "title": "Eliminar comentario",
+          "description": "¿Estás seguro de eliminar este comentario? Esta acción es irreversible.",
+          "success": "Comentario eliminado"
+        },
+        "button": {
+          "accept": "Aceptar",
+          "cancel": "Cancelar"
+        }
+      }
+    },
+    "reaction": {
+      "title": "Reaccionar",
+      "add": "Reaccionar con {{emoji}}",
+      "remove": "Quitar reacción"
+    }
+  },
+  "markdown": {
+    "help": "¿Cómo usar Markdown?",
+    "introduction": "Puedes usar <0>Markdown</0> para dar formato a tu texto:",
+    "description": {
+      "heading": "Descripción",
+      "bold": "Negrita:",
+      "italic": "Cursiva:",
+      "link": "Enlace:",
+      "quote": "Cita:",
+      "inlineCode": "Código en línea:",
+      "codeBlock": "Bloque de código:",
+      "orderedList": "Lista enumerada:",
+      "unorderedList": "Lista sin orden:",
+      "image": "Imagen:",
+      "youtube": "Video de YouTube:"
+    },
+    "example": {
+      "heading": "Ejemplo",
+      "bold": "**negrita**",
+      "italic": "*cursiva*",
+      "link": "[Descripción](URL)",
+      "quote": "> cita",
+      "inlineCode": "`código`",
+      "codeBlock": "```bloque```",
+      "orderedList": "1. Primer ítem",
+      "unorderedList": "- Primer ítem",
+      "image": "![Descripción](URL)",
+      "youtube": "[youtube:URL]"
+    }
+  }
+}

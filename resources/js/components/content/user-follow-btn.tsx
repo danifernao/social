@@ -2,6 +2,7 @@ import { usePostAction } from '@/hooks/use-post-action';
 import { type User } from '@/types';
 import { getAnimatedButtonClasses } from '@/utils/buttonHelpers';
 import { LoaderCircle, UserMinus, UserPlus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/button';
 
 interface UserFollowBtnProps {
@@ -12,6 +13,9 @@ interface UserFollowBtnProps {
  * Muestra el botón para seguir o dejar de seguir a un usuario.
  */
 export default function UserFollowBtn({ user }: UserFollowBtnProps) {
+    // Obtiene las traducciones para el componente.
+    const { t } = useTranslation('components/user');
+
     const { isProcessing, execute } = usePostAction();
     const { iconClass, textClass } = getAnimatedButtonClasses(isProcessing);
 
@@ -23,7 +27,7 @@ export default function UserFollowBtn({ user }: UserFollowBtnProps) {
         >
             {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />}
             {user.is_followed ? <UserMinus className={iconClass} /> : <UserPlus className={iconClass} />}
-            <span className={textClass}>{user.is_followed ? 'Dejar de seguir' : 'Seguir'}</span>
+            <span className={textClass}>{user.is_followed ? t('unfollow') : t('follow')}</span>
         </Button>
     );
 }

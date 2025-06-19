@@ -1,6 +1,7 @@
 import { type User } from '@/types';
 import { Link } from '@inertiajs/react';
 import { UserCog } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/button';
 
 interface UserFollowBtnProps {
@@ -11,12 +12,15 @@ interface UserFollowBtnProps {
  * Muestra el botón para seguir o dejar de seguir a un usuario.
  */
 export default function UserAdminBtn({ user }: UserFollowBtnProps) {
+    // Obtiene las traducciones para el componente.
+    const { t } = useTranslation('components/user');
+
     return (
         <Button asChild className="group relative gap-0 overflow-hidden">
             <Link href={`/admin/${user.id}`}>
                 <UserCog className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                 <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-200 group-hover:ml-2 group-hover:max-w-xs">
-                    Administrar
+                    {t('admin')}
                 </span>
             </Link>
         </Button>

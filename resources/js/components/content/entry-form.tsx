@@ -4,6 +4,7 @@ import type { Comment, Entry, Post } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import TextareaAutosize from 'react-textarea-autosize';
 import { toast } from 'sonner';
 import { MarkdownHelp } from './entry-form-markdown-help';
@@ -19,6 +20,9 @@ interface EntryFormProps {
  * Muestra un formulario para la creación o edición de una entrada.
  */
 export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
+    // Obtiene las traducciones para el componente.
+    const { t } = useTranslation('components/entry');
+
     // Determina si el formulario es para una publicación o un comentario.
     const formType = entry ? (entry.type === 'post' ? 'post' : 'comment') : postId ? 'comment' : 'post';
 
@@ -64,7 +68,7 @@ export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
                 setData('content', '');
             },
             onError: (errors) => {
-                toast('¡Ups! Error inesperado.');
+                toast(t('general.error'));
                 console.error(errors);
             },
         });
@@ -103,7 +107,7 @@ export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
                 value={data.content}
                 onChange={(e) => setData('content', e.target.value)}
                 disabled={processing}
-                placeholder="¿En qué estás pensando?"
+                placeholder={t('form.placeholder.textarea')}
                 maxLength={3000}
             />
 
@@ -111,7 +115,7 @@ export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
                 <MarkdownHelp />
                 <Button type="submit" className="ml-auto" disabled={processing}>
                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                    {formType === 'post' ? 'Publicar' : 'Comentar'}
+                    {formType === 'post' ? t('form.button.post') : t('form.button.comment')}
                 </Button>
             </div>
         </form>

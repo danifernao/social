@@ -1,5 +1,6 @@
 import type { Auth, User } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import UserAdminBtn from './user-admin-btn';
 import UserAvatar from './user-avatar';
 import UserBlockBtn from './user-block-btn';
@@ -14,6 +15,9 @@ interface ProfileHeaderProps {
  * junto con los botones para seguirlo y bloquearlo.
  */
 export default function ProfileHeader({ user }: ProfileHeaderProps) {
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('pages/profile');
+
     // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;
 
@@ -26,8 +30,12 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                         <h1 className="flex-1 text-3xl">@{user.username}</h1>
                     </div>
                     <div className="flex gap-3">
-                        <Link href={`/user/${user.username}/following`}>{user.follows_count} seguidos</Link>
-                        <Link href={`/user/${user.username}/followers`}>{user.followers_count} seguidores</Link>
+                        <Link href={`/user/${user.username}/following`}>
+                            {user.follows_count} {t('header.following')}
+                        </Link>
+                        <Link href={`/user/${user.username}/followers`}>
+                            {user.followers_count} {t('header.followers')}
+                        </Link>
                     </div>
                 </div>
             </div>

@@ -1,88 +1,92 @@
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Trans, useTranslation } from 'react-i18next';
 
 /**
  * Muestra una ayuda contextual con las reglas básicas y ejemplos para
  * formatear texto utilizando Markdown en las publicaciones y comentarios.
  */
 export function MarkdownHelp() {
+    // Obtiene las traducciones para el componente.
+    const { t } = useTranslation('components/entry');
+
     return (
         <Popover>
             <PopoverTrigger asChild>
                 <Button variant="link" className="text-muted-foreground p-0 text-sm">
-                    ¿Cómo usar Markdown?
+                    {t('markdown.help')}
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[400px] text-sm">
                 <p className="mb-4">
-                    Puedes usar <strong>Markdown</strong> para dar formato a tu texto:
+                    <Trans i18nKey="markdown.introduction" components={[<strong />]} ns="components/entry" />
                 </p>
                 <table className="w-full table-auto border-collapse text-sm">
                     <thead>
                         <tr>
-                            <th className="pr-4 pb-2 text-left font-medium">Descripción</th>
-                            <th className="pb-2 text-left font-medium">Ejemplo</th>
+                            <th className="pr-4 pb-2 text-left font-medium">{t('markdown.description.heading')}</th>
+                            <th className="pb-2 text-left font-medium">{t('markdown.example.heading')}</th>
                         </tr>
                     </thead>
                     <tbody className="[&_td]:py-1 [&_td]:pr-4 [&_td]:align-top">
                         <tr>
-                            <td>Negrita:</td>
+                            <td>{t('markdown.description.bold')}</td>
                             <td>
-                                <code>**negrita**</code>
+                                <code>{t('markdown.example.bold')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>Cursiva:</td>
+                            <td>{t('markdown.description.italic')}</td>
                             <td>
-                                <code>*cursiva*</code>
+                                <code>{t('markdown.example.italic')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>Enlace:</td>
+                            <td>{t('markdown.description.link')}</td>
                             <td>
-                                <code>[Descripción](URL)</code>
+                                <code>{t('markdown.example.link')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>Cita:</td>
+                            <td>{t('markdown.description.quote')}</td>
                             <td>
-                                <code>&gt; cita</code>
+                                <code>{t('markdown.example.quote')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>Código en línea:</td>
+                            <td>{t('markdown.description.inlineCode')}</td>
                             <td>
-                                <code>`código`</code>
+                                <code>{t('markdown.example.inlineCode')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>Bloque de código:</td>
+                            <td>{t('markdown.description.codeBlock')}</td>
                             <td>
-                                <code>```bloque```</code>
+                                <code>{t('markdown.example.codeBlock')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>Lista enumerada:</td>
+                            <td>{t('markdown.description.orderedList')}</td>
                             <td>
-                                <code>1. Primer ítem</code>
+                                <code>{t('markdown.example.orderedList')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>Lista sin orden:</td>
+                            <td>{t('markdown.description.unorderedList')}</td>
                             <td>
-                                <code>- Primer ítem</code>
+                                <code>{t('markdown.example.unorderedList')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>Imagen:</td>
+                            <td>{t('markdown.description.image')}</td>
                             <td>
-                                <code>![Descripción](URL)</code>
+                                <code>{t('markdown.example.image')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>Video de YouTube:</td>
+                            <td>{t('markdown.description.youtube')}</td>
                             <td>
-                                <code>[youtube:URL]</code>
+                                <code>{t('markdown.example.youtube')}</code>
                             </td>
                         </tr>
                     </tbody>

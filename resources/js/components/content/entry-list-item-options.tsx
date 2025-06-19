@@ -3,6 +3,7 @@ import type { Entry } from '@/types';
 import { router } from '@inertiajs/react';
 import { EllipsisVertical } from 'lucide-react';
 import { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import {
     AlertDialog,
@@ -27,6 +28,9 @@ interface EntryItemOptionsProps {
  * Muestra un menú de opciones para editar o eliminar una entrada.
  */
 export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
+    // Obtiene las traducciones para el componente.
+    const { t } = useTranslation('components/entry');
+
     // Estado que controla la visibilidad del formulario de edición.
     const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
 
@@ -46,7 +50,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
     const routeParamKey = entry.type === 'post' ? 'post' : 'comment';
 
     // Mensaje que se mostrará al usuario tras eliminar la entrada según su tipo.
-    const deletedMessage = entry.type === 'post' ? 'Publicación eliminada.' : 'Comentario eliminado.';
+    const deletedMessage = entry.type === 'post' ? t('entry.dialog.delete.post.success') : t('entry.dialog.delete.comment.success');
 
     // Ejecuta la eliminación de la entrada tras confirmar.
     const onConfirm = () => {
@@ -59,7 +63,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                 toast(deletedMessage);
             },
             onError: (errors) => {
-                toast('¡Ups! Error inesperado.');
+                toast(t('general.error'));
                 console.error(errors);
             },
         });
@@ -69,7 +73,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button aria-label="Opciones" variant="outline">
+                    <Button aria-label={t('entry.options.title')} title={t('entry.options.title')} variant="outline">
                         <EllipsisVertical />
                     </Button>
                 </DropdownMenuTrigger>
@@ -77,12 +81,12 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                     <DropdownMenuGroup>
                         <DropdownMenuItem>
                             <Button variant="link" className="hover:no-underline" onClick={() => setIsFormDialogOpen(true)}>
-                                Editar
+                                {t('entry.options.edit')}
                             </Button>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                             <Button variant="link" className="hover:no-underline" onClick={() => setIsConfirmDialogOpen(true)}>
-                                Eliminar
+                                {t('entry.options.delete')}
                             </Button>
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
@@ -91,8 +95,10 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
 
             <Dialog open={isFormDialogOpen} onOpenChange={setIsFormDialogOpen}>
                 <DialogContent>
-                    <DialogTitle>Editar</DialogTitle>
-                    <DialogDescription>Edita el contenido de tu {entry.type === 'post' ? 'publicación' : 'comentario'}.</DialogDescription>
+                    <DialogTitle>{entry.type === 'post' ? t('entry.dialog.edit.post.title') : t('entry.dialog.edit.comment.title')}</DialogTitle>
+                    <DialogDescription>
+                        {entry.type === 'post' ? t('entry.dialog.edit.post.description') : t('entry.dialog.edit.comment.description')}
+                    </DialogDescription>
                     <EntryForm entry={entry} onSubmit={closeFormDialog} />
                 </DialogContent>
             </Dialog>
@@ -100,14 +106,16 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
             <AlertDialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Eliminar {entry.type === 'post' ? 'publicación' : 'comentario'}</AlertDialogTitle>
+                        <AlertDialogTitle>
+                            {entry.type === 'post' ? t('entry.dialog.delete.post.title') : t('entry.dialog.delete.comment.title')}
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
-                            ¿Estás seguro de eliminar {entry.type === 'post' ? 'esta publicación' : 'este comentario'}? Esta acción es irreversible.
+                            {entry.type === 'post' ? t('entry.dialog.delete.post.description') : t('entry.dialog.delete.comment.description')}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={onConfirm}>Aceptar</AlertDialogAction>
+                        <AlertDialogCancel>{t('entry.dialog.delete.button.cancel')}</AlertDialogCancel>
+                        <AlertDialogAction onClick={onConfirm}>{t('entry.dialog.delete.button.accept')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

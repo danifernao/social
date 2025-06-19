@@ -7,11 +7,15 @@ import AppLayout from '@/layouts/app-layout';
 import { AppContentLayout } from '@/layouts/app/app-content-layout';
 import type { BreadcrumbItem, Post, Posts } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Muestra la página de inicio del usuario autenticado.
  */
 export default function Home() {
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('pages/home');
+
     // Captura la lista de publicaciones proporcionada por Inertia.
     const { posts } = usePage<{ posts: Posts }>().props;
 
@@ -32,14 +36,14 @@ export default function Home() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Inicio',
+            title: t('breadcrumb.first'),
             href: route('home.show'),
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Inicio" />
+            <Head title={t('meta.title')} />
             <AppContentLayout>
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>
                     <EntryForm />

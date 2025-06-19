@@ -8,7 +8,7 @@ const modules = import.meta.glob("./locales/**/*.json", { eager: true });
 const resources: any = {};
 
 for (const path in modules) {
-  const match = path.match(/\.\/locales\/(\w+)\/(\w+)\.json$/);
+  const match = path.match(/\.\/locales\/(\w+)\/(.+)\.json$/);
   if (!match) continue;
 
   const [, lang, namespace] = match;

@@ -1,8 +1,9 @@
 import type { Auth, Entry, Post } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { format, formatDistanceToNow, parseISO } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { format, formatDistanceToNow, Locale, parseISO } from 'date-fns';
+import { enUS, es } from 'date-fns/locale';
 import { MessageSquare } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { buttonVariants } from '../ui/button';
 import EntryItemOptions from './entry-list-item-options';
 import EntryListItemReactions from './entry-list-item-reactions';
@@ -18,6 +19,18 @@ interface EntryListItemProps {
  * Se usa "forwardRef" para permitir el manejo de referencias externas, como por ejemplo para el desplazamiento automático.
  */
 export default function EntryListItem({ entry }: EntryListItemProps) {
+    // Obtiene las traducciones para el componente.
+    const { i18n, t } = useTranslation('components/entry');
+
+    // Relación entre idioma y formato de fecha.
+    const localeMap: Record<string, Locale> = {
+        es,
+        en: enUS,
+    };
+
+    // Selecciona el idioma adecuado según el idioma actual de la aplicación.
+    const locale = localeMap[i18n.language] ?? es;
+
     // Captura el usuario autenticado y la ruta actual proporcionados por Inertia.
     const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
 
@@ -32,7 +45,7 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
     // Tiempo relativo en español desde que se creó la entrada.
     const distanceToNow = formatDistanceToNow(new Date(entry.created_at), {
         addSuffix: true,
-        locale: es,
+        locale,
     });
 
     return (
@@ -48,7 +61,7 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                     <div className="flex gap-4 text-sm">
                         {entry.created_at !== entry.updated_at && (
                             <time dateTime={entry.updated_at} title={formatDate(entry.updated_at)}>
-                                Editado
+                                {t('entry.edited')}
                             </time>
                         )}
                         {entry.type === 'post' ? (

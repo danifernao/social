@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
 
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 type RegisterForm = {
     username: string;
@@ -19,7 +19,7 @@ type RegisterForm = {
 };
 
 export default function Register() {
-    const { t } = useTranslation('auth');
+    const { t } = useTranslation('pages/auth');
 
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
         username: '',
@@ -112,10 +112,9 @@ export default function Register() {
                 </div>
 
                 <div className="text-muted-foreground text-center text-sm">
-                    {t('message.alreadyHaveAccount')}{' '}
-                    <TextLink href={route('login')} tabIndex={6}>
-                        {t('link.login')}
-                    </TextLink>
+                    <Trans i18nKey="message.alreadyHaveAccount" ns="pages/auth">
+                        <TextLink href={route('login')} tabIndex={6}></TextLink>
+                    </Trans>
                 </div>
             </form>
         </AuthLayout>

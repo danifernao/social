@@ -4,6 +4,7 @@ import Picker from '@emoji-mart/react';
 import { router, usePage } from '@inertiajs/react';
 import { SmilePlus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
 
@@ -12,6 +13,9 @@ interface EntryListItemReactionsProps {
 }
 
 export default function EntryListItemReactions({ entry }: EntryListItemReactionsProps) {
+    // Obtiene las traducciones para el componente.
+    const { t } = useTranslation('components/entry');
+
     // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;
 
@@ -74,7 +78,7 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                 },
 
                 onError: (errors) => {
-                    toast('¡Ups! Error al reaccionar.');
+                    toast(t('general.error'));
                     console.error(errors);
                 },
             },
@@ -113,7 +117,8 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                             key={emoji}
                             onClick={() => (auth.user ? toggleReaction(emoji) : false)}
                             className={reactedByUser ? 'bg-accent text-accent-foreground' : ''}
-                            aria-label={`Reaccionar con ${emoji}`}
+                            aria-label={reactedByUser ? t('entry.reaction.remove') : t('entry.reaction.add', { emoji })}
+                            title={reactedByUser ? t('entry.reaction.remove') : t('entry.reaction.add', { emoji })}
                             variant="outline"
                         >
                             <span className="mr-1">{count}</span>
@@ -124,7 +129,7 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
             )}
 
             {auth.user && (
-                <Button onClick={() => setShowPicker(!showPicker)} variant="outline">
+                <Button onClick={() => setShowPicker(!showPicker)} variant="outline" title={t('entry.reaction.title')}>
                     <SmilePlus />
                 </Button>
             )}

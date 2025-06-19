@@ -8,11 +8,15 @@ import AppLayout from '@/layouts/app-layout';
 import { AppContentLayout } from '@/layouts/app/app-content-layout';
 import type { Auth, BreadcrumbItem, Post, Posts, User } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Muestra la página de perfil de un usuario.
  */
 export default function Profile() {
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('pages/profile');
+
     // Captura el usuario autenticado, el usuario del perfil y la lista de publicaciones proporcionados por Inertia.
     const { auth, user, posts } = usePage<{ auth: Auth; user: User; posts: Posts }>().props;
 
@@ -36,14 +40,14 @@ export default function Profile() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: `Perfil de ${user.username}`,
+            title: t('breadcrumb.first', { username: user.username }),
             href: route('profile.show', { user: user.username }),
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Perfil de ${user.username}`} />
+            <Head title={t('meta.title', { username: user.username })} />
             <AppContentLayout>
                 <ProfileHeader user={user} />
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>
