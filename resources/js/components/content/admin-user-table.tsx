@@ -6,6 +6,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { format, parseISO } from 'date-fns';
 import { ArrowUpDown } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import UserAvatar from './user-avatar';
 
 interface Props {
@@ -18,6 +19,9 @@ interface Props {
  * Lista a todos los usuarios registrados en la red para su administración.
  */
 export default function AdminUserTable({ users, previous, next }: Props) {
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
+
     // Captura la URL de la página y el usuario autenticado proporcionados por Inertia.
     const {
         url,
@@ -38,9 +42,9 @@ export default function AdminUserTable({ users, previous, next }: Props) {
 
     // Nombres para cada rol de usuario.
     const roles = {
-        admin: 'Administrador',
-        mod: 'Moderador',
-        user: 'Usuario',
+        admin: t('text.admin'),
+        mod: t('text.mod'),
+        user: t('text.user'),
     };
 
     // Gestiona el formulario de búsqueda.
@@ -102,7 +106,7 @@ export default function AdminUserTable({ users, previous, next }: Props) {
         <div className="w-full space-y-4">
             {/* Buscador */}
             <form onSubmit={handleSearch}>
-                <Input placeholder="Buscar por username o ID..." value={query} onChange={(e) => setQuery(e.target.value)} />
+                <Input placeholder={t('placeholder.searchUser')} value={query} onChange={(e) => setQuery(e.target.value)} />
             </form>
 
             {/* Tabla */}
@@ -112,33 +116,33 @@ export default function AdminUserTable({ users, previous, next }: Props) {
                         <TableRow className="[&_button]:px-0 [&_th]:px-4">
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('id')}>
-                                    ID <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('text.id')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
-                            <TableHead>Avatar</TableHead>
+                            <TableHead>{t('text.avatar')}</TableHead>
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('username')}>
-                                    Username <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('text.username')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('email_verified_at')}>
-                                    Verificado <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('text.verified')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('is_active')}>
-                                    Habilitado <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('text.enabled')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('role')}>
-                                    Rol <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('text.role')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('created_at')}>
-                                    Registrado <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('text.registered')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
                             <TableHead></TableHead>
@@ -169,7 +173,7 @@ export default function AdminUserTable({ users, previous, next }: Props) {
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={6} className="py-4 text-center">
-                                    No se encontraron resultados.
+                                    {t('text.noResults')}
                                 </TableCell>
                             </TableRow>
                         )}
@@ -181,21 +185,21 @@ export default function AdminUserTable({ users, previous, next }: Props) {
             <div className="flex justify-end gap-2">
                 {previous ? (
                     <Button variant="outline" size="sm" asChild>
-                        <Link href={previous}>Anterior</Link>
+                        <Link href={previous}>{t('text.previous')}</Link>
                     </Button>
                 ) : (
                     <Button variant="outline" size="sm" disabled>
-                        Anterior
+                        {t('text.previous')}
                     </Button>
                 )}
 
                 {next ? (
                     <Button variant="outline" size="sm" asChild>
-                        <Link href={next}>Siguiente</Link>
+                        <Link href={next}>{t('text.next')}</Link>
                     </Button>
                 ) : (
                     <Button variant="outline" size="sm" disabled>
-                        Siguiente
+                        {t('text.next')}
                     </Button>
                 )}
             </div>

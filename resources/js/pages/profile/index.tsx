@@ -40,7 +40,7 @@ export default function Profile() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('breadcrumbs.profile', { username: user.username }),
+            title: t('text.userProfile', { username: user.username }),
             href: route('profile.show', { user: user.username }),
         },
     ];

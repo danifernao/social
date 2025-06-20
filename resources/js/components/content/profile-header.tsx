@@ -30,10 +30,10 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                         <h1 className="flex-1 text-3xl">@{user.username}</h1>
                     </div>
                     <div className="flex gap-3">
-                        <Link href={`/user/${user.username}/following`}>
+                        <Link href={`/user/${user.username}/following`} className="lowercase">
                             {user.follows_count} {t('text.following')}
                         </Link>
-                        <Link href={`/user/${user.username}/followers`}>
+                        <Link href={`/user/${user.username}/followers`} className="lowercase">
                             {user.followers_count} {t('text.followers')}
                         </Link>
                     </div>

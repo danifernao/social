@@ -1,4 +1,5 @@
 import { usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 
 interface EmptyMessageProps {
     custom?: string; // Mensaje personalizado.
@@ -8,6 +9,9 @@ interface EmptyMessageProps {
  * Muestra un mensaje dependiendo de la ruta actual de la página.
  */
 export default function EmptyMessage({ custom = '' }: EmptyMessageProps) {
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
+
     // Captura la ruta actual de la pagina proporcionada por Inertia.
     const { routeName } = usePage<{ routeName: string }>().props;
 
@@ -17,23 +21,23 @@ export default function EmptyMessage({ custom = '' }: EmptyMessageProps) {
         switch (routeName) {
             case 'home.show':
             case 'profile.show':
-                message = 'Aún no hay publicaciones.';
+                message = t('text.noPosts');
                 break;
             case 'follow.following':
-                message = 'Este usuario no sigue a nadie por ahora.';
+                message = t('text.noFollowing');
                 break;
             case 'follow.followers':
-                message = 'Este usuario aún no tiene seguidores.';
+                message = t('text.noFollowers');
                 break;
             case 'post.show':
-                message = 'Nadie ha comentado aún.';
+                message = t('text.noComments');
                 break;
             case 'search.show':
             case 'search.hashtag':
-                message = 'No se encontraron resultados.';
+                message = t('text.noResults');
                 break;
             default:
-                message = 'No hay nada que mostrar aún.';
+                message = t('text.empty');
                 break;
         }
     }

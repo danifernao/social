@@ -8,11 +8,15 @@ import AppLayout from '@/layouts/app-layout';
 import { AppContentLayout } from '@/layouts/app/app-content-layout';
 import type { Auth, BreadcrumbItem, Comment, Comments, Post } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Muestra la página de una publicación y sus comentarios.
  */
 export default function Home() {
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
+
     // Captura el usuario autenticado, la publicación y los comentarios proporcionados por Inertia.
     const { auth, post, comments } = usePage<{ auth: Auth; post: Post; comments: Comments }>().props;
 
@@ -35,18 +39,18 @@ export default function Home() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: `Perfil de ${post.user.username}`,
+            title: t('text.userProfile', { username: post.user.username }),
             href: route('profile.show', { user: post.user.username }),
         },
         {
-            title: 'Publicación',
+            title: t('text.post'),
             href: route('post.show', { post: post.id }),
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Publicación" />
+            <Head title={t('meta.title.post', { username: post.user.username })} />
             <AppContentLayout>
                 <article className="flex flex-col gap-8">
                     <EntryListItem entry={post} />
@@ -54,7 +58,7 @@ export default function Home() {
                         <EntryListUpdateContext.Provider value={handleEntryChanges}>
                             {post.comments_count > 0 && (
                                 <>
-                                    <h2>{post.comments_count} comentarios:</h2>
+                                    <h2>{t('nComments', { total: post.comments_count })}</h2>
                                     <EntryList entries={entries} />
                                     <ListLoadMore type="comment" cursor={cursor} isProcessing={processing} onClick={loadMore} autoClick={false} />
                                 </>

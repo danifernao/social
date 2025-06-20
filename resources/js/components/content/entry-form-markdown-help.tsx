@@ -21,69 +21,69 @@ export function MarkdownHelp() {
                 <table className="w-full table-auto border-collapse text-sm">
                     <thead>
                         <tr>
-                            <th className="pr-4 pb-2 text-left font-medium">{t('markdownTable.left.header')}</th>
-                            <th className="pb-2 text-left font-medium">{t('markdownTable.right.header')}</th>
+                            <th className="pr-4 pb-2 text-left font-medium">{t('text.description')}</th>
+                            <th className="pb-2 text-left font-medium">{t('text.example')}</th>
                         </tr>
                     </thead>
                     <tbody className="[&_td]:py-1 [&_td]:pr-4 [&_td]:align-top">
                         <tr>
-                            <td>{t('markdownTable.left.bold')}</td>
+                            <td>{t('text.bold')}</td>
                             <td>
-                                <code>{t('markdownTable.right.bold')}</code>
+                                <code>{t('text.mdBold')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('markdownTable.left.italic')}</td>
+                            <td>{t('text.italic')}</td>
                             <td>
-                                <code>{t('markdownTable.right.italic')}</code>
+                                <code>{t('text.mdItalic')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('markdownTable.left.link')}</td>
+                            <td>{t('text.link')}</td>
                             <td>
-                                <code>{t('markdownTable.right.link')}</code>
+                                <code>{t('text.mdLink')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('markdownTable.left.quote')}</td>
+                            <td>{t('text.quote')}</td>
                             <td>
-                                <code>{t('markdownTable.right.quote')}</code>
+                                <code>{t('text.mdQuote')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('markdownTable.left.inlineCode')}</td>
+                            <td>{t('text.inlineCode')}</td>
                             <td>
-                                <code>{t('markdownTable.right.inlineCode')}</code>
+                                <code>{t('text.mdInlineCode')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('markdownTable.left.codeBlock')}</td>
+                            <td>{t('text.codeBlock')}</td>
                             <td>
-                                <code>{t('markdownTable.right.codeBlock')}</code>
+                                <code>{t('text.mdCodeBlock')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('markdownTable.left.orderedList')}</td>
+                            <td>{t('text.orderedList')}</td>
                             <td>
-                                <code>{t('markdownTable.right.orderedList')}</code>
+                                <code>{t('text.mdOrderedList')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('markdownTable.left.unorderedList')}</td>
+                            <td>{t('text.unorderedList')}</td>
                             <td>
-                                <code>{t('markdownTable.right.unorderedList')}</code>
+                                <code>{t('text.mdUnorderedList')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('markdownTable.left.image')}</td>
+                            <td>{t('text.image')}</td>
                             <td>
-                                <code>{t('markdownTable.right.image')}</code>
+                                <code>{t('text.mdImage')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('markdownTable.left.youtube')}</td>
+                            <td>{t('text.youtube')}</td>
                             <td>
-                                <code>{t('markdownTable.right.youtube')}</code>
+                                <code>{t('text.mdYoutube')}</code>
                             </td>
                         </tr>
                     </tbody>

@@ -36,7 +36,7 @@ export default function Home() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('breadcrumbs.home'),
+            title: t('text.home'),
             href: route('home.show'),
         },
     ];

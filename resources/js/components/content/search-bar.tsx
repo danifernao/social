@@ -5,6 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { SearchType, SearchTypes } from '@/types';
 import { ChevronDown, Search } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface SearchBarProps {
     type: SearchType; // Tipo de búsqueda inicial (publicación o usuario).
@@ -16,10 +17,13 @@ interface SearchBarProps {
  * Muestra una barra de búsqueda y permite buscar publicaciones o usuarios.
  */
 export default function SearchBar({ type, query, onSubmit }: SearchBarProps) {
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
+
     // Lista de tipos de búsqueda disponibles con etiquetas legibles para el usuario.
     const searchTypes: SearchTypes[] = [
-        { label: 'Publicaciones', value: 'post' },
-        { label: 'Usuarios', value: 'user' },
+        { label: t('text.posts'), value: 'post' },
+        { label: t('text.users'), value: 'user' },
     ];
 
     // Tipo de búsqueda por defecto basado en las propiedades iniciales.
@@ -70,7 +74,7 @@ export default function SearchBar({ type, query, onSubmit }: SearchBarProps) {
             </Popover>
 
             <Input
-                placeholder={`Buscar ${searchType.label.toLowerCase()}...`}
+                placeholder={t('placeholder.search', { type: searchType.label.toLowerCase() })}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full max-w-md"

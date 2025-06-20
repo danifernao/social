@@ -5,43 +5,46 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { type Auth, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { Bell, Home, LogIn, Search, User, UserCog, UserPlus, Users } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import AppLogo from './app-logo';
 
 export function AppSidebar() {
+    const { t } = useTranslation('common');
+
     const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
 
     const navAuth = [
         {
-            title: 'Inicio',
+            title: t('text.home'),
             href: '/home',
             icon: Home,
         },
         {
-            title: 'Perfil',
+            title: t('text.profile'),
             href: `/user/${auth.user?.username}`,
             icon: User,
         },
         {
-            title: 'Explorar',
+            title: t('text.explore'),
             href: `/search`,
             icon: Search,
         },
         {
-            title: 'Conexiones',
+            title: t('text.connections'),
             href: `/user/${auth.user?.username}/following`,
             icon: Users,
             isActive: ['follow.following', 'follow.followers'].includes(routeName),
         },
         {
             name: 'notifications',
-            title: 'Notificaciones',
+            title: t('text.notifications'),
             href: `/notifications`,
             icon: Bell,
         },
         ...(auth.user?.can_moderate
             ? [
                   {
-                      title: 'Administración',
+                      title: t('text.management'),
                       href: '/admin',
                       icon: UserCog,
                       isActive: ['admin.user.show', 'admin.user.edit'].includes(routeName),
@@ -52,12 +55,12 @@ export function AppSidebar() {
 
     const navGuest = [
         {
-            title: 'Iniciar sesión',
+            title: t('text.login'),
             href: '/login',
             icon: LogIn,
         },
         {
-            title: 'Registrarse',
+            title: t('text.register'),
             href: `/register`,
             icon: UserPlus,
         },

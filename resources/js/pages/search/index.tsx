@@ -8,6 +8,7 @@ import { AppContentLayout } from '@/layouts/app/app-content-layout';
 import type { BreadcrumbItem, Post, SearchResults, SearchType, User } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface PageProps {
     type: SearchType; // Tipo de búsqueda (publicación o usuario).
@@ -21,6 +22,9 @@ interface PageProps {
  * Muestra la página de resultados de una búsqueda o de una etiqueta.
  */
 export default function Search() {
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
+
     // Captura las propiedades de la página proporcionadas por Inertia.
     const { props } = usePage<PageProps>();
 
@@ -51,7 +55,7 @@ export default function Search() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: isHashtag ? `Etiqueta` : 'Buscar',
+            title: isHashtag ? t('text.hashtag') : t('text.search'),
             href: route('search.show'),
         },
     ];

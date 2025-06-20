@@ -1,8 +1,9 @@
 import type { Notification } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { format, formatDistanceToNow, parseISO } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { format, formatDistanceToNow, Locale, parseISO } from 'date-fns';
+import { enUS, es } from 'date-fns/locale';
 import { useEffect, useRef, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
 interface NotificationListItemProps {
     notification: Notification;
@@ -12,6 +13,9 @@ interface NotificationListItemProps {
  * Muestra una notificación y la marca como leída al hacer clic en ella.
  */
 export default function NotificationListItem({ notification }: NotificationListItemProps) {
+    // Obtiene las traducciones de la página.
+    const { i18n } = useTranslation('common');
+
     // Captura el token CSRF proporcionado por Inertia.
     // Este token es necesario para que Laravel acepte la solicitud PATCH.
     const { csrfToken } = usePage<{ csrfToken: string }>().props;
@@ -38,13 +42,22 @@ export default function NotificationListItem({ notification }: NotificationListI
     // URL de destino de la notificación.
     const url = context ? `/post/${context.id}` : `/user/${sender.username}`;
 
+    // Relación entre idioma y formato de fecha.
+    const localeMap: Record<string, Locale> = {
+        es,
+        en: enUS,
+    };
+
+    // Selecciona el idioma adecuado según el idioma actual de la aplicación.
+    const locale = localeMap[i18n.language] ?? es;
+
     // Fecha de creación de la notificación en formato corto y legible.
     const formattedDate = format(parseISO(notification.created_at), 'dd/MM/yyyy h:mm a');
 
     // Tiempo relativo en español desde que se creó la notificación.
     const distanceToNow = formatDistanceToNow(new Date(notification.created_at), {
         addSuffix: true,
-        locale: es,
+        locale,
     });
 
     // Marca la notificación como leída si no lo está.
@@ -65,7 +78,7 @@ export default function NotificationListItem({ notification }: NotificationListI
                         },
                     })
                         .then((response) => {
-                            if (!response.ok) throw new Error('Falló el marcado como leído.');
+                            if (!response.ok) throw new Error('Failed');
                             return response.json();
                         })
                         .then((data) => {
@@ -94,12 +107,41 @@ export default function NotificationListItem({ notification }: NotificationListI
             className={`flex flex-col border-b px-4 py-4 last:border-b-0 ${notification.read_at || shouldShowAsRead ? 'text-gray-500' : ''}`}
         >
             <Link href={url}>
-                <span className="font-bold">{sender.username}</span>
-                {type === 'follow' && ' te ha seguido.'}
-                {type === 'comment' && ' ha comentado en una publicación tuya.'}
-                {type === 'mention' && ' te ha mencionado en'}
-                {type === 'mention' && context && context.type === 'post' && ' una publicación.'}
-                {type === 'mention' && context && context.type === 'comment' && ' un comentario.'}
+                {type === 'follow' && (
+                    <Trans
+                        i18nKey="text.followNotification"
+                        ns="common"
+                        values={{ username: sender.username }}
+                        components={[<strong />, <strong />]}
+                    />
+                )}
+
+                {type === 'comment' && (
+                    <Trans
+                        i18nKey="text.commentNotification"
+                        ns="common"
+                        values={{ username: sender.username }}
+                        components={[<strong />, <strong />]}
+                    />
+                )}
+
+                {type === 'mention' && context && context.type === 'post' && (
+                    <Trans
+                        i18nKey="text.mentionInPostNotification"
+                        ns="common"
+                        values={{ username: sender.username }}
+                        components={[<strong />, <strong />]}
+                    />
+                )}
+
+                {type === 'mention' && context && context.type === 'comment' && (
+                    <Trans
+                        i18nKey="text.mentionInCommentNotification"
+                        ns="common"
+                        values={{ username: sender.username }}
+                        components={[<strong />, <strong />]}
+                    />
+                )}
             </Link>
             <time className="text-sm" dateTime={notification.created_at} title={formattedDate}>
                 {distanceToNow}

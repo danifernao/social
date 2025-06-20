@@ -5,6 +5,7 @@ import * as hashtag from 'linkify-plugin-hashtag';
 import * as mention from 'linkify-plugin-mention';
 import Linkify from 'linkify-react';
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Components } from 'react-markdown';
 import Markdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
@@ -26,6 +27,9 @@ type ExtendedComponents = Components & {
  * - Muestra botón "Leer más" si el contenido excede 300px de alto para expandirlo.
  */
 export default function FormattedText({ text }: Props) {
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
+
     // Referencia al contenedor que envuelve al texto.
     const contentRef = useRef<HTMLDivElement>(null);
 
@@ -152,7 +156,7 @@ export default function FormattedText({ text }: Props) {
             {!expanded && showExpand && (
                 <div className="absolute right-0 bottom-0 left-0 flex items-center justify-center bg-gradient-to-t from-black to-transparent p-4">
                     <Button variant="link" onClick={() => setExpanded(true)} className="mt-2 text-sm">
-                        Leer más
+                        {t('text.readMore')}
                     </Button>
                 </div>
             )}
