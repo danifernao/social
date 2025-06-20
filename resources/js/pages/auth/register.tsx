@@ -19,7 +19,7 @@ type RegisterForm = {
 };
 
 export default function Register() {
-    const { t } = useTranslation('pages/auth');
+    const { t } = useTranslation('common');
 
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
         username: '',
@@ -112,7 +112,7 @@ export default function Register() {
                 </div>
 
                 <div className="text-muted-foreground text-center text-sm">
-                    <Trans i18nKey="message.alreadyHaveAccount" ns="pages/auth">
+                    <Trans i18nKey="text.alreadyHaveAccount" ns="common">
                         <TextLink href={route('login')} tabIndex={6}></TextLink>
                     </Trans>
                 </div>

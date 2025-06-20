@@ -10,7 +10,7 @@ import AuthLayout from '@/layouts/auth-layout';
 import { useTranslation } from 'react-i18next';
 
 export default function VerifyEmail({ status }: { status?: string }) {
-    const { t } = useTranslation('pages/auth');
+    const { t } = useTranslation('common');
 
     const { post, processing } = useForm({});
 
@@ -25,7 +25,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
             <Head title={t('meta.title.verifyEmail')} />
 
             {status === 'verification-link-sent' && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">{t('message.verificationEmailSent')}</div>
+                <div className="mb-4 text-center text-sm font-medium text-green-600">{t('text.verificationEmailSent')}</div>
             )}
 
             <form onSubmit={submit} className="space-y-6 text-center">
@@ -35,7 +35,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
                 </Button>
 
                 <TextLink href={route('logout')} method="post" className="mx-auto block text-sm">
-                    {t('link.logout')}
+                    {t('text.logout')}
                 </TextLink>
             </form>
         </AuthLayout>

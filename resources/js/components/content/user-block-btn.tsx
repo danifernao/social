@@ -13,8 +13,8 @@ interface UserBlockBtnProps {
  * Muestra el botón para bloquear o desbloquear a un usuario.
  */
 export default function UserBlockBtn({ user }: UserBlockBtnProps) {
-    // Obtiene las traducciones para el componente.
-    const { t } = useTranslation('components/user');
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
 
     const { isProcessing, execute } = usePostAction();
     const { iconClass, textClass } = getAnimatedButtonClasses(isProcessing);
@@ -23,7 +23,7 @@ export default function UserBlockBtn({ user }: UserBlockBtnProps) {
         <Button className="group relative gap-0 overflow-hidden" onClick={() => execute('user.block', { user: user.id })} disabled={isProcessing}>
             {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />}
             {user.is_blocked ? <LockOpen className={iconClass} /> : <Lock className={iconClass} />}
-            <span className={textClass}>{user.is_blocked ? t('unblock') : t('block')}</span>
+            <span className={textClass}>{user.is_blocked ? t('button.unblock') : t('button.block')}</span>
         </Button>
     );
 }

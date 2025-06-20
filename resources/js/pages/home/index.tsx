@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
  */
 export default function Home() {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('pages/home');
+    const { t } = useTranslation('common');
 
     // Captura la lista de publicaciones proporcionada por Inertia.
     const { posts } = usePage<{ posts: Posts }>().props;
@@ -36,14 +36,14 @@ export default function Home() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('breadcrumb.first'),
+            title: t('breadcrumbs.home'),
             href: route('home.show'),
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={t('meta.title')} />
+            <Head title={t('meta.title.home')} />
             <AppContentLayout>
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>
                     <EntryForm />

@@ -24,7 +24,7 @@ interface LoginProps {
 }
 
 export default function Login({ status, canResetPassword }: LoginProps) {
-    const { t } = useTranslation('pages/auth');
+    const { t } = useTranslation('common');
 
     const { data, setData, post, processing, errors, reset } = useForm<Required<LoginForm>>({
         email: '',
@@ -66,7 +66,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             <Label htmlFor="password">{t('field.password')}</Label>
                             {canResetPassword && (
                                 <TextLink href={route('password.request')} className="ml-auto text-sm" tabIndex={5}>
-                                    {t('link.forgotPassword')}
+                                    {t('text.forgotPassword')}
                                 </TextLink>
                             )}
                         </div>
@@ -101,7 +101,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                 </div>
 
                 <div className="text-muted-foreground text-center text-sm">
-                    <Trans i18nKey="message.noAccountYet" ns="pages/auth">
+                    <Trans i18nKey="text.noAccountYet" ns="common">
                         <TextLink href={route('register')} tabIndex={5}></TextLink>
                     </Trans>
                 </div>

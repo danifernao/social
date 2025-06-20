@@ -13,8 +13,8 @@ interface EntryListItemReactionsProps {
 }
 
 export default function EntryListItemReactions({ entry }: EntryListItemReactionsProps) {
-    // Obtiene las traducciones para el componente.
-    const { t } = useTranslation('components/entry');
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
 
     // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;
@@ -78,7 +78,7 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                 },
 
                 onError: (errors) => {
-                    toast(t('general.error'));
+                    toast(t('text.error'));
                     console.error(errors);
                 },
             },
@@ -117,8 +117,8 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                             key={emoji}
                             onClick={() => (auth.user ? toggleReaction(emoji) : false)}
                             className={reactedByUser ? 'bg-accent text-accent-foreground' : ''}
-                            aria-label={reactedByUser ? t('entry.reaction.remove') : t('entry.reaction.add', { emoji })}
-                            title={reactedByUser ? t('entry.reaction.remove') : t('entry.reaction.add', { emoji })}
+                            aria-label={reactedByUser ? t('text.removeReaction') : t('text.reactWith', { emoji })}
+                            title={reactedByUser ? t('text.removeReaction') : t('text.reactWith', { emoji })}
                             variant="outline"
                         >
                             <span className="mr-1">{count}</span>
@@ -129,7 +129,7 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
             )}
 
             {auth.user && (
-                <Button onClick={() => setShowPicker(!showPicker)} variant="outline" title={t('entry.reaction.title')}>
+                <Button onClick={() => setShowPicker(!showPicker)} variant="outline" title={t('text.react')}>
                     <SmilePlus />
                 </Button>
             )}

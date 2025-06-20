@@ -16,7 +16,7 @@ interface ProfileHeaderProps {
  */
 export default function ProfileHeader({ user }: ProfileHeaderProps) {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('pages/profile');
+    const { t } = useTranslation('common');
 
     // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;
@@ -31,10 +31,10 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                     </div>
                     <div className="flex gap-3">
                         <Link href={`/user/${user.username}/following`}>
-                            {user.follows_count} {t('header.following')}
+                            {user.follows_count} {t('text.following')}
                         </Link>
                         <Link href={`/user/${user.username}/followers`}>
-                            {user.followers_count} {t('header.followers')}
+                            {user.followers_count} {t('text.followers')}
                         </Link>
                     </div>
                 </div>

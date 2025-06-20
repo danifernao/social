@@ -1,0 +1,126 @@
+{
+  "meta": {
+    "title": {
+      "welcome": "Bienveido",
+      "login": "Iniciar sesión",
+      "register": "Registrarse",
+      "forgotPassword": "Restablecer contraseña",
+      "resetPassword": "Restablecer contraseña",
+      "confirmPasswoird": "Confirmar contraseña",
+      "verifyEmail": "Verificar correo electrónico",
+      "home": "Inicio",
+      "profile": "Perfil de {{username}}"
+    }
+  },
+  "breadcrumbs": {
+    "home": "Inicio",
+    "profile": "Perfil de {{username}}"
+  },
+  "title": {
+    "welcome": "Bienvenido a {{siteName}}",
+    "login": "Inicia sesión en tu cuenta",
+    "register": "Crea una cuenta",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "resetPassword": "Restablecer contraseña",
+    "confirmPassword": "Confirma tu contraseña",
+    "verifyEmail": "Verificar correo electrónico"
+  },
+  "description": {
+    "welcome": "Conecta, comparte y descubre lo que otros piensan.",
+    "login": "Ingresa tu correo electrónico y contraseña para iniciar sesión.",
+    "register": "Ingresa tus datos a continuación para crear tu cuenta.",
+    "forgotPassword": "Ingresa tu correo para recibir un enlace de restablecimiento de contraseña.",
+    "resetPassword": "Ingresa tu nueva contraseña a continuación.",
+    "confirmPassword": "Esta es una zona segura de la aplicación. Por favor, confirma tu contraseña antes de continuar.",
+    "verifyEmail": "Por favor, verifica tu dirección de correo electrónico haciendo clic en el enlace que acabamos de enviarte."
+  },
+  "field": {
+    "username": "Nombre de usuario",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "passwordConfirmation": "Confirmar contraseña",
+    "rememberMe": "Recuérdame"
+  },
+  "placeholder": {
+    "email": "correo@ejemplo.com",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "passwordConfirmation": "Confirmar contraseña",
+    "entry": "¿En qué estás pensando?"
+  },
+  "button": {
+    "login": "Iniciar sesión",
+    "register": "Crear cuenta",
+    "forgotPassword": "Enviar enlace para restablecer contraseña",
+    "resetPassword": "Restablecer contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "sendVerificationEmail": "Reenviar correo de verificación",
+    "post": "Publicar",
+    "comment": "Comentar",
+    "accept": "Aceptar",
+    "cancel": "Cancelar",
+    "admin": "Administrar",
+    "follow": "Seguir",
+    "unfollow": "Dejar de seguir",
+    "block": "Bloquear",
+    "unblock": "Desbloquear"
+  },
+  "text": {
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta? <0>Inicia sesión</0>",
+    "noAccountYet": "¿No tienes una cuenta? <0>Crea una</0>",
+    "goBack": "O bien, vuelve a <0>iniciar sesión</0>",
+    "verificationEmailSent": "Se ha enviado un nuevo enlace de verificación al correo que proporcionaste durante el registro.",
+    "logout": "Cerrar sesión",
+    "avatar": "Avatar",
+    "following": "seguidos",
+    "followers": "seguidores",
+    "edited": "Editado",
+    "options": "Opciones",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "editPost": "Editar publicación",
+    "editComment": "Editar comentario",
+    "editPostDescription": "Edita el contenido de tu publicación.",
+    "editCommentDescription": "Edita el contenido de tu comentario.",
+    "deletePost": "Eliminar publicación",
+    "deleteComment": "Eliminar comentario",
+    "deletPostConfirmation": "¿Estás seguro de eliminar esta publicación? Esta acción es irreversible.",
+    "deletCommentConfirmation": "¿Estás seguro de eliminar este comentario? Esta acción es irreversible.",
+    "postDeleted": "Publicación eliminada",
+    "commentDeleted": "Comentario eliminado",
+    "react": "Reaccionar",
+    "reactWith": "Reaccionar con {{emoji}}",
+    "removeReaction": "Quitar reacción",
+    "markdownHelp": "¿Cómo usar Markdown?",
+    "error": "¡Ups! Error inesperado."
+  },
+  "markdownTable": {
+    "left": {
+      "header": "Descripción",
+      "bold": "Negrita:",
+      "italic": "Cursiva:",
+      "link": "Enlace:",
+      "quote": "Cita:",
+      "inlineCode": "Código en línea:",
+      "codeBlock": "Bloque de código:",
+      "orderedList": "Lista enumerada:",
+      "unorderedList": "Lista sin orden:",
+      "image": "Imagen:",
+      "youtube": "Video de YouTube:"
+    },
+    "right": {
+      "header": "Ejemplo",
+      "bold": "**negrita**",
+      "italic": "*cursiva*",
+      "link": "[Descripción](URL)",
+      "quote": "> cita",
+      "inlineCode": "`código`",
+      "codeBlock": "```bloque```",
+      "orderedList": "1. Primer ítem",
+      "unorderedList": "- Primer ítem",
+      "image": "![Descripción](URL)",
+      "youtube": "[youtube:URL]"
+    }
+  }
+}

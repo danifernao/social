@@ -28,8 +28,8 @@ interface EntryItemOptionsProps {
  * Muestra un menú de opciones para editar o eliminar una entrada.
  */
 export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
-    // Obtiene las traducciones para el componente.
-    const { t } = useTranslation('components/entry');
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
 
     // Estado que controla la visibilidad del formulario de edición.
     const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
@@ -50,7 +50,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
     const routeParamKey = entry.type === 'post' ? 'post' : 'comment';
 
     // Mensaje que se mostrará al usuario tras eliminar la entrada según su tipo.
-    const deletedMessage = entry.type === 'post' ? t('entry.dialog.delete.post.success') : t('entry.dialog.delete.comment.success');
+    const deletedMessage = entry.type === 'post' ? t('text.postDeleted') : t('text.commentDeleted');
 
     // Ejecuta la eliminación de la entrada tras confirmar.
     const onConfirm = () => {
@@ -63,7 +63,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                 toast(deletedMessage);
             },
             onError: (errors) => {
-                toast(t('general.error'));
+                toast(t('text.error'));
                 console.error(errors);
             },
         });
@@ -73,7 +73,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button aria-label={t('entry.options.title')} title={t('entry.options.title')} variant="outline">
+                    <Button aria-label={t('text.options')} title={t('text.options')} variant="outline">
                         <EllipsisVertical />
                     </Button>
                 </DropdownMenuTrigger>
@@ -81,12 +81,12 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                     <DropdownMenuGroup>
                         <DropdownMenuItem>
                             <Button variant="link" className="hover:no-underline" onClick={() => setIsFormDialogOpen(true)}>
-                                {t('entry.options.edit')}
+                                {t('text.edit')}
                             </Button>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                             <Button variant="link" className="hover:no-underline" onClick={() => setIsConfirmDialogOpen(true)}>
-                                {t('entry.options.delete')}
+                                {t('text.delete')}
                             </Button>
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
@@ -95,10 +95,8 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
 
             <Dialog open={isFormDialogOpen} onOpenChange={setIsFormDialogOpen}>
                 <DialogContent>
-                    <DialogTitle>{entry.type === 'post' ? t('entry.dialog.edit.post.title') : t('entry.dialog.edit.comment.title')}</DialogTitle>
-                    <DialogDescription>
-                        {entry.type === 'post' ? t('entry.dialog.edit.post.description') : t('entry.dialog.edit.comment.description')}
-                    </DialogDescription>
+                    <DialogTitle>{entry.type === 'post' ? t('text.editPost') : t('text.editComment')}</DialogTitle>
+                    <DialogDescription>{entry.type === 'post' ? t('text.editPostDescription') : t('text.editCommentDescription')}</DialogDescription>
                     <EntryForm entry={entry} onSubmit={closeFormDialog} />
                 </DialogContent>
             </Dialog>
@@ -106,16 +104,14 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
             <AlertDialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>
-                            {entry.type === 'post' ? t('entry.dialog.delete.post.title') : t('entry.dialog.delete.comment.title')}
-                        </AlertDialogTitle>
+                        <AlertDialogTitle>{entry.type === 'post' ? t('text.deletePost') : t('text.deleteComment')}</AlertDialogTitle>
                         <AlertDialogDescription>
-                            {entry.type === 'post' ? t('entry.dialog.delete.post.description') : t('entry.dialog.delete.comment.description')}
+                            {entry.type === 'post' ? t('text.deletPostConfirmation') : t('text.deletCommentConfirmation')}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>{t('entry.dialog.delete.button.cancel')}</AlertDialogCancel>
-                        <AlertDialogAction onClick={onConfirm}>{t('entry.dialog.delete.button.accept')}</AlertDialogAction>
+                        <AlertDialogCancel>{t('button.cancel')}</AlertDialogCancel>
+                        <AlertDialogAction onClick={onConfirm}>{t('button.accept')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

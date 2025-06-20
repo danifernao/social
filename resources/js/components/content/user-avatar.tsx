@@ -11,8 +11,8 @@ interface UserAvatarProps {
  * Muestra el avatar de un usuario.
  */
 export default function UserAvatar({ user, className = 'w-10 h-10' }: UserAvatarProps) {
-    // Obtiene las traducciones para el componente.
-    const { t } = useTranslation('components/user');
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
 
     // Define las clases de Tailwind que corresponden a cada tamaño de avatar.
     return (
@@ -22,7 +22,7 @@ export default function UserAvatar({ user, className = 'w-10 h-10' }: UserAvatar
                 className="flex h-full w-full items-center justify-center overflow-hidden rounded-sm bg-neutral-200 font-bold text-black dark:bg-neutral-700 dark:text-white"
             >
                 {user.avatar_url ? (
-                    <img src={user.avatar_url} alt={t('avatar')} className="size-full object-cover" />
+                    <img src={user.avatar_url} alt={t('text.avatar')} className="size-full object-cover" />
                 ) : (
                     <p className="flex size-full items-center justify-center">{user.username.charAt(0).toUpperCase()}</p>
                 )}

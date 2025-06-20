@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
  */
 export default function Profile() {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('pages/profile');
+    const { t } = useTranslation('common');
 
     // Captura el usuario autenticado, el usuario del perfil y la lista de publicaciones proporcionados por Inertia.
     const { auth, user, posts } = usePage<{ auth: Auth; user: User; posts: Posts }>().props;
@@ -40,14 +40,14 @@ export default function Profile() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('breadcrumb.first', { username: user.username }),
+            title: t('breadcrumbs.profile', { username: user.username }),
             href: route('profile.show', { user: user.username }),
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={t('meta.title', { username: user.username })} />
+            <Head title={t('meta.title.profile', { username: user.username })} />
             <AppContentLayout>
                 <ProfileHeader user={user} />
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>

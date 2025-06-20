@@ -23,7 +23,7 @@ type ResetPasswordForm = {
 };
 
 export default function ResetPassword({ token, email }: ResetPasswordProps) {
-    const { t } = useTranslation('pages/auth');
+    const { t } = useTranslation('common');
 
     const { data, setData, post, processing, errors, reset } = useForm<Required<ResetPasswordForm>>({
         token: token,

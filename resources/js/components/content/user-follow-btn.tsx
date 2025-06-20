@@ -13,8 +13,8 @@ interface UserFollowBtnProps {
  * Muestra el botón para seguir o dejar de seguir a un usuario.
  */
 export default function UserFollowBtn({ user }: UserFollowBtnProps) {
-    // Obtiene las traducciones para el componente.
-    const { t } = useTranslation('components/user');
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
 
     const { isProcessing, execute } = usePostAction();
     const { iconClass, textClass } = getAnimatedButtonClasses(isProcessing);
@@ -27,7 +27,7 @@ export default function UserFollowBtn({ user }: UserFollowBtnProps) {
         >
             {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />}
             {user.is_followed ? <UserMinus className={iconClass} /> : <UserPlus className={iconClass} />}
-            <span className={textClass}>{user.is_followed ? t('unfollow') : t('follow')}</span>
+            <span className={textClass}>{user.is_followed ? t('button.unfollow') : t('button.follow')}</span>
         </Button>
     );
 }

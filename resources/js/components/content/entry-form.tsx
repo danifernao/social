@@ -20,8 +20,8 @@ interface EntryFormProps {
  * Muestra un formulario para la creación o edición de una entrada.
  */
 export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
-    // Obtiene las traducciones para el componente.
-    const { t } = useTranslation('components/entry');
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
 
     // Determina si el formulario es para una publicación o un comentario.
     const formType = entry ? (entry.type === 'post' ? 'post' : 'comment') : postId ? 'comment' : 'post';
@@ -68,7 +68,7 @@ export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
                 setData('content', '');
             },
             onError: (errors) => {
-                toast(t('general.error'));
+                toast(t('text.error'));
                 console.error(errors);
             },
         });
@@ -107,7 +107,7 @@ export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
                 value={data.content}
                 onChange={(e) => setData('content', e.target.value)}
                 disabled={processing}
-                placeholder={t('form.placeholder.textarea')}
+                placeholder={t('placeholder.entry')}
                 maxLength={3000}
             />
 
@@ -115,7 +115,7 @@ export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
                 <MarkdownHelp />
                 <Button type="submit" className="ml-auto" disabled={processing}>
                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                    {formType === 'post' ? t('form.button.post') : t('form.button.comment')}
+                    {formType === 'post' ? t('button.post') : t('button.comment')}
                 </Button>
             </div>
         </form>

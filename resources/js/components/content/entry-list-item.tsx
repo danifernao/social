@@ -19,8 +19,8 @@ interface EntryListItemProps {
  * Se usa "forwardRef" para permitir el manejo de referencias externas, como por ejemplo para el desplazamiento automático.
  */
 export default function EntryListItem({ entry }: EntryListItemProps) {
-    // Obtiene las traducciones para el componente.
-    const { i18n, t } = useTranslation('components/entry');
+    // Obtiene las traducciones de la página.
+    const { i18n, t } = useTranslation('common');
 
     // Relación entre idioma y formato de fecha.
     const localeMap: Record<string, Locale> = {
@@ -61,7 +61,7 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                     <div className="flex gap-4 text-sm">
                         {entry.created_at !== entry.updated_at && (
                             <time dateTime={entry.updated_at} title={formatDate(entry.updated_at)}>
-                                {t('entry.edited')}
+                                {t('text.edited')}
                             </time>
                         )}
                         {entry.type === 'post' ? (
@@ -86,7 +86,7 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                 <EntryListItemReactions entry={entry} />
                 {entry.type === 'post' && routeName !== 'post.show' && (
                     <div className="ml-auto">
-                        <Link href={`/post/${entry.id}#comments`} className={buttonVariants({ variant: 'outline' })} title={t('entry.comment')}>
+                        <Link href={`/post/${entry.id}#comments`} className={buttonVariants({ variant: 'outline' })} title={t('button.comment')}>
                             {(entry as Post).comments_count} <MessageSquare />
                         </Link>
                     </div>

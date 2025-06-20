@@ -13,7 +13,7 @@ import AuthLayout from '@/layouts/auth-layout';
 import { Trans, useTranslation } from 'react-i18next';
 
 export default function ForgotPassword({ status }: { status?: string }) {
-    const { t } = useTranslation('pages/auth');
+    const { t } = useTranslation('common');
 
     const { data, setData, post, processing, errors } = useForm<Required<{ email: string }>>({
         email: '',
@@ -58,7 +58,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                 </form>
 
                 <div className="text-muted-foreground space-x-1 text-center text-sm">
-                    <Trans i18nKey="message.goBack" ns="pages/auth">
+                    <Trans i18nKey="text.goBack" ns="common">
                         <TextLink href={route('login')}></TextLink>
                     </Trans>
                 </div>
