@@ -27,7 +27,7 @@ export default function ConfirmPassword() {
     };
 
     return (
-        <AuthLayout title={t('confirmPasswordTitle')} description={t('confirmPasswordDescription')}>
+        <AuthLayout title={t('confirmYourPassword')} description={t('confirmYourPasswordDescription')}>
             <Head title={t('confirmPassword')} />
 
             <form onSubmit={submit}>

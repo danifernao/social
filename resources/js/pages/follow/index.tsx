@@ -6,6 +6,7 @@ import AppLayout from '@/layouts/app-layout';
 import { AppContentLayout } from '@/layouts/app/app-content-layout';
 import type { Auth, BreadcrumbItem, User, Users } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 
 interface PageProps {
     auth: Auth; // Usuario autenticado.
@@ -20,6 +21,9 @@ interface PageProps {
  * Muestra la página de seguidos o seguidores de un usuario.
  */
 export default function Follow() {
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
+
     // Captura las propiedades de la página proporcionadas por Inertia.
     const { auth, user, following, followers, routeName } = usePage<PageProps>().props;
 
@@ -40,18 +44,20 @@ export default function Follow() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: `Perfil de ${user.username}`,
+            title: t('userProfile', { username: user.username }),
             href: route('profile.show', { user: user.username }),
         },
         {
-            title: pageName === 'following' ? 'Seguidos' : 'Seguidores',
+            title: pageName === 'following' ? t('following') : t('followers'),
             href: route(routeName, { user: user.username }),
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`${pageName === 'following' ? 'Seguidos por' : 'Seguidores de'} ${user.username}`} />
+            <Head
+                title={`${pageName === 'following' ? t('followedByUser', { username: user.username }) : t('userFollowers', { username: user.username })} ${user.username}`}
+            />
             <AppContentLayout>
                 <FollowNav pageName={pageName} username={user.username} />
                 <UserList users={users} />

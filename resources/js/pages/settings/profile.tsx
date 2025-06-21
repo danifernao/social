@@ -12,13 +12,7 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import { Trash2 } from 'lucide-react';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Configuración del perfil',
-        href: '/settings/profile',
-    },
-];
+import { useTranslation } from 'react-i18next';
 
 type ProfileForm = {
     username: string;
@@ -29,6 +23,7 @@ type ProfileForm = {
 };
 
 export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
+    const { t } = useTranslation('common');
     const { auth } = usePage<SharedData>().props;
 
     const avatarUrl = auth.user.avatar_url;
@@ -75,13 +70,20 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
     const getInitial = () => auth.user.username.charAt(0).toUpperCase();
 
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: t('profileSettings'),
+            href: '/settings/profile',
+        },
+    ];
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Configuración del perfil" />
+            <Head title={t('profileSettings')} />
 
             <SettingsLayout>
                 <div className="space-y-6">
-                    <HeadingSmall title="Información del perfil" description="Actualiza tu nombre de usuario y dirección de correo electrónico" />
+                    <HeadingSmall title={t('profileInfo')} description={t('profileInfoDescription')} />
 
                     <form onSubmit={submit} className="space-y-6">
                         <div className="flex items-center gap-6">
@@ -95,7 +97,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                         type="button"
                                         onClick={handleRemoveAvatar}
                                         className="absolute top-0 right-0 flex h-6 w-6 items-center justify-center rounded-full bg-neutral-800 text-white hover:bg-red-600"
-                                        title="Quitar avatar"
+                                        title={t('removeAvatar')}
                                     >
                                         <Trash2 className="h-4 w-4" />
                                     </button>
@@ -104,13 +106,13 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
                             <div className="flex-1 space-y-2">
                                 <Input type="file" accept="image/png,image/jpeg,image/jpg" onChange={handleFileChange} ref={fileInputRef} />
-                                <p className="text-muted-foreground text-sm">Tamaño máximo: 2MB. Solo PNG o JPG.</p>
+                                <p className="text-muted-foreground text-sm">{t('avatarSizeAndFormat')}</p>
                                 <InputError className="mt-2" message={errors.avatar} />
                             </div>
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="username">Nombre de usuario</Label>
+                            <Label htmlFor="username">{t('username')}</Label>
 
                             <Input
                                 id="username"
@@ -119,14 +121,14 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                 onChange={(e) => setData('username', e.target.value)}
                                 required
                                 autoComplete="username"
-                                placeholder="Nombre de usuario"
+                                placeholder={t('username')}
                             />
 
                             <InputError className="mt-2" message={errors.username} />
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="email">Dirección de correo electrónico</Label>
+                            <Label htmlFor="email">{t('emailAddress')}</Label>
 
                             <Input
                                 id="email"
@@ -136,7 +138,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                 onChange={(e) => setData('email', e.target.value)}
                                 required
                                 autoComplete="email"
-                                placeholder="Dirección de correo electrónico"
+                                placeholder={t('emailAddress')}
                             />
 
                             <InputError className="mt-2" message={errors.email} />
@@ -145,27 +147,25 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                         {mustVerifyEmail && auth.user.email_verified_at === null && (
                             <div>
                                 <p className="text-muted-foreground -mt-4 text-sm">
-                                    Tu dirección de correo electrónico no está verificada.{' '}
+                                    {t('emailNoVerified')}
                                     <Link
                                         href={route('verification.send')}
                                         method="post"
                                         as="button"
                                         className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                                     >
-                                        Haz clic aquí para reenviar el correo de verificación.
+                                        {t('clickToSendVerificationEmail')}
                                     </Link>
                                 </p>
 
                                 {status === 'verification-link-sent' && (
-                                    <div className="mt-2 text-sm font-medium text-green-600">
-                                        Se ha enviado un nuevo enlace de verificación a tu dirección de correo electrónico.
-                                    </div>
+                                    <div className="mt-2 text-sm font-medium text-green-600">{t('verificationLinkSent')}</div>
                                 )}
                             </div>
                         )}
 
                         <div className="flex items-center gap-4">
-                            <Button disabled={processing}>Guardar</Button>
+                            <Button disabled={processing}>{t('save')}</Button>
 
                             <Transition
                                 show={recentlySuccessful}
@@ -174,7 +174,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                 leave="transition ease-in-out"
                                 leaveTo="opacity-0"
                             >
-                                <p className="text-sm text-neutral-600">Guardado</p>
+                                <p className="text-sm text-neutral-600">{t('saved')}</p>
                             </Transition>
                         </div>
                     </form>

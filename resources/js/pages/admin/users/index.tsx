@@ -5,19 +5,23 @@ import { AppContentLayout } from '@/layouts/app/app-content-layout';
 import type { BreadcrumbItem, Users } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 /**
  *
  */
 export default function UsersIndex() {
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
+
     // Captura la lista de usuarios y el mensaje, si existe, proporcionados por Inertia.
     const { users, message } = usePage<{ users: Users; message: string }>().props;
 
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Administración de usuarios',
+            title: t('userManagement'),
             href: route('admin.user.show'),
         },
     ];
@@ -31,7 +35,7 @@ export default function UsersIndex() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Administración de usuarios" />
+            <Head title={t('userManagement')} />
             <AdminLayout>
                 <AppContentLayout noMargin={true} fullWidth={true}>
                     <AdminUserTable users={users.data} previous={users.links.prev} next={users.links.next} />

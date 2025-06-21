@@ -170,7 +170,7 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                     <CardTitle>{t('changePassword')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <p>{t('changePasswordDescription')}</p>
+                    <p>{t('changeUserPasswordDescription')}</p>
                     <div className="flex items-center gap-2">
                         <Checkbox
                             id="pass-reset-link"
@@ -178,7 +178,7 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                             onCheckedChange={(checked) => setData('pass_reset_link', !!checked)}
                             disabled={processing}
                         />
-                        <label htmlFor="pass-reset-link">{t('sendPasswordResetLink')}</label>
+                        <label htmlFor="pass-reset-link">{t('sendPasswordResetEmail')}</label>
                     </div>
                     <Button type="button" onClick={() => handleAction('reset_password')} disabled={processing}>
                         {processing && data.action === 'reset_password' && <LoaderCircle className="h-4 w-4 animate-spin" />}
@@ -190,16 +190,13 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
             {/* Habilitación / Inhabilitación de inicio de sesión */}
             <Card>
                 <CardHeader>
-                    <CardTitle>{isActive ? 'Inhabilitar' : 'Habilitar'} cuenta</CardTitle>
+                    <CardTitle>{isActive ? t('deactivateAccount') : t('activateAccount')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <p>
-                        {isActive ? 'Inhabilita el inicio de sesión y borra las sesiones existentes' : 'Habilita el inicio de sesión'} de la cuenta de
-                        usuario.
-                    </p>
+                    <p>{isActive ? t('deactivateAccountDescription') : t('activateAccountDescription')}</p>
                     <Button type="button" onClick={() => handleAction('toggle_account_status')} disabled={processing}>
                         {processing && data.action === 'toggle_account_status' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {isActive ? 'Inhabilitar' : 'Habilitar'}
+                        {isActive ? t('deactivate') : t('activate')}
                     </Button>
                 </CardContent>
             </Card>
@@ -208,13 +205,13 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
             {auth.user.is_admin && !user.is_admin && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>Eliminar cuenta</CardTitle>
+                        <CardTitle>{t('deleteAccount')}</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <p>Elimina la cuenta de usuario y todos los datos asociados a ella.</p>
+                        <p>{t('deleteUserAccountDescription')}</p>
                         <Button type="button" variant="destructive" onClick={() => handleAction('delete_account')} disabled={processing}>
                             {processing && data.action === 'delete_account' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            Eliminar
+                            {t('delete')}
                         </Button>
                     </CardContent>
                 </Card>
@@ -223,18 +220,18 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Confirmar acción</DialogTitle>
+                        <DialogTitle>{t('confirmAction')}</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
-                        <p>Para continuar, ingresa tu contraseña de administrador.</p>
+                        <p>{t('confirmActionDescription')}</p>
                         <Input type="password" placeholder="Contraseña" value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} />
                     </div>
                     <DialogFooter className="mt-4">
                         <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                            Cancelar
+                            {t('cancel')}
                         </Button>
                         <Button onClick={confirmAction} disabled={!adminPassword.trim()}>
-                            Confirmar
+                            {t('confirm')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

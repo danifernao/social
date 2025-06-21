@@ -7,12 +7,16 @@ import { AppContentLayout } from '@/layouts/app/app-content-layout';
 import type { BreadcrumbItem, Notification, Notifications } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 /**
  * Muestra la página de notificaciones del usuario autenticado.
  */
 export default function Notifications() {
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
+
     // Captura la lista de notificaciones proporcionada por Inertia.
     const { notifications } = usePage<{ notifications: Notifications }>().props;
 
@@ -62,14 +66,14 @@ export default function Notifications() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Notificaciones',
+            title: t('notifications'),
             href: route('notification.show'),
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Notificaciones" />
+            <Head title={t('notifications')} />
             <AppContentLayout>
                 <NotificationHeader markAsRead={markAsRead} isProcessing={isMarkReadProcessing} />
                 <NotificationList notifications={notificationsList} />

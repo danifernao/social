@@ -157,14 +157,16 @@ export default function AdminUserTable({ users, previous, next }: Props) {
                                         <UserAvatar user={user} />
                                     </TableCell>
                                     <TableCell>{user.username}</TableCell>
-                                    <TableCell className={addTextColor(user.email_verified_at)}>{user.email_verified_at ? 'Sí' : 'No'}</TableCell>
-                                    <TableCell className={addTextColor(user.is_active)}>{user.is_active ? 'Sí' : 'No'}</TableCell>
+                                    <TableCell className={addTextColor(user.email_verified_at)}>
+                                        {user.email_verified_at ? t('yes') : t('no')}
+                                    </TableCell>
+                                    <TableCell className={addTextColor(user.is_active)}>{user.is_active ? t('yes') : t('no')}</TableCell>
                                     <TableCell>{roles[user.role]}</TableCell>
                                     <TableCell>{formatDate(user.created_at)}</TableCell>
                                     <TableCell>
                                         {canActOnUser(user) && (
                                             <Button variant="outline" asChild>
-                                                <Link href={user.id.toString()}>Administrar</Link>
+                                                <Link href={user.id.toString()}>{t('manage')}</Link>
                                             </Button>
                                         )}
                                     </TableCell>

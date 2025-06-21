@@ -107,7 +107,7 @@ export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
                 value={data.content}
                 onChange={(e) => setData('content', e.target.value)}
                 disabled={processing}
-                placeholder={t('whatAreYouThinking')}
+                placeholder={t('whatsOnYourMind')}
                 maxLength={3000}
             />
 

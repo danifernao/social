@@ -1,15 +1,18 @@
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import NotificationBadge from '../content/notification-badge';
 
 export function NavMain({ items = [] }: { items: NavItem[] }) {
+    const { t } = useTranslation('common');
+
     const page = usePage();
     const pathname = page.url.split(/[?#]/)[0];
 
     return (
         <SidebarGroup className="px-2 py-0">
-            <SidebarGroupLabel>Menú</SidebarGroupLabel>
+            <SidebarGroupLabel>{t('menu')}</SidebarGroupLabel>
             <SidebarMenu>
                 {items.map((item) => (
                     <SidebarMenuItem key={item.title}>

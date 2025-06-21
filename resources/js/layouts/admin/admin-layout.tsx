@@ -5,8 +5,12 @@ import { cn } from '@/lib/utils';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function AdminLayout({ children }: PropsWithChildren) {
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
+
     // When server-side rendering, we only render the layout on the client...
     if (typeof window === 'undefined') {
         return null;
@@ -17,7 +21,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
 
     const sidebarNavItems: NavItem[] = [
         {
-            title: 'Usuarios',
+            title: t('users'),
             href: '/admin/users',
             icon: null,
             isActive: ['admin.user.show', 'admin.user.edit'].includes(routeName),
@@ -26,7 +30,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
 
     return (
         <div className="px-4 py-6">
-            <Heading title="Administración" description="Gestiona los usuarios registrados en la red social." />
+            <Heading title={t('management')} description={t('managementDescription')} />
 
             <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12">
                 <aside className="w-full max-w-xl lg:w-48">
