@@ -7,6 +7,7 @@ import { Auth, User } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Checkbox } from '../ui/checkbox';
 import FormErrors from './form-errors';
@@ -19,6 +20,9 @@ interface AdminUserSettingsFormProps {
  * Muestra el formulario para la gestión del usuario.
  */
 export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormProps) {
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation('common');
+
     // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;
 
@@ -92,10 +96,10 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
             {auth.user.is_admin && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>Cambiar rol</CardTitle>
+                        <CardTitle>{t('changeRole')}</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <p>Establece si el usuario es administrador, moderador o un usuario regular.</p>
+                        <p>{t('changeRoleDescription')}</p>
                         <Select
                             value={data.new_role}
                             onValueChange={(value: 'user' | 'mod' | 'admin') => setData('new_role', value)}
@@ -105,14 +109,14 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                                 <SelectValue placeholder="Selecciona un rol" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="admin">Administrador</SelectItem>
-                                <SelectItem value="mod">Moderador</SelectItem>
-                                <SelectItem value="user">Usuario</SelectItem>
+                                <SelectItem value="admin">{t('administrator')}</SelectItem>
+                                <SelectItem value="mod">{t('moderator')}</SelectItem>
+                                <SelectItem value="user">{t('user')}</SelectItem>
                             </SelectContent>
                         </Select>
                         <Button type="button" onClick={() => handleAction('change_role')} disabled={processing}>
                             {processing && data.action === 'change_role' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            Cambiar
+                            {t('change')}
                         </Button>
                     </CardContent>
                 </Card>
@@ -121,13 +125,13 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
             {/* Información */}
             <Card>
                 <CardHeader>
-                    <CardTitle>Restablecer información</CardTitle>
+                    <CardTitle>{t('resetInfo')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <p>Elimina el avatar actual y reemplaza el nombre de usuario por uno aleatorio.</p>
+                    <p>{t('resetInfoDescription')}</p>
                     <Button type="button" onClick={() => handleAction('reset_info')} disabled={processing}>
                         {processing && data.action === 'reset_info' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Restablecer
+                        {t('reset')}
                     </Button>
                 </CardContent>
             </Card>
@@ -135,11 +139,11 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
             {/* Correo */}
             <Card>
                 <CardHeader>
-                    <CardTitle>Cambiar correo electrónico</CardTitle>
+                    <CardTitle>{t('changeEmail')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <Input
-                        placeholder="Nuevo correo electrónico"
+                        placeholder={t('newEmail')}
                         value={data.new_email ?? ''}
                         onChange={(e) => setData('new_email', e.target.value)}
                         disabled={processing}
@@ -151,11 +155,11 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                             onCheckedChange={(checked) => setData('email_verification_link', !!checked)}
                             disabled={processing}
                         />
-                        <label htmlFor="email-verification-link">Enviar correo electrónico de verificación de cuenta.</label>
+                        <label htmlFor="email-verification-link">{t('sendVerificationEmail')}</label>
                     </div>
                     <Button type="button" onClick={() => handleAction('change_email')} disabled={processing}>
                         {processing && data.action === 'change_email' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Cambiar
+                        {t('change')}
                     </Button>
                 </CardContent>
             </Card>
@@ -163,10 +167,10 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
             {/* Contraseña */}
             <Card>
                 <CardHeader>
-                    <CardTitle>Cambiar contraseña</CardTitle>
+                    <CardTitle>{t('changePassword')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <p>Cambia la contraseña por una aleatoria y cierra todas las sesiones.</p>
+                    <p>{t('changePasswordDescription')}</p>
                     <div className="flex items-center gap-2">
                         <Checkbox
                             id="pass-reset-link"
@@ -174,11 +178,11 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                             onCheckedChange={(checked) => setData('pass_reset_link', !!checked)}
                             disabled={processing}
                         />
-                        <label htmlFor="pass-reset-link">Enviar correo electrónico de restablecimiento de contraseña.</label>
+                        <label htmlFor="pass-reset-link">{t('sendPasswordResetLink')}</label>
                     </div>
                     <Button type="button" onClick={() => handleAction('reset_password')} disabled={processing}>
                         {processing && data.action === 'reset_password' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Cambiar
+                        {t('change')}
                     </Button>
                 </CardContent>
             </Card>

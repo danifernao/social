@@ -68,7 +68,7 @@ export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
                 setData('content', '');
             },
             onError: (errors) => {
-                toast(t('text.error'));
+                toast(t('error'));
                 console.error(errors);
             },
         });
@@ -107,7 +107,7 @@ export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
                 value={data.content}
                 onChange={(e) => setData('content', e.target.value)}
                 disabled={processing}
-                placeholder={t('placeholder.entry')}
+                placeholder={t('whatAreYouThinking')}
                 maxLength={3000}
             />
 
@@ -115,7 +115,7 @@ export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
                 <MarkdownHelp />
                 <Button type="submit" className="ml-auto" disabled={processing}>
                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                    {formType === 'post' ? t('button.post') : t('button.comment')}
+                    {formType === 'post' ? t('createPost') : t('comment')}
                 </Button>
             </div>
         </form>

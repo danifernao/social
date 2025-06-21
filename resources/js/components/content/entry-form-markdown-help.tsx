@@ -14,76 +14,76 @@ export function MarkdownHelp() {
         <Popover>
             <PopoverTrigger asChild>
                 <Button variant="link" className="text-muted-foreground p-0 text-sm">
-                    {t('text.markdownHelp')}
+                    {t('markdownHelp')}
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[400px] text-sm">
                 <table className="w-full table-auto border-collapse text-sm">
                     <thead>
                         <tr>
-                            <th className="pr-4 pb-2 text-left font-medium">{t('text.description')}</th>
-                            <th className="pb-2 text-left font-medium">{t('text.example')}</th>
+                            <th className="pr-4 pb-2 text-left font-medium">{t('description')}</th>
+                            <th className="pb-2 text-left font-medium">{t('example')}</th>
                         </tr>
                     </thead>
                     <tbody className="[&_td]:py-1 [&_td]:pr-4 [&_td]:align-top">
                         <tr>
-                            <td>{t('text.bold')}</td>
+                            <td>{t('bold')}</td>
                             <td>
-                                <code>{t('text.mdBold')}</code>
+                                <code>{t('mdBold')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('text.italic')}</td>
+                            <td>{t('italic')}</td>
                             <td>
-                                <code>{t('text.mdItalic')}</code>
+                                <code>{t('mdItalic')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('text.link')}</td>
+                            <td>{t('link')}</td>
                             <td>
-                                <code>{t('text.mdLink')}</code>
+                                <code>{t('mdLink')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('text.quote')}</td>
+                            <td>{t('quote')}</td>
                             <td>
-                                <code>{t('text.mdQuote')}</code>
+                                <code>{t('mdQuote')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('text.inlineCode')}</td>
+                            <td>{t('inlineCode')}</td>
                             <td>
-                                <code>{t('text.mdInlineCode')}</code>
+                                <code>{t('mdInlineCode')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('text.codeBlock')}</td>
+                            <td>{t('codeBlock')}</td>
                             <td>
-                                <code>{t('text.mdCodeBlock')}</code>
+                                <code>{t('mdCodeBlock')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('text.orderedList')}</td>
+                            <td>{t('orderedList')}</td>
                             <td>
-                                <code>{t('text.mdOrderedList')}</code>
+                                <code>{t('mdOrderedList')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('text.unorderedList')}</td>
+                            <td>{t('unorderedList')}</td>
                             <td>
-                                <code>{t('text.mdUnorderedList')}</code>
+                                <code>{t('mdUnorderedList')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('text.image')}</td>
+                            <td>{t('image')}</td>
                             <td>
-                                <code>{t('text.mdImage')}</code>
+                                <code>{t('mdImage')}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td>{t('text.youtube')}</td>
+                            <td>{t('youtubeVideo')}</td>
                             <td>
-                                <code>{t('text.mdYoutube')}</code>
+                                <code>{t('mdYoutube')}</code>
                             </td>
                         </tr>
                     </tbody>

@@ -156,7 +156,7 @@ export default function FormattedText({ text }: Props) {
             {!expanded && showExpand && (
                 <div className="absolute right-0 bottom-0 left-0 flex items-center justify-center bg-gradient-to-t from-black to-transparent p-4">
                     <Button variant="link" onClick={() => setExpanded(true)} className="mt-2 text-sm">
-                        {t('text.readMore')}
+                        {t('readMore')}
                     </Button>
                 </div>
             )}

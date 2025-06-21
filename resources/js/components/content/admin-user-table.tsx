@@ -42,9 +42,9 @@ export default function AdminUserTable({ users, previous, next }: Props) {
 
     // Nombres para cada rol de usuario.
     const roles = {
-        admin: t('text.admin'),
-        mod: t('text.mod'),
-        user: t('text.user'),
+        admin: t('administrator'),
+        mod: t('moderator'),
+        user: t('user'),
     };
 
     // Gestiona el formulario de búsqueda.
@@ -106,7 +106,7 @@ export default function AdminUserTable({ users, previous, next }: Props) {
         <div className="w-full space-y-4">
             {/* Buscador */}
             <form onSubmit={handleSearch}>
-                <Input placeholder={t('placeholder.searchUser')} value={query} onChange={(e) => setQuery(e.target.value)} />
+                <Input placeholder={t('searchUserPlaceholder')} value={query} onChange={(e) => setQuery(e.target.value)} />
             </form>
 
             {/* Tabla */}
@@ -116,33 +116,33 @@ export default function AdminUserTable({ users, previous, next }: Props) {
                         <TableRow className="[&_button]:px-0 [&_th]:px-4">
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('id')}>
-                                    {t('text.id')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('id')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
-                            <TableHead>{t('text.avatar')}</TableHead>
+                            <TableHead>{t('avatar')}</TableHead>
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('username')}>
-                                    {t('text.username')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('username')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('email_verified_at')}>
-                                    {t('text.verified')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('verified')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('is_active')}>
-                                    {t('text.enabled')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('enabled')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('role')}>
-                                    {t('text.role')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('role')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('created_at')}>
-                                    {t('text.registered')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('registered')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
                             <TableHead></TableHead>
@@ -173,7 +173,7 @@ export default function AdminUserTable({ users, previous, next }: Props) {
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={6} className="py-4 text-center">
-                                    {t('text.noResults')}
+                                    {t('noResults')}
                                 </TableCell>
                             </TableRow>
                         )}
@@ -185,21 +185,21 @@ export default function AdminUserTable({ users, previous, next }: Props) {
             <div className="flex justify-end gap-2">
                 {previous ? (
                     <Button variant="outline" size="sm" asChild>
-                        <Link href={previous}>{t('text.previous')}</Link>
+                        <Link href={previous}>{t('previous')}</Link>
                     </Button>
                 ) : (
                     <Button variant="outline" size="sm" disabled>
-                        {t('text.previous')}
+                        {t('previous')}
                     </Button>
                 )}
 
                 {next ? (
                     <Button variant="outline" size="sm" asChild>
-                        <Link href={next}>{t('text.next')}</Link>
+                        <Link href={next}>{t('next')}</Link>
                     </Button>
                 ) : (
                     <Button variant="outline" size="sm" disabled>
-                        {t('text.next')}
+                        {t('next')}
                     </Button>
                 )}
             </div>

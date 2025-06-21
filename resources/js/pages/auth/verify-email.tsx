@@ -21,21 +21,21 @@ export default function VerifyEmail({ status }: { status?: string }) {
     };
 
     return (
-        <AuthLayout title={t('title.verifyEmail')} description={t('description.verifyEmail')}>
-            <Head title={t('meta.title.verifyEmail')} />
+        <AuthLayout title={t('verifyEmail')} description={t('verifyEmailMessage')}>
+            <Head title={t('verifyEmail')} />
 
             {status === 'verification-link-sent' && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">{t('text.verificationEmailSent')}</div>
+                <div className="mb-4 text-center text-sm font-medium text-green-600">{t('verificationEmailSent')}</div>
             )}
 
             <form onSubmit={submit} className="space-y-6 text-center">
                 <Button disabled={processing} variant="secondary">
                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                    {t('button.sendVerificationEmail')}
+                    {t('resendVerificationEmail')}
                 </Button>
 
                 <TextLink href={route('logout')} method="post" className="mx-auto block text-sm">
-                    {t('text.logout')}
+                    {t('logout')}
                 </TextLink>
             </form>
         </AuthLayout>

@@ -28,14 +28,14 @@ export function FollowNav({ pageName, username }: FollowPageNavProps) {
                 aria-current={pageName === 'following' ? 'page' : undefined}
                 className={cn(baseClass, pageName === 'following' && activeClass)}
             >
-                {t('text.following')}
+                {t('following')}
             </Link>
             <Link
                 href={`/user/${username}/followers`}
                 aria-current={pageName === 'followers' ? 'page' : undefined}
                 className={cn(baseClass, pageName === 'followers' && activeClass)}
             >
-                {t('text.followers')}
+                {t('followers')}
             </Link>
         </nav>
     );

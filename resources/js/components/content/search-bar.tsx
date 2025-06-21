@@ -22,8 +22,8 @@ export default function SearchBar({ type, query, onSubmit }: SearchBarProps) {
 
     // Lista de tipos de búsqueda disponibles con etiquetas legibles para el usuario.
     const searchTypes: SearchTypes[] = [
-        { label: t('text.posts'), value: 'post' },
-        { label: t('text.users'), value: 'user' },
+        { label: t('posts'), value: 'post' },
+        { label: t('users'), value: 'user' },
     ];
 
     // Tipo de búsqueda por defecto basado en las propiedades iniciales.
@@ -74,7 +74,7 @@ export default function SearchBar({ type, query, onSubmit }: SearchBarProps) {
             </Popover>
 
             <Input
-                placeholder={t('placeholder.search', { type: searchType.label.toLowerCase() })}
+                placeholder={t('searchPlaceholder', { type: searchType.label.toLowerCase() })}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full max-w-md"

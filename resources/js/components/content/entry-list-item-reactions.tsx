@@ -78,7 +78,7 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                 },
 
                 onError: (errors) => {
-                    toast(t('text.error'));
+                    toast(t('error'));
                     console.error(errors);
                 },
             },
@@ -117,8 +117,8 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                             key={emoji}
                             onClick={() => (auth.user ? toggleReaction(emoji) : false)}
                             className={reactedByUser ? 'bg-accent text-accent-foreground' : ''}
-                            aria-label={reactedByUser ? t('text.removeReaction') : t('text.reactWith', { emoji })}
-                            title={reactedByUser ? t('text.removeReaction') : t('text.reactWith', { emoji })}
+                            aria-label={reactedByUser ? t('removeReaction') : t('reactWith', { emoji })}
+                            title={reactedByUser ? t('removeReaction') : t('reactWith', { emoji })}
                             variant="outline"
                         >
                             <span className="mr-1">{count}</span>
@@ -129,7 +129,7 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
             )}
 
             {auth.user && (
-                <Button onClick={() => setShowPicker(!showPicker)} variant="outline" title={t('text.react')}>
+                <Button onClick={() => setShowPicker(!showPicker)} variant="outline" title={t('react')}>
                     <SmilePlus />
                 </Button>
             )}

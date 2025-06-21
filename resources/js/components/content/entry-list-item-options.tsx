@@ -50,7 +50,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
     const routeParamKey = entry.type === 'post' ? 'post' : 'comment';
 
     // Mensaje que se mostrará al usuario tras eliminar la entrada según su tipo.
-    const deletedMessage = entry.type === 'post' ? t('text.postDeleted') : t('text.commentDeleted');
+    const deletedMessage = entry.type === 'post' ? t('postDeleted') : t('commentDeleted');
 
     // Ejecuta la eliminación de la entrada tras confirmar.
     const onConfirm = () => {
@@ -63,7 +63,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                 toast(deletedMessage);
             },
             onError: (errors) => {
-                toast(t('text.error'));
+                toast(t('error'));
                 console.error(errors);
             },
         });
@@ -73,7 +73,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button aria-label={t('text.options')} title={t('text.options')} variant="outline">
+                    <Button aria-label={t('options')} title={t('options')} variant="outline">
                         <EllipsisVertical />
                     </Button>
                 </DropdownMenuTrigger>
@@ -81,12 +81,12 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                     <DropdownMenuGroup>
                         <DropdownMenuItem>
                             <Button variant="link" className="hover:no-underline" onClick={() => setIsFormDialogOpen(true)}>
-                                {t('text.edit')}
+                                {t('edit')}
                             </Button>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                             <Button variant="link" className="hover:no-underline" onClick={() => setIsConfirmDialogOpen(true)}>
-                                {t('text.delete')}
+                                {t('delete')}
                             </Button>
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
@@ -95,8 +95,8 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
 
             <Dialog open={isFormDialogOpen} onOpenChange={setIsFormDialogOpen}>
                 <DialogContent>
-                    <DialogTitle>{entry.type === 'post' ? t('text.editPost') : t('text.editComment')}</DialogTitle>
-                    <DialogDescription>{entry.type === 'post' ? t('text.editPostDescription') : t('text.editCommentDescription')}</DialogDescription>
+                    <DialogTitle>{entry.type === 'post' ? t('editPost') : t('editComment')}</DialogTitle>
+                    <DialogDescription>{entry.type === 'post' ? t('editPostDescription') : t('editCommentDescription')}</DialogDescription>
                     <EntryForm entry={entry} onSubmit={closeFormDialog} />
                 </DialogContent>
             </Dialog>
@@ -104,14 +104,14 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
             <AlertDialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>{entry.type === 'post' ? t('text.deletePost') : t('text.deleteComment')}</AlertDialogTitle>
+                        <AlertDialogTitle>{entry.type === 'post' ? t('deletePost') : t('deleteComment')}</AlertDialogTitle>
                         <AlertDialogDescription>
-                            {entry.type === 'post' ? t('text.deletPostConfirmation') : t('text.deletCommentConfirmation')}
+                            {entry.type === 'post' ? t('deletePostConfirmation') : t('deleteCommentConfirmation')}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>{t('button.cancel')}</AlertDialogCancel>
-                        <AlertDialogAction onClick={onConfirm}>{t('button.accept')}</AlertDialogAction>
+                        <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+                        <AlertDialogAction onClick={onConfirm}>{t('accept')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

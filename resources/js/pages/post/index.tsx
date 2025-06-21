@@ -39,18 +39,18 @@ export default function Home() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('text.userProfile', { username: post.user.username }),
+            title: t('userProfile', { username: post.user.username }),
             href: route('profile.show', { user: post.user.username }),
         },
         {
-            title: t('text.post'),
+            title: t('post'),
             href: route('post.show', { post: post.id }),
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={t('meta.title.post', { username: post.user.username })} />
+            <Head title={t('userPost', { username: post.user.username })} />
             <AppContentLayout>
                 <article className="flex flex-col gap-8">
                     <EntryListItem entry={post} />

@@ -26,15 +26,15 @@ export default function ForgotPassword({ status }: { status?: string }) {
     };
 
     return (
-        <AuthLayout title={t('title.forgotPassword')} description={t('description.forgotPassword')}>
-            <Head title={t('meta.title.forgotPassword')} />
+        <AuthLayout title={t('forgotPassword')} description={t('forgotPasswordDescription')}>
+            <Head title={t('resetPassword')} />
 
             {status && <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>}
 
             <div className="space-y-6">
                 <form onSubmit={submit}>
                     <div className="grid gap-2">
-                        <Label htmlFor="email">{t('field.email')}</Label>
+                        <Label htmlFor="email">{t('email')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -43,7 +43,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                             value={data.email}
                             autoFocus
                             onChange={(e) => setData('email', e.target.value)}
-                            placeholder={t('placeholder.email')}
+                            placeholder={t('dummyEmail')}
                         />
 
                         <InputError message={errors.email} />
@@ -52,13 +52,13 @@ export default function ForgotPassword({ status }: { status?: string }) {
                     <div className="my-6 flex items-center justify-start">
                         <Button className="w-full" disabled={processing}>
                             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            {t('button.forgotPassword')}
+                            {t('sendPasswordResetLinkBtn')}
                         </Button>
                     </div>
                 </form>
 
                 <div className="text-muted-foreground space-x-1 text-center text-sm">
-                    <Trans i18nKey="text.goBack" ns="common">
+                    <Trans i18nKey="returnToLogin" ns="common">
                         <TextLink href={route('login')}></TextLink>
                     </Trans>
                 </div>

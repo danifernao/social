@@ -55,7 +55,7 @@ export default function Search() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: isHashtag ? t('text.hashtag') : t('text.search'),
+            title: isHashtag ? t('hashtag') : t('search'),
             href: route('search.show'),
         },
     ];

@@ -15,36 +15,36 @@ export function AppSidebar() {
 
     const navAuth = [
         {
-            title: t('text.home'),
+            title: t('home'),
             href: '/home',
             icon: Home,
         },
         {
-            title: t('text.profile'),
+            title: t('profile'),
             href: `/user/${auth.user?.username}`,
             icon: User,
         },
         {
-            title: t('text.explore'),
+            title: t('explore'),
             href: `/search`,
             icon: Search,
         },
         {
-            title: t('text.connections'),
+            title: t('connections'),
             href: `/user/${auth.user?.username}/following`,
             icon: Users,
             isActive: ['follow.following', 'follow.followers'].includes(routeName),
         },
         {
             name: 'notifications',
-            title: t('text.notifications'),
+            title: t('notifications'),
             href: `/notifications`,
             icon: Bell,
         },
         ...(auth.user?.can_moderate
             ? [
                   {
-                      title: t('text.management'),
+                      title: t('management'),
                       href: '/admin',
                       icon: UserCog,
                       isActive: ['admin.user.show', 'admin.user.edit'].includes(routeName),
@@ -55,12 +55,12 @@ export function AppSidebar() {
 
     const navGuest = [
         {
-            title: t('text.login'),
+            title: t('login'),
             href: '/login',
             icon: LogIn,
         },
         {
-            title: t('text.register'),
+            title: t('register'),
             href: `/register`,
             icon: UserPlus,
         },
