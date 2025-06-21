@@ -108,7 +108,7 @@
 	"newEmail": "Nuevo correo electrónico",
 	"newPassword": "Nueva contraseña",
 	"next": "Siguiente",
-  "no": "No",
+	"no": "No",
 	"noAccountYet": "¿No tienes una cuenta? <0>Crea una</0>",
 	"noComments": "Nadie ha comentado aún.",
 	"noFollowers": "Este usuario aún no tiene seguidores.",
@@ -184,6 +184,6 @@
 	"welcomeMessage": "Conecta, comparte y descubre lo que otros piensan.",
 	"welcomeTitle": "Bienvenido a {{siteName}}",
 	"whatsOnYourMind": "¿En qué estás pensando?",
-  "yes": "Sí",
+	"yes": "Sí",
 	"youtubeVideo": "Video de YouTube"
 }
