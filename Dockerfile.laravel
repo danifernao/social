@@ -1,0 +1,57 @@
+# Usa como base PHP 8.4 con Apache preinstalado.
+FROM php:8.4-apache
+
+# Establece el directorio de trabajo dentro del contenedor.
+WORKDIR /var/www/html
+
+# Actualiza paquetes e instala dependencias necesarias.
+RUN apt-get update && apt-get install -y \
+  git unzip curl libzip-dev zip \
+  libpng-dev libjpeg-dev libfreetype6-dev \
+  libonig-dev libxml2-dev wget \
+  && docker-php-ext-configure gd --with-freetype --with-jpeg \
+  && docker-php-ext-install \
+  pdo \
+  pdo_mysql \
+  zip \
+  gd \
+  mbstring \
+  xml \
+  ctype \
+  bcmath \
+  fileinfo \
+  opcache \
+  pcntl \
+  && wget https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz \
+  && tar -xvzf dockerize-linux-amd64-v0.6.1.tar.gz \
+  && mv dockerize /usr/local/bin/ \
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copia Composer desde la imagen oficial.
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copia los archivos del proyecto.
+COPY . .
+
+# Copia composer.json y composer.lock, luego instala dependencias con Composer.
+COPY composer*.json ./
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+
+# Configura el DocumentRoot de Apache para Laravel.
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
+  && sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+# Activa módulos de Apache necesarios para Laravel.
+RUN a2enmod rewrite headers
+
+# Ajusta permisos para que Laravel pueda escribir en storage y bootstrap/cache.
+RUN chown -R www-data:www-data storage bootstrap/cache \
+  && chmod -R 775 storage bootstrap/cache
+
+# Copia y da permisos al script de entrada.
+COPY entrypoint-laravel.sh /usr/local/bin/entrypoint-laravel.sh
+RUN chmod +x /usr/local/bin/entrypoint-laravel.sh
+
+# Define el script de entrada del contenedor.
+ENTRYPOINT ["entrypoint-laravel.sh"]

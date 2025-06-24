@@ -1,0 +1,42 @@
+services:
+  laravel:
+    build:
+      context: .
+      dockerfile: Dockerfile.laravel
+    volumes:
+      - ./:/var/www/html
+      - /var/www/html/vendor
+    ports:
+      - 80:80
+      - 8080:8080
+    depends_on:
+      - mysql
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    volumes:
+      - ./:/var/www/html
+      - /var/www/html/node_modules
+    ports:
+      - 5173:5173
+    depends_on:
+      - laravel
+  mysql:
+    image: mysql:9.3
+    environment:
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_DATABASE: ${DB_DATABASE}
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 8888:80
+    environment:
+      - PMA_HOST=mysql
+      - PMA_port=3306
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 8025:8025
