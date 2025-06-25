@@ -22,8 +22,8 @@ services:
       context: .
       dockerfile: Dockerfile.node
     volumes:
-    - ./:/var/www/html
-    - /var/www/html/node_modules
+      - ./:/var/www/html
+      - /var/www/html/node_modules
     develop:
       watch:
         - action: rebuild
