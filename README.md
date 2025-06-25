@@ -40,7 +40,7 @@
 4. Abre la terminal y ejecuta lo siguiente para instalar las dependencias y levantar los contenedores:
 
 ```
-docker compose up --build
+docker compose up --watch --build
 ```
 
 5. Abre `http://localhost/` en tu navegador para ver la aplicación.

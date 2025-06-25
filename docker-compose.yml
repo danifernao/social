@@ -3,9 +3,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.laravel
-    volumes:
-      - ./:/var/www/html
-      - /var/www/html/vendor
+    develop:
+      watch:
+        - action: sync
+          path: ./
+          target: /var/www/html
+          ignore:
+            - vendor
+        - action: rebuild
+          path: composer.json
     ports:
       - 80:80
       - 8080:8080
@@ -16,8 +22,12 @@ services:
       context: .
       dockerfile: Dockerfile.node
     volumes:
-      - ./:/var/www/html
-      - /var/www/html/node_modules
+    - ./:/var/www/html
+    - /var/www/html/node_modules
+    develop:
+      watch:
+        - action: rebuild
+          path: package.json
     ports:
       - 5173:5173
     depends_on:
@@ -29,6 +39,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
       MYSQL_DATABASE: ${DB_DATABASE}
+    volumes:
+      - mysql_data:/var/lib/mysql
   phpmyadmin:
     image: phpmyadmin
     ports:
@@ -40,3 +52,5 @@ services:
     image: mailhog/mailhog
     ports:
       - 8025:8025
+volumes:
+  mysql_data:
