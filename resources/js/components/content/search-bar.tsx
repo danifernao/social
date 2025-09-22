@@ -18,7 +18,7 @@ interface SearchBarProps {
  */
 export default function SearchBar({ type, query, onSubmit }: SearchBarProps) {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Lista de tipos de búsqueda disponibles con etiquetas legibles para el usuario.
     const searchTypes: SearchTypes[] = [

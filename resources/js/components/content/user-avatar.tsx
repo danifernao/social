@@ -12,7 +12,7 @@ interface UserAvatarProps {
  */
 export default function UserAvatar({ user, className = 'w-10 h-10' }: UserAvatarProps) {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Define las clases de Tailwind que corresponden a cada tamaño de avatar.
     return (

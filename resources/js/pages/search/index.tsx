@@ -23,7 +23,7 @@ interface PageProps {
  */
 export default function Search() {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Captura las propiedades de la página proporcionadas por Inertia.
     const { props } = usePage<PageProps>();

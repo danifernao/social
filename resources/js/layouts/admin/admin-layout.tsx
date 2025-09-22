@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function AdminLayout({ children }: PropsWithChildren) {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // When server-side rendering, we only render the layout on the client...
     if (typeof window === 'undefined') {

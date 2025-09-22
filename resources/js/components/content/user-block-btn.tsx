@@ -14,7 +14,7 @@ interface UserBlockBtnProps {
  */
 export default function UserBlockBtn({ user }: UserBlockBtnProps) {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     const { isProcessing, execute } = usePostAction();
     const { iconClass, textClass } = getAnimatedButtonClasses(isProcessing);

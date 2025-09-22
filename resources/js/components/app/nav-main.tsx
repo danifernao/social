@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import NotificationBadge from '../content/notification-badge';
 
 export function NavMain({ items = [] }: { items: NavItem[] }) {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     const page = usePage();
     const pathname = page.url.split(/[?#]/)[0];

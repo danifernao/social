@@ -21,7 +21,7 @@ interface EntryFormProps {
  */
 export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Determina si el formulario es para una publicación o un comentario.
     const formType = entry ? (entry.type === 'post' ? 'post' : 'comment') : postId ? 'comment' : 'post';

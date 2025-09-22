@@ -3,7 +3,7 @@ import { Head, Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 export default function Welcome() {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     return (
         <div className="bg-background flex min-h-screen flex-col items-center justify-center px-6 text-center">

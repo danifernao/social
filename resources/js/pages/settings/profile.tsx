@@ -23,7 +23,7 @@ type ProfileForm = {
 };
 
 export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
     const { auth } = usePage<SharedData>().props;
 
     const avatarUrl = auth.user.avatar_url;
