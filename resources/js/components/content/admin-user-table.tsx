@@ -166,7 +166,7 @@ export default function AdminUserTable({ users, previous, next }: Props) {
                                     <TableCell>
                                         {canActOnUser(user) && (
                                             <Button variant="outline" asChild>
-                                                <Link href={user.id.toString()}>{t('manage')}</Link>
+                                                <Link href={`/admin/${user.id}`}>{t('manage')}</Link>
                                             </Button>
                                         )}
                                     </TableCell>
