@@ -114,7 +114,7 @@ export default function Register() {
                 </div>
 
                 <div className="text-muted-foreground text-center text-sm">
-                    <Trans i18nKey="alreadyHaveAccount" ns="common">
+                    <Trans i18nKey="alreadyHaveAccount">
                         <TextLink href={route('login')} tabIndex={6}></TextLink>
                     </Trans>
                 </div>
