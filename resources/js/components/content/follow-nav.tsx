@@ -12,7 +12,7 @@ interface FollowPageNavProps {
  */
 export function FollowNav({ pageName, username }: FollowPageNavProps) {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Clase base.
     const baseClass =

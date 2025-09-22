@@ -10,7 +10,7 @@ interface EmptyMessageProps {
  */
 export default function EmptyMessage({ custom = '' }: EmptyMessageProps) {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Captura la ruta actual de la pagina proporcionada por Inertia.
     const { routeName } = usePage<{ routeName: string }>().props;

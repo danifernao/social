@@ -20,7 +20,7 @@ interface EntryItemOptionsProps {
  */
 export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Estado que controla la visibilidad del formulario de edición.
     const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);

@@ -14,7 +14,7 @@ interface EntryListItemReactionsProps {
 
 export default function EntryListItemReactions({ entry }: EntryListItemReactionsProps) {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;

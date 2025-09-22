@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
  */
 export default function UsersEdit() {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Captura el usuario proporcionado por Inertia.
     const { user } = usePage<{ user: User }>().props;

@@ -22,7 +22,7 @@ interface PageProps {
  */
 export default function Follow() {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Captura las propiedades de la página proporcionadas por Inertia.
     const { auth, user, following, followers, routeName } = usePage<PageProps>().props;
