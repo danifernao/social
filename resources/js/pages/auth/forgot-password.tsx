@@ -58,7 +58,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                 </form>
 
                 <div className="text-muted-foreground space-x-1 text-center text-sm">
-                    <Trans i18nKey="returnToLogin" ns="common">
+                    <Trans i18nKey="returnToLogin">
                         <TextLink href={route('login')}></TextLink>
                     </Trans>
                 </div>

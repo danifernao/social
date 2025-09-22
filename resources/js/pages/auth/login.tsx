@@ -101,7 +101,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                 </div>
 
                 <div className="text-muted-foreground text-center text-sm">
-                    <Trans i18nKey="noAccountYet" ns="common">
+                    <Trans i18nKey="noAccountYet">
                         <TextLink href={route('register')} tabIndex={5}></TextLink>
                     </Trans>
                 </div>
