@@ -19,7 +19,7 @@ export default function ListLoadMore({ type, cursor, isProcessing, autoClick = t
     if (!cursor) return null;
 
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Referencia del botón para observar su visibilidad.
     const ref = useRef<HTMLButtonElement | null>(null);

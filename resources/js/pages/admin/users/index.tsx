@@ -13,7 +13,7 @@ import { toast } from 'sonner';
  */
 export default function UsersIndex() {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Captura la lista de usuarios y el mensaje, si existe, proporcionados por Inertia.
     const { users, message } = usePage<{ users: Users; message: string }>().props;

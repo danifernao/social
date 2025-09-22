@@ -14,7 +14,7 @@ interface NotificationListItemProps {
  */
 export default function NotificationListItem({ notification }: NotificationListItemProps) {
     // Obtiene las traducciones de la página.
-    const { i18n } = useTranslation('common');
+    const { i18n } = useTranslation();
 
     // Captura el token CSRF proporcionado por Inertia.
     // Este token es necesario para que Laravel acepte la solicitud PATCH.

@@ -10,7 +10,7 @@ import AuthLayout from '@/layouts/auth-layout';
 import { useTranslation } from 'react-i18next';
 
 export default function VerifyEmail({ status }: { status?: string }) {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     const { post, processing } = useForm({});
 

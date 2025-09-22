@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 export default function Appearance() {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
     const { lang } = usePage<{ lang: string }>().props;
 
     const { data, setData, patch, processing } = useForm({

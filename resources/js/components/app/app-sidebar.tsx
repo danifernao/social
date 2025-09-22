@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import AppLogo from './app-logo';
 
 export function AppSidebar() {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
 

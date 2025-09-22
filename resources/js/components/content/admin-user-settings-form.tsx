@@ -21,7 +21,7 @@ interface AdminUserSettingsFormProps {
  */
 export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormProps) {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;

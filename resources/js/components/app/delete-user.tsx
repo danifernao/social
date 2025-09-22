@@ -12,7 +12,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { useTranslation } from 'react-i18next';
 
 export default function DeleteUser() {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     const passwordInput = useRef<HTMLInputElement>(null);
     const { data, setData, delete: destroy, processing, reset, errors, clearErrors } = useForm<Required<{ password: string }>>({ password: '' });

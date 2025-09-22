@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
  */
 export default function Home() {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Captura el usuario autenticado, la publicación y los comentarios proporcionados por Inertia.
     const { auth, post, comments } = usePage<{ auth: Auth; post: Post; comments: Comments }>().props;

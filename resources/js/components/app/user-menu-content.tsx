@@ -11,7 +11,7 @@ interface UserMenuContentProps {
 }
 
 export function UserMenuContent({ user }: UserMenuContentProps) {
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     const cleanup = useMobileNavigation();
 

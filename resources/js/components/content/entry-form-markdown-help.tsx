@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
  */
 export function MarkdownHelp() {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     return (
         <Popover>

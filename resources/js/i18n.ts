@@ -1,27 +1,18 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-// Cargar todos los archivos de traducción de forma automática.
-const modules = import.meta.glob("./locales/**/*.json", { eager: true });
-
-// Estructura final: { en: { common: {...}, welcome: {...} }, es: {...} }
-const resources: any = {};
-
-for (const path in modules) {
-  const match = path.match(/\.\/locales\/(\w+)\/(.+)\.json$/);
-  if (!match) continue;
-
-  const [, lang, namespace] = match;
-  resources[lang] ??= {};
-  resources[lang][namespace] = (modules[path] as any).default;
-}
+import en from "./locales/en.json";
+import es from "./locales/es.json";
 
 i18n.use(initReactI18next).init({
-  resources,
+  resources: {
+    en: { translation: en },
+    es: { translation: es },
+  },
   lng: "es",
-  fallbackLng: "es",
+  fallbackLng: "en",
   interpolation: {
-    escapeValue: false,
+    escapeValue: false, // react ya lo maneja
   },
 });
 

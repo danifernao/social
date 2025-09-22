@@ -15,7 +15,7 @@ import { toast } from 'sonner';
  */
 export default function Notifications() {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Captura la lista de notificaciones proporcionada por Inertia.
     const { notifications } = usePage<{ notifications: Notifications }>().props;

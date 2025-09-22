@@ -20,7 +20,7 @@ interface Props {
  */
 export default function AdminUserTable({ users, previous, next }: Props) {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Captura la URL de la página y el usuario autenticado proporcionados por Inertia.
     const {

@@ -12,7 +12,7 @@ interface NotificationHeaderProps {
  */
 export default function NotificationHeader({ markAsRead, isProcessing }: NotificationHeaderProps) {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     return (
         <div className="flex items-center gap-4">

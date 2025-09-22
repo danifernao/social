@@ -13,7 +13,7 @@ interface UserFollowBtnProps {
  */
 export default function UserAdminBtn({ user }: UserFollowBtnProps) {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     return (
         <Button asChild className="group relative gap-0 overflow-hidden">

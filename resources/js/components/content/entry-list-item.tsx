@@ -20,7 +20,7 @@ interface EntryListItemProps {
  */
 export default function EntryListItem({ entry }: EntryListItemProps) {
     // Obtiene las traducciones de la página.
-    const { i18n, t } = useTranslation('common');
+    const { i18n, t } = useTranslation();
 
     // Relación entre idioma y formato de fecha.
     const localeMap: Record<string, Locale> = {

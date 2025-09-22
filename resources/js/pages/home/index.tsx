@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
  */
 export default function Home() {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Captura la lista de publicaciones proporcionada por Inertia.
     const { posts } = usePage<{ posts: Posts }>().props;

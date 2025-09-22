@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
  */
 export default function Profile() {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Captura el usuario autenticado, el usuario del perfil y la lista de publicaciones proporcionados por Inertia.
     const { auth, user, posts } = usePage<{ auth: Auth; user: User; posts: Posts }>().props;

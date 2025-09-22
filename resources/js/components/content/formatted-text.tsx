@@ -28,7 +28,7 @@ type ExtendedComponents = Components & {
  */
 export default function FormattedText({ text }: Props) {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation('common');
+    const { t } = useTranslation();
 
     // Referencia al contenedor que envuelve al texto.
     const contentRef = useRef<HTMLDivElement>(null);
