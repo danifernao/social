@@ -16,16 +16,18 @@ type RegisterForm = {
     email: string;
     password: string;
     password_confirmation: string;
+    language: string;
 };
 
 export default function Register() {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
         username: '',
         email: '',
         password: '',
         password_confirmation: '',
+        language: i18n.language,
     });
 
     const submit: FormEventHandler = (e) => {
