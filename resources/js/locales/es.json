@@ -18,6 +18,8 @@
   "changePassword": "Cambiar contraseña",
   "changeRole": "Cambiar rol",
   "changeRoleDescription": "Establece si el usuario es administrador, moderador o un usuario regular.",
+  "changeUsername": "Cambiar nombre de usuario",
+  "changeUsernameDescription": "Si el campo se deja vacío, el registro se guardará con un nombre de usuario aleatorio.",
   "clickToSendVerificationEmail": "Haz clic aquí para reenviar el correo de verificación.",
   "codeBlock": "Bloque de código",
   "comment": "Comentar",

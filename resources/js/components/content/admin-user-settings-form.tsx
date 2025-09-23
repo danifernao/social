@@ -40,6 +40,7 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
 
     const { data, setData, patch, errors, processing } = useForm({
         action: '',
+        new_username: user.username,
         new_email: user.email,
         new_role: user.role,
         email_verification_link: false as boolean,
@@ -65,9 +66,15 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
     const sendData = () => {
         patch(route('admin.user.update', user.id), {
             preserveScroll: true,
-            onSuccess: () => {
-                if (data.action === 'toggle_account_status') {
-                    setIsActive((prev) => !prev);
+            onSuccess: (page) => {
+                switch (data.action) {
+                    case 'toggle_account_status':
+                        setIsActive((prev) => !prev);
+                        break;
+                    case 'change_username':
+                        const typedPage = page as unknown as { props: { user: User } };
+                        setData('new_username', typedPage.props.user.username);
+                        break;
                 }
                 toast('¡Cambios guardados!');
             },
@@ -131,6 +138,26 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                     <Button type="button" onClick={() => handleAction('reset_info')} disabled={processing}>
                         {processing && data.action === 'reset_info' && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         {t('reset')}
+                    </Button>
+                </CardContent>
+            </Card>
+
+            {/* Nombre de usuario */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>{t('changeUsername')}</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <Input
+                        placeholder={t('username')}
+                        value={data.new_username ?? ''}
+                        onChange={(e) => setData('new_username', e.target.value)}
+                        disabled={processing}
+                    />
+                    <p className="text-muted-foreground text-sm italic">{t('changeUsernameDescription')}</p>
+                    <Button type="button" onClick={() => handleAction('change_username')} disabled={processing}>
+                        {processing && data.action === 'change_username' && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                        {t('change')}
                     </Button>
                 </CardContent>
             </Card>

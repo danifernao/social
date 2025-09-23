@@ -18,6 +18,8 @@
   "changePassword": "Change password",
   "changeRole": "Change role",
   "changeRoleDescription": "Set whether the user is an administrator, moderator, or regular user.",
+  "changeUsername": "Change username",
+  "changeUsernameDescription": "If the field is left empty, the record will be saved with a random username.",
   "clickToSendVerificationEmail": "Click here to resend the verification email.",
   "codeBlock": "Code block",
   "comment": "Comment",
