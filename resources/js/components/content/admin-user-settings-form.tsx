@@ -63,7 +63,7 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
 
     // Envía los datos del formulario.
     const sendData = () => {
-        patch(route('admin.user.update', user.username), {
+        patch(route('admin.user.update', user.id), {
             preserveScroll: true,
             onSuccess: () => {
                 if (data.action === 'toggle_account_status') {
