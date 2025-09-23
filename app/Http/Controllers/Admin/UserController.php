@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Models\UserBlock;
+use App\Rules\UserRules;
 use App\Traits\HandlesPasswordConfirmation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -104,7 +105,7 @@ class UserController extends Controller
         }
         
         $request->validate([
-            'action' => ['required', Rule::in(['change_role', 'reset_info', 'change_email', 'reset_password', 'toggle_account_status', 'delete_account'])],
+            'action' => ['required', Rule::in(['change_role', 'reset_info', 'change_username', 'change_email', 'reset_password', 'toggle_account_status', 'delete_account'])],
             'pass_confirmation' => ['required', 'string'],
         ]);
 
@@ -117,6 +118,8 @@ class UserController extends Controller
                 return $this->changeRole($request, $user);
             case 'reset_info':
                 return $this->resetInfo($user);
+            case 'change_username':
+                return $this->changeUsername($request, $user);
             case 'change_email':
                 return $this->changeEmail($request, $user);
             case 'reset_password':
@@ -192,6 +195,38 @@ class UserController extends Controller
     }
 
     /**
+     * Cambia el nombre de usuario del usuario.
+     * - Si se recibe un nuevo nombre de usuario en la solicitud, lo valida y lo asigna.
+     * - Si no se recibe, genera automáticamente un nombre de usuario único y lo asigna.
+     * 
+     * @param User $user Usuario al que se le va a cambiar el nombre de usuario.
+     */
+    private function changeUsername(Request $request, User $user)
+    {
+        if ($request->filled('new_username')) {
+            $request->validate([
+                'new_username' => UserRules::username($user->id),
+            ]);
+
+            $new_username = $request->new_username;
+        } else {
+            // Dado que no se proporcionó un nombre de usuario, genera uno aleatoriamente.
+            do {
+                $new_username = 'user_' . Str::lower(Str::random(8));
+            } while (User::where('username', $new_username)->exists());
+        }
+
+        $user->username = $new_username;
+
+        // Si cambió el nombre de usuario, guarda el cambio.
+        if ($user->isDirty('username')) {
+            $user->save();
+        }
+
+        return back()->with('status', 'username-updated');
+    }
+
+    /**
      * Cambia el correo del usuario y, si se solicita, envía el enlace de verificación.
      * 
      * @param User $user Usuario al que se le va a cambiar el correo.
@@ -199,14 +234,7 @@ class UserController extends Controller
     private function changeEmail(Request $request, User $user)
     {
         $request->validate([
-            'new_email' => [
-                'required',
-                'string',
-                'lowercase',
-                'email',
-                'max:255',
-                Rule::unique('users', 'email')->ignore($user->id),
-            ],
+            'new_email' => UserRules::email($user->id),
         ]);
 
         $user->email = $request->new_email;
