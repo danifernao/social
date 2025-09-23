@@ -226,28 +226,15 @@ class UserController extends Controller
     }
 
     /**
-     * Restablece la contraseña del usuario, elimina sus sesiones y, opcionalmente, envía un enlace de recuperación.
+     * Envía un enlace al correo electrónico del usuario para el restablecimiento de la contraseña.
      * 
-     * @param User $user Usuario al que se le va a cambiar la contraseña.
+     * @param User $user Usuario que recibirá el correo electrónico.
      */
     private function resetPassword(Request $request, User $user)
     {
-        // Genera una nueva contraseña aleatoria.
-        $new_password = Str::random(12);
-
-        $user->password = Hash::make($new_password);
-        $user->remember_token = null;
-        $user->save();
-
-        // Elimina todas las sesiones activas del usuario.
-        DB::table('sessions')->where('user_id', $user->id)->delete();
-
-        // Si se solicitó, envía un enlace de recuperación al correo.
-        if (filter_var($request->pass_reset_link, FILTER_VALIDATE_BOOLEAN)) {
-            Password::sendResetLink(['email' => $user->email]);
-        }
-
-        return back()->with('status', 'password-updated');
+        Password::sendResetLink(['email' => $user->email]);
+        
+        return back()->with('status', 'password-reset-email-sent');
     }
 
     /**
