@@ -43,7 +43,6 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
         new_email: user.email,
         new_role: user.role,
         email_verification_link: false as boolean,
-        pass_reset_link: false as boolean,
         pass_confirmation: '',
     });
 
@@ -167,22 +166,13 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
             {/* Contraseña */}
             <Card>
                 <CardHeader>
-                    <CardTitle>{t('changePassword')}</CardTitle>
+                    <CardTitle>{t('resetPassword')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <p>{t('changeUserPasswordDescription')}</p>
-                    <div className="flex items-center gap-2">
-                        <Checkbox
-                            id="pass-reset-link"
-                            checked={data.pass_reset_link}
-                            onCheckedChange={(checked) => setData('pass_reset_link', !!checked)}
-                            disabled={processing}
-                        />
-                        <label htmlFor="pass-reset-link">{t('sendPasswordResetEmail')}</label>
-                    </div>
+                    <p>{t('resetUserPasswordDescription')}</p>
                     <Button type="button" onClick={() => handleAction('reset_password')} disabled={processing}>
                         {processing && data.action === 'reset_password' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('change')}
+                        {t('reset')}
                     </Button>
                 </CardContent>
             </Card>
