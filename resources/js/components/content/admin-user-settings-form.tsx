@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Auth, User } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Checkbox } from '../ui/checkbox';
@@ -107,7 +107,6 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                         <CardTitle>{t('changeRole')}</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <p>{t('changeRoleDescription')}</p>
                         <Select
                             value={data.new_role}
                             onValueChange={(value: 'user' | 'mod' | 'admin') => setData('new_role', value)}
@@ -122,6 +121,16 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                                 <SelectItem value="user">{t('user')}</SelectItem>
                             </SelectContent>
                         </Select>
+
+                        <dl className="text-muted-foreground grid grid-cols-[min-content_1fr] gap-2 text-sm">
+                            {Object.entries(t('roles', { returnObjects: true })).map(([role, description]) => (
+                                <Fragment key={role}>
+                                    <dt className="font-semibold">{role}:</dt>
+                                    <dd>{description}</dd>
+                                </Fragment>
+                            ))}
+                        </dl>
+
                         <Button type="button" onClick={() => handleAction('change_role')} disabled={processing}>
                             {processing && data.action === 'change_role' && <LoaderCircle className="h-4 w-4 animate-spin" />}
                             {t('change')}

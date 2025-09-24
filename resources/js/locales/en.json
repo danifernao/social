@@ -17,7 +17,6 @@
   "changeEmail": "Change email",
   "changePassword": "Change password",
   "changeRole": "Change role",
-  "changeRoleDescription": "Set whether the user is an administrator, moderator, or regular user.",
   "changeUsername": "Change username",
   "changeUsernameDescription": "If the field is left empty, the record will be saved with a random username.",
   "clickToSendVerificationEmail": "Click here to resend the verification email.",
@@ -149,6 +148,11 @@
   "resetUserPasswordDescription": "Send the user a password reset email.",
   "returnToLogin": "Or go back to <0>log in</0>",
   "role": "Role",
+  "roles": {
+    "User": "Manage their account, post, comment, and follow other users.",
+    "Moderator": "Everything a User can do, plus manage posts and other users' accounts.",
+    "Administrator": "Everything above, plus manage the site, assign roles, and delete accounts."
+  },
   "save": "Save",
   "savePassword": "Save password",
   "saved": "Saved",
