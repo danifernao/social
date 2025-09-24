@@ -4,10 +4,15 @@ import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { type PropsWithChildren } from 'react';
+import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function AdminLayout({ children }: PropsWithChildren) {
+interface AdminLayoutProps {
+    children: ReactNode;
+    fullWidth?: boolean;
+}
+
+export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 
@@ -55,8 +60,8 @@ export default function AdminLayout({ children }: PropsWithChildren) {
 
                 <Separator className="my-6 md:hidden" />
 
-                <div className="flex-1 md:max-w-2xl">
-                    <section className="max-w-xl space-y-12">{children}</section>
+                <div className={cn('flex-1', fullWidth ? 'md:w-xl' : 'md:max-w-2xl')}>
+                    <section className={cn('space-y-12', !fullWidth && 'max-w-xl')}>{children}</section>
                 </div>
             </div>
         </div>
