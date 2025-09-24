@@ -24,7 +24,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
         <AuthLayout title={t('verifyEmail')} description={t('verifyEmailMessage')}>
             <Head title={t('verifyEmail')} />
 
-            {status === 'verification-link-sent' && (
+            {status === 'verification_link_sent' && (
                 <div className="mb-4 text-center text-sm font-medium text-green-600">{t('verificationEmailSent')}</div>
             )}
 

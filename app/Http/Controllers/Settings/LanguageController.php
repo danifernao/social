@@ -34,6 +34,6 @@ class LanguageController extends Controller
         $user->language = $request->lang;
         $user->save();
 
-        return back()->with('status', 'language-changed');
+        return back()->with('status', 'language_changed');
     }
 }

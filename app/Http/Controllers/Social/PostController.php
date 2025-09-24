@@ -157,6 +157,6 @@ class PostController extends Controller
             return redirect()->route('profile.show', $post->user->username);
         }
 
-        return back()->with('status', 'post-deleted');
+        return back()->with('status', 'post_deleted');
     }
 }
