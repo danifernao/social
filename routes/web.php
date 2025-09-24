@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\SiteController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Social\BlockUserController;
 use App\Http\Controllers\Social\CommentController;
@@ -46,7 +47,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/notifications/read', [NotificationController::class, 'markAllAsRead'])->name('notification.markAllAsRead');
     Route::patch('/notifications/read/{id}', [NotificationController::class, 'markOneAsRead'])->name('notification.markOneAsRead');
 
-    Route::redirect('admin', 'admin/users');
+    Route::redirect('admin', 'admin/site');
+    Route::get('admin/site', [SiteController::class, 'edit'])->name('admin.site.edit');
     Route::get('admin/users', [UserController::class, 'show'])->name('admin.user.show');
     Route::get('admin/{user}', [UserController::class, 'edit'])->name('admin.user.edit');
     Route::patch('admin/{user}', [UserController::class, 'update'])->name('admin.user.update');
