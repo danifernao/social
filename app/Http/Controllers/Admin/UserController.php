@@ -255,12 +255,20 @@ class UserController extends Controller
 
     /**
      * Envía un enlace al correo electrónico del usuario para el restablecimiento de la contraseña.
+     * Opcionalmente, puede generar una nueva contraseña aleatoria y actualizarla antes de enviar el enlace.
      * 
      * @param Request $request Datos de la petición HTTP.
      * @param User $user Usuario que recibirá el correo electrónico.
      */
     private function resetPassword(Request $request, User $user)
     {
+        if (filter_var($request->random_password, FILTER_VALIDATE_BOOLEAN)) {
+            $new_password = Str::random(12);
+            $user->password = Hash::make($new_password);
+            $user->remember_token = null;
+            $user->save();
+        }
+
         Password::sendResetLink(['email' => $user->email]);
         
         return back()->with('status', 'password_reset_email_sent');

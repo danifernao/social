@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Checkbox } from '../ui/checkbox';
+import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
 import FormErrors from './form-errors';
 
 interface AdminUserSettingsFormProps {
@@ -44,6 +45,7 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
         new_email: user.email,
         new_role: user.role,
         email_verification_link: false as boolean,
+        random_password: false as boolean,
         pass_confirmation: '',
     });
 
@@ -199,6 +201,15 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <p>{t('resetUserPasswordDescription')}</p>
+                    <div className="flex items-center gap-2">
+                        <Checkbox
+                            id="reset-pasaword"
+                            checked={data.random_password}
+                            onCheckedChange={(checked) => setData('random_password', !!checked)}
+                            disabled={processing}
+                        />
+                        <label htmlFor="reset-password">{t('useRandomPassword')}</label>
+                    </div>
                     <Button type="button" onClick={() => handleAction('reset_password')} disabled={processing}>
                         {processing && data.action === 'reset_password' && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         {t('reset')}
@@ -206,17 +217,30 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                 </CardContent>
             </Card>
 
-            {/* Habilitación / Inhabilitación de inicio de sesión */}
+            {/* Habilitación / Inhabilitación de la cuenta */}
             <Card>
                 <CardHeader>
-                    <CardTitle>{isActive ? t('deactivateAccount') : t('activateAccount')}</CardTitle>
+                    <CardTitle>{t('accountStatus')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <p>{isActive ? t('deactivateAccountDescription') : t('activateAccountDescription')}</p>
-                    <Button type="button" onClick={() => handleAction('toggle_account_status')} disabled={processing}>
+                    <div className="flex items-center gap-2">
+                        <ToggleGroup
+                            type="single"
+                            value={isActive ? 'true' : 'false'}
+                            onValueChange={() => handleAction('toggle_account_status')}
+                            aria-label="Status"
+                            variant="outline"
+                        >
+                            <ToggleGroupItem value="true" aria-label="Habilitado">
+                                Habilitado
+                            </ToggleGroupItem>
+                            <ToggleGroupItem value="false" aria-label="Inhabilitado">
+                                Inhabilitado
+                            </ToggleGroupItem>
+                        </ToggleGroup>
                         {processing && data.action === 'toggle_account_status' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {isActive ? t('deactivate') : t('activate')}
-                    </Button>
+                    </div>
+                    <p className="text-muted-foreground text-sm italic">{t('accountStatusDescription')}</p>
                 </CardContent>
             </Card>
 
