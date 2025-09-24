@@ -24,7 +24,7 @@ export default function UsersEdit() {
             <Head title={t('siteSettings')} />
             <AdminLayout>
                 <AppContentLayout noMargin={true} fullWidth={true}>
-                    <>Hello world!</>
+                    <p>{t('underConstruction')}</p>
                 </AppContentLayout>
             </AdminLayout>
         </AppLayout>
