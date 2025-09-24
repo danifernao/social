@@ -36,7 +36,7 @@ export default function UsersIndex() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={t('userManagement')} />
-            <AdminLayout>
+            <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
                     <AdminUserTable users={users.data} previous={users.links.prev} next={users.links.next} />
                 </AppContentLayout>
