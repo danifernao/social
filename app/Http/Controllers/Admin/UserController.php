@@ -129,7 +129,7 @@ class UserController extends Controller
             case 'delete_account':
                 return $this->deleteAccount($request, $user);
             default:
-                return back()->with('status', 'no-action-performed');
+                return back()->with('status', 'no_action_performed');
         }
     }
 
@@ -166,7 +166,7 @@ class UserController extends Controller
             }
         }
 
-        return back()->with('status', 'role-updated');
+        return back()->with('status', 'role_updated');
     }
 
     /**
@@ -184,7 +184,7 @@ class UserController extends Controller
         $user->avatar_path = null;
         $user->save();
 
-        return back()->with('status', 'avatar-deleted');
+        return back()->with('status', 'avatar_deleted');
     }
 
     /**
@@ -216,7 +216,7 @@ class UserController extends Controller
             $user->save();
         }
 
-        return back()->with('status', 'username-updated');
+        return back()->with('status', 'username_updated');
     }
 
     /**
@@ -243,7 +243,7 @@ class UserController extends Controller
             $user->sendEmailVerificationNotification();
         }
 
-        return back()->with('status', 'email-updated');
+        return back()->with('status', 'email_updated');
     }
 
     /**
@@ -255,7 +255,7 @@ class UserController extends Controller
     {
         Password::sendResetLink(['email' => $user->email]);
         
-        return back()->with('status', 'password-reset-email-sent');
+        return back()->with('status', 'password_reset_email_sent');
     }
 
     /**
