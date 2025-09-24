@@ -128,19 +128,21 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                 </Card>
             )}
 
-            {/* Información */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>{t('resetInfo')}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <p>{t('resetInfoDescription')}</p>
-                    <Button type="button" onClick={() => handleAction('reset_info')} disabled={processing}>
-                        {processing && data.action === 'reset_info' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('reset')}
-                    </Button>
-                </CardContent>
-            </Card>
+            {/* Avatar */}
+            {user.avatar_url && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>{t('deleteAvatar')}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex items-center gap-4">
+                        <img src={user.avatar_url} alt="Avatar" className="h-24 w-24 rounded-sm bg-neutral-200 object-cover" />
+                        <Button type="button" onClick={() => handleAction('delete_avatar')} disabled={processing}>
+                            {processing && data.action === 'delete_avatar' && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                            {t('delete')}
+                        </Button>
+                    </CardContent>
+                </Card>
+            )}
 
             {/* Nombre de usuario */}
             <Card>
@@ -150,7 +152,7 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                 <CardContent className="space-y-4">
                     <Input
                         placeholder={t('username')}
-                        value={data.new_username ?? ''}
+                        value={data.new_username}
                         onChange={(e) => setData('new_username', e.target.value)}
                         disabled={processing}
                     />
@@ -170,7 +172,7 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                 <CardContent className="space-y-4">
                     <Input
                         placeholder={t('newEmail')}
-                        value={data.new_email ?? ''}
+                        value={data.new_email}
                         onChange={(e) => setData('new_email', e.target.value)}
                         disabled={processing}
                     />
