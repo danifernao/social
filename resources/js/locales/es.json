@@ -17,7 +17,6 @@
   "changeEmail": "Cambiar correo electrónico",
   "changePassword": "Cambiar contraseña",
   "changeRole": "Cambiar rol",
-  "changeRoleDescription": "Establece si el usuario es administrador, moderador o un usuario regular.",
   "changeUsername": "Cambiar nombre de usuario",
   "changeUsernameDescription": "Si el campo se deja vacío, el registro se guardará con un nombre de usuario aleatorio.",
   "clickToSendVerificationEmail": "Haz clic aquí para reenviar el correo de verificación.",
@@ -148,6 +147,11 @@
   "resetUserPasswordDescription": "Envía al usuario un correo electrónico para el restablecimiento de la contraseña.",
   "returnToLogin": "O bien, vuelve a <0>iniciar sesión</0>",
   "role": "Rol",
+  "roles": {
+    "Usuario": "Gestionar su cuenta, publicar, comentar y seguir a otros.",
+    "Moderador": "Todo lo del Usuario más gestionar publicaciones y cuentas ajenas.",
+    "Administrador": "Todo lo anterior más administrar el sitio, asignar roles y eliminar cuentas."
+  },
   "save": "Guardar",
   "savePassword": "Guardar contraseña",
   "saved": "Guardado",
