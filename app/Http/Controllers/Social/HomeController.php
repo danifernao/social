@@ -15,6 +15,8 @@ class HomeController extends Controller
      *
      * - Para usuarios administradores muestra todas las publicaciones.
      * - Para usuarios normales muestra solo publicaciones propias y de los usuarios que sigue.
+     * 
+     * @param Request $request Datos de la petición HTTP.
      */
     public function show(Request $request)
     {
