@@ -11,6 +11,8 @@ class NotificationController extends Controller
 {
     /**
      * Muestra las notificaciones del usuario autenticado.
+     * 
+     * @param Request $request Datos de la petición HTTP.
      */
     public function show(Request $request)
     {
@@ -25,6 +27,8 @@ class NotificationController extends Controller
 
     /**
      * Marca todas las notificaciones no leídas del usuario autenticado como leídas.
+     * 
+     * @param Request $request Datos de la petición HTTP.
      */
     public function markAllAsRead(Request $request)
     {
@@ -36,7 +40,8 @@ class NotificationController extends Controller
     /**
      * Marca una notificación específica como leída.
      *
-     * @param string $id Identificador de la notificación
+     * @param Request $request Datos de la petición HTTP.
+     * @param string $id Identificador de la notificación.
      */
     public function markOneAsRead(Request $request, string $id)
     {

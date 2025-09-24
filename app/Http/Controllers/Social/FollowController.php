@@ -14,6 +14,7 @@ class FollowController extends Controller
     /**
      * Alterna (seguir/dejar de seguir) la relación de seguimiento entre el usuario autenticado y otro usuario.
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param User $user Usuario al que se va a seguir o dejar de seguir.
      */
     public function toggle(Request $request, User $user)
@@ -47,6 +48,7 @@ class FollowController extends Controller
     /**
      * Muestra la lista paginada de usuarios que sigue un usuario dado.
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param User $user Usuario cuya lista de seguidos se va a mostrar.
      */
     public function showFollowing(Request $request, User $user)
@@ -81,6 +83,7 @@ class FollowController extends Controller
     /**
      * Muestra la lista paginada de seguidores de un usuario.
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param User $user Usuario cuya lista de seguidores se va a mostrar.
      */
     public function showFollowers(Request $request, User $user)
