@@ -105,7 +105,7 @@ class UserController extends Controller
         }
         
         $request->validate([
-            'action' => ['required', Rule::in(['change_role', 'reset_info', 'change_username', 'change_email', 'reset_password', 'toggle_account_status', 'delete_account'])],
+            'action' => ['required', Rule::in(['change_role', 'delete_avatar', 'change_username', 'change_email', 'reset_password', 'toggle_account_status', 'delete_account'])],
             'pass_confirmation' => ['required', 'string'],
         ]);
 
@@ -116,8 +116,8 @@ class UserController extends Controller
         switch ($request->action) {
             case 'change_role':
                 return $this->changeRole($request, $user);
-            case 'reset_info':
-                return $this->resetInfo($user);
+            case 'delete_avatar':
+                return $this->deleteAvatar($user);
             case 'change_username':
                 return $this->changeUsername($request, $user);
             case 'change_email':
@@ -170,28 +170,21 @@ class UserController extends Controller
     }
 
     /**
-     * Restaura el nombre de usuario y elimina el avatar del usuario.
+     * Elimina el avatar del usuario.
      * 
-     * @param User $user Usuario al que se le va a restablecer el avatar y el nombre de usuario.
+     * @param User $user Usuario al que se le va a eliminar el avatar.
      */
-    private function resetInfo(User $user)
+    private function deleteAvatar(User $user)
     {
-        // Elimina el avatar actual si existe en disco.
+        // Elimina el avatar si existe en disco.
         if ($user->avatar_path && Storage::disk('public')->exists($user->avatar_path)) {
             Storage::disk('public')->delete($user->avatar_path);
         }
 
         $user->avatar_path = null;
-
-        // Genera un nuevo nombre de usuario único.
-        do {
-            $new_username = 'user_' . Str::lower(Str::random(8));
-        } while (User::where('username', $new_username)->exists());
-
-        $user->username = $new_username;
         $user->save();
 
-        return back()->with('status', 'info-updated');
+        return back()->with('status', 'avatar-deleted');
     }
 
     /**
