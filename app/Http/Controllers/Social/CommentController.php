@@ -20,6 +20,7 @@ class CommentController extends Controller
     /**
      * Crea un nuevo comentario asociado a una publicación.
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param Post $post Publicación en la que se va a comentar.
      */
     public function create(Request $request, Post $post)
@@ -95,6 +96,7 @@ class CommentController extends Controller
     /**
      * Actualiza un comentario existente.
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param Comment $comment Comentario que se va a actualizar.
      */
     public function update(Request $request, Comment $comment)

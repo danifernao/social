@@ -11,6 +11,7 @@ class BlockUserController extends Controller
    /**
      * Alterna el bloqueo de un usuario por parte del usuario autenticado.
      *
+     * @param Request $request Datos de la petición HTTP.
      * @param User $user Usuario a bloquear o desbloquear.
      */
     public function toggle(Request $request, User $user)

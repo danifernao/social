@@ -17,6 +17,7 @@ class ProfileController extends Controller
     /**
      * Muestra el perfil de un usuario junto con sus publicaciones.
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param User $user Usuario cuyo perfil se va a mostrar.
      */
     public function show(Request $request, User $user)

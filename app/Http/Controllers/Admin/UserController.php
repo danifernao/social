@@ -24,6 +24,8 @@ class UserController extends Controller
     /**
      * Muestra una lista paginada de usuarios para el panel de administración.
      * Aplica búsqueda, ordenamiento y paginación basada en cursor.
+     * 
+     * @param Request $request Datos de la petición HTTP.
      */
     public function show(Request $request)
     {
@@ -71,6 +73,7 @@ class UserController extends Controller
      * Muestra el formulario de edición de un usuario para el moderador.
      * Los administradores solo pueden ser editados por otros administradores.
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param User $user Usuario cuyos datos se van a editar.
      */
     public function edit(Request $request, User $user)
@@ -93,6 +96,7 @@ class UserController extends Controller
      * Procesa las acciones de administración sobre un usuario:
      * Cambio de rol, reinicio de info, cambio de correo o restablecimiento de contraseña.
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param User $user Usuario cuyos datos se van a actualizar.
      */
     public function update(Request $request, User $user)
@@ -136,6 +140,7 @@ class UserController extends Controller
     /**
      * Cambia el rol del usuario (user <-> admin).
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param User $user Usuario al que se le va a cambiar el rol.
      */
     private function changeRole(Request $request, User $user)
@@ -192,6 +197,7 @@ class UserController extends Controller
      * - Si se recibe un nuevo nombre de usuario en la solicitud, lo valida y lo asigna.
      * - Si no se recibe, genera automáticamente un nombre de usuario único y lo asigna.
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param User $user Usuario al que se le va a cambiar el nombre de usuario.
      */
     private function changeUsername(Request $request, User $user)
@@ -222,6 +228,7 @@ class UserController extends Controller
     /**
      * Cambia el correo del usuario y, si se solicita, envía el enlace de verificación.
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param User $user Usuario al que se le va a cambiar el correo.
      */
     private function changeEmail(Request $request, User $user)
@@ -249,6 +256,7 @@ class UserController extends Controller
     /**
      * Envía un enlace al correo electrónico del usuario para el restablecimiento de la contraseña.
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param User $user Usuario que recibirá el correo electrónico.
      */
     private function resetPassword(Request $request, User $user)
@@ -280,6 +288,7 @@ class UserController extends Controller
     /**
      * Elimina una cuenta de usuario.
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param User $user Usuario que se va a eliminar.
      */
     public function deleteAccount(Request $request, User $user)

@@ -12,6 +12,8 @@ class ReactionController extends Controller
 {
     /**
      * Crea, reemplaza o elimina una reacción de un usuario sobre una publicación o comentario.
+     * 
+     * @param Request $request Datos de la petición HTTP.
      */
     public function toggle(Request $request)
     {

@@ -11,6 +11,8 @@ class LanguageController extends Controller
 {
     /**
      * Muestra la página para cambiar el idioma de la interfaz.
+     * 
+     * @param Request $request Datos de la petición HTTP.
      */
     public function edit(Request $request)
     {
@@ -23,6 +25,8 @@ class LanguageController extends Controller
 
     /**
      * Cambia el idioma de la interfaz.
+     * 
+     * @param Request $request Datos de la petición HTTP.
      */
     public function update(Request $request)
     {

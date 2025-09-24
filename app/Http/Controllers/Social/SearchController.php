@@ -16,6 +16,7 @@ class SearchController extends Controller
      * Muestra los resultados de búsqueda de usuarios o publicaciones.
      * También permite buscar por hashtag.
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param string|null $hashtag Etiqueta para filtrar las publicaciones (sin el símbolo "#").
      */
     public function show(Request $request, $hashtag = null)

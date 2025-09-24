@@ -22,6 +22,8 @@ class PostController extends Controller
 
     /**
      * Crea una nueva publicación.
+     * 
+     * @param Request $request Datos de la petición HTTP.
      */
     public function create(Request $request)
     {
@@ -63,6 +65,7 @@ class PostController extends Controller
     /**
      * Muestra una publicación específica con sus comentarios.
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param Post $post Publicación que se va a mostrar.
      */
     public function show(Request $request, Post $post)
@@ -112,6 +115,7 @@ class PostController extends Controller
     /**
      * Actualiza una publicación existente.
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param Post $post Publicación que se va a actualizar.
      */
     public function update(Request $request, Post $post)
@@ -139,6 +143,7 @@ class PostController extends Controller
     /**
      * Elimina una publicación.
      * 
+     * @param Request $request Datos de la petición HTTP.
      * @param Post $post Publicación que se va a eliminar.
      */
     public function delete(Request $request, Post $post)
