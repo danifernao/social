@@ -26,66 +26,14 @@ export function MarkdownHelp() {
                         </tr>
                     </thead>
                     <tbody className="[&_td]:py-1 [&_td]:pr-4 [&_td]:align-top">
-                        <tr>
-                            <td>{t('bold')}</td>
-                            <td>
-                                <code>{t('mdBold')}</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>{t('italic')}</td>
-                            <td>
-                                <code>{t('mdItalic')}</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>{t('link')}</td>
-                            <td>
-                                <code>{t('mdLink')}</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>{t('quote')}</td>
-                            <td>
-                                <code>{t('mdQuote')}</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>{t('inlineCode')}</td>
-                            <td>
-                                <code>{t('mdInlineCode')}</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>{t('codeBlock')}</td>
-                            <td>
-                                <code>{t('mdCodeBlock')}</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>{t('orderedList')}</td>
-                            <td>
-                                <code>{t('mdOrderedList')}</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>{t('unorderedList')}</td>
-                            <td>
-                                <code>{t('mdUnorderedList')}</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>{t('image')}</td>
-                            <td>
-                                <code>{t('mdImage')}</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>{t('youtubeVideo')}</td>
-                            <td>
-                                <code>{t('mdYoutube')}</code>
-                            </td>
-                        </tr>
+                        {Object.entries(t('markdownExamples', { returnObjects: true })).map(([description, example]) => (
+                            <tr key={description}>
+                                <td>{description}</td>
+                                <td>
+                                    <code>{example}</code>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </PopoverContent>
