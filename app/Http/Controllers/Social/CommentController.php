@@ -127,6 +127,6 @@ class CommentController extends Controller
         
         $comment->delete();
 
-        return back()->with('status', 'comment-deleted');
+        return back()->with('status', 'comment_deleted');
     }
 }
