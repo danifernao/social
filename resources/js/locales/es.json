@@ -171,6 +171,8 @@
   "userManagement": "Administración de usuarios",
   "userPost": "Publicación de {{username}}",
   "userProfile": "Perfil de {{username}}",
+  "userRegistration": "Registro de usuarios",
+  "userRegistrationVisibility": "Habilita o inhabilita el registro de nuevos usuarios.",
   "userSettings": "Configuración de usuario",
   "username": "Nombre de usuario",
   "users": "Usuarios",

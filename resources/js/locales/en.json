@@ -172,6 +172,8 @@
   "userManagement": "User management",
   "userPost": "{{username}}’s post",
   "userProfile": "{{username}}’s profile",
+  "userRegistration": "User registration",
+  "userRegistrationVisibility": "Enable or disable new user registrations.",
   "userSettings": "User settings",
   "username": "Username",
   "users": "Users",

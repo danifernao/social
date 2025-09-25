@@ -2,12 +2,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useAdminActionForm } from '@/hooks/use-admin-action-form';
 import { Auth, User } from '@/types';
-import { useForm, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
 import { Checkbox } from '../ui/checkbox';
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
 import ConfirmActionDialog from './admin-confirm-action-dialog';
@@ -27,78 +27,35 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
     // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;
 
-    // Estado para controlar si el diálogo de confirmación está abierto.
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-    // Estado para recordar qué acción está pendiente de confirmación.
-    const [pendingAction, setPendingAction] = useState<string | null>(null);
-
-    // Estado para la contraseña del administrador que confirma la acción.
-    const [adminPassword, setAdminPassword] = useState('');
-
     // Estado que refleja si el usuario está habilitado o no.
     const [isActive, setIsActive] = useState(user.is_active);
 
-    const { data, setData, patch, errors, processing } = useForm({
-        action: '',
-        new_username: user.username,
-        new_email: user.email,
-        new_role: user.role,
-        email_verification_link: false as boolean,
-        random_password: false as boolean,
-        pass_confirmation: '',
-    });
-
-    // Guarda temporalmente la acción solicitada y abre el diálogo de confirmación.
-    const handleAction = (action: string) => {
-        setPendingAction(action);
-        setIsDialogOpen(true);
-    };
-
-    // Prepara los datos que se van a enviar y restablece estados por defecto.
-    const confirmAction = () => {
-        setData('pass_confirmation', adminPassword);
-        setData('action', pendingAction ?? '');
-        setIsDialogOpen(false);
-        setAdminPassword('');
-        setPendingAction(null);
-    };
-
     // Envía los datos del formulario.
-    const sendData = () => {
-        patch(route('admin.user.update', user.id), {
-            preserveScroll: true,
-            onSuccess: (page) => {
-                switch (data.action) {
-                    case 'toggle_account_status':
-                        setIsActive((prev) => !prev);
-                        break;
-                    case 'change_username':
-                        const typedPage = page as unknown as { props: { user: User } };
-                        setData('new_username', typedPage.props.user.username);
-                        break;
-                }
-                toast('¡Cambios guardados!');
-            },
-            onError: () => {
-                document.documentElement.scrollIntoView();
-            },
-            onFinish: () => {
-                setData('action', '');
-            },
-        });
-    };
-
-    // Envía los datos del formulario automáticamente cuando registra un cambio en la acción solicitada.
-    useEffect(() => {
-        if (data.action) {
-            sendData();
-        }
-    }, [data.action]);
+    const { form, handleAction, confirmAction, isDialogOpen, closeDialog } = useAdminActionForm({
+        initialData: {
+            new_username: user.username,
+            new_email: user.email,
+            new_role: user.role,
+            email_verification_link: false,
+            random_password: false,
+        },
+        route: () => route('admin.user.update', user.id),
+        onSuccess: (action, page) => {
+            switch (action) {
+                case 'toggle_account_status':
+                    setIsActive((prev) => !prev);
+                    break;
+                case 'change_username':
+                    const typedPage = page as unknown as { props: { user: User } };
+                    form.setData((prev) => ({ ...prev, new_username: typedPage.props.user.username }));
+                    break;
+            }
+        },
+    });
 
     return (
         <form className="space-y-8">
-            <FormErrors errors={errors} />
+            <FormErrors errors={form.errors} />
 
             {/* Rol */}
             {auth.user.is_admin && (
@@ -108,9 +65,9 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <Select
-                            value={data.new_role}
-                            onValueChange={(value: 'user' | 'mod' | 'admin') => setData('new_role', value)}
-                            disabled={processing && data.action === 'change_role'}
+                            value={form.data.new_role}
+                            onValueChange={(value: 'user' | 'mod' | 'admin') => form.setData('new_role', value)}
+                            disabled={form.processing && form.data.action === 'change_role'}
                         >
                             <SelectTrigger className="w-[200px]">
                                 <SelectValue placeholder="Selecciona un rol" />
@@ -131,8 +88,12 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                             ))}
                         </dl>
 
-                        <Button type="button" onClick={() => handleAction('change_role')} disabled={processing && data.action === 'change_role'}>
-                            {processing && data.action === 'change_role' && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                        <Button
+                            type="button"
+                            onClick={() => handleAction('change_role')}
+                            disabled={form.processing && form.data.action === 'change_role'}
+                        >
+                            {form.processing && form.data.action === 'change_role' && <LoaderCircle className="h-4 w-4 animate-spin" />}
                             {t('change')}
                         </Button>
                     </CardContent>
@@ -147,8 +108,12 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                     </CardHeader>
                     <CardContent className="flex items-center gap-4">
                         <img src={user.avatar_url} alt="Avatar" className="h-24 w-24 rounded-sm bg-neutral-200 object-cover" />
-                        <Button type="button" onClick={() => handleAction('delete_avatar')} disabled={processing && data.action === 'delete_avatar'}>
-                            {processing && data.action === 'delete_avatar' && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                        <Button
+                            type="button"
+                            onClick={() => handleAction('delete_avatar')}
+                            disabled={form.processing && form.data.action === 'delete_avatar'}
+                        >
+                            {form.processing && form.data.action === 'delete_avatar' && <LoaderCircle className="h-4 w-4 animate-spin" />}
                             {t('delete')}
                         </Button>
                     </CardContent>
@@ -163,13 +128,17 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                 <CardContent className="space-y-4">
                     <Input
                         placeholder={t('username')}
-                        value={data.new_username}
-                        onChange={(e) => setData('new_username', e.target.value)}
-                        disabled={processing && data.action === 'change_username'}
+                        value={form.data.new_username}
+                        onChange={(e) => form.setData('new_username', e.target.value)}
+                        disabled={form.processing && form.data.action === 'change_username'}
                     />
                     <p className="text-muted-foreground text-sm italic">{t('changeUsernameDescription')}</p>
-                    <Button type="button" onClick={() => handleAction('change_username')} disabled={processing && data.action === 'change_username'}>
-                        {processing && data.action === 'change_username' && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                    <Button
+                        type="button"
+                        onClick={() => handleAction('change_username')}
+                        disabled={form.processing && form.data.action === 'change_username'}
+                    >
+                        {form.processing && form.data.action === 'change_username' && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         {t('change')}
                     </Button>
                 </CardContent>
@@ -183,21 +152,25 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                 <CardContent className="space-y-4">
                     <Input
                         placeholder={t('newEmail')}
-                        value={data.new_email}
-                        onChange={(e) => setData('new_email', e.target.value)}
-                        disabled={processing && data.action === 'change_email'}
+                        value={form.data.new_email}
+                        onChange={(e) => form.setData('new_email', e.target.value)}
+                        disabled={form.processing && form.data.action === 'change_email'}
                     />
                     <div className="flex items-center gap-2">
                         <Checkbox
                             id="email-verification-link"
-                            checked={data.email_verification_link}
-                            onCheckedChange={(checked) => setData('email_verification_link', !!checked)}
-                            disabled={processing && data.action === 'change_email'}
+                            checked={form.data.email_verification_link}
+                            onCheckedChange={(checked) => form.setData('email_verification_link', !!checked)}
+                            disabled={form.processing && form.data.action === 'change_email'}
                         />
                         <label htmlFor="email-verification-link">{t('sendVerificationEmail')}</label>
                     </div>
-                    <Button type="button" onClick={() => handleAction('change_email')} disabled={processing && data.action === 'change_email'}>
-                        {processing && data.action === 'change_email' && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                    <Button
+                        type="button"
+                        onClick={() => handleAction('change_email')}
+                        disabled={form.processing && form.data.action === 'change_email'}
+                    >
+                        {form.processing && form.data.action === 'change_email' && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         {t('change')}
                     </Button>
                 </CardContent>
@@ -213,14 +186,18 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                     <div className="flex items-center gap-2">
                         <Checkbox
                             id="reset-password"
-                            checked={data.random_password}
-                            onCheckedChange={(checked) => setData('random_password', !!checked)}
-                            disabled={processing && data.action === 'reset_password'}
+                            checked={form.data.random_password}
+                            onCheckedChange={(checked) => form.setData('random_password', !!checked)}
+                            disabled={form.processing && form.data.action === 'reset_password'}
                         />
                         <label htmlFor="reset-password">{t('useRandomPassword')}</label>
                     </div>
-                    <Button type="button" onClick={() => handleAction('reset_password')} disabled={processing && data.action === 'reset_password'}>
-                        {processing && data.action === 'reset_password' && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                    <Button
+                        type="button"
+                        onClick={() => handleAction('reset_password')}
+                        disabled={form.processing && form.data.action === 'reset_password'}
+                    >
+                        {form.processing && form.data.action === 'reset_password' && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         {t('reset')}
                     </Button>
                 </CardContent>
@@ -241,14 +218,13 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                                     handleAction('toggle_account_status');
                                 }
                             }}
-                            aria-label="Status"
                             variant="outline"
-                            disabled={processing && data.action === 'toggle_account_status'}
+                            disabled={form.processing && form.data.action === 'toggle_account_status'}
                         >
                             <ToggleGroupItem value="true">{t('enabled')}</ToggleGroupItem>
                             <ToggleGroupItem value="false">{t('disabled')}</ToggleGroupItem>
                         </ToggleGroup>
-                        {processing && data.action === 'toggle_account_status' && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                        {form.processing && form.data.action === 'toggle_account_status' && <LoaderCircle className="h-4 w-4 animate-spin" />}
                     </div>
                     <p className="text-muted-foreground text-sm italic">{t('accountStatusDescription')}</p>
                 </CardContent>
@@ -266,9 +242,9 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                             type="button"
                             variant="destructive"
                             onClick={() => handleAction('delete_account')}
-                            disabled={processing && data.action === 'delete_account'}
+                            disabled={form.processing && form.data.action === 'delete_account'}
                         >
-                            {processing && data.action === 'delete_account' && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                            {form.processing && form.data.action === 'delete_account' && <LoaderCircle className="h-4 w-4 animate-spin" />}
                             {t('delete')}
                         </Button>
                     </CardContent>
@@ -278,9 +254,9 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
             {/* Confirmación de la acción */}
             <ConfirmActionDialog
                 open={isDialogOpen}
-                onOpenChange={(open) => setIsDialogOpen(open)}
-                password={adminPassword}
-                onPasswordChange={(value) => setAdminPassword(value)}
+                onOpenChange={closeDialog}
+                password={form.data.pass_confirmation}
+                onPasswordChange={(value) => form.setData('pass_confirmation', value)}
                 onConfirm={confirmAction}
             />
         </form>

@@ -1,3 +1,4 @@
+import AdminSiteSettingsForm from '@/components/content/admin-site-settings-form';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import AppLayout from '@/layouts/app-layout';
 import { AppContentLayout } from '@/layouts/app/app-content-layout';
@@ -24,7 +25,7 @@ export default function UsersEdit() {
             <Head title={t('siteSettings')} />
             <AdminLayout>
                 <AppContentLayout noMargin={true} fullWidth={true}>
-                    <p>{t('underConstruction')}</p>
+                    <AdminSiteSettingsForm />
                 </AppContentLayout>
             </AdminLayout>
         </AppLayout>
