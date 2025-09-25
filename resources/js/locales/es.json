@@ -44,6 +44,7 @@
   "deletePostConfirmation": "¿Estás seguro de eliminar esta publicación? Esta acción es irreversible.",
   "deleteUserAccountDescription": "Elimina la cuenta de usuario y todos los datos asociados a ella.",
   "description": "Descripción",
+  "disabled": "Inhabilitado",
   "dummyEmail": "correo@ejemplo.com",
   "edit": "Editar",
   "editComment": "Editar comentario",

@@ -245,12 +245,8 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                             variant="outline"
                             disabled={processing && data.action === 'toggle_account_status'}
                         >
-                            <ToggleGroupItem value="true" aria-label="Habilitado">
-                                Habilitado
-                            </ToggleGroupItem>
-                            <ToggleGroupItem value="false" aria-label="Inhabilitado">
-                                Inhabilitado
-                            </ToggleGroupItem>
+                            <ToggleGroupItem value="true">{t('enabled')}</ToggleGroupItem>
+                            <ToggleGroupItem value="false">{t('disabled')}</ToggleGroupItem>
                         </ToggleGroup>
                         {processing && data.action === 'toggle_account_status' && <LoaderCircle className="h-4 w-4 animate-spin" />}
                     </div>
