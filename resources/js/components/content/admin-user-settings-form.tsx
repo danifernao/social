@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Auth, User } from '@/types';
@@ -11,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Checkbox } from '../ui/checkbox';
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
+import ConfirmActionDialog from './admin-confirm-action-dialog';
 import FormErrors from './form-errors';
 
 interface AdminUserSettingsFormProps {
@@ -275,25 +275,14 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                 </Card>
             )}
 
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>{t('confirmAction')}</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                        <p>{t('confirmActionDescription')}</p>
-                        <Input type="password" placeholder="Contraseña" value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} />
-                    </div>
-                    <DialogFooter className="mt-4">
-                        <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                            {t('cancel')}
-                        </Button>
-                        <Button onClick={confirmAction} disabled={!adminPassword.trim()}>
-                            {t('confirm')}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+            {/* Confirmación de la acción */}
+            <ConfirmActionDialog
+                open={isDialogOpen}
+                onOpenChange={(open) => setIsDialogOpen(open)}
+                password={adminPassword}
+                onPasswordChange={(value) => setAdminPassword(value)}
+                onConfirm={confirmAction}
+            />
         </form>
     );
 }

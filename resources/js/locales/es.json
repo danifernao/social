@@ -24,7 +24,7 @@
   "comments": "Comentarios",
   "confirm": "Confirmar",
   "confirmAction": "Confirmar acción",
-  "confirmActionDescription": "Para continuar, ingresa tu contraseña de administrador.",
+  "confirmActionDescription": "Para continuar, ingresa tu contraseña de usuario con privilegios.",
   "confirmPassword": "Confirmar contraseña",
   "confirmYourPassword": "Confirma tu contraseña",
   "confirmYourPasswordDescription": "Esta es una zona segura de la aplicación. Por favor, confirma tu contraseña antes de continuar.",

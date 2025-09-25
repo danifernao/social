@@ -24,7 +24,7 @@
   "comments": "Comments",
   "confirm": "Confirm",
   "confirmAction": "Confirm action",
-  "confirmActionDescription": "To continue, enter your administrator password.",
+  "confirmActionDescription": "To continue, enter your privileged account password.",
   "confirmPassword": "Confirm password",
   "confirmYourPassword": "Confirm your password",
   "confirmYourPasswordDescription": "This is a secure area of the application. Please confirm your password before continuing.",
