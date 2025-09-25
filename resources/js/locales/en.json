@@ -45,6 +45,7 @@
   "deletePostConfirmation": "Are you sure you want to delete this post? This action cannot be undone.",
   "deleteUserAccountDescription": "Deletes the user account and all associated data.",
   "description": "Description",
+  "disabled": "Disabled",
   "dummyEmail": "email@example.com",
   "edit": "Edit",
   "editComment": "Edit comment",
