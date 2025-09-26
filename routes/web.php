@@ -49,6 +49,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::redirect('admin', 'admin/site');
     Route::get('admin/site', [SiteController::class, 'edit'])->name('admin.site.edit');
+    Route::patch('admin/site', [SiteController::class, 'update'])->name('admin.site.update');
     Route::get('admin/users', [UserController::class, 'show'])->name('admin.user.show');
     Route::get('admin/{user}', [UserController::class, 'edit'])->name('admin.user.edit');
     Route::patch('admin/{user}', [UserController::class, 'update'])->name('admin.user.update');
