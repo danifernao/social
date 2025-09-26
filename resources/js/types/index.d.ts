@@ -10,3 +10,5 @@ export * from './modules/entry/entry';
 export * from './modules/entry/post';
 export * from './modules/entry/comment';
 export * from './modules/entry/reaction';
+
+export * from './modules/site-settings';

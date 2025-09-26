@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAdminActionForm } from '@/hooks/use-admin-action-form';
-import { Auth } from '@/types';
-import { usePage } from '@inertiajs/react';
+import { SiteSettings } from '@/types';
 import { LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,17 +8,18 @@ import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
 import ConfirmActionDialog from './admin-confirm-action-dialog';
 import FormErrors from './form-errors';
 
-interface AdminSiteSettingsFormProps {}
+interface AdminSiteSettingsFormProps {
+    settings: SiteSettings;
+}
 
 /**
  * Muestra el formulario para la gestión de la configuración del sitio.
  */
-export default function AdminSiteSettingsForm({}: AdminSiteSettingsFormProps) {
+export default function AdminSiteSettingsForm({ settings }: AdminSiteSettingsFormProps) {
     const { t } = useTranslation();
-    const { auth } = usePage<{ auth: Auth }>().props;
 
     // Estado que refleja si el registro de usuarios está habilitado o no.
-    const [isRegistrationEnabled, setIsRegistrationEnabled] = useState(true);
+    const [isRegistrationEnabled, setIsRegistrationEnabled] = useState(settings.is_user_registration_enabled);
 
     // Envía los datos del formulario.
     const { form, handleAction, confirmAction, isDialogOpen, closeDialog } = useAdminActionForm({
