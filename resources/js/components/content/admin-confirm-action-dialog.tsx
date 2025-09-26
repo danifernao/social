@@ -11,6 +11,10 @@ interface ConfirmActionDialogProps {
     onConfirm: () => void;
 }
 
+/**
+ * Muestra el formulario para confirmar una acción administrativa.
+ * Requiere la contraseña del usuario para continuar.
+ */
 export default function ConfirmActionDialog({ open, onOpenChange, password, onPasswordChange, onConfirm }: ConfirmActionDialogProps) {
     const { t } = useTranslation();
 

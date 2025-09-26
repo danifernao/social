@@ -18,10 +18,10 @@ export default function AdminSiteSettingsForm({}: AdminSiteSettingsFormProps) {
     const { t } = useTranslation();
     const { auth } = usePage<{ auth: Auth }>().props;
 
-    // Estado local: refleja si el registro de usuarios está habilitado.
+    // Estado que refleja si el registro de usuarios está habilitado o no.
     const [isRegistrationEnabled, setIsRegistrationEnabled] = useState(true);
 
-    // Hook reutilizable para manejar acciones administrativas.
+    // Envía los datos del formulario.
     const { form, handleAction, confirmAction, isDialogOpen, closeDialog } = useAdminActionForm({
         initialData: {},
         route: () => route('admin.site.update'),
