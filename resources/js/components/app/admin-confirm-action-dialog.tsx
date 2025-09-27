@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ConfirmActionDialogProps {
@@ -19,6 +20,9 @@ export default function ConfirmActionDialog({ open, onOpenChange, password, onPa
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 
+    // Referencia al botón de confirmación del diálogo.
+    const buttonRef = useRef<HTMLButtonElement>(null);
+
     // Envía la contraseña.
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         if (password.trim()) {
@@ -27,9 +31,23 @@ export default function ConfirmActionDialog({ open, onOpenChange, password, onPa
         e.preventDefault();
     };
 
-    // Evita que Enter cierre el diálogo si el campo está vacío.
+    /**
+     * Evita que Enter cierre el diálogo si el campo de texto está vacío.
+     * De lo contrario, lo envía.
+     *
+     * Observación: al presionar Enter dentro del campo de texto, Radix interpreta
+     * la acción como "interacción fuera", lo que generará comportamientos
+     * inesperados en el hook que gestiona las acciones administrativas.
+     *
+     * Solución: si hay contraseña, se simula un clic en el botón de confirmación
+     * para disparar el mismo flujo que un clic manual; siempre se hace
+     * preventDefault para evitar cierres inesperados.
+     */
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && !password.trim()) {
+        if (e.key === 'Enter') {
+            if (password.trim()) {
+                buttonRef.current?.click();
+            }
             e.preventDefault();
         }
     };
@@ -55,7 +73,7 @@ export default function ConfirmActionDialog({ open, onOpenChange, password, onPa
                         <Button variant="outline" onClick={() => onOpenChange(false)}>
                             {t('cancel')}
                         </Button>
-                        <Button type="submit" disabled={!password.trim()}>
+                        <Button type="submit" ref={buttonRef} disabled={!password.trim()}>
                             {t('confirm')}
                         </Button>
                     </DialogFooter>
