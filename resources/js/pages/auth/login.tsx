@@ -2,13 +2,13 @@ import { Head, useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
 
-import InputError from '@/components/app/input-error';
-import TextLink from '@/components/app/text-link';
+import InputError from '@/components/kit/input-error';
+import TextLink from '@/components/kit/text-link';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import AuthLayout from '@/layouts/auth-layout';
+import AuthLayout from '@/layouts/kit/auth-layout';
 
 import { SiteSettings } from '@/types';
 import { Trans, useTranslation } from 'react-i18next';

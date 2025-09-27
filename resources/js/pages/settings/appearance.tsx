@@ -1,11 +1,11 @@
 import { Head } from '@inertiajs/react';
 
-import AppearanceTabs from '@/components/app/appearance-tabs';
-import HeadingSmall from '@/components/app/heading-small';
+import AppearanceTabs from '@/components/kit/appearance-tabs';
+import HeadingSmall from '@/components/kit/heading-small';
 import { type BreadcrumbItem } from '@/types';
 
-import AppLayout from '@/layouts/app-layout';
-import SettingsLayout from '@/layouts/settings/layout';
+import SettingsLayout from '@/layouts/app/settings/layout';
+import AppLayout from '@/layouts/kit/app-layout';
 import { useTranslation } from 'react-i18next';
 
 export default function Appearance() {

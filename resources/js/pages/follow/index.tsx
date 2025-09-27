@@ -1,9 +1,9 @@
-import { FollowNav } from '@/components/content/follow-nav';
-import ListLoadMore from '@/components/content/list-load-more';
-import UserList from '@/components/content/user-list';
-import { usePaginatedData } from '@/hooks/use-paginated-data';
-import AppLayout from '@/layouts/app-layout';
-import { AppContentLayout } from '@/layouts/app/app-content-layout';
+import { FollowNav } from '@/components/app/follow-nav';
+import ListLoadMore from '@/components/app/list-load-more';
+import UserList from '@/components/app/user-list';
+import { usePaginatedData } from '@/hooks/app/use-paginated-data';
+import AppLayout from '@/layouts/kit/app-layout';
+import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
 import type { Auth, BreadcrumbItem, User, Users } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';

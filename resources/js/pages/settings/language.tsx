@@ -1,7 +1,7 @@
-import HeadingSmall from '@/components/app/heading-small';
+import HeadingSmall from '@/components/kit/heading-small';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import AppLayout from '@/layouts/app-layout';
-import SettingsLayout from '@/layouts/settings/layout';
+import SettingsLayout from '@/layouts/app/settings/layout';
+import AppLayout from '@/layouts/kit/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { useEffect } from 'react';

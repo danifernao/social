@@ -1,7 +1,7 @@
-import AdminUserTable from '@/components/content/admin-user-table';
-import AdminLayout from '@/layouts/admin/admin-layout';
-import AppLayout from '@/layouts/app-layout';
-import { AppContentLayout } from '@/layouts/app/app-content-layout';
+import AdminUserTable from '@/components/app/admin-user-table';
+import AdminLayout from '@/layouts/app/admin/admin-layout';
+import AppLayout from '@/layouts/kit/app-layout';
+import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
 import type { BreadcrumbItem, Users } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
