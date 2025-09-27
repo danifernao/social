@@ -92,7 +92,7 @@ php artisan storage:link
 7. Ejecuta lo siguiente para realizar las migraciones:
 
 ```
-php artisan migrate
+php artisan migrate --seed
 ```
 
 8. Ejecuta lo siguiente para instalar las dependencias JavaScript:
