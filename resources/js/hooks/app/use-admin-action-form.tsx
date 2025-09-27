@@ -59,6 +59,11 @@ export function useAdminActionForm<T extends Record<string, any>>({ initialData,
     // Cierra el diálogo.
     const closeDialog = () => {
         setIsDialogOpen(false);
+        setPendingAction(null);
+        form.setData((prev) => ({
+            ...prev,
+            pass_confirmation: '',
+        }));
     };
 
     // Efecto que dispara el envío automático cuando la acción cambia.
