@@ -10,8 +10,8 @@ php artisan key:generate
 # Espera a que MySQL esté listo.
 dockerize -wait tcp://mysql:3306 -timeout 60s
 
-# Destruye las tablas existentes.
-php artisan migrate
+# Ejecuta las migraciones.
+php artisan migrate --seed
 
 # Crea un enlace simbólico desde public/storage hacia storage/app/public para acceso público a archivos.
 php artisan storage:link
