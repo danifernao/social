@@ -3,14 +3,14 @@ import { Transition } from '@headlessui/react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { FormEventHandler, useRef, useState } from 'react';
 
-import DeleteUser from '@/components/app/delete-user';
-import HeadingSmall from '@/components/app/heading-small';
-import InputError from '@/components/app/input-error';
+import DeleteUser from '@/components/kit/delete-user';
+import HeadingSmall from '@/components/kit/heading-small';
+import InputError from '@/components/kit/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import AppLayout from '@/layouts/app-layout';
-import SettingsLayout from '@/layouts/settings/layout';
+import SettingsLayout from '@/layouts/app/settings/layout';
+import AppLayout from '@/layouts/kit/app-layout';
 import { Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 

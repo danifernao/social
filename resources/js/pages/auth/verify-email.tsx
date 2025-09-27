@@ -3,9 +3,9 @@ import { Head, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
 
-import TextLink from '@/components/app/text-link';
+import TextLink from '@/components/kit/text-link';
 import { Button } from '@/components/ui/button';
-import AuthLayout from '@/layouts/auth-layout';
+import AuthLayout from '@/layouts/kit/auth-layout';
 
 import { useTranslation } from 'react-i18next';
 

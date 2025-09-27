@@ -1,12 +1,12 @@
-import InputError from '@/components/app/input-error';
-import AppLayout from '@/layouts/app-layout';
-import SettingsLayout from '@/layouts/settings/layout';
+import InputError from '@/components/kit/input-error';
+import SettingsLayout from '@/layouts/app/settings/layout';
+import AppLayout from '@/layouts/kit/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useRef } from 'react';
 
-import HeadingSmall from '@/components/app/heading-small';
+import HeadingSmall from '@/components/kit/heading-small';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

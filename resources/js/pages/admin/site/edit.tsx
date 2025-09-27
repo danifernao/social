@@ -1,7 +1,7 @@
-import AdminSiteSettingsForm from '@/components/content/admin-site-settings-form';
-import AdminLayout from '@/layouts/admin/admin-layout';
-import AppLayout from '@/layouts/app-layout';
-import { AppContentLayout } from '@/layouts/app/app-content-layout';
+import AdminSiteSettingsForm from '@/components/app/admin-site-settings-form';
+import AdminLayout from '@/layouts/app/admin/admin-layout';
+import AppLayout from '@/layouts/kit/app-layout';
+import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
 import type { BreadcrumbItem, SiteSettings } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
