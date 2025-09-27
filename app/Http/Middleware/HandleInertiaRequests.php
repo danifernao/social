@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Http\Resources\UserResource;
+use App\Models\SiteSetting;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -56,6 +57,12 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'siteSettings' => function () {
+                $siteSettings = SiteSetting::first();
+                return [
+                    'is_user_registration_enabled' => $siteSettings?->is_user_registration_enabled ?? false,
+                ];
+            },
             'post' => fn () => $request->session()->get('post'),
             'comment' => fn () => $request->session()->get('comment'),
             'unreadNotisCount' => fn () => $request->user()?->unreadNotifications()->count() ?? 0,
