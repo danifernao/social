@@ -1,9 +1,9 @@
-import ListLoadMore from '@/components/content/list-load-more';
-import NotificationHeader from '@/components/content/notification-header';
-import NotificationList from '@/components/content/notification-list';
-import { usePaginatedData } from '@/hooks/use-paginated-data';
-import AppLayout from '@/layouts/app-layout';
-import { AppContentLayout } from '@/layouts/app/app-content-layout';
+import ListLoadMore from '@/components/app/list-load-more';
+import NotificationHeader from '@/components/app/notification-header';
+import NotificationList from '@/components/app/notification-list';
+import { usePaginatedData } from '@/hooks/app/use-paginated-data';
+import AppLayout from '@/layouts/kit/app-layout';
+import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
 import type { BreadcrumbItem, Notification, Notifications } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';

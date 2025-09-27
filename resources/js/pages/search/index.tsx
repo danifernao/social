@@ -1,10 +1,10 @@
-import ListLoadMore from '@/components/content/list-load-more';
-import SearchBar from '@/components/content/search-bar';
-import SearchSearchResults from '@/components/content/search-results';
+import ListLoadMore from '@/components/app/list-load-more';
+import SearchBar from '@/components/app/search-bar';
+import SearchSearchResults from '@/components/app/search-results';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
-import { usePaginatedData } from '@/hooks/use-paginated-data';
-import AppLayout from '@/layouts/app-layout';
-import { AppContentLayout } from '@/layouts/app/app-content-layout';
+import { usePaginatedData } from '@/hooks/app/use-paginated-data';
+import AppLayout from '@/layouts/kit/app-layout';
+import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
 import type { BreadcrumbItem, Post, SearchResults, SearchType, User } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';

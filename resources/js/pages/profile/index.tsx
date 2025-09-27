@@ -1,11 +1,11 @@
-import EntryForm from '@/components/content/entry-form';
-import EntryList from '@/components/content/entry-list';
-import ListLoadMore from '@/components/content/list-load-more';
-import ProfileHeader from '@/components/content/profile-header';
+import EntryForm from '@/components/app/entry-form';
+import EntryList from '@/components/app/entry-list';
+import ListLoadMore from '@/components/app/list-load-more';
+import ProfileHeader from '@/components/app/profile-header';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
-import { usePaginatedData } from '@/hooks/use-paginated-data';
-import AppLayout from '@/layouts/app-layout';
-import { AppContentLayout } from '@/layouts/app/app-content-layout';
+import { usePaginatedData } from '@/hooks/app/use-paginated-data';
+import AppLayout from '@/layouts/kit/app-layout';
+import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
 import type { Auth, BreadcrumbItem, Post, Posts, User } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
