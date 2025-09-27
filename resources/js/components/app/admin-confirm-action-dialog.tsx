@@ -32,11 +32,11 @@ export default function ConfirmActionDialog({ open, onOpenChange, password, onPa
     };
 
     /**
-     * Evita que Enter cierre el diálogo si el campo de texto está vacío.
-     * De lo contrario, lo envía.
+     * Evita que Enter cierre el diálogo si el campo de contraseña está vacío.
+     * De lo contrario, envía la contraseña.
      *
-     * Observación: al presionar Enter dentro del campo de texto, Radix interpreta
-     * la acción como "interacción fuera", lo que generará comportamientos
+     * Observación: al presionar Enter dentro del campo de contraseña, Radix
+     * interpreta la acción como "interacción fuera", lo que generará comportamientos
      * inesperados en el hook que gestiona las acciones administrativas.
      *
      * Solución: si hay contraseña, se simula un clic en el botón de confirmación
