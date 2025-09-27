@@ -55,8 +55,6 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
 
     return (
         <form className="space-y-8">
-            <FormErrors errors={form.errors} />
-
             {/* Rol */}
             {auth.user.is_admin && (
                 <Card>
@@ -64,6 +62,8 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                         <CardTitle>{t('changeRole')}</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
+                        {form.data.action === 'change_role' && <FormErrors errors={form.errors} />}
+
                         <Select
                             value={form.data.new_role}
                             onValueChange={(value: 'user' | 'mod' | 'admin') => form.setData('new_role', value)}
@@ -106,16 +106,19 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                     <CardHeader>
                         <CardTitle>{t('deleteAvatar')}</CardTitle>
                     </CardHeader>
-                    <CardContent className="flex items-center gap-4">
-                        <img src={user.avatar_url} alt="Avatar" className="h-24 w-24 rounded-sm bg-neutral-200 object-cover" />
-                        <Button
-                            type="button"
-                            onClick={() => handleAction('delete_avatar')}
-                            disabled={form.processing && form.data.action === 'delete_avatar'}
-                        >
-                            {form.processing && form.data.action === 'delete_avatar' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            {t('delete')}
-                        </Button>
+                    <CardContent className="space-y-4">
+                        {form.data.action === 'delete_avatar' && <FormErrors errors={form.errors} />}
+                        <div className="flex items-center gap-4">
+                            <img src={user.avatar_url} alt="Avatar" className="h-24 w-24 rounded-sm bg-neutral-200 object-cover" />
+                            <Button
+                                type="button"
+                                onClick={() => handleAction('delete_avatar')}
+                                disabled={form.processing && form.data.action === 'delete_avatar'}
+                            >
+                                {form.processing && form.data.action === 'delete_avatar' && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                                {t('delete')}
+                            </Button>
+                        </div>
                     </CardContent>
                 </Card>
             )}
@@ -126,6 +129,7 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                     <CardTitle>{t('changeUsername')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                    {form.data.action === 'change_username' && <FormErrors errors={form.errors} />}
                     <Input
                         placeholder={t('username')}
                         value={form.data.new_username}
@@ -150,12 +154,15 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                     <CardTitle>{t('changeEmail')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                    {form.data.action === 'change_email' && <FormErrors errors={form.errors} />}
+
                     <Input
                         placeholder={t('newEmail')}
                         value={form.data.new_email}
                         onChange={(e) => form.setData('new_email', e.target.value)}
                         disabled={form.processing && form.data.action === 'change_email'}
                     />
+
                     <div className="flex items-center gap-2">
                         <Checkbox
                             id="email-verification-link"
@@ -165,6 +172,7 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                         />
                         <label htmlFor="email-verification-link">{t('sendVerificationEmail')}</label>
                     </div>
+
                     <Button
                         type="button"
                         onClick={() => handleAction('change_email')}
@@ -182,6 +190,7 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                     <CardTitle>{t('resetPassword')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                    {form.data.action === 'reset_password' && <FormErrors errors={form.errors} />}
                     <p>{t('resetUserPasswordDescription')}</p>
                     <div className="flex items-center gap-2">
                         <Checkbox
@@ -209,6 +218,7 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                     <CardTitle>{t('accountStatus')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                    {form.data.action === 'toggle_account_status' && <FormErrors errors={form.errors} />}
                     <div className="flex items-center gap-2">
                         <ToggleGroup
                             type="single"
@@ -237,6 +247,7 @@ export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormPro
                         <CardTitle>{t('deleteAccount')}</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
+                        {form.data.action === 'delete_account' && <FormErrors errors={form.errors} />}
                         <p>{t('deleteUserAccountDescription')}</p>
                         <Button
                             type="button"
