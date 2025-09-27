@@ -1,9 +1,16 @@
 import { Button } from '@/components/ui/button';
-import { Head, Link } from '@inertiajs/react';
+import { SiteSettings } from '@/types';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 export default function Welcome() {
+    // Obtiene las traducciones de la página.
     const { t } = useTranslation();
+
+    // Captura la configuración del sitio proporcionado por Inertia.
+    const { siteSettings } = usePage<{ siteSettings: SiteSettings }>().props;
+
+    console.log(siteSettings);
 
     return (
         <div className="bg-background flex min-h-screen flex-col items-center justify-center px-6 text-center">
@@ -16,11 +23,13 @@ export default function Welcome() {
                         {t('login')}
                     </Button>
                 </Link>
-                <Link href="/register">
-                    <Button size="lg" className="w-full sm:w-auto">
-                        {t('signUp')}
-                    </Button>
-                </Link>
+                {siteSettings.is_user_registration_enabled && (
+                    <Link href="/register">
+                        <Button size="lg" className="w-full sm:w-auto">
+                            {t('signUp')}
+                        </Button>
+                    </Link>
+                )}
             </div>
         </div>
     );
