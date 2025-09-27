@@ -36,14 +36,13 @@ export default function AdminSiteSettingsForm({ settings }: AdminSiteSettingsFor
 
     return (
         <form className="space-y-8">
-            <FormErrors errors={form.errors} />
-
             {/* Habilitación / Inhabilitación de la página de registro de usuario */}
             <Card>
                 <CardHeader>
                     <CardTitle>{t('userRegistration')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                    {form.data.action === 'toggle_user_registration' && <FormErrors errors={form.errors} />}
                     <div className="flex items-center gap-2">
                         <ToggleGroup
                             type="single"

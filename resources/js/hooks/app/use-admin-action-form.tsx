@@ -19,8 +19,19 @@ export function useAdminActionForm<T extends Record<string, any>>({ initialData,
     // Acción pendiente que requiere confirmación.
     const [pendingAction, setPendingAction] = useState<string | null>(null);
 
+    // Restaura los valores iniciales del formulario.
+    const resetForm = () => {
+        form.setData((prev) => ({
+            ...prev,
+            action: '',
+            pass_confirmation: '',
+        }));
+        form.clearErrors();
+    };
+
     // Abre el diálogo y registra la acción pendiente.
     const handleAction = (action: string) => {
+        resetForm();
         setPendingAction(action);
         setIsDialogOpen(true);
     };
@@ -43,16 +54,6 @@ export function useAdminActionForm<T extends Record<string, any>>({ initialData,
                 onSuccess?.(form.data.action, page);
                 toast('¡Cambios guardados!');
             },
-            onError: () => {
-                document.documentElement.scrollIntoView();
-            },
-            onFinish: () => {
-                form.setData((prev) => ({
-                    ...prev,
-                    action: '',
-                    pass_confirmation: '',
-                }));
-            },
         });
     };
 
@@ -60,10 +61,7 @@ export function useAdminActionForm<T extends Record<string, any>>({ initialData,
     const closeDialog = () => {
         setIsDialogOpen(false);
         setPendingAction(null);
-        form.setData((prev) => ({
-            ...prev,
-            pass_confirmation: '',
-        }));
+        resetForm();
     };
 
     // Efecto que dispara el envío automático cuando la acción cambia.
