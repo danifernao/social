@@ -30,15 +30,15 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $auth_user = $request->user();
-
-        // Si no es moderador, deniega el acceso.
-        if (!$auth_user->canModerate()) {
+        // Deniega acceso si el usuario autenticado no es moderador.
+        if (!$request->user()->canModerate()) {
             abort(403);
         }
 
-        // Define los campos permitidos para ordenamiento.
+        // Columnas permitidas para ordenamiento.
         $allowed_order_by = ['id', 'username', 'email_verified_at', 'is_active', 'role', 'created_at'];
+
+        // Obtiene y valida el campo para ordenar, por defecto "username".
         $order_by = $request->get('orderBy', 'username');
         $order_by = in_array($order_by, $allowed_order_by) ? $order_by : 'username';
 
@@ -50,6 +50,7 @@ class UserController extends Controller
         $query = trim($request->get('query', ''));
         $cursor = $request->header('X-Cursor');
 
+        // Consulta base del modelo User.
         $users_query = User::query();
 
         // Aplica búsqueda por nombre de usuario parcial o por ID exacta.
@@ -60,8 +61,10 @@ class UserController extends Controller
             });
         }
 
+        // Ordena los resultados de la consulta de usuarios según la columna y la dirección del ordenamiento.
         $users_query->orderBy($order_by, $order_direction);
 
+        // Obtiene los usuarios paginados mediante cursor, 50 por página, a partir del cursor dado.
         $users = $users_query->cursorPaginate(50, ['*'], 'cursor', $cursor);
 
         return Inertia::render('admin/users/index', [
@@ -71,10 +74,12 @@ class UserController extends Controller
 
     /**
      * Muestra el formulario de creación de usuario.
+     * 
+     * @param Request $request Datos de la petición HTTP.
      */
     public function create(Request $request)
     {
-        // Si quien visita la página no es administrador, deniega el acceso.
+        // Deniega acceso si el usuario autenticado no es administrador.
         if (!$request->user()->isAdmin()) {
             abort(403);
         }
@@ -90,10 +95,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $auth_user = $request->user();
-
-        // Si quien realiza la acción no es administrador, deniega el acceso.
-        if (!$auth_user->isAdmin()) {
+        // Deniega acceso si el usuario autenticado no es administrador.
+        if (!$request->user()->isAdmin()) {
             abort(403);
         }
 
@@ -138,13 +141,16 @@ class UserController extends Controller
      */
     public function edit(Request $request, User $user)
     {
+        // Obtiene el usuario autenticado.
         $auth_user = $request->user();
 
+        // Deniega el acceso si el usuario autenticado no tiene permiso para
+        // actuar sobre el usuario indicado.
         if (!$auth_user->canActOn($user)) {
             abort(403);
         }
 
-        // Prepara el recurso y lo convierte en un arreglo.
+        // Convierte el usuario en un arreglo usando UserResource.
         $user_data = (new UserResource($user))->resolve();
 
         return Inertia::render('admin/users/edit', [
@@ -153,17 +159,18 @@ class UserController extends Controller
     }
 
     /**
-     * Procesa las acciones de administración sobre un usuario:
-     * Cambio de rol, reinicio de info, cambio de correo o restablecimiento de contraseña.
+     * Procesa las acciones de administración sobre un usuario.
      * 
      * @param Request $request Datos de la petición HTTP.
      * @param User $user Usuario cuyos datos se van a actualizar.
      */
     public function update(Request $request, User $user)
     {
+        // Obtiene el usuario autenticado.
         $auth_user = $request->user();
 
-        // Verifica los permisos del usuario autenticado.
+        // Deniega el acceso si el usuario autenticado no tiene permiso para
+        // actuar sobre el usuario indicado.
         if (!$auth_user->canActOn($user)) {
             abort(403);
         }
@@ -176,7 +183,7 @@ class UserController extends Controller
         // Verifica que la contraseña ingresada por el moderador sea la correcta.
         $this->confirmPassword($request->input('privileged_password'));
 
-        // Ejecuta la acción correspondiente.
+        // Ejecuta la acción correspondiente delegando a métodos específicos.
         switch ($request->action) {
             case 'change_role':
                 return $this->changeRole($request, $user);
@@ -205,28 +212,26 @@ class UserController extends Controller
      */
     private function changeRole(Request $request, User $user)
     {
-        // Si quien realiza la acción no es administrador, deniega el acceso.
+        // Deniega acceso si el usuario autenticado no es administrador.
         if (!$request->user()->isAdmin()) {
-            return back()->withErrors([
-                'message' => 'No tienes los permisos suficientes para cambiar el rol.',
-            ]);
+            abort(403);
         }
 
         $request->validate([
             'new_role' => 'required|in:admin,mod,user',
         ]);
 
-        // Solo guarda el rol si realmente cambió.
+        // Cambia el rol solo si es diferente al actual.
         if ($request->new_role !== $user->role) {
             $user->role = $request->new_role;
             $user->save();
 
-            // Si el rol es administrador o moderador, elimina bloqueos relacionados.
+            // Si el rol es administrador o moderador, elimina bloqueos asociados al usuario.
             if ($request->new_role !== 'user') {
-                // Eliminar bloqueos hechos POR el administrador o moderador.
+                // Elimina bloqueos hechos POR el administrador o moderador.
                 UserBlock::where('blocker_id', $user->id)->delete();
 
-                // Eliminar bloqueos HECHOS AL administrador o moderador.
+                // Elimina bloqueos HECHOS AL administrador o moderador.
                 UserBlock::where('blocked_id', $user->id)->delete();
             }
         }
@@ -241,11 +246,12 @@ class UserController extends Controller
      */
     private function deleteAvatar(User $user)
     {
-        // Elimina el avatar si existe en disco.
+        // Elimina el avatar del disco si existe.
         if ($user->avatar_path && Storage::disk('public')->exists($user->avatar_path)) {
             Storage::disk('public')->delete($user->avatar_path);
         }
 
+        // Limpia la ruta del avatar en la base de datos.
         $user->avatar_path = null;
         $user->save();
 
@@ -269,7 +275,7 @@ class UserController extends Controller
 
             $new_username = $request->new_username;
         } else {
-            // Dado que no se proporcionó un nombre de usuario, genera uno aleatoriamente.
+            // Genera un nombre de usuario único.
             do {
                 $new_username = 'user_' . Str::lower(Str::random(8));
             } while (User::where('username', $new_username)->exists());
@@ -277,7 +283,7 @@ class UserController extends Controller
 
         $user->username = $new_username;
 
-        // Si cambió el nombre de usuario, guarda el cambio.
+        // Guarda el cambio si el nombre de usuario fue modificado.
         if ($user->isDirty('username')) {
             $user->save();
         }
@@ -305,7 +311,7 @@ class UserController extends Controller
             $user->save();
         }
 
-        // Si se solicitó, envía el enlace de verificación al correo.
+        // Envía enlace de verificación si se solicitó y el correo no está verificado.
         if (filter_var($request->email_verification_link, FILTER_VALIDATE_BOOLEAN) && !$user->email_verified_at) {
             $user->sendEmailVerificationNotification();
         }
@@ -322,6 +328,7 @@ class UserController extends Controller
      */
     private function resetPassword(Request $request, User $user)
     {
+        // Genera y guarda una nueva contraseña aleatoria si se solicitó.
         if (filter_var($request->random_password, FILTER_VALIDATE_BOOLEAN)) {
             $new_password = Str::random(12);
             $user->password = Hash::make($new_password);
@@ -329,6 +336,7 @@ class UserController extends Controller
             $user->save();
         }
 
+        // Envía el enlace de restablecimiento de contraseña al usuario.
         Password::sendResetLink(['email' => $user->email]);
         
         return back()->with('status', 'password_reset_email_sent');
@@ -361,18 +369,10 @@ class UserController extends Controller
      */
     public function deleteAccount(Request $request, User $user)
     {
-        // Si quien realiza la acción no es administrador, deniega el acceso.
-        if (!$request->user()->isAdmin()) {
-            return back()->withErrors([
-                'message' => 'No tienes los permisos suficientes para eliminar la cuenta.',
-            ]);
-        }
-
-        // Si se está tratando de eliminar a otro administrador, deniega el acceso.
-        if ($user->isAdmin()) {
-            return back()->withErrors([
-                'message' => 'No puedes eliminar a otro administrador.',
-            ]);
+        // Deniega acceso si el usuario autenticado no es administrador
+        // o si se intenta eliminar a otro administrador.
+        if (!$request->user()->isAdmin() || $user->isAdmin()) {
+            abort(403);
         }
         
         // Elimina todas las sesiones activas del usuario.
