@@ -20,14 +20,12 @@ class SiteController extends Controller
      */
     public function edit(Request $request)
     {
-        // Si quien visita la página no es administrador, deniega el acceso.
+        // Deniega acceso si el usuario autenticado no es administrador.
         if (!$request->user()->isAdmin()) {
-            return back()->withErrors([
-                'message' => 'No tienes los permisos suficientes para realizar esta acción.',
-            ]);
+            abort(403);
         }
         
-        // Obtiene la única fila de configuración.
+        // Obtiene la configuración del sitio.
         $siteSettings = SiteSetting::firstOrFail();
 
         return Inertia::render('admin/site/edit', [
@@ -42,11 +40,9 @@ class SiteController extends Controller
      */
     public function update(Request $request)
     {
-        // Si quien realiza la acción no es administrador, deniega el acceso.
+        // Deniega acceso si el usuario autenticado no es administrador.
         if (!$request->user()->isAdmin()) {
-            return back()->withErrors([
-                'message' => 'No tienes los permisos suficientes para realizar esta acción.',
-            ]);
+            abort(403);
         }
         
         $request->validate([
@@ -57,7 +53,7 @@ class SiteController extends Controller
         // Verifica que la contraseña ingresada por el administrador sea la correcta.
         $this->confirmPassword($request->input('privileged_password'));
 
-        // Ejecuta la acción correspondiente.
+        // Ejecuta la acción correspondiente delegando a métodos específicos.
         switch ($request->action) {
             case 'toggle_user_registration':
                 return $this->toggleUserRegistrationEnabled();
@@ -71,7 +67,7 @@ class SiteController extends Controller
      */
     private function toggleUserRegistrationEnabled()
     {
-        // Obtiene la única fila de configuración.
+        // Obtiene la configuración del sitio.
         $siteSettings = SiteSetting::firstOrFail();
 
         // Inhabilita o habilita la página de registro de usuario.
