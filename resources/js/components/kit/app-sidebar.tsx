@@ -28,7 +28,7 @@ export function AppSidebar() {
             title: t('explore'),
             href: `/search`,
             icon: Search,
-            isActive: ['search.show', 'search.hashtag'].includes(routeName),
+            isActive: ['search.index', 'search.hashtag'].includes(routeName),
         },
         {
             title: t('connections'),
@@ -48,7 +48,7 @@ export function AppSidebar() {
                       title: t('management'),
                       href: '/admin',
                       icon: UserCog,
-                      isActive: ['admin.site.edit', 'admin.user.show', 'admin.user.edit'].includes(routeName),
+                      isActive: ['admin.site.edit', 'admin.user.index', 'admin.user.edit'].includes(routeName),
                   },
               ]
             : []),

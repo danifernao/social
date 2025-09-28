@@ -28,7 +28,7 @@ class UserController extends Controller
      * 
      * @param Request $request Datos de la petición HTTP.
      */
-    public function show(Request $request)
+    public function index(Request $request)
     {
         $auth_user = $request->user();
 
@@ -117,7 +117,7 @@ class UserController extends Controller
         event(new Registered($user));
 
         return redirect()
-            ->route('admin.user.show')
+            ->route('admin.user.index')
             ->with('message', 'Usuario creado');
     }
     
@@ -373,6 +373,6 @@ class UserController extends Controller
         // Elimina al ususario.
         $user->delete();
 
-        return redirect()->route('admin.user.show')->with('message', 'Usuario eliminado.');
+        return redirect()->route('admin.user.index')->with('message', 'Usuario eliminado.');
     }
 }

@@ -29,7 +29,7 @@ export default function Home() {
     } = usePaginatedData<Post>({
         initialItems: posts.data, // Lista inicial de publicaciones.
         initialCursor: posts.meta.next_cursor, // Cursor inicial.
-        fetchUrl: route('home.show'), // Ruta para solicitar más publicaciones.
+        fetchUrl: route('home.index'), // Ruta para solicitar más publicaciones.
         propKey: 'posts', // Nombre de la propiedad que devuelve Inertia con los datos a usar.
     });
 
@@ -37,7 +37,7 @@ export default function Home() {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('home'),
-            href: route('home.show'),
+            href: route('home.index'),
         },
     ];
 

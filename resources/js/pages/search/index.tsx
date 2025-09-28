@@ -45,7 +45,7 @@ export default function Search() {
     } = usePaginatedData<Post | User>({
         initialItems: props.results.data, // Lista inicial de resultados.
         initialCursor: props.results.meta.next_cursor, // Cursor inicial.
-        fetchUrl: route('search.show', { type, query }), // Ruta para solicitar más resultados.
+        fetchUrl: route('search.index', { type, query }), // Ruta para solicitar más resultados.
         propKey: 'results', // Nombre de la propiedad que devuelve Inertia con los datos a usar.
     });
 
@@ -56,7 +56,7 @@ export default function Search() {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: isHashtag ? t('hashtag') : t('search'),
-            href: route('search.show'),
+            href: route('search.index'),
         },
     ];
 
@@ -68,7 +68,7 @@ export default function Search() {
         shouldReset.current = true;
 
         router.get(
-            route('search.show'),
+            route('search.index'),
             { type: newType, query: newQuery },
             {
                 preserveState: true,
