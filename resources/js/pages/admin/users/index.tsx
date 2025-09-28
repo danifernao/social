@@ -1,9 +1,10 @@
 import AdminUserTable from '@/components/app/admin-user-table';
+import { Button } from '@/components/ui/button';
 import AdminLayout from '@/layouts/app/admin/admin-layout';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
 import type { BreadcrumbItem, Users } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -38,6 +39,11 @@ export default function UsersIndex() {
             <Head title={t('userManagement')} />
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
+                    <div>
+                        <Button variant="outline" asChild>
+                            <Link href={route('admin.user.create')}>{t('createUser')}</Link>
+                        </Button>
+                    </div>
                     <AdminUserTable users={users.data} previous={users.links.prev} next={users.links.next} />
                 </AppContentLayout>
             </AdminLayout>

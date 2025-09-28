@@ -51,6 +51,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('admin/site', [SiteController::class, 'edit'])->name('admin.site.edit');
     Route::patch('admin/site', [SiteController::class, 'update'])->name('admin.site.update');
     Route::get('admin/users', [UserController::class, 'show'])->name('admin.user.show');
+    Route::get('admin/users/create', [UserController::class, 'create'])->name('admin.user.create');
+    Route::post('admin/users/create', [UserController::class, 'store'])->name('admin.user.store');
     Route::get('admin/{user}', [UserController::class, 'edit'])->name('admin.user.edit');
     Route::patch('admin/{user}', [UserController::class, 'update'])->name('admin.user.update');
 });
