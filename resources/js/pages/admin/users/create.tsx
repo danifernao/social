@@ -16,7 +16,7 @@ export default function UsersEdit() {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('userManagement'),
-            href: route('admin.user.show'),
+            href: route('admin.user.index'),
         },
         {
             title: t('createUser'),

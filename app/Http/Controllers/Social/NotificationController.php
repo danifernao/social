@@ -14,7 +14,7 @@ class NotificationController extends Controller
      * 
      * @param Request $request Datos de la petición HTTP.
      */
-    public function show(Request $request)
+    public function index(Request $request)
     {
         $cursor = $request->header('X-Cursor');
 
