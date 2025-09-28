@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\UserBlock;
 use App\Rules\UserRules;
 use App\Traits\HandlesPasswordConfirmation;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -68,6 +69,57 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * Muestra el formulario de registro de usuario.
+     */
+    public function create()
+    {
+        return Inertia::render('admin/users/create');
+    }
+
+    /**
+     * Crea un nuevo usuario desde el panel de administración.
+     * Requiere que el administrador confirme su contraseña.
+     * 
+     * @param Request $request Datos de la petición HTTP.
+     */
+    public function store(Request $request)
+    {
+        $auth_user = $request->user();
+
+        // Si quien realiza la acción no es administrador, deniega el acceso.
+        if (!$auth_user->isAdmin()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'email' => ['required', 'email', 'unique:users,email'],
+            'admin_password' => ['required', 'string'],
+        ]);
+
+        // Verifica que la contraseña ingresada por el administrador sea la correcta.
+        $this->confirmPassword($request->input('admin_password'));
+
+        // Genera un nombre de usuario aleatorio.
+        do {
+            $username = 'user_' . Str::lower(Str::random(8));
+        } while (User::where('username', $username)->exists());
+
+        // Genera una contraseña aleatoria.
+        $password = Str::random(12);
+
+        $user = User::create([
+            'email' => $request->email,
+            'password' => Hash::make($password),
+            'username' => $username,
+        ]);
+
+        event(new Registered($user));
+
+        return redirect()
+            ->route('admin.user.show')
+            ->with('message', 'Usuario creado');
+    }
     
     /**
      * Muestra el formulario de edición de un usuario para el moderador.
