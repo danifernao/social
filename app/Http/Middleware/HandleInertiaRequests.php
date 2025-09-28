@@ -46,6 +46,7 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'routeName' => $request->route()?->getName(),
             'status' => fn () => $request->session()->get('status'),
+            'message' => fn () => $request->session()->get('message'),
             'csrfToken' => csrf_token(),
             'auth' => [
                 'user' => $request->user()
