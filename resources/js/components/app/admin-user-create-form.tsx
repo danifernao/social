@@ -48,6 +48,8 @@ export default function AdminUserCreateForm() {
                         disabled={form.processing}
                     />
 
+                    <p className="text-muted-foreground text-sm italic">{t('createUserDescription')}</p>
+
                     {/* Campo para ingresar la contraseña del administrador */}
                     <p>{t('confirmActionDescription')}</p>
 

@@ -70,7 +70,7 @@ class UserController extends Controller
     }
 
     /**
-     * Muestra el formulario de registro de usuario.
+     * Muestra el formulario de creación de usuario.
      */
     public function create()
     {
@@ -108,13 +108,16 @@ class UserController extends Controller
         // Genera una contraseña aleatoria.
         $password = Str::random(12);
 
-        $user = User::create([
+        // Crea el usuario forzando la asignación y marcando el correo como verificado.
+        $user = User::forceCreate([
+            'username' => $username,
             'email' => $request->email,
             'password' => Hash::make($password),
-            'username' => $username,
+            'email_verified_at' => now(),
         ]);
 
-        event(new Registered($user));
+        // Envía un enlace de restablecimiento de contraseña.
+        Password::sendResetLink(['email' => $user->email]);
 
         return redirect()
             ->route('admin.user.index')
