@@ -68,8 +68,8 @@ export default function AdminSiteSettingsForm({ settings }: AdminSiteSettingsFor
             <ConfirmActionDialog
                 open={isDialogOpen}
                 onOpenChange={closeDialog}
-                password={form.data.pass_confirmation}
-                onPasswordChange={(value) => form.setData('pass_confirmation', value)}
+                password={form.data.privileged_password}
+                onPasswordChange={(value) => form.setData('privileged_password', value)}
                 onConfirm={confirmAction}
             />
         </form>

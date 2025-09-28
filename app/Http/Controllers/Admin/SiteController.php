@@ -51,11 +51,11 @@ class SiteController extends Controller
         
         $request->validate([
             'action' => ['required', Rule::in(['toggle_user_registration'])],
-            'pass_confirmation' => ['required', 'string'],
+            'privileged_password' => ['required', 'string'],
         ]);
 
         // Verifica que la contraseña ingresada por el administrador sea la correcta.
-        $this->confirmPassword($request->input('pass_confirmation'));
+        $this->confirmPassword($request->input('privileged_password'));
 
         // Ejecuta la acción correspondiente.
         switch ($request->action) {

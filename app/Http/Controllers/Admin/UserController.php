@@ -94,11 +94,11 @@ class UserController extends Controller
 
         $request->validate([
             'email' => ['required', 'email', 'unique:users,email'],
-            'admin_password' => ['required', 'string'],
+            'privileged_password' => ['required', 'string'],
         ]);
 
         // Verifica que la contraseña ingresada por el administrador sea la correcta.
-        $this->confirmPassword($request->input('admin_password'));
+        $this->confirmPassword($request->input('privileged_password'));
 
         // Genera un nombre de usuario aleatorio.
         do {
@@ -165,11 +165,11 @@ class UserController extends Controller
         
         $request->validate([
             'action' => ['required', Rule::in(['change_role', 'delete_avatar', 'change_username', 'change_email', 'reset_password', 'toggle_account_status', 'delete_account'])],
-            'pass_confirmation' => ['required', 'string'],
+            'privileged_password' => ['required', 'string'],
         ]);
 
         // Verifica que la contraseña ingresada por el moderador sea la correcta.
-        $this->confirmPassword($request->input('pass_confirmation'));
+        $this->confirmPassword($request->input('privileged_password'));
 
         // Ejecuta la acción correspondiente.
         switch ($request->action) {
