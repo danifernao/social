@@ -72,8 +72,13 @@ class UserController extends Controller
     /**
      * Muestra el formulario de creación de usuario.
      */
-    public function create()
+    public function create(Request $request)
     {
+        // Si quien visita la página no es administrador, deniega el acceso.
+        if (!$request->user()->isAdmin()) {
+            abort(403);
+        }
+
         return Inertia::render('admin/users/create');
     }
 
