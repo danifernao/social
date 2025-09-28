@@ -19,7 +19,7 @@ class SearchController extends Controller
      * @param Request $request Datos de la petición HTTP.
      * @param string|null $hashtag Etiqueta para filtrar las publicaciones (sin el símbolo "#").
      */
-    public function show(Request $request, $hashtag = null)
+    public function index(Request $request, $hashtag = null)
     {
         $type = $hashtag ? 'post' : $request->get('type', 'post'); // Si hay hashtag, fuerza búsqueda de publicaciones.
         $query = trim($request->get('query', ''));

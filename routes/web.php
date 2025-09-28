@@ -16,13 +16,13 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     if (Auth::check()) {
-        return redirect()->route('home.show');
+        return redirect()->route('home.index');
     }
     return Inertia::render('welcome');
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/home', [HomeController::class, 'show'])->name('home.show');
+    Route::get('/home', [HomeController::class, 'index'])->name('home.index');
 
     Route::get('/user/{user}/following', [FollowController::class, 'showFollowing'])->name('follow.following');
     Route::get('/user/{user}/followers', [FollowController::class, 'showFollowers'])->name('follow.followers');
@@ -40,17 +40,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('/reaction', [ReactionController::class, 'toggle'])->name('reaction.toggle');
 
-    Route::get('/search', [SearchController::class, 'show'])->name('search.show');
-    Route::get('/hashtag/{hashtag}', [SearchController::class, 'show'])->where('hashtag', '[\pL\pN_]+')->name('search.hashtag');
+    Route::get('/search', [SearchController::class, 'index'])->name('search.index');
+    Route::get('/hashtag/{hashtag}', [SearchController::class, 'index'])->where('hashtag', '[\pL\pN_]+')->name('search.hashtag');
 
-    Route::get('/notifications', [NotificationController::class, 'show'])->name('notification.show');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notification.index');
     Route::patch('/notifications/read', [NotificationController::class, 'markAllAsRead'])->name('notification.markAllAsRead');
     Route::patch('/notifications/read/{id}', [NotificationController::class, 'markOneAsRead'])->name('notification.markOneAsRead');
 
     Route::redirect('admin', 'admin/site');
     Route::get('admin/site', [SiteController::class, 'edit'])->name('admin.site.edit');
     Route::patch('admin/site', [SiteController::class, 'update'])->name('admin.site.update');
-    Route::get('admin/users', [UserController::class, 'show'])->name('admin.user.show');
+    Route::get('admin/users', [UserController::class, 'index'])->name('admin.user.index');
     Route::get('admin/users/create', [UserController::class, 'create'])->name('admin.user.create');
     Route::post('admin/users/create', [UserController::class, 'store'])->name('admin.user.store');
     Route::get('admin/{user}', [UserController::class, 'edit'])->name('admin.user.edit');

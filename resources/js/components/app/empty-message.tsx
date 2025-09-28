@@ -19,7 +19,7 @@ export default function EmptyMessage({ custom = '' }: EmptyMessageProps) {
 
     if (!message) {
         switch (routeName) {
-            case 'home.show':
+            case 'home.index':
             case 'profile.show':
                 message = t('noPosts');
                 break;
@@ -32,7 +32,7 @@ export default function EmptyMessage({ custom = '' }: EmptyMessageProps) {
             case 'post.show':
                 message = t('noComments');
                 break;
-            case 'search.show':
+            case 'search.index':
             case 'search.hashtag':
                 message = t('noResults');
                 break;

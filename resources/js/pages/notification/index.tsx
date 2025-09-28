@@ -32,7 +32,7 @@ export default function Notifications() {
     } = usePaginatedData<Notification>({
         initialItems: notifications.data, // Lista inicial de notificaciones.
         initialCursor: notifications.meta.next_cursor, // Cursor inicial.
-        fetchUrl: route('notification.show'), // Ruta para solicitar más notificaciones.
+        fetchUrl: route('notification.index'), // Ruta para solicitar más notificaciones.
         propKey: 'notifications', // Nombre de la propiedad que devuelve Inertia con los datos a usar.
     });
 
@@ -67,7 +67,7 @@ export default function Notifications() {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('notifications'),
-            href: route('notification.show'),
+            href: route('notification.index'),
         },
     ];
 

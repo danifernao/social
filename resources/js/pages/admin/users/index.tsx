@@ -23,7 +23,7 @@ export default function UsersIndex() {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('userManagement'),
-            href: route('admin.user.show'),
+            href: route('admin.user.index'),
         },
     ];
 
