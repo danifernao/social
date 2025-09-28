@@ -18,7 +18,7 @@ export default function AdminUserCreateForm() {
     // Se inicializa el formulario con los campos necesarios
     const form = useForm({
         email: '', // Correo electrónico del nuevo usuario
-        admin_password: '', // Contraseña del administrador
+        privileged_password: '', // Contraseña del administrador
     });
 
     // Función que se ejecuta al enviar el formulario
@@ -56,8 +56,8 @@ export default function AdminUserCreateForm() {
                     <Input
                         type="password"
                         placeholder={t('password')}
-                        value={form.data.admin_password}
-                        onChange={(e) => form.setData('admin_password', e.target.value)}
+                        value={form.data.privileged_password}
+                        onChange={(e) => form.setData('privileged_password', e.target.value)}
                         disabled={form.processing}
                     />
 
