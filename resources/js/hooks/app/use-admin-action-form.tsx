@@ -11,7 +11,7 @@ interface UseAdminActionFormOptions<T> {
 // Hook genérico para formularios administrativos que requieren confirmación de contraseña.
 export function useAdminActionForm<T extends Record<string, any>>({ initialData, route: formRoute, onSuccess }: UseAdminActionFormOptions<T>) {
     // Formulario de Inertia con los datos iniciales.
-    const form = useForm({ ...initialData, action: '', pass_confirmation: '' });
+    const form = useForm({ ...initialData, action: '', privileged_password: '' });
 
     // Estado para controlar el diálogo de confirmación.
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -24,7 +24,7 @@ export function useAdminActionForm<T extends Record<string, any>>({ initialData,
         form.setData((prev) => ({
             ...prev,
             action: '',
-            pass_confirmation: '',
+            privileged_password: '',
         }));
         form.clearErrors();
     };
