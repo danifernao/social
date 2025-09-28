@@ -35,7 +35,7 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
             title: t('users'),
             href: '/admin/users',
             icon: null,
-            isActive: ['admin.user.index', 'admin.user.edit'].includes(routeName),
+            isActive: ['admin.user.index', 'admin.user.create', 'admin.user.edit'].includes(routeName),
         },
     ];
 
