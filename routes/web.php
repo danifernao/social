@@ -34,7 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/post/{post}', [PostController::class, 'update'])->name('post.update');
     Route::delete('/post/{post}', [PostController::class, 'delete'])->name('post.delete');
 
-    Route::post('/post/{post}/comment', [CommentController::class, 'create'])->name('comment.create');
+    Route::post('/post/{post}/comment', [CommentController::class, 'store'])->name('comment.store');
     Route::patch('/comment/{comment}', [CommentController::class, 'update'])->name('comment.update');
     Route::delete('/comment/{comment}', [CommentController::class, 'delete'])->name('comment.delete');
 
