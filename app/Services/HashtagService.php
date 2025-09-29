@@ -10,7 +10,7 @@ class HashtagService
     // Extrae las etiquetas del contenido de una publicación.
     public function extractFrom(string $content): array
     {
-        preg_match_all('/#([\p{L}0-9_]+)/u', $content, $matches);
+        preg_match_all('/#([a-z0-9]+)/i', $content, $matches);
         return array_unique(array_map('mb_strtolower', $matches[1]));
     }
 
