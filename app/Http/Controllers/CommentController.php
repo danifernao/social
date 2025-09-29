@@ -23,7 +23,7 @@ class CommentController extends Controller
      * @param Request $request Datos de la petición HTTP.
      * @param Post $post Publicación en la que se va a comentar.
      */
-    public function create(Request $request, Post $post)
+    public function store(Request $request, Post $post)
     {
         $auth_user = $request->user();
 
