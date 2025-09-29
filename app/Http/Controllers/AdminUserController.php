@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
@@ -18,7 +18,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
-class UserController extends Controller
+class AdminUserController extends Controller
 {
     use HandlesPasswordConfirmation;
 

@@ -13,14 +13,14 @@ import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
 import ConfirmActionDialog from './admin-confirm-action-dialog';
 import FormErrors from './form-errors';
 
-interface AdminUserSettingsFormProps {
+interface AdminUserEditFormProps {
     user: User;
 }
 
 /**
  * Muestra el formulario para la gestión del usuario.
  */
-export default function AdminUserSettingsForm({ user }: AdminUserSettingsFormProps) {
+export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 
