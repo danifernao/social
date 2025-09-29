@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\UserBlock;
 use App\Rules\UserRules;
 use App\Traits\HandlesPasswordConfirmation;
+use App\Utils\UsernameGenerator;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -108,10 +109,8 @@ class AdminUserController extends Controller
         // Verifica que la contraseña ingresada por el administrador sea la correcta.
         $this->confirmPassword($request->input('privileged_password'));
 
-        // Genera un nombre de usuario aleatorio.
-        do {
-            $username = 'user_' . Str::lower(Str::random(8));
-        } while (User::where('username', $username)->exists());
+        // Genera un nombre de usuario único.
+        $username = UsernameGenerator::generate();
 
         // Genera una contraseña aleatoria.
         $password = Str::random(12);
@@ -276,9 +275,7 @@ class AdminUserController extends Controller
             $new_username = $request->new_username;
         } else {
             // Genera un nombre de usuario único.
-            do {
-                $new_username = 'user_' . Str::lower(Str::random(8));
-            } while (User::where('username', $new_username)->exists());
+            $new_username = UsernameGenerator::generate();
         }
 
         $user->username = $new_username;
