@@ -76,8 +76,9 @@ export default function FormattedText({ entryType, text }: Props) {
                 if (entryType === 'comment' || !/^#[a-z0-9]+$/i.test(content)) {
                     return <>{content}</>;
                 }
-                return renderInertiaLink({ attributes, content });
+                return renderInertiaLink({ attributes, content }); // Etiquetas usan enlace interno.
             },
+            url: renderExternalLink, // URLs normales se abren en una nueva pestaña.
         },
         // Convierte el "href" según el tipo de enlace para generar rutas internas amigables.
         formatHref: (href: string, type: string) => {
