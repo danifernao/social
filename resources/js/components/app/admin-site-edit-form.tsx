@@ -8,14 +8,14 @@ import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
 import ConfirmActionDialog from './admin-confirm-action-dialog';
 import FormErrors from './form-errors';
 
-interface AdminSiteSettingsFormProps {
+interface AdminSiteEditFormProps {
     settings: SiteSettings;
 }
 
 /**
  * Muestra el formulario para la gestión de la configuración del sitio.
  */
-export default function AdminSiteSettingsForm({ settings }: AdminSiteSettingsFormProps) {
+export default function AdminSiteEditForm({ settings }: AdminSiteEditFormProps) {
     const { t } = useTranslation();
 
     // Estado que refleja si el registro de usuarios está habilitado o no.
