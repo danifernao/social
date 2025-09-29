@@ -1,5 +1,6 @@
 import remarkYoutube from '@/lib/remark-youtube';
 import { cn } from '@/lib/utils';
+import { EntryType } from '@/types';
 import { Link } from '@inertiajs/react';
 import * as hashtag from 'linkify-plugin-hashtag';
 import * as mention from 'linkify-plugin-mention';
@@ -12,6 +13,7 @@ import remarkBreaks from 'remark-breaks';
 import { Button } from '../ui/button';
 
 interface Props {
+    entryType: EntryType; // Puede ser "post" o "comment".
     text: string; // El texto que será formateado y mostrado.
 }
 
@@ -26,7 +28,7 @@ type ExtendedComponents = Components & {
  * - Convierte menciones (@usuario), etiquetas (#tema) y direcciones web en enlaces.
  * - Muestra botón "Leer más" si el contenido excede 300px de alto para expandirlo.
  */
-export default function FormattedText({ text }: Props) {
+export default function FormattedText({ entryType, text }: Props) {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 
@@ -71,7 +73,9 @@ export default function FormattedText({ text }: Props) {
             mention: renderInertiaLink, // Menciones usan enlace interno.
             hashtag: ({ attributes, content }: any) => {
                 // Filtra las etiquetas no alfanuméricas
-                if (!/^#[a-z0-9]+$/i.test(content)) return <>{content}</>;
+                if (entryType === 'comment' || !/^#[a-z0-9]+$/i.test(content)) {
+                    return <>{content}</>;
+                }
                 return renderInertiaLink({ attributes, content });
             },
         },
