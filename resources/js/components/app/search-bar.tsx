@@ -1,11 +1,10 @@
 import { Button } from '@/components/ui/button';
-import { Command, CommandGroup, CommandItem } from '@/components/ui/command';
 import { Input } from '@/components/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SearchType, SearchTypes } from '@/types';
-import { ChevronDown, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 interface SearchBarProps {
     type: SearchType; // Tipo de búsqueda inicial (publicación o usuario).
@@ -35,9 +34,6 @@ export default function SearchBar({ type, query, onSubmit }: SearchBarProps) {
     // Estado local del texto ingresado por el usuario.
     const [searchQuery, setSearchQuery] = useState(query);
 
-    // Estado que controla si el menú del tipo de búsqueda está abierto.
-    const [open, setOpen] = useState(false);
-
     /**
      * Envía los datos de la búsqueda al componente padre.
      */
@@ -47,31 +43,18 @@ export default function SearchBar({ type, query, onSubmit }: SearchBarProps) {
 
     return (
         <div className="flex items-center space-x-2">
-            <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-40 justify-between">
-                        {searchType.label}
-                        <ChevronDown className="ml-2 h-4 w-4" />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-40 p-0">
-                    <Command>
-                        <CommandGroup>
-                            {searchTypes.map((type) => (
-                                <CommandItem
-                                    key={type.value}
-                                    onSelect={() => {
-                                        setSearchType(type);
-                                        setOpen(false);
-                                    }}
-                                >
-                                    {type.label}
-                                </CommandItem>
-                            ))}
-                        </CommandGroup>
-                    </Command>
-                </PopoverContent>
-            </Popover>
+            <Select value={searchType.value} onValueChange={(val) => setSearchType(searchTypes.find((s) => s.value === val)!)}>
+                <SelectTrigger className="w-50">
+                    <SelectValue placeholder={defaultType.label} />
+                </SelectTrigger>
+                <SelectContent>
+                    {searchTypes.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                        </SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
 
             <Input
                 placeholder={t('searchPlaceholder', { type: searchType.label.toLowerCase() })}
