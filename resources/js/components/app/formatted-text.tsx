@@ -46,7 +46,7 @@ export default function FormattedText({ text }: Props) {
     const linkClass = 'text-blue-600 hover:underline';
 
     // Renderiza enlaces internos (menciones y etiquetas) usando el componente Link de Inertia.
-    const renderInertiaLink = ({ attributes, content }: { attributes: any; content: React.ReactNode }) => {
+    const renderInertiaLink = ({ attributes, content }: any) => {
         return (
             <Link href={attributes.href} className={linkClass}>
                 {content}
@@ -55,7 +55,7 @@ export default function FormattedText({ text }: Props) {
     };
 
     // Renderiza enlaces externos para abrir en una pestaña nueva.
-    const renderExternalLink = ({ attributes, content }: { attributes: any; content: React.ReactNode }) => {
+    const renderExternalLink = ({ attributes, content }: any) => {
         return (
             <a href={attributes.href} className={linkClass} target="_blank" rel="noopener noreferrer">
                 {content}
@@ -69,12 +69,16 @@ export default function FormattedText({ text }: Props) {
         plugins: [mention, hashtag], // Plugins para detectar menciones y etiquetas.
         render: {
             mention: renderInertiaLink, // Menciones usan enlace interno.
-            hashtag: renderInertiaLink, // Etiquetas usan enlace interno.
+            hashtag: ({ attributes, content }: any) => {
+                // Filtra las etiquetas no alfanuméricas
+                if (!/^#[a-z0-9]+$/i.test(content)) return <>{content}</>;
+                return renderInertiaLink({ attributes, content });
+            },
         },
         // Convierte el "href" según el tipo de enlace para generar rutas internas amigables.
         formatHref: (href: string, type: string) => {
             if (type === 'mention') return `/user/${href.substring(1)}`; // Quita el "@" y crea ruta a usuario.
-            if (type === 'hashtag') return `/hashtag/${href.substring(1)}`; // Quita el "#" y crea ruta a etiqueta.
+            if (type === 'hashtag') return `/search?query=${encodeURIComponent('#' + href.substring(1))}`; // Quita el "#" y crea ruta a etiqueta.
             return href; // Para URLs normales no cambia.
         },
     };

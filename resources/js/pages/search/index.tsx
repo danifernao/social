@@ -14,7 +14,6 @@ interface PageProps {
     type: SearchType; // Tipo de búsqueda (publicación o usuario).
     query: string; // Término de búsqueda.
     results: SearchResults; // Resultados de la búsqueda.
-    isHashtag: boolean; // Indica si la búsqueda es por etiqueta (hashtag).
     [key: string]: any;
 }
 
@@ -49,13 +48,10 @@ export default function Search() {
         propKey: 'results', // Nombre de la propiedad que devuelve Inertia con los datos a usar.
     });
 
-    // Indica si la búsqueda es por etiqueta (hashtag).
-    const isHashtag = props.isHashtag;
-
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: isHashtag ? t('hashtag') : t('search'),
+            title: t('search'),
             href: route('search.index'),
         },
     ];
@@ -90,7 +86,7 @@ export default function Search() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Buscar" />
             <AppContentLayout>
-                {!isHashtag ? <SearchBar type={type} query={query} onSubmit={onSubmit} /> : <h2 className="text-2xl">#{query}</h2>}
+                <SearchBar type={type} query={query} onSubmit={onSubmit} />
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>
                     <SearchSearchResults results={type === 'post' ? (results as Post[]) : (results as User[])} />
                 </EntryListUpdateContext.Provider>
