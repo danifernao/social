@@ -1,4 +1,4 @@
-import AdminUserSettingsForm from '@/components/app/admin-user-settings-form';
+import AdminUserEditForm from '@/components/app/admin-user-edit-form';
 import AdminLayout from '@/layouts/app/admin/admin-layout';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
@@ -35,7 +35,7 @@ export default function UsersEdit() {
                     <h2 className="text-2xl font-semibold tracking-tight">
                         <Link href={`/user/${user.username}`}>{user.username}</Link>
                     </h2>
-                    <AdminUserSettingsForm user={user} />
+                    <AdminUserEditForm user={user} />
                 </AppContentLayout>
             </AdminLayout>
         </AppLayout>

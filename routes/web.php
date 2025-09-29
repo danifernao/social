@@ -1,16 +1,16 @@
 <?php
 
-use App\Http\Controllers\Admin\SiteController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Social\BlockUserController;
-use App\Http\Controllers\Social\CommentController;
-use App\Http\Controllers\Social\FollowController;
-use App\Http\Controllers\Social\HomeController;
-use App\Http\Controllers\Social\NotificationController;
-use App\Http\Controllers\Social\PostController;
-use App\Http\Controllers\Social\ProfileController;
-use App\Http\Controllers\Social\ReactionController;
-use App\Http\Controllers\Social\SearchController;
+use App\Http\Controllers\AdminSiteController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\BlockUserController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\FollowController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReactionController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -48,13 +48,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/notifications/read/{id}', [NotificationController::class, 'markOneAsRead'])->name('notification.markOneAsRead');
 
     Route::redirect('admin', 'admin/site');
-    Route::get('admin/site', [SiteController::class, 'edit'])->name('admin.site.edit');
-    Route::patch('admin/site', [SiteController::class, 'update'])->name('admin.site.update');
-    Route::get('admin/users', [UserController::class, 'index'])->name('admin.user.index');
-    Route::get('admin/users/create', [UserController::class, 'create'])->name('admin.user.create');
-    Route::post('admin/users/create', [UserController::class, 'store'])->name('admin.user.store');
-    Route::get('admin/{user}', [UserController::class, 'edit'])->name('admin.user.edit');
-    Route::patch('admin/{user}', [UserController::class, 'update'])->name('admin.user.update');
+    Route::get('admin/site', [AdminSiteController::class, 'edit'])->name('admin.site.edit');
+    Route::patch('admin/site', [AdminSiteController::class, 'update'])->name('admin.site.update');
+    Route::get('admin/users', [AdminUserController::class, 'index'])->name('admin.user.index');
+    Route::get('admin/users/create', [AdminUserController::class, 'create'])->name('admin.user.create');
+    Route::post('admin/users/create', [AdminUserController::class, 'store'])->name('admin.user.store');
+    Route::get('admin/{user}', [AdminUserController::class, 'edit'])->name('admin.user.edit');
+    Route::patch('admin/{user}', [AdminUserController::class, 'update'])->name('admin.user.update');
 });
 
 Route::get('/user/{user}', [ProfileController::class, 'show'])->name('profile.show');
