@@ -80,7 +80,7 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                 </div>
             </header>
 
-            <FormattedText text={entry.content} />
+            <FormattedText entryType={entry.type} text={entry.content} />
 
             <footer className="flex gap-4">
                 <EntryListItemReactions entry={entry} />
