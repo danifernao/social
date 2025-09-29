@@ -33,7 +33,6 @@ export default function EmptyMessage({ custom = '' }: EmptyMessageProps) {
                 message = t('noComments');
                 break;
             case 'search.index':
-            case 'search.hashtag':
                 message = t('noResults');
                 break;
             default:

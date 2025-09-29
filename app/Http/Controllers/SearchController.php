@@ -17,14 +17,13 @@ class SearchController extends Controller
      * También permite buscar por hashtag.
      * 
      * @param Request $request Datos de la petición HTTP.
-     * @param string|null $hashtag Etiqueta para filtrar las publicaciones (sin el símbolo "#").
      */
-    public function index(Request $request, $hashtag = null)
+    public function index(Request $request)
     {
-        $type = $hashtag ? 'post' : $request->get('type', 'post'); // Si hay hashtag, fuerza búsqueda de publicaciones.
-        $query = trim($request->get('query', ''));
-        $cursor = $request->header('X-Cursor');
-        $auth_user = $request->user();
+        $type = $request->get('type', 'post'); // Tipo de búsqueda ("post" o "user").
+        $query = urldecode(trim($request->get('query', ''))); // Término de búsqueda.
+        $cursor = $request->header('X-Cursor'); // Cursor para paginación.
+        $auth_user = $request->user(); // Usuario autenticado.
 
         // Se excluyen usuarios con bloqueos.
         $excluded_ids = $auth_user->excludedUserIds();
@@ -33,6 +32,7 @@ class SearchController extends Controller
          * BÚSQUEDA DE USUARIOS
          */
         if ($type === 'user') {
+            // Consulta de usuarios filtrando por nombre y excluyendo bloqueados.
             $users = User::query()
                 ->when($query, fn ($q) =>
                     $q->where('username', 'like', "%{$query}%")) // Filtro por nombre de usuario.
@@ -75,18 +75,22 @@ class SearchController extends Controller
             ->whereNotIn('user_id', $excluded_ids) // Excluye publicaciones bloqueadas.
             ->latest();
 
-        if ($hashtag) {
+        // Verifica si el término de consulta es una etiqueta.
+        if (preg_match('/^#[a-z0-9]+$/i', $query)) {
             // Filtra las publicaciones por la etiqueta dada.
+            $hashtag = ltrim($query, '#');
             $posts_query->whereHas('hashtags', fn ($q) =>
                 $q->where('name', mb_strtolower($hashtag))
             );
         } elseif ($query) {
+            // Si no es una etiqueta, busca las publicaciones que contengan el término.
             $posts_query->where('content', 'like', "%{$query}%");
         }
 
+        // Paginación con cursor.
         $posts = $posts_query->cursorPaginate(7, ['*'], 'cursor', $cursor);
 
-        // Añade las reacciones de cada publicación.
+        // Añade las reacciones a cada publicación.
         $posts->setCollection(
             $posts->getCollection()->map(function ($post) use ($auth_user) {
                 $post->reactions = $post->reactionsSummary($auth_user->id);
@@ -96,9 +100,8 @@ class SearchController extends Controller
 
         return Inertia::render('search/index', [
             'type' => 'post',
-            'query' => $hashtag ?? $query,
+            'query' => $query,
             'results' => PostResource::collection($posts),
-            'isHashtag' => (bool) $hashtag,
         ]);
     }
 }

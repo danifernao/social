@@ -41,7 +41,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/reaction', [ReactionController::class, 'toggle'])->name('reaction.toggle');
 
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
-    Route::get('/hashtag/{hashtag}', [SearchController::class, 'index'])->where('hashtag', '[\pL\pN_]+')->name('search.hashtag');
 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notification.index');
     Route::patch('/notifications/read', [NotificationController::class, 'markAllAsRead'])->name('notification.markAllAsRead');

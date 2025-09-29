@@ -28,7 +28,6 @@ export function AppSidebar() {
             title: t('explore'),
             href: `/search`,
             icon: Search,
-            isActive: ['search.index', 'search.hashtag'].includes(routeName),
         },
         {
             title: t('connections'),
