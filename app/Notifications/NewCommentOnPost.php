@@ -21,7 +21,8 @@ class NewCommentOnPost extends Notification
      */
     public function __construct(
         public User $sender,
-        public int $postId
+        public int $postId,
+        public int $postAuthorId
     ) {}
 
     /**
@@ -54,6 +55,7 @@ class NewCommentOnPost extends Notification
                 'context' => [ // Contexto: en qué publicación ocurrió.
                     'type' => 'post',
                     'id' => $this->postId,
+                    'author_id' => $this->postAuthorId,
                 ],
             ],
         ];
