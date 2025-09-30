@@ -30,7 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/user/{user}/block', [BlockUserController::class, 'toggle'])->name('user.block');
 
-    Route::post('/post', [PostController::class, 'create'])->name('post.create');
+    Route::post('/post', [PostController::class, 'store'])->name('post.store');
     Route::patch('/post/{post}', [PostController::class, 'update'])->name('post.update');
     Route::delete('/post/{post}', [PostController::class, 'delete'])->name('post.delete');
 

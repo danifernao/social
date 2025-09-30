@@ -12,6 +12,7 @@ use App\Services\MentionService;
 use App\Utils\MentionParser;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Notifications\DatabaseNotification;
 use Inertia\Inertia;
 
 class PostController extends Controller
@@ -28,7 +29,7 @@ class PostController extends Controller
      * 
      * @param Request $request Datos de la petición HTTP.
      */
-    public function create(Request $request)
+    public function store(Request $request)
     {
         $data = $request->validate([
             'content' => 'required|string|max:3000'
