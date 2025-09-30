@@ -11,6 +11,7 @@ export interface Notification {
             context?: {
                 type: 'comment' | 'post';
                 id: number;
+                author_id?: number;
             };
         };
     };

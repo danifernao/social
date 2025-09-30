@@ -7,8 +7,8 @@ use App\Http\Resources\CommentResource;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\User;
-use App\Notifications\NewMention;
 use App\Services\HashtagService;
+use App\Services\MentionService;
 use App\Utils\MentionParser;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -18,7 +18,10 @@ class PostController extends Controller
 {
     use AuthorizesRequests;
 
-    public function __construct(protected HashtagService $hashtagService) {}
+    public function __construct(
+        protected HashtagService $hashtagService,
+        protected MentionService $mentionService
+    ) {}
 
     /**
      * Crea una nueva publicación.
@@ -45,20 +48,8 @@ class PostController extends Controller
         // Registra las etiquetas usadas en la publicación.
         $this->hashtagService->sync($post);
 
-        // Extrae los usuarios mencionados en la publicación.
-        $mentioned_users = MentionParser::extractMentionedUsers($data['content']);
-
-        // Filtra menciones de usuarios con bloqueos.
-        $mentioned_users = $auth_user->filterMentionables($mentioned_users);
-
         // Guarda menciones y envía notificaciones.
-        foreach ($mentioned_users as $user) {
-            $post->mentions()->create([
-                'user_id' => $user->id,
-            ]);
-
-            $user->notify(new NewMention($auth_user, 'post', $post->id));
-        }
+        $this->mentionService->createWithNotifications($post, $auth_user, 'post');
 
         // Prepara el recurso y lo convierte en un arreglo.
         $post_data = (new PostResource($post))->resolve();
@@ -85,8 +76,7 @@ class PostController extends Controller
         }
 
         // Carga relaciones y reacciones.
-        $post->load('user');
-        $post->loadCount('comments');
+        $post->load('user')->loadCount('comments');
         $post->reactions = $post->reactionsSummary($user?->id);
 
         $cursor = $request->header('X-Cursor');
@@ -138,6 +128,9 @@ class PostController extends Controller
         // Actualiza las etiquetas usadas en la publicación.
         $this->hashtagService->sync($post);
 
+        // Actualiza las menciones hechas en la publicación.
+        $this->mentionService->sync($post, $request->user());
+
         // Prepara el recurso y lo convierte en un arreglo.
         $post_data = (new PostResource($post))->resolve();
 
@@ -156,7 +149,7 @@ class PostController extends Controller
 
         $post->delete();
 
-        // Enlimina las etiquetas usadas en la publicación.
+        // Elimina las etiquetas usadas en la publicación.
         $this->hashtagService->detachAndClean($post);
 
         $referer = $request->header('referer');

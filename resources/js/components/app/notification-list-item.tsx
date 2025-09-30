@@ -1,4 +1,4 @@
-import type { Notification } from '@/types';
+import type { Auth, Notification } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { format, formatDistanceToNow, Locale, parseISO } from 'date-fns';
 import { enUS, es } from 'date-fns/locale';
@@ -16,9 +16,9 @@ export default function NotificationListItem({ notification }: NotificationListI
     // Obtiene las traducciones de la página.
     const { i18n } = useTranslation();
 
-    // Captura el token CSRF proporcionado por Inertia.
+    // Captura el token CSRF y el usuario autenticado proporcionado por Inertia.
     // Este token es necesario para que Laravel acepte la solicitud PATCH.
-    const { csrfToken } = usePage<{ csrfToken: string }>().props;
+    const { auth, csrfToken } = usePage<{ auth: Auth; csrfToken: string }>().props;
 
     // Referencia del elemento HTML que contiene la notificaión.
     // Esta referencia se usará con IntersectionObserver para detectar cuándo está visible.
@@ -109,7 +109,13 @@ export default function NotificationListItem({ notification }: NotificationListI
             <Link href={url}>
                 {type === 'follow' && <Trans i18nKey="hasFollowedYou" values={{ username: sender.username }} components={[<strong />, <strong />]} />}
 
-                {type === 'comment' && <Trans i18nKey="hasCommented" values={{ username: sender.username }} components={[<strong />, <strong />]} />}
+                {type === 'comment' &&
+                    context &&
+                    (context.author_id === auth.user.id ? (
+                        <Trans i18nKey="hasCommentedOnYourPost" values={{ username: sender.username }} components={[<strong />, <strong />]} />
+                    ) : (
+                        <Trans i18nKey="hasCommentedInPost" values={{ username: sender.username }} components={[<strong />, <strong />]} />
+                    ))}
 
                 {type === 'mention' && context && context.type === 'post' && (
                     <Trans i18nKey="hasMentionedYouInPost" values={{ username: sender.username }} components={[<strong />, <strong />]} />

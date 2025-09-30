@@ -8,7 +8,7 @@ use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use App\Notifications\NewCommentOnPost;
-use App\Notifications\NewMention;
+use App\Services\MentionService;
 use App\Utils\MentionParser;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -16,6 +16,10 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class CommentController extends Controller
 {
     use AuthorizesRequests;
+
+    public function __construct(
+        protected MentionService $mentionService
+    ) {}
 
     /**
      * Crea un nuevo comentario asociado a una publicación.
@@ -46,24 +50,16 @@ class CommentController extends Controller
         // Agrega el usuario autenticado al comentario.
         $comment->setRelation('user', $auth_user);
 
-        // Extrae los usuarios mencionados en los comentarios.
-        $mentioned_users = MentionParser::extractMentionedUsers($data['content']);
-
-        // Filtra menciones de usuarios con bloqueos.
-        $mentioned_users = $auth_user->filterMentionables($mentioned_users);
-
         // Guarda menciones y envía notificaciones.
-        foreach ($mentioned_users as $user) {
-            $comment->mentions()->create([
-                'user_id' => $user->id,
-            ]);
-            $user->notify(new NewMention($auth_user, 'comment', $post->id));
-        }
+        $this->mentionService->createWithNotifications($comment, $auth_user, 'comment');
 
         // Si el autor del comentario no es el mismo que el autor de la publicación, se le notifica al autor de la publicación.
         if ($post->user_id !== $auth_user->id) {
-            $post->user->notify(new NewCommentOnPost($auth_user, $post->id));
+            $post->user->notify(new NewCommentOnPost($auth_user, $post->id, $post->user_id));
         }
+
+        // Recupera los usuarios mencionados en el comentario.
+        $mentioned_users = User::whereIn('id', $comment->mentions()->pluck('user_id'))->get();
 
         // Prepara una lista de usuarios que ya han sido notificados para evitar redundancia.
         $notified_user_ids = $mentioned_users->pluck('id')->toArray();
@@ -73,9 +69,8 @@ class CommentController extends Controller
         // Se buscan otros comentaristas de la publicación que aún no han sido notificados.
         $other_commenters = $post->comments()
             ->whereNotIn('user_id', $notified_user_ids)
-            ->select('user_id')
-            ->distinct()
-            ->pluck('user_id');
+            ->pluck('user_id')
+            ->unique();
 
         // Se cargan los usuarios a notificar.
         $users_to_notify = User::whereIn('id', $other_commenters)->get();
@@ -87,7 +82,7 @@ class CommentController extends Controller
 
         // Se notifica a los otros comentaristas.
         $users_to_notify->each(function ($user) use ($auth_user, $post) {
-            $user->notify(new NewCommentOnPost($auth_user, $post->id));
+            $user->notify(new NewCommentOnPost($auth_user, $post->id, $post->user_id));
         });
 
         // Prepara el recurso y lo convierte en un arreglo.
@@ -114,6 +109,9 @@ class CommentController extends Controller
         $comment->save();
 
         $comment->load('user');
+
+        // Actualiza las menciones hechas en el comentario.
+        $this->mentionService->sync($comment, $request->user());
 
         // Prepara el recurso y lo convierte en un arreglo.
         $comment_data = (new CommentResource($comment))->resolve();
