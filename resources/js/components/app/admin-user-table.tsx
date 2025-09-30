@@ -156,7 +156,9 @@ export default function AdminUserTable({ users, previous, next }: Props) {
                                     <TableCell>
                                         <UserAvatar user={user} />
                                     </TableCell>
-                                    <TableCell>{user.username}</TableCell>
+                                    <TableCell>
+                                        <Link href={`/user/${user.username}`}>{user.username}</Link>
+                                    </TableCell>
                                     <TableCell className={addTextColor(user.email_verified_at)}>
                                         {user.email_verified_at ? t('yes') : t('no')}
                                     </TableCell>
