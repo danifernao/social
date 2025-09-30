@@ -12,7 +12,6 @@ use App\Services\MentionService;
 use App\Utils\MentionParser;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Notifications\DatabaseNotification;
 use Inertia\Inertia;
 
 class PostController extends Controller
