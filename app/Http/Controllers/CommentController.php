@@ -52,9 +52,12 @@ class CommentController extends Controller
         // Filtra menciones de usuarios con bloqueos.
         $mentioned_users = $auth_user->filterMentionables($mentioned_users);
 
-        // Notifica a los usuarios mencionados.
+        // Guarda menciones y envía notificaciones.
         foreach ($mentioned_users as $user) {
-            $user->notify(new NewMention($comment->user, 'comment', $post->id));
+            $comment->mentions()->create([
+                'user_id' => $user->id,
+            ]);
+            $user->notify(new NewMention($auth_user, 'comment', $post->id));
         }
 
         // Si el autor del comentario no es el mismo que el autor de la publicación, se le notifica al autor de la publicación.

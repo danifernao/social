@@ -64,4 +64,27 @@ class Comment extends Model
     {
         return $this->morphMany(Reaction::class, 'reactionable');
     }
+
+    /**
+     * Relación polimórfica: menciones asociadas a este comentario.
+     *
+     * @return MorphMany<Mention>
+     */
+    public function mentions()
+    {
+        return $this->morphMany(Mention::class, 'mentionable');
+    }
+
+    /**
+     * Evento de ciclo de vida: cuando se elimina un comentario,
+     * también se eliminan todas sus menciones asociadas.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::deleting(function ($comment) {
+            $comment->mentions()->delete();
+        });
+    }
 }

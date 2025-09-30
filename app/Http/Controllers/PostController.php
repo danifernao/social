@@ -51,8 +51,12 @@ class PostController extends Controller
         // Filtra menciones de usuarios con bloqueos.
         $mentioned_users = $auth_user->filterMentionables($mentioned_users);
 
-        // Envía notificación a los usuarios mencionados.
+        // Guarda menciones y envía notificaciones.
         foreach ($mentioned_users as $user) {
+            $post->mentions()->create([
+                'user_id' => $user->id,
+            ]);
+
             $user->notify(new NewMention($auth_user, 'post', $post->id));
         }
 

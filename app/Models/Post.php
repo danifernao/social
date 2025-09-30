@@ -78,4 +78,27 @@ class Post extends Model
     {
         return $this->belongsToMany(Hashtag::class);
     }
+
+    /**
+     * Relación polimórfica: menciones asociadas a esta publicación.
+     *
+     * @return MorphMany<Mention>
+     */
+    public function mentions()
+    {
+        return $this->morphMany(Mention::class, 'mentionable');
+    }
+
+    /**
+     * Evento de ciclo de vida: cuando se elimina una publicación,
+     * también se eliminan todas sus menciones asociadas.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::deleting(function ($post) {
+            $post->mentions()->delete();
+        });
+    }
 }
