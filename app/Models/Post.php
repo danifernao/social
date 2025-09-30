@@ -52,7 +52,7 @@ class Post extends Model
     /**
      * Relación: comentarios realizados en esta publicación.
      *
-     * @return HasMany<Comment>
+     * @return HasMany<Comment, Post>
      */
     public function comments()
     {
@@ -62,7 +62,7 @@ class Post extends Model
     /**
      * Relación polimórfica: reacciones asociadas a esta publicación.
      *
-     * @return MorphMany<Reaction>
+     * @return MorphMany<Reaction, Post>
      */
     public function reactions()
     {
@@ -72,7 +72,7 @@ class Post extends Model
     /**
      * Relación: etiquetas asociadas a la publicación.
      *
-     * @return BelongsToMany<Hashtag>
+     * @return BelongsToMany<Hashtag, Post>
      */
     public function hashtags()
     {
@@ -82,7 +82,7 @@ class Post extends Model
     /**
      * Relación polimórfica: menciones asociadas a esta publicación.
      *
-     * @return MorphMany<Mention>
+     * @return MorphMany<Mention, Post>
      */
     public function mentions()
     {

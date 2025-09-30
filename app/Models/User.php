@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 
 /**
- * Modelo que representa a un usuario autenticado en el sistema.
+ * Modelo que representa a un usuario registrado.
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -83,6 +83,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Relación: usuarios a los que este usuario sigue.
+     * 
+     * @return BelongsToMany<User, User>
      */
     public function follows()
     {
@@ -91,6 +93,8 @@ class User extends Authenticatable implements MustVerifyEmail
     
     /**
      * Relación: usuarios que siguen a este usuario.
+     * 
+     * @return BelongsToMany<User, User>
      */
     public function followers()
     {
@@ -99,6 +103,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Relación: publicaciones creadas por el usuario.
+     * 
+     * @return HasMany<Post, User>
      */
     public function posts()
     {
@@ -107,6 +113,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Relación: comentarios creados por el usuario.
+     * 
+     * @return HasMany<Comment, User>
      */
     public function comments()
     {
@@ -115,6 +123,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Relación: reacciones hechas por el usuario.
+     * 
+     * @return HasMany<Reaction, User>
      */
     public function reactions()
     {
@@ -123,6 +133,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Relación: usuarios bloqueados por este usuario.
+     * 
+     * @return BelongsToMany<User, User>
      */
     public function blockedUsers()
     {
@@ -131,6 +143,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Relación: usuarios que han bloqueado a este usuario.
+     * 
+     * @return BelongsToMany<User, User>
      */
     public function blockedByUsers()
     {
@@ -170,6 +184,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Determina si el usuario puede gestionar a otro usuario.
      *
+     * @param User $user Usuario objetivo.
      * @return bool
      */
     public function canActOn(User $user): bool
@@ -281,8 +296,8 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Filtra una colección de usuarios, dejando solo los que pueden ser mencionados.
      *
-     * @param Collection $mentionedUsers
-     * @return Collection
+     * @param Collection<int, User> $mentionedUsers
+     * @return Collection<int, User>
      */
     public function filterMentionables($mentionedUsers)
     {
