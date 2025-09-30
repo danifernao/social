@@ -53,7 +53,7 @@ export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
         */
         const url = entry
             ? route(entry.type === 'post' ? 'post.update' : 'comment.update', entry.type === 'post' ? { post: entry.id } : { comment: entry.id })
-            : route(postId ? 'comment.store' : 'post.create', postId ? { post: postId } : undefined);
+            : route(postId ? 'comment.store' : 'post.store', postId ? { post: postId } : undefined);
 
         action(url, {
             preserveScroll: true,
