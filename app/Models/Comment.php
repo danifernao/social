@@ -43,6 +43,8 @@ class Comment extends Model
 
     /**
      * Relación: el usuario que escribió el comentario.
+     * 
+     * @return BelongsTo<User, Comment>
      */
     public function user()
     {
@@ -51,6 +53,8 @@ class Comment extends Model
 
     /**
      * Relación: la publicación a la que pertenece el comentario.
+     * 
+     * @return BelongsTo<Post, Comment>
      */
     public function post()
     {
@@ -59,6 +63,8 @@ class Comment extends Model
 
     /**
      * Relación polimórfica: reacciones asociadas a este comentario.
+     * 
+     * @return MorphMany<Reaction, Comment>
      */
     public function reactions()
     {
@@ -68,7 +74,7 @@ class Comment extends Model
     /**
      * Relación polimórfica: menciones asociadas a este comentario.
      *
-     * @return MorphMany<Mention>
+     * @return MorphMany<Mention, Comment>
      */
     public function mentions()
     {

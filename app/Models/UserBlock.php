@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Modelo que representa un bloqueo entre usuarios,
- * donde un usuario bloquea a otro.
+ * donde un usuario (blocker) bloquea a otro (blocked).
  */
 class UserBlock extends Model
 {
@@ -19,13 +19,17 @@ class UserBlock extends Model
     
     /**
      * Relación: usuario que realiza el bloqueo.
+     * 
+     * @return BelongsTo<User, UserBlock>
      */
     public function blocker() {
         return $this->belongsTo(User::class, 'blocker_id');
     }
 
     /**
-     * Relación: usuario bloqueado.
+     * Relación: usuario que fue bloqueado.
+     * 
+     * @return BelongsTo<User, UserBlock>
      */
     public function blocked() {
         return $this->belongsTo(User::class, 'blocked_id');
