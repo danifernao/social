@@ -22,6 +22,10 @@ export default function Profile() {
 
     // Determina si el usuario autenticado está visitando su propio perfil.
     const isOwner = auth.user && user.id === auth.user.id;
+    const isMod = auth.user && auth.user.can_moderate;
+
+    // ID del usuario cuyo perfil se está visitando.
+    const profileUserId = !isOwner && isMod ? user.id : null;
 
     const {
         items: entries, // Lista de publicaciones actuales.
@@ -51,7 +55,7 @@ export default function Profile() {
             <AppContentLayout>
                 <ProfileHeader user={user} />
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>
-                    {isOwner && <EntryForm />}
+                    {(isOwner || isMod) && <EntryForm profileUserId={profileUserId} />}
                     <EntryList entries={entries} />
                 </EntryListUpdateContext.Provider>
                 <ListLoadMore type="post" cursor={cursor} isProcessing={processing} onClick={loadMore} />

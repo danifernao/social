@@ -2,7 +2,7 @@ export interface Notification {
     id: string;
     read_at: string | null;
     data: {
-        type: 'mention' | 'comment' | 'follow';
+        type: 'mention' | 'post' | 'comment' | 'follow';
         data: {
             sender: {
                 id: number;

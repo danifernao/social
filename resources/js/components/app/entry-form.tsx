@@ -14,12 +14,13 @@ interface EntryFormProps {
     entry?: Entry; // Una entrada existente, la cual puede ser una publicación o un comentario.
     postId?: number; // ID de una publicación, necesario si se desea crear un comentario.
     onSubmit?: () => void; // Función que se llama tras el envío exitoso del formulario.
+    profileUserId?: null | number;
 }
 
 /**
  * Muestra un formulario para la creación o edición de una entrada.
  */
-export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
+export default function EntryForm({ profileUserId, entry, postId, onSubmit }: EntryFormProps) {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 
@@ -32,6 +33,7 @@ export default function EntryForm({ entry, postId, onSubmit }: EntryFormProps) {
     // Hook de Inertia para gestionar datos del formulario, errores y estados.
     const { data, setData, post, patch, processing, errors, reset } = useForm({
         content: '',
+        profile_user_id: profileUserId,
     });
 
     // Permite que otros componentes reflejen la creación o actualización de una entrada en su lista.
