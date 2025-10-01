@@ -80,17 +80,4 @@ class Comment extends Model
     {
         return $this->morphMany(Mention::class, 'mentionable');
     }
-
-    /**
-     * Evento de ciclo de vida: cuando se elimina un comentario,
-     * también se eliminan todas sus menciones asociadas.
-     *
-     * @return void
-     */
-    protected static function booted()
-    {
-        static::deleting(function ($comment) {
-            $comment->mentions()->delete();
-        });
-    }
 }
