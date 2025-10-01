@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Post;
 use App\Models\User;
-use App\Observers\UserObserver;
 use App\Observers\DatabaseNotificationObserver;
+use App\Observers\PostObserver;
+use App\Observers\UserObserver;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
@@ -37,10 +39,9 @@ class AppServiceProvider extends ServiceProvider
             return User::where('username', $value)->firstOrFail();
         });
 
-        // Registra el observador de usuarios.
-        User::observe(UserObserver::class);
-
-        // Registra el observador de notificaciones.
+        // Registra los observadores.
         DatabaseNotification::observe(DatabaseNotificationObserver::class);
+        Post::observe(PostObserver::class);
+        User::observe(UserObserver::class);
     }
 }
