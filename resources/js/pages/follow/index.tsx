@@ -31,7 +31,7 @@ export default function Follow() {
 
     const {
         items: users, // Lista de los usuarios.
-        cursor, // Cursor para la siguiente página de usuarios.
+        nextCursor, // Cursor para la siguiente página de usuarios.
         processing, // Indica si se está cargando más usuarios.
         loadMore, // Función para cargar más usuarios.
     } = usePaginatedData<User>({
@@ -61,7 +61,7 @@ export default function Follow() {
             <AppContentLayout>
                 <FollowNav pageName={pageName} username={user.username} />
                 <UserList users={users} />
-                <ListLoadMore type="user" cursor={cursor} isProcessing={processing} onClick={loadMore} />
+                <ListLoadMore type="user" cursor={nextCursor} isProcessing={processing} onClick={loadMore} />
             </AppContentLayout>
         </AppLayout>
     );
