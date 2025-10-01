@@ -25,7 +25,8 @@ export default function Home() {
 
     const {
         items: entries, // Lista de comentarios actuales.
-        cursor, // Cursor para la siguiente página de comentarios.
+        prevCursor, // Cursor para la anterior página de comentarios.
+        nextCursor, // Cursor para la siguiente página de comentarios.
         processing, // Indica si se está cargando más comentarios.
         loadMore, // Función para cargar más comentarios.
         handleEntryChanges, // Función para actualizar la lista de comentarios.
@@ -60,7 +61,7 @@ export default function Home() {
                                 <>
                                     <h2>{t('nComments', { total: post.comments_count })}</h2>
                                     <EntryList entries={entries} />
-                                    <ListLoadMore type="comment" cursor={cursor} isProcessing={processing} onClick={loadMore} autoClick={false} />
+                                    <ListLoadMore type="comment" cursor={nextCursor} isProcessing={processing} onClick={loadMore} autoClick={false} />
                                 </>
                             )}
                             {isAuth && <EntryForm postId={post.id} />}

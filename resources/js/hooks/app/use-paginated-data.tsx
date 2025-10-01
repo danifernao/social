@@ -16,35 +16,47 @@ export function usePaginatedData<T>({ initialItems, initialCursor, fetchUrl, pro
     // Estado que contiene los elementos actuales.
     const [items, setItems] = useState<T[]>(initialItems);
 
-    // Cursor actual de paginación.
-    const [cursor, setCursor] = useState<string | null>(initialCursor);
+    // Estado para los cursores de paginación.
+    const [nextCursor, setNextCursor] = useState<string | null>(initialCursor);
+    const [prevCursor, setPrevCursor] = useState<string | null>(null);
 
     // Estado que indica si la carga de elementos está en curso.
     const [processing, setProcessing] = useState<boolean>(false);
 
     // Obtiene más elementos usando el cursor actual.
-    const loadMore = () => {
+    const loadMore = (direction: 'next' | 'prev' = 'next') => {
         setProcessing(true);
+
         router.reload({
             only: [propKey], // Solicita solo la propiedad relevante para este hook.
             headers: {
-                'X-Cursor': cursor ?? '',
+                // Manda el cursor dependiendo de la dirección.
+                'X-Cursor': direction === 'next' ? (nextCursor ?? '') : (prevCursor ?? ''),
             },
             onSuccess: (page) => {
-                // Extrae los nuevos datos y el siguiente cursor desde las propiedades de la página.
+                // Captura las propiedades devueltas por Inertia.
                 const pageData = (page.props as any)[propKey];
+
+                // Guarda los nuevos elementos de la lista.
                 const newItems = pageData?.data ?? [];
-                const next = pageData?.meta.next_cursor ?? null;
+
+                // Actualiza los cursores de la paginación.
+                setNextCursor(pageData?.meta.next_cursor ?? null);
+                setPrevCursor(pageData?.meta.prev_cursor ?? null);
 
                 // Combina los nuevos elementos con los previos, evitando duplicados por ID.
                 setItems((prev) => {
                     const newIds = new Set(newItems.map((item: any) => item.id));
                     const filteredPrev = prev.filter((item: any) => !newIds.has(item.id));
-                    return [...filteredPrev, ...newItems];
-                });
 
-                // Actualiza el cursor para la siguiente página.
-                setCursor(next);
+                    if (direction === 'next') {
+                        // Si es "siguiente", se agregan al final.
+                        return [...filteredPrev, ...newItems];
+                    } else {
+                        // Si es "anterior", se agregan al inicio.
+                        return [...newItems, ...filteredPrev];
+                    }
+                });
             },
             onError: (errors) => {
                 toast('¡Ups! Error inesperado.');
@@ -87,12 +99,14 @@ export function usePaginatedData<T>({ initialItems, initialCursor, fetchUrl, pro
     // Restablece los elementos y el cursor a sus valores iniciales.
     const resetProps = () => {
         setItems(initialItems);
-        setCursor(initialCursor);
+        setNextCursor(initialCursor);
+        setPrevCursor(null);
     };
 
     return {
         items,
-        cursor,
+        nextCursor,
+        prevCursor,
         processing,
         loadMore,
         resetProps,
