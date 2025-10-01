@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
+use App\Observers\CommentObserver;
 use App\Observers\DatabaseNotificationObserver;
 use App\Observers\PostObserver;
 use App\Observers\UserObserver;
@@ -40,6 +42,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Registra los observadores.
+        Comment::observe(CommentObserver::class);
         DatabaseNotification::observe(DatabaseNotificationObserver::class);
         Post::observe(PostObserver::class);
         User::observe(UserObserver::class);
