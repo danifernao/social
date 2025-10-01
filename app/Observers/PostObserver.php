@@ -4,9 +4,9 @@ namespace App\Observers;
 
 use App\Models\Post;
 use App\Models\Comment;
-use Illuminate\Notifications\DatabaseNotification;
 use App\Notifications\NewCommentOnPost;
 use App\Notifications\NewMention;
+use Illuminate\Notifications\DatabaseNotification;
 
 class PostObserver
 {
@@ -15,29 +15,31 @@ class PostObserver
      */
     public function deleting(Post $post)
     {
-        // Elimina las menciones hechas en la publicación.
+        // Elimina las menciones hechas en esta publicación.
         $post->mentions()->delete();
-        
-        $post->comments->each(function (Comment $comment) {
-            // Elimina las menciones hechas en los comentarios.
+
+        // Recorre los comentarios de la publicación.
+        $post->comments()->get()->each(function (Comment $comment) {
+            // Elimina las menciones hechas en el comentario.
             $comment->mentions()->delete();
 
             // Elimina las notificaciones de menciones hechas en el comentario.
             DatabaseNotification::where('type', NewMention::class)
-                ->whereJsonContains('data->context->type', 'comment')
-                ->whereJsonContains('data->context->id', $comment->id)
+                ->where('data->data->context->type', 'comment')
+                ->where('data->data->context->id', $comment->id)
                 ->delete();
         });
-
-        // Elimina las notificaciones de comentarios en la publicación.
-        DatabaseNotification::whereJsonContains('data->context->type', 'post')
-            ->whereJsonContains('data->context->id', $post->id)
+        
+        // Elimina las notificaciones de comentarios en esta publicación.
+        DatabaseNotification::where('type', NewCommentOnPost::class)
+            ->where('data->data->context->type', 'post')
+            ->where('data->data->context->id', $post->id)
             ->delete();
 
-        // Elimina las notificaciones de menciones hechas en la publicación.
+        // Elimina las notificaciones de menciones hechas en esta publicación.
         DatabaseNotification::where('type', NewMention::class)
-            ->whereJsonContains('data->context->type', 'post')
-            ->whereJsonContains('data->context->id', $post->id)
+            ->where('data->data->context->type', 'post')
+            ->where('data->data->context->id', $post->id)
             ->delete();
     }
 }

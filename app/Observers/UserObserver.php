@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\User;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Storage;
 
 class UserObserver
@@ -12,12 +13,12 @@ class UserObserver
      */
     public function deleting(User $user): void
     {
-        // Verifica si el usuario tiene una ruta de avatar registrada
-        // y si el archivo correspondiente realmente existe en el disco "public".
+        // Elimina el avatar de este usuario si existe.
         if ($user->avatar_path && Storage::disk('public')->exists($user->avatar_path)) {
-            // Si el archivo existe, lo elimina del sistema de archivos.
-            // Esto evita dejar archivos huérfanos ocupando espacio después de borrar al usuario.
             Storage::disk('public')->delete($user->avatar_path);
         }
+
+        // Elimina todas las notificaciones generadas por este usuario.
+        DatabaseNotification::where('data->data->sender->id', $user->id)->delete();
     }
 }
