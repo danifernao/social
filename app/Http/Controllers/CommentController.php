@@ -53,18 +53,23 @@ class CommentController extends Controller
         // Guarda menciones y envía notificaciones.
         $this->mentionService->createWithNotifications($comment, $auth_user, 'comment');
 
-        // Si el autor del comentario no es el mismo que el autor de la publicación, se le notifica al autor de la publicación.
-        if ($post->user_id !== $auth_user->id) {
-            $post->user->notify(new NewCommentOnPost($auth_user, $post->id, $post->user_id));
-        }
-
         // Recupera los usuarios mencionados en el comentario.
         $mentioned_users = User::whereIn('id', $comment->mentions()->pluck('user_id'))->get();
 
         // Prepara una lista de usuarios que ya han sido notificados para evitar redundancia.
         $notified_user_ids = $mentioned_users->pluck('id')->toArray();
-        $notified_user_ids[] = $auth_user->id; // Se agrega a esa lista al autor del comentario.
-        $notified_user_ids[] = $post->user_id; // Se agrega a esa lista al autor de la publicación.
+
+        // Si el autor del comentario no es el mismo que el autor de la publicación y no ha sido
+        // mencionado, se le notifica al autor de la publicación.
+        if ($post->user_id !== $auth_user->id && !in_array($post->user_id, $notified_user_ids)) {
+            $post->user->notify(new NewCommentOnPost($auth_user, $post->id, $post->user_id));
+        }
+
+        // Se agrega a esa lista al autor del comentario.
+        $notified_user_ids[] = $auth_user->id;
+
+        // Se agrega a esa lista al autor de la publicación.
+        $notified_user_ids[] = $post->user_id;
 
         // Se buscan otros comentaristas de la publicación que aún no han sido notificados.
         $other_commenters = $post->comments()
