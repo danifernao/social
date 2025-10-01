@@ -83,7 +83,9 @@ export default function NotificationListItem({ notification }: NotificationListI
                         })
                         .then((data) => {
                             if (data.status === 'ok') {
-                                setShouldShowAsRead(true);
+                                setTimeout(() => {
+                                    setShouldShowAsRead(true);
+                                }, 3000);
                             }
                         })
                         .catch((errors) => {
