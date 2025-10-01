@@ -7,6 +7,7 @@ use App\Http\Resources\CommentResource;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\User;
+use App\Notifications\NewPostOnProfile;
 use App\Services\HashtagService;
 use App\Services\MentionService;
 use App\Utils\MentionParser;
@@ -30,17 +31,41 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'content' => 'required|string|max:3000'
-        ]);
-
+        // Usuario autenticado.
         $auth_user = $request->user();
+
+        // Valida los datos de la solicitud.
+        $data = $request->validate([
+            'content' => 'required|string|max:3000',
+            'profile_user_id' => 'nullable|integer|exists:users,id',
+        ]);
+        
+        // ID del usuario cuyo perfil se está visitando.
+        $profile_user_id = null;
+
+        // Si se envía un profile_user_id válido, que no sea el mismo usuario,
+        // y el usuario autenticado tiene permisos de moderación,
+        // entonces se guarda ese profile_user_id en la publicación.
+        if (!empty($data['profile_user_id']) &&
+            $data['profile_user_id'] !== $auth_user->id &&
+            $auth_user->canModerate()) {
+                $profile_user_id = $data['profile_user_id'];
+        }
 
         // Crea la publicación.
         $post = Post::create([
             'user_id' => $auth_user->id,
             'content' => $data['content'],
+            'profile_user_id' => $profile_user_id,
         ]);
+
+        // Si es una publicación en perfil ajeno, notifica al dueño del perfil.
+        if ($profile_user_id) {
+            $profileUser = User::find($profile_user_id);
+            if ($profileUser) {
+                $profileUser->notify(new NewPostOnProfile($auth_user, $post->id));
+            }
+        }
 
         // Agrega el usuario autenticado a la publicación.
         $post->setRelation('user', $auth_user);

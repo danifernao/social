@@ -111,6 +111,10 @@ export default function NotificationListItem({ notification }: NotificationListI
             <Link href={url}>
                 {type === 'follow' && <Trans i18nKey="hasFollowedYou" values={{ username: sender.username }} components={[<strong />, <strong />]} />}
 
+                {type === 'post' && (
+                    <Trans i18nKey="hasPostOnYourProfile" values={{ username: sender.username }} components={[<strong />, <strong />]} />
+                )}
+
                 {type === 'comment' &&
                     context &&
                     (context.author_id === auth.user.id ? (

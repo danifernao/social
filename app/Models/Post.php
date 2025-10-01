@@ -20,6 +20,7 @@ class Post extends Model
     protected $fillable = [
         'user_id',
         'content',
+        'profile_user_id',
     ];
 
     /**

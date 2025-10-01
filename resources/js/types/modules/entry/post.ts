@@ -6,6 +6,7 @@ export interface Post {
     id: number;
     user_id: number;
     user: User;
+    profile_user_id: null | number;
     content: string;
     comments_count: number;
     reactions: Reaction[];
