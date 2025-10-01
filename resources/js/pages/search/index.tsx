@@ -36,7 +36,7 @@ export default function Search() {
 
     const {
         items: results, // Lista de los resultados.
-        cursor, // Cursor para la siguiente página de resultados.
+        nextCursor, // Cursor para la siguiente página de resultados.
         processing, // Indica si se está cargando más resultados.
         loadMore, // Función para cargar más resultados.
         handleEntryChanges, // Función para actualizar la lista de publicaciones.
@@ -90,7 +90,7 @@ export default function Search() {
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>
                     <SearchSearchResults results={type === 'post' ? (results as Post[]) : (results as User[])} />
                 </EntryListUpdateContext.Provider>
-                <ListLoadMore type="post" cursor={cursor} isProcessing={processing} onClick={loadMore} />
+                <ListLoadMore type="post" cursor={nextCursor} isProcessing={processing} onClick={loadMore} />
             </AppContentLayout>
         </AppLayout>
     );

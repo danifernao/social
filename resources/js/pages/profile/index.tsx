@@ -29,7 +29,7 @@ export default function Profile() {
 
     const {
         items: entries, // Lista de publicaciones actuales.
-        cursor, // Cursor para la siguiente página de publicaciones.
+        nextCursor, // Cursor para la siguiente página de publicaciones.
         processing, // Indica si se está cargando más publicaciones.
         loadMore, // Función para cargar más publicaciones.
         handleEntryChanges, // Función para actualizar la lista de publicaciones.
@@ -58,7 +58,7 @@ export default function Profile() {
                     {(isOwner || isMod) && <EntryForm profileUserId={profileUserId} />}
                     <EntryList entries={entries} />
                 </EntryListUpdateContext.Provider>
-                <ListLoadMore type="post" cursor={cursor} isProcessing={processing} onClick={loadMore} />
+                <ListLoadMore type="post" cursor={nextCursor} isProcessing={processing} onClick={loadMore} />
             </AppContentLayout>
         </AppLayout>
     );

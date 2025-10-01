@@ -25,7 +25,7 @@ export default function Notifications() {
 
     const {
         items: notificationsList, // Lista de notificaciones actuales.
-        cursor, // Cursor para la siguiente página de notificaciones.
+        nextCursor, // Cursor para la siguiente página de notificaciones.
         processing, // Indica si se está cargando más notificaciones.
         loadMore, // Función para cargar más notificaciones.
         updateItems, //
@@ -77,7 +77,7 @@ export default function Notifications() {
             <AppContentLayout>
                 <NotificationHeader markAsRead={markAsRead} isProcessing={isMarkReadProcessing} />
                 <NotificationList notifications={notificationsList} />
-                <ListLoadMore type="notification" cursor={cursor} isProcessing={processing} onClick={loadMore} />
+                <ListLoadMore type="notification" cursor={nextCursor} isProcessing={processing} onClick={loadMore} />
             </AppContentLayout>
         </AppLayout>
     );
