@@ -66,7 +66,14 @@ class ProfileController extends Controller
             // Obtiene las publicaciones del perfil.
             $posts = Post::with('user')
                 ->withCount('comments')
-                ->where('user_id', $user->id)
+                
+                ->where(function ($query) use ($user) {
+                    $query->where('profile_user_id', $user->id)
+                          ->orWhere(function ($q2) use ($user) {
+                              $q2->whereNull('profile_user_id')
+                                ->where('user_id', $user->id);
+                          });
+                })
                 ->latest()
                 ->cursorPaginate(7, ['*'], 'cursor', $cursor);
 
