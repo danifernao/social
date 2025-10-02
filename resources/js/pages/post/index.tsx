@@ -8,6 +8,7 @@ import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
 import type { Auth, BreadcrumbItem, Comment, Comments, Post } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -22,6 +23,9 @@ export default function Home() {
 
     // Determina si hay un usuario autenticado.
     const isAuth = !!auth.user;
+
+    // Referencia para la sección de comentarios.
+    const commentsRef = useRef<HTMLElement>(null);
 
     const {
         items: entries, // Lista de comentarios actuales.
@@ -53,13 +57,20 @@ export default function Home() {
         },
     ];
 
+    // Desplaza a la sección de comentarios si es vista parcial.
+    useEffect(() => {
+        if (isPartialView && commentsRef.current) {
+            commentsRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [isPartialView]);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={t('userPost', { username: post.user.username })} />
             <AppContentLayout>
                 <article className="flex flex-col gap-8">
                     <EntryListItem entry={post} />
-                    <section id="comments" className="flex flex-col gap-8">
+                    <section id="comments" ref={commentsRef} className="flex flex-col gap-8">
                         <EntryListUpdateContext.Provider value={handleEntryChanges}>
                             {post.comments_count > 0 && (
                                 <>
