@@ -13,6 +13,7 @@ use App\Services\MentionService;
 use App\Utils\MentionParser;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Pagination\CursorPaginator;
 use Inertia\Inertia;
 
 class PostController extends Controller
@@ -92,7 +93,8 @@ class PostController extends Controller
     {
         $user = $request->user();
 
-        // Si está autenticado, verifica bloqueos mutuos.
+        // Si existe un usuario autenticado, se verifica que no
+        // haya bloqueos mutuos con el autor de la publicación.
         if ($user) {
             $author = $post->user()->first();
             if ($user->hasBlockedOrBeenBlockedBy($author)) {
@@ -104,9 +106,17 @@ class PostController extends Controller
         $post->load('user')->loadCount('comments');
         $post->reactions = $post->reactionsSummary($user?->id);
 
+        // Se captura el cursor de la paginación.
         $cursor = $request->header('X-Cursor');
 
-        // Consulta de comentarios.
+        // Se captura, en caso de existir, el identificador de un
+        // comentario específico a enfocar.
+        $focus_comment_id = $request->query('comment_id');
+
+        // Número de elementos por página en la paginación de comentarios.
+        $per_page = 15;
+
+        // Consulta base de comentarios de la publicación.
         $comments_query = $post->comments()->with('user')->oldest();
 
         // Excluye comentarios de usuarios con bloqueos mutuos.
@@ -115,7 +125,21 @@ class PostController extends Controller
             $comments_query->whereNotIn('user_id', $excluded_ids);
         }
 
-        $comments = $comments_query->cursorPaginate(15, ['*'], 'cursor', $cursor);
+        if ($focus_comment_id) {
+            // Se busca el comentario solicitado dentro de la consulta.
+            $focused = (clone $comments_query)->where('id', $focus_comment_id)->first();
+            if ($focused) {
+                // Si existe, se construye un paginador manual con un único comentario.
+                $comments = new CursorPaginator([$focused], $per_page, null, [
+                    'path' => $request->url(),
+                    'cursorName' => 'cursor',
+                ]);
+            } else {
+                $comments = $comments_query->cursorPaginate($per_page, ['*'], 'cursor', $cursor);
+            }
+        } else {
+            $comments = $comments_query->cursorPaginate($per_page, ['*'], 'cursor', $cursor);
+        }
 
         // Agrega las reacciones a cada comentario.
         $comments->setCollection(

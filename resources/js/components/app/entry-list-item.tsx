@@ -59,18 +59,12 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                 </div>
                 <div className="flex items-center justify-center gap-4">
                     <div className="flex gap-4 text-sm">
-                        {entry.created_at !== entry.updated_at && (
-                            <time dateTime={entry.updated_at} title={formatDate(entry.updated_at)}>
-                                {t('edited')}
-                            </time>
-                        )}
-                        {entry.type === 'post' ? (
-                            <Link href={`/post/${entry.id}`} title={formatDate(entry.created_at)}>
-                                <time dateTime={entry.created_at}>{distanceToNow}</time>
-                            </Link>
-                        ) : (
+                        <Link
+                            href={entry.type === 'post' ? `/post/${entry.id}` : `/post/${entry.post_id}?comment_id=${entry.id}`}
+                            title={formatDate(entry.created_at)}
+                        >
                             <time dateTime={entry.created_at}>{distanceToNow}</time>
-                        )}
+                        </Link>
                     </div>
                     {(isOwner || auth.user?.can_moderate) && (
                         <div>
