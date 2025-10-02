@@ -40,7 +40,7 @@ export default function NotificationListItem({ notification }: NotificationListI
     const context = notification.data.data.context;
 
     // URL de destino de la notificación.
-    const url = context ? `/post/${context.id}` : `/user/${sender.username}`;
+    const url = context ? `/${context.type}/${context.id}` : `/user/${sender.username}`;
 
     // Relación entre idioma y formato de fecha.
     const localeMap: Record<string, Locale> = {

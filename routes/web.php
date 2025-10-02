@@ -11,6 +11,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\SearchController;
+use App\Models\Comment;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -58,6 +59,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('/user/{user}', [ProfileController::class, 'show'])->name('profile.show');
 Route::get('/post/{post}', [PostController::class, 'show'])->name('post.show');
+
+Route::get('/comment/{comment}', function (Request $request, Comment $comment) {
+    return redirect()->route('post.show', [
+        'post' => $comment->post_id,
+        'comment_id' => $comment->id,
+    ]);
+})->name('comment.show');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
