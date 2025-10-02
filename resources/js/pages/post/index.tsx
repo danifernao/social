@@ -7,7 +7,7 @@ import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
 import type { Auth, BreadcrumbItem, Comment, Comments, Post } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -25,7 +25,6 @@ export default function Home() {
 
     const {
         items: entries, // Lista de comentarios actuales.
-        prevCursor, // Cursor para la anterior página de comentarios.
         nextCursor, // Cursor para la siguiente página de comentarios.
         processing, // Indica si se está cargando más comentarios.
         loadMore, // Función para cargar más comentarios.
@@ -36,6 +35,11 @@ export default function Home() {
         fetchUrl: route('post.show', { post: post.id }), // Ruta para solicitar más comentarios.
         propKey: 'comments', // Nombre de la propiedad que devuelve Inertia con los datos a usar.
     });
+
+    // Detecta si la página está mostrando un hilo parcial (cuando llega con "comment_id").
+    const urlParams = new URLSearchParams(window.location.search);
+    const commentId = urlParams.get('comment_id');
+    const isPartialView = commentId && entries.length === 1 && entries[0].id === Number(commentId);
 
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
@@ -59,7 +63,17 @@ export default function Home() {
                         <EntryListUpdateContext.Provider value={handleEntryChanges}>
                             {post.comments_count > 0 && (
                                 <>
-                                    <h2>{t('nComments', { total: post.comments_count })}</h2>
+                                    <div className="flex items-center gap-2">
+                                        <h2>{t('nComments', { total: post.comments_count })}</h2>
+                                        {isPartialView && (
+                                            <>
+                                                <span className="text-sm text-gray-500">({t('partial')})</span>
+                                                <Link href={route('post.show', { post: post.id })} className="text-sm text-blue-600">
+                                                    {t('seeFullThread')}
+                                                </Link>
+                                            </>
+                                        )}
+                                    </div>
                                     <EntryList entries={entries} />
                                     <ListLoadMore type="comment" cursor={nextCursor} isProcessing={processing} onClick={loadMore} autoClick={false} />
                                 </>
