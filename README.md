@@ -23,10 +23,12 @@
     - Posibilidad de bloquear usuarios para evitar interacción.
 - **Búsqueda**
     - Búsqueda unificada por publicaciones o usuarios.
-- **Notificaciones** _(en desarrollo)_
-    - Sistema de notificaciones en construcción.
-- **Panel de administración** _(en desarrollo)_
-    - Funcionalidades administrativas para la gestión de usuarios en desarrollo.
+- **Notificaciones**
+    - Notifica cuando alguien comenta en una publicación propia.
+    - Notifica cuando alguien menciona a un usuario (en publicaciones o comentarios).
+    - Notifica cuando un usuario comienza a seguir a otro.
+- **Panel de administración**
+    - Funcionalidades administrativas para la gestión de usuarios.
 - **Multilenguaje**
     - Interfaz disponible en varios idiomas, con detección automática del idioma preferido o selección manual.
 
