@@ -78,8 +78,8 @@ export default function Home() {
                                         <h2>{t('nComments', { total: post.comments_count })}</h2>
                                         {isPartialView && (
                                             <>
-                                                <span className="text-sm text-gray-500">({t('partial')})</span>
-                                                <Link href={route('post.show', { post: post.id })} className="text-sm text-blue-600">
+                                                <span className="text-muted-foreground text-sm">({t('partial')})</span>
+                                                <Link href={route('post.show', { post: post.id })} className="text-sm text-blue-600 hover:underline">
                                                     {t('seeFullThread')}
                                                 </Link>
                                             </>
