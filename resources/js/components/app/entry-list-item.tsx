@@ -54,7 +54,7 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
             <header className="flex gap-4">
                 <div className="flex flex-1 items-center justify-center gap-3">
                     <UserAvatar user={entry.user} />
-                    <div className="felx flex-1 font-semibold">
+                    <div className="felx flex-1 items-center font-semibold">
                         <Link href={`/user/${entry.user.username}`}>{entry.user.username}</Link>
                         <UserRoleBadge role={entry.user.role} />
                     </div>
