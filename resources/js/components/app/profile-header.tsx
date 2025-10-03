@@ -22,13 +22,12 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
     const { auth } = usePage<{ auth: Auth }>().props;
 
     return (
-        <div className="flex gap-1">
-            <div className="flex flex-1 flex-col gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            {/* Avatar + info */}
+            <div className="flex items-center gap-4">
                 <UserAvatar className="h-24 w-24 text-4xl" user={user} />
-                <div className="flex flex-1 flex-col gap-1">
-                    <div className="flex flex-col gap-4">
-                        <h1 className="flex-1 text-3xl">@{user.username}</h1>
-                    </div>
+                <div className="flex flex-col">
+                    <h1 className="text-3xl">@{user.username}</h1>
                     <div className="flex gap-3">
                         <Link href={`/user/${user.username}/following`} className="lowercase">
                             {user.follows_count} {t('following')}
@@ -39,6 +38,8 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                     </div>
                 </div>
             </div>
+
+            {/* Botones */}
             {auth.user && auth.user.id !== user.id && (
                 <div className="flex flex-wrap justify-end gap-2">
                     {!user.is_blocked && !user.has_blocked && <UserFollowBtn user={user} />}
