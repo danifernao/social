@@ -1,10 +1,9 @@
+import remarkHashtag from '@/lib/remark-hashtag';
+import remarkMention from '@/lib/remark-mention';
 import remarkYoutube from '@/lib/remark-youtube';
 import { cn } from '@/lib/utils';
 import { EntryType } from '@/types';
 import { Link } from '@inertiajs/react';
-import * as hashtag from 'linkify-plugin-hashtag';
-import * as mention from 'linkify-plugin-mention';
-import Linkify from 'linkify-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Components } from 'react-markdown';
@@ -44,62 +43,24 @@ export default function FormattedText({ entryType, text }: Props) {
     // Clase base para el contenedor.
     const baseClass = 'overflow-hidden transition-all duration-300';
 
-    // Clase para los enlaces.
-    const linkClass = 'text-blue-600 hover:underline';
-
-    // Renderiza enlaces internos (menciones y etiquetas) usando el componente Link de Inertia.
-    const renderInertiaLink = ({ attributes, content }: any) => {
-        return (
-            <Link href={attributes.href} className={linkClass}>
-                {content}
-            </Link>
-        );
-    };
-
-    // Renderiza enlaces externos para abrir en una pestaña nueva.
-    const renderExternalLink = ({ attributes, content }: any) => {
-        return (
-            <a href={attributes.href} className={linkClass} target="_blank" rel="noopener noreferrer">
-                {content}
-            </a>
-        );
-    };
-
-    // Opciones de configuración para Linkify.
-    const options = {
-        defaultProtocol: 'https', // Protocolo por defecto para URLs sin uno explícito.
-        plugins: [mention, hashtag], // Plugins para detectar menciones y etiquetas.
-        render: {
-            mention: renderInertiaLink, // Menciones usan enlace interno.
-            hashtag: ({ attributes, content }: any) => {
-                // Filtra las etiquetas no alfanuméricas
-                if (entryType === 'comment' || !/^#[a-z0-9]+$/i.test(content)) {
-                    return <>{content}</>;
-                }
-                return renderInertiaLink({ attributes, content }); // Etiquetas usan enlace interno.
-            },
-            url: renderExternalLink, // URLs normales se abren en una nueva pestaña.
-        },
-        // Convierte el "href" según el tipo de enlace para generar rutas internas amigables.
-        formatHref: (href: string, type: string) => {
-            if (type === 'mention') return `/user/${href.substring(1)}`; // Quita el "@" y crea ruta a usuario.
-            if (type === 'hashtag') return `/search?query=${encodeURIComponent('#' + href.substring(1))}`; // Quita el "#" y crea ruta a etiqueta.
-            return href; // Para URLs normales no cambia.
-        },
-    };
-
     // Define los componentes personalizados para la representación de Markdown.
     const components: ExtendedComponents = {
-        p: ({ node, children }) => (
-            <p className="mb-4 last:mb-0">
-                <Linkify options={options}>{children}</Linkify>
-            </p>
-        ),
-        a: ({ href, children }) => (
-            <a href={href} className={linkClass} target="_blank" rel="noopener noreferrer">
-                {children}
-            </a>
-        ),
+        p: ({ node, children }) => <p className="mb-4 last:mb-0">{children}</p>,
+        a: ({ href, node, children }) => {
+            if (!href) return <>{children}</>;
+            if (href.startsWith('/')) {
+                return (
+                    <Link href={href ?? '#'} className="text-blue-600 hover:underline">
+                        {children}
+                    </Link>
+                );
+            }
+            return (
+                <a href={href} className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
+                    {children}
+                </a>
+            );
+        },
         strong: ({ children }) => <strong>{children}</strong>,
         em: ({ children }) => <em>{children}</em>,
         blockquote: ({ children }) => <blockquote className="text-muted-foreground mb-4 border-l-4 pl-4 italic last:mb-0">{children}</blockquote>,
@@ -154,7 +115,7 @@ export default function FormattedText({ entryType, text }: Props) {
         <div className="relative">
             <div ref={contentRef} className={cn(baseClass, expanded ? 'max-h-full' : 'max-h-[300px]')}>
                 <Markdown
-                    remarkPlugins={[remarkBreaks, remarkYoutube]}
+                    remarkPlugins={[remarkBreaks, remarkYoutube, remarkMention, [remarkHashtag, { entryType }]]}
                     allowedElements={['p', 'a', 'br', 'strong', 'em', 'blockquote', 'code', 'pre', 'ul', 'ol', 'li', 'img', 'youtube']}
                     components={components}
                 >
