@@ -9,6 +9,7 @@ import EntryItemOptions from './entry-list-item-options';
 import EntryListItemReactions from './entry-list-item-reactions';
 import FormattedText from './formatted-text';
 import UserAvatar from './user-avatar';
+import UserRoleBadge from './user-role-badge';
 
 interface EntryListItemProps {
     entry: Entry; // Una publicación o un comentario.
@@ -53,8 +54,9 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
             <header className="flex gap-4">
                 <div className="flex flex-1 items-center justify-center gap-3">
                     <UserAvatar user={entry.user} />
-                    <div className="flex-1 font-semibold">
+                    <div className="felx flex-1 font-semibold">
                         <Link href={`/user/${entry.user.username}`}>{entry.user.username}</Link>
+                        <UserRoleBadge role={entry.user.role} />
                     </div>
                 </div>
                 <div className="flex items-center justify-center gap-4">

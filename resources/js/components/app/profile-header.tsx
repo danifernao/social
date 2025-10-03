@@ -5,6 +5,7 @@ import UserAdminBtn from './user-admin-btn';
 import UserAvatar from './user-avatar';
 import UserBlockBtn from './user-block-btn';
 import UserFollowBtn from './user-follow-btn';
+import UserRoleBadge from './user-role-badge';
 
 interface ProfileHeaderProps {
     user: User; // Usuario del perfil visitado.
@@ -27,7 +28,10 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
             <div className="flex items-center gap-4">
                 <UserAvatar className="h-24 w-24 text-4xl" user={user} />
                 <div className="flex flex-col">
-                    <h1 className="text-3xl">@{user.username}</h1>
+                    <h1 className="flex items-center text-3xl">
+                        <span>@{user.username}</span>
+                        <UserRoleBadge role={user.role} />
+                    </h1>
                     <div className="flex gap-3">
                         <Link href={`/user/${user.username}/following`} className="lowercase">
                             {user.follows_count} {t('following')}
