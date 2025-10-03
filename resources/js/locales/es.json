@@ -3,6 +3,7 @@
   "activate": "Activar",
   "accountStatus": "Cambiar el estado de la cuenta",  
   "accountStatusDescription": "Al inhabilitar una cuenta, se bloquea el inicio de sesión y se cierran todas las sesiones activas asociadas a ella.",
+  "admin": "Admin",
   "administrator": "Administrador",
   "alreadyHaveAccount": "¿Ya tienes una cuenta? <0>Inicia sesión</0>",
   "appearance": "Apariencia",
@@ -105,6 +106,7 @@
     "Video de YouTube": "[youtube:URL]"
   },
   "menu": "Menú",
+  "mod": "Mod",
   "moderator": "Moderador",
   "nComments": "{{total}} comentarios",
   "newEmail": "Nuevo correo electrónico",

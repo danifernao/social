@@ -3,6 +3,7 @@
   "activate": "Activate",
   "accountStatus": "Change account status",
   "accountStatusDescription": "Disabling an account blocks login and logs out all active sessions.",
+  "admin": "Admin",
   "administrator": "Administrator",
   "alreadyHaveAccount": "Already have an account? <0>Log in</0>",
   "appearance": "Appearance",
@@ -106,6 +107,7 @@
     "YouTube video": "[youtube:URL]"
   },
   "menu": "Menu",
+  "mod": "Mod",
   "moderator": "Moderator",
   "nComments": "{{total}} comments",
   "newEmail": "New email",
