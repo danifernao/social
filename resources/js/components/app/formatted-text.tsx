@@ -51,6 +51,11 @@ export default function FormattedText({ entryType, text }: Props) {
     // Define los componentes personalizados para la representación de Markdown.
     const components: ExtendedComponents = {
         p: ({ node, children }) => <p className="mb-4 last:mb-0">{children}</p>,
+        strong: ({ children }) => <strong>{children}</strong>,
+        em: ({ children }) => <em>{children}</em>,
+        del: ({ children }) => <del className="line-through">{children}</del>,
+        h1: ({ children }) => <h1 className="mb-4 text-xl font-bold">{children}</h1>,
+        h2: ({ children }) => <h2 className="mb-4 text-lg font-bold">{children}</h2>,
         a: ({ href, node, children }) => {
             if (!href) return <>{children}</>;
             if (href.startsWith('/')) {
@@ -66,8 +71,10 @@ export default function FormattedText({ entryType, text }: Props) {
                 </a>
             );
         },
-        strong: ({ children }) => <strong>{children}</strong>,
-        em: ({ children }) => <em>{children}</em>,
+        img: ({ src, alt }) => (
+            <img src={src ?? ''} alt={alt ?? ''} loading="lazy" className="mb-4 aspect-[4/3] h-auto max-w-full rounded last:mb-0" />
+        ),
+        hr: () => <hr className="my-4 border-t" />,
         blockquote: ({ children }) => <blockquote className="text-muted-foreground mb-4 border-l-4 pl-4 italic last:mb-0">{children}</blockquote>,
         pre({ children }) {
             return <pre className="bg-muted mb-4 overflow-x-auto rounded p-2 text-sm last:mb-0">{children}</pre>;
@@ -78,21 +85,6 @@ export default function FormattedText({ entryType, text }: Props) {
         ul: ({ children }) => <ul className="mb-4 list-inside list-disc pl-4 last:mb-0">{children}</ul>,
         ol: ({ children }) => <ol className="mb-4 list-inside list-decimal pl-4 last:mb-0">{children}</ol>,
         li: ({ children }) => <li>{children}</li>,
-        img: ({ src, alt }) => (
-            <img src={src ?? ''} alt={alt ?? ''} loading="lazy" className="mb-4 aspect-[4/3] h-auto max-w-full rounded last:mb-0" />
-        ),
-        iframe: ({ node, ...props }) => {
-            const src = node?.properties?.src;
-            return (
-                <iframe
-                    {...props}
-                    src={typeof src === 'string' ? src : undefined}
-                    allowFullScreen
-                    loading="lazy"
-                    className="mb-4 aspect-video h-full w-full rounded border-0 last:mb-0"
-                />
-            );
-        },
         hidden: ({ type, children }) => {
             const [show, setShow] = useState(false);
             if (type === 'inline') {
@@ -122,8 +114,19 @@ export default function FormattedText({ entryType, text }: Props) {
                     </div>
                 );
             }
-
             return <>{children}</>;
+        },
+        iframe: ({ node, ...props }) => {
+            const src = node?.properties?.src;
+            return (
+                <iframe
+                    {...props}
+                    src={typeof src === 'string' ? src : undefined}
+                    allowFullScreen
+                    loading="lazy"
+                    className="mb-4 aspect-video h-full w-full rounded border-0 last:mb-0"
+                />
+            );
         },
     };
 
@@ -159,18 +162,21 @@ export default function FormattedText({ entryType, text }: Props) {
                     remarkPlugins={[remarkBreaks, remarkDirective, remarkCustomDirectives, remarkMention, [remarkHashtag, { entryType }]]}
                     allowedElements={[
                         'p',
-                        'a',
                         'span',
                         'br',
                         'strong',
                         'em',
+                        'h1',
+                        'h2',
+                        'hr',
+                        'a',
+                        'img',
                         'blockquote',
                         'code',
                         'pre',
                         'ul',
                         'ol',
                         'li',
-                        'img',
                         'hidden',
                         'iframe',
                     ]}
