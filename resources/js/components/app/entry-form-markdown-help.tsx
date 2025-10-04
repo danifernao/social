@@ -39,7 +39,9 @@ export function MarkdownHelp() {
                             <tr key={description}>
                                 <td>{description}</td>
                                 <td>
-                                    <code onClick={(e) => select(example as string, e)}>{example}</code>
+                                    <code className="whitespace-pre-wrap" onClick={(e) => select(example as string, e)}>
+                                        {example}
+                                    </code>
                                 </td>
                             </tr>
                         ))}
