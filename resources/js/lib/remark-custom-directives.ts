@@ -29,7 +29,6 @@ export default function remarkCustomDirectives() {
         if (!videoId) {
           node.data = {
             hName: 'span',
-            hProperties: { className: 'text-red-500 font-mono' },
           };
           return;
         }

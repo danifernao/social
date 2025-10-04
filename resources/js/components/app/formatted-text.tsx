@@ -114,7 +114,7 @@ export default function FormattedText({ entryType, text }: Props) {
                                 setShow(!show);
                                 forceExpanded.current = true;
                             }}
-                            className="text-sm text-blue-600 hover:underline"
+                            className="text-blue-600 hover:underline"
                         >
                             {show ? t('hideContent') : t('showContent')}
                         </button>
