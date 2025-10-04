@@ -1,6 +1,6 @@
+import remarkCustomDirectives from '@/lib/remark-custom-directives';
 import remarkHashtag from '@/lib/remark-hashtag';
 import remarkMention from '@/lib/remark-mention';
-import remarkYoutube from '@/lib/remark-youtube';
 import { cn } from '@/lib/utils';
 import { EntryType } from '@/types';
 import { Link } from '@inertiajs/react';
@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import type { Components } from 'react-markdown';
 import Markdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
+import remarkDirective from 'remark-directive';
 import { Button } from '../ui/button';
 
 interface Props {
@@ -38,7 +39,11 @@ export default function FormattedText({ entryType, text }: Props) {
     const [expanded, setExpanded] = useState(false);
 
     // Estado para mostrar u ocultar el botón de "Leer más".
-    const [showExpand, setShowExpand] = useState(false);
+    const [showExpandButton, setShowExpandButton] = useState(false);
+
+    // Se activa cuando el usuario abre un contenido oculto,
+    // esto se hace para evitar conflictos con "Leer más".
+    const forceExpanded = useRef(false);
 
     // Clase base para el contenedor.
     const baseClass = 'overflow-hidden transition-all duration-300';
@@ -76,15 +81,49 @@ export default function FormattedText({ entryType, text }: Props) {
         img: ({ src, alt }) => (
             <img src={src ?? ''} alt={alt ?? ''} loading="lazy" className="mb-4 aspect-[4/3] h-auto max-w-full rounded last:mb-0" />
         ),
-        youtube: ({ id }) => {
+        iframe: ({ node, ...props }) => {
+            const src = node?.properties?.src;
             return (
                 <iframe
-                    src={`https://www.youtube.com/embed/${id}`}
+                    {...props}
+                    src={typeof src === 'string' ? src : undefined}
                     allowFullScreen
                     loading="lazy"
                     className="mb-4 aspect-video h-full w-full rounded border-0 last:mb-0"
                 />
             );
+        },
+        hidden: ({ type, children }) => {
+            const [show, setShow] = useState(false);
+            if (type === 'inline') {
+                return (
+                    <span
+                        onClick={() => setShow(!show)}
+                        className="cursor-pointer rounded bg-gray-800 px-1 transition-colors duration-300"
+                        style={{ color: show ? undefined : '#1f2937' }}
+                    >
+                        {children}
+                    </span>
+                );
+            }
+            if (type === 'block') {
+                return (
+                    <div className="mb-4 last:mb-0">
+                        <button
+                            onClick={() => {
+                                setShow(!show);
+                                forceExpanded.current = true;
+                            }}
+                            className="text-sm text-blue-600 hover:underline"
+                        >
+                            {show ? t('hideContent') : t('showContent')}
+                        </button>
+                        {show && <div>{children}</div>}
+                    </div>
+                );
+            }
+
+            return <>{children}</>;
         },
     };
 
@@ -98,10 +137,12 @@ export default function FormattedText({ entryType, text }: Props) {
 
         // Crea un observador para detectar cambios en el tamaño del contenedor.
         const observer = new ResizeObserver(() => {
-            if (el.scrollHeight > 300) {
-                setShowExpand(true);
-            } else {
-                setShowExpand(false);
+            if (!forceExpanded.current) {
+                if (el.scrollHeight > 300) {
+                    setShowExpandButton(true);
+                } else {
+                    setShowExpandButton(false);
+                }
             }
         });
 
@@ -109,21 +150,37 @@ export default function FormattedText({ entryType, text }: Props) {
 
         // Limpia el observador al desmontar el componente para evitar fugas de memoria.
         return () => observer.disconnect();
-    }, []);
+    }, [text]);
 
     return (
         <div className="relative">
-            <div ref={contentRef} className={cn(baseClass, expanded ? 'max-h-full' : 'max-h-[300px]')}>
+            <div ref={contentRef} className={cn(baseClass, expanded || forceExpanded.current ? 'max-h-full' : 'max-h-[300px]')}>
                 <Markdown
-                    remarkPlugins={[remarkBreaks, remarkYoutube, remarkMention, [remarkHashtag, { entryType }]]}
-                    allowedElements={['p', 'a', 'br', 'strong', 'em', 'blockquote', 'code', 'pre', 'ul', 'ol', 'li', 'img', 'youtube']}
+                    remarkPlugins={[remarkBreaks, remarkDirective, remarkCustomDirectives, remarkMention, [remarkHashtag, { entryType }]]}
+                    allowedElements={[
+                        'p',
+                        'a',
+                        'span',
+                        'br',
+                        'strong',
+                        'em',
+                        'blockquote',
+                        'code',
+                        'pre',
+                        'ul',
+                        'ol',
+                        'li',
+                        'img',
+                        'hidden',
+                        'iframe',
+                    ]}
                     components={components}
                 >
                     {text}
                 </Markdown>
             </div>
 
-            {!expanded && showExpand && (
+            {!expanded && showExpandButton && (
                 <div className="absolute right-0 bottom-0 left-0 flex items-center justify-center bg-gradient-to-t from-black to-transparent p-4">
                     <Button variant="link" onClick={() => setExpanded(true)} className="mt-2 text-sm">
                         {t('readMore')}
