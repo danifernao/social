@@ -77,6 +77,7 @@
   "hasMentionedYouInComment": "<0>{{username}}</0> <1>mentioned</1> you in a comment.",
   "hasMentionedYouInPost": "<0>{{username}}</0> <1>mentioned</1> you in a post.",
   "hasPostOnYourProfile": "<0>{{username}}</0> has <1>posted</1> on your profile.",
+  "hideContent": "Hide content",
   "home": "Home",
   "id": "ID",
   "language": "Language",
@@ -93,7 +94,7 @@
   "management": "Management",
   "managementDescription": "Manage the configuration and administration of the social network.",
   "markAsRead": "Mark as read",
-  "markdownHelp": "How to use Markdown?",
+  "markdownHelp": "How to format text",
   "markdownExamples": {
     "Bold": "**bold**",
     "Italic": "*italic*",
@@ -104,7 +105,9 @@
     "Ordered list": "1. First item",
     "Unordered list": "- First item",
     "Image": "![Description](URL)",
-    "YouTube video": "[youtube:URL]"
+    "YouTube video": "::youtube[URL]",
+    "Hidden text": ":hidden[Text]",
+    "Hidden content": ":::hidden Content :::"
   },
   "menu": "Menu",
   "mod": "Mod",
@@ -166,6 +169,7 @@
   "sendVerificationEmail": "Send account verification email.",
   "settings": "Settings",
   "settingsDescription": "Manage your profile and account settings.",
+  "showContent": "show content",
   "signUp": "Sign up",
   "siteSettings": "Site settings",
   "system": "System",
