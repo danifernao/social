@@ -107,7 +107,7 @@
     "Image": "![Description](URL)",
     "YouTube video": "::youtube[URL]",
     "Hidden text": ":hidden[Text]",
-    "Hidden content": ":::hidden Content :::"
+    "Hidden content": ":::hidden\nContent\n:::"
   },
   "menu": "Menu",
   "mod": "Mod",

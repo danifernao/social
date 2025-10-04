@@ -105,8 +105,8 @@
     "Lista sin orden": "- Primer ítem",
     "Imagen": "![Descripción](URL)",
     "Video de YouTube": "::youtube[URL]",
-    "Texto oculto": ":hidden[Texto]",
-    "Bloque oculto": ":::hidden Contenido :::"
+    "Texto oculto": ":hidden[Texto oculto]",
+    "Bloque oculto": ":::hidden\nContenido oculto\n:::"
   },
   "menu": "Menú",
   "mod": "Mod",
