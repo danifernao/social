@@ -10,6 +10,15 @@ export function MarkdownHelp() {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 
+    // Selecciona el texto dentro del <code>.
+    const select = async (text: string, event: React.MouseEvent<HTMLElement>) => {
+        const range = document.createRange();
+        range.selectNodeContents(event.currentTarget);
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+    };
+
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -30,7 +39,7 @@ export function MarkdownHelp() {
                             <tr key={description}>
                                 <td>{description}</td>
                                 <td>
-                                    <code>{example}</code>
+                                    <code onClick={(e) => select(example as string, e)}>{example}</code>
                                 </td>
                             </tr>
                         ))}

@@ -76,6 +76,7 @@
   "hasMentionedYouInComment": "<0>{{username}}</0> te ha <1>mencionado</1> en un comentario.",
   "hasMentionedYouInPost": "<0>{{username}}</0> te ha <1>mencionado</1> en una publicación.",
   "hasPostOnYourProfile": "<0>{{username}}</0> ha <1>publicado</1> en tu perfil.",
+  "hideContent": "Ocultar contenido",
   "home": "Inicio",
   "id": "ID",
   "light": "Claro",
@@ -92,7 +93,7 @@
   "management": "Administración",
   "managementDescription": "Gestiona la configuración y administración de la red social.",
   "markAsRead": "Marcar como leídas",
-  "markdownHelp": "¿Cómo usar Markdown?",
+  "markdownHelp": "Cómo aplicar formato",
   "markdownExamples": {
     "Negrita": "**negrita**",
     "Cursiva": "*cursiva*",
@@ -103,7 +104,9 @@
     "Lista ordenada": "1. Primer ítem",
     "Lista sin orden": "- Primer ítem",
     "Imagen": "![Descripción](URL)",
-    "Video de YouTube": "[youtube:URL]"
+    "Video de YouTube": "::youtube[URL]",
+    "Texto oculto": ":hidden[Texto]",
+    "Bloque oculto": ":::hidden Contenido :::"
   },
   "menu": "Menú",
   "mod": "Mod",
@@ -165,6 +168,7 @@
   "sendVerificationEmail": "Enviar correo electrónico de verificación de cuenta.",
   "settings": "Configuración",
   "settingsDescription": "Administra tu perfil y los ajustes de tu cuenta.",
+  "showContent": "Mostrar contenido oculto",
   "signUp": "Crear cuenta",
   "siteSettings": "Ajustes del sitio",
   "system": "Sistema",
