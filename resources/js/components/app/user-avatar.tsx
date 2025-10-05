@@ -18,7 +18,7 @@ export default function UserAvatar({ user, className = 'w-10 h-10' }: UserAvatar
     return (
         <div className={`relative ${className}`}>
             <Link
-                href={`/user/${user.username}`}
+                href={route('profile.show', user.username)}
                 className="flex h-full w-full items-center justify-center overflow-hidden rounded-sm bg-neutral-200 font-bold text-black dark:bg-neutral-700 dark:text-white"
             >
                 {user.avatar_url ? (

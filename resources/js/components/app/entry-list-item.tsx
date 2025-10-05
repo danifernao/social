@@ -55,14 +55,18 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                 <div className="flex flex-1 items-center justify-center gap-3">
                     <UserAvatar user={entry.user} />
                     <div className="felx flex-1 items-center font-semibold">
-                        <Link href={`/user/${entry.user.username}`}>{entry.user.username}</Link>
+                        <Link href={route('profile.show', entry.user.username)}>{entry.user.username}</Link>
                         <UserRoleBadge role={entry.user.role} />
                     </div>
                 </div>
                 <div className="flex items-center justify-center gap-4">
                     <div className="flex gap-4 text-sm">
                         <Link
-                            href={entry.type === 'post' ? `/post/${entry.id}` : `/post/${entry.post_id}?comment_id=${entry.id}`}
+                            href={
+                                entry.type === 'post'
+                                    ? route('post.show', entry.id)
+                                    : route('post.comment.show', { post: entry.post_id, comment: entry.id })
+                            }
                             title={formatDate(entry.created_at)}
                         >
                             <time dateTime={entry.created_at}>{distanceToNow}</time>

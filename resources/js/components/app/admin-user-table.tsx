@@ -157,7 +157,7 @@ export default function AdminUserTable({ users, previous, next }: Props) {
                                         <UserAvatar user={user} />
                                     </TableCell>
                                     <TableCell>
-                                        <Link href={`/user/${user.username}`}>{user.username}</Link>
+                                        <Link href={route('profile.show', user.id)}>{user.username}</Link>
                                     </TableCell>
                                     <TableCell className={addTextColor(user.email_verified_at)}>
                                         {user.email_verified_at ? t('yes') : t('no')}
@@ -168,7 +168,7 @@ export default function AdminUserTable({ users, previous, next }: Props) {
                                     <TableCell>
                                         {canActOnUser(user) && (
                                             <Button variant="outline" asChild>
-                                                <Link href={`/admin/${user.id}`}>{t('manage')}</Link>
+                                                <Link href={route('admin.user.edit', user.id)}>{t('manage')}</Link>
                                             </Button>
                                         )}
                                     </TableCell>

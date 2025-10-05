@@ -17,7 +17,7 @@ export default function UserAdminBtn({ user }: UserFollowBtnProps) {
 
     return (
         <Button asChild className="group relative gap-0 overflow-hidden">
-            <Link href={`/admin/${user.id}`}>
+            <Link href={route('admin.user.edit', user.id)}>
                 <UserCog className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                 <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-200 group-hover:ml-2 group-hover:max-w-xs">
                     {t('manage')}

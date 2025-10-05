@@ -19,7 +19,7 @@ export default function Home() {
     const { t } = useTranslation();
 
     // Captura el usuario autenticado, la publicación y los comentarios proporcionados por Inertia.
-    const { auth, post, comments } = usePage<{ auth: Auth; post: Post; comments: Comments }>().props;
+    const { routeName, auth, post, comments } = usePage<{ auth: Auth; post: Post; comments: Comments }>().props;
 
     // Determina si hay un usuario autenticado.
     const isAuth = !!auth.user;
@@ -36,24 +36,22 @@ export default function Home() {
     } = usePaginatedData<Comment>({
         initialItems: comments.data, // Lista inicial de comentarios.
         initialCursor: comments.meta.next_cursor, // Cursor inicial.
-        fetchUrl: route('post.show', { post: post.id }), // Ruta para solicitar más comentarios.
+        fetchUrl: route('post.show', post.id), // Ruta para solicitar más comentarios.
         propKey: 'comments', // Nombre de la propiedad que devuelve Inertia con los datos a usar.
     });
 
-    // Detecta si la página está mostrando un hilo parcial (cuando llega con "comment_id").
-    const urlParams = new URLSearchParams(window.location.search);
-    const commentId = urlParams.get('comment_id');
-    const isPartialView = commentId && entries.length === 1 && entries[0].id === Number(commentId);
+    // Detecta si la página está mostrando un hilo parcial (cuando llega con comentario).
+    const isPartialView = routeName === 'post.comment.show';
 
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('userProfile', { username: post.user.username }),
-            href: route('profile.show', { user: post.user.username }),
+            href: route('profile.show', post.user.username),
         },
         {
             title: t('post'),
-            href: route('post.show', { post: post.id }),
+            href: route('post.show', post.id),
         },
     ];
 
@@ -79,7 +77,7 @@ export default function Home() {
                                         {isPartialView && (
                                             <>
                                                 <span className="text-muted-foreground text-sm">({t('partial')})</span>
-                                                <Link href={route('post.show', { post: post.id })} className="text-sm text-blue-600 hover:underline">
+                                                <Link href={route('post.show', post.id)} className="text-sm text-blue-600 hover:underline">
                                                     {t('seeFullThread')}
                                                 </Link>
                                             </>
