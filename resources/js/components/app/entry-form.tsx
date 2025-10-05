@@ -9,6 +9,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { toast } from 'sonner';
 import { MarkdownHelp } from './entry-form-markdown-help';
 import FormErrors from './form-errors';
+import FormattedText from './formatted-text';
 
 interface EntryFormProps {
     entry?: Entry; // Una entrada existente, la cual puede ser una publicación o un comentario.
@@ -29,6 +30,9 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
 
     // Almacena temporalmente la entrada que retorna el envío del formulario.
     const [entryFromResponse, setEntryFromResponse] = useState<Entry>();
+
+    // Estado para alternar vista previa.
+    const [previewMode, setPreviewMode] = useState(false);
 
     // Hook de Inertia para gestionar datos del formulario, errores y estados.
     const { data, setData, post, patch, processing, errors, reset } = useForm({
@@ -99,27 +103,47 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
     }, [entry]);
 
     return (
-        <form onSubmit={submitForm} className="space-y-3">
-            <FormErrors errors={errors} />
+        <>
+            {previewMode ? (
+                <div className="flex flex-col gap-2">
+                    <div className="bg-card text-card-foreground rounded-xl border px-6 py-6 shadow-sm">
+                        <FormattedText entryType={formType} text={data.content} />
+                    </div>
+                    <Button variant="outline" className="ml-auto" onClick={() => setPreviewMode(false)}>
+                        {t('backToEdit')}
+                    </Button>
+                </div>
+            ) : (
+                <form onSubmit={submitForm} className="space-y-3">
+                    <FormErrors errors={errors} />
 
-            <TextareaAutosize
-                className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                minRows={1}
-                maxRows={10}
-                value={data.content}
-                onChange={(e) => setData('content', e.target.value)}
-                disabled={processing}
-                placeholder={t('whatsOnYourMind')}
-                maxLength={3000}
-            />
+                    <TextareaAutosize
+                        className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                        minRows={1}
+                        maxRows={10}
+                        value={data.content}
+                        onChange={(e) => setData('content', e.target.value)}
+                        disabled={processing}
+                        placeholder={t('whatsOnYourMind')}
+                        maxLength={3000}
+                    />
 
-            <div className="flex items-center gap-4">
-                <MarkdownHelp />
-                <Button type="submit" className="ml-auto" disabled={processing}>
-                    {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                    {formType === 'post' ? t('createPost') : t('comment')}
-                </Button>
-            </div>
-        </form>
+                    <div className="flex items-center gap-4">
+                        <MarkdownHelp />
+                        <div className="ml-auto flex items-center gap-2">
+                            {data.content.trim().length > 0 && (
+                                <Button type="button" variant="outline" onClick={() => setPreviewMode(true)}>
+                                    {t('preview')}
+                                </Button>
+                            )}
+                            <Button type="submit" disabled={processing || data.content.trim().length === 0}>
+                                {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                                {formType === 'post' ? t('createPost') : t('comment')}
+                            </Button>
+                        </div>
+                    </div>
+                </form>
+            )}
+        </>
     );
 }
