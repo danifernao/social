@@ -26,7 +26,7 @@ export function MarkdownHelp() {
                     {t('markdownHelp')}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[400px] text-sm">
+            <PopoverContent className="max-h-96 w-[400px] overflow-y-auto text-sm">
                 <table className="w-full table-auto border-collapse text-sm">
                     <thead>
                         <tr>
