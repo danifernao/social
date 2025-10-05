@@ -21,7 +21,7 @@ export function AppSidebar() {
         },
         {
             title: t('profile'),
-            href: `/user/${auth.user?.username}`,
+            href: route('profile.show', auth.user?.username),
             icon: User,
         },
         {
@@ -31,21 +31,21 @@ export function AppSidebar() {
         },
         {
             title: t('connections'),
-            href: `/user/${auth.user?.username}/following`,
+            href: route('follow.following', auth.user?.username),
             icon: Users,
             isActive: ['follow.following', 'follow.followers'].includes(routeName),
         },
         {
             name: 'notifications',
             title: t('notifications'),
-            href: `/notifications`,
+            href: route('notification.index'),
             icon: Bell,
         },
         ...(auth.user?.can_moderate
             ? [
                   {
                       title: t('management'),
-                      href: '/admin',
+                      href: route('admin.index'),
                       icon: UserCog,
                       isActive: ['admin.site.edit', 'admin.user.index', 'admin.user.create', 'admin.user.edit'].includes(routeName),
                   },
@@ -56,12 +56,12 @@ export function AppSidebar() {
     const navGuest = [
         {
             title: t('login'),
-            href: '/login',
+            href: route('login'),
             icon: LogIn,
         },
         {
             title: t('register'),
-            href: `/register`,
+            href: route('register'),
             icon: UserPlus,
         },
     ];
@@ -76,7 +76,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href="/home" prefetch>
+                            <Link href={route('home.index')} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>

@@ -27,13 +27,13 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
     const sidebarNavItems: NavItem[] = [
         {
             title: t('siteSettings'),
-            href: '/admin/site',
+            href: route('admin.site.edit'),
             icon: null,
             isActive: ['admin.site.edit'].includes(routeName),
         },
         {
             title: t('users'),
-            href: '/admin/users',
+            href: route('admin.user.index'),
             icon: null,
             isActive: ['admin.user.index', 'admin.user.create', 'admin.user.edit'].includes(routeName),
         },

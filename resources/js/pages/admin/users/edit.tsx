@@ -23,7 +23,7 @@ export default function UsersEdit() {
         },
         {
             title: user.username,
-            href: route('admin.user.edit', { user: user.username }),
+            href: route('admin.user.edit', user.username),
         },
     ];
 
@@ -33,7 +33,7 @@ export default function UsersEdit() {
             <AdminLayout>
                 <AppContentLayout noMargin={true} fullWidth={true}>
                     <h2 className="text-2xl font-semibold tracking-tight">
-                        <Link href={`/user/${user.username}`}>{user.username}</Link>
+                        <Link href={route('profile.show', user.username)}>{user.username}</Link>
                     </h2>
                     <AdminUserEditForm user={user} />
                 </AppContentLayout>
