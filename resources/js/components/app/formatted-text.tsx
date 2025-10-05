@@ -15,6 +15,7 @@ import { Button } from '../ui/button';
 interface Props {
     entryType: EntryType; // Puede ser "post" o "comment".
     text: string; // El texto que será formateado y mostrado.
+    alwaysExpanded?: boolean; // Fuerza que el contenido se muestre expandido.
 }
 
 // Define un tipo que extienda Components permitiendo claves extra (como "youtube").
@@ -28,7 +29,7 @@ type ExtendedComponents = Components & {
  * - Convierte menciones (@usuario), etiquetas (#tema) y direcciones web en enlaces.
  * - Muestra botón "Leer más" si el contenido excede 300px de alto para expandirlo.
  */
-export default function FormattedText({ entryType, text }: Props) {
+export default function FormattedText({ entryType, text, alwaysExpanded = false }: Props) {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 
@@ -137,6 +138,13 @@ export default function FormattedText({ entryType, text }: Props) {
     useEffect(() => {
         const el = contentRef.current;
         if (!el) return;
+
+        // Si se especificó, fuerza que el contenido se muestre expandido.
+        if (alwaysExpanded) {
+            forceExpanded.current = true;
+            setExpanded(true);
+            return;
+        }
 
         // Crea un observador para detectar cambios en el tamaño del contenedor.
         const observer = new ResizeObserver(() => {
