@@ -70,7 +70,7 @@ export default function NotificationListItem({ notification }: NotificationListI
                     hasTriggeredRequest.current = true;
 
                     // Se hace una petición PATCH para marcar la notificación como leída.
-                    fetch(route('notification.markOneAsRead', { id: notification.id }), {
+                    fetch(route('notification.markOneAsRead', notification.id), {
                         method: 'PATCH',
                         headers: {
                             'X-CSRF-TOKEN': csrfToken,

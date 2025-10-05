@@ -25,15 +25,18 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home.index');
 
-    Route::get('/user/{user}/following', [FollowController::class, 'showFollowing'])->name('follow.following');
-    Route::get('/user/{user}/followers', [FollowController::class, 'showFollowers'])->name('follow.followers');
-    Route::post('/user/{user}/follow', [FollowController::class, 'toggle'])->name('follow.toggle');
+    Route::prefix('user')->group(function () {
+        Route::get('{user}/following', [FollowController::class, 'showFollowing'])->name('follow.following');
+        Route::get('{user}/followers', [FollowController::class, 'showFollowers'])->name('follow.followers');
+        Route::post('{user}/follow', [FollowController::class, 'toggle'])->name('follow.toggle');
+        Route::post('{user}/block', [BlockUserController::class, 'toggle'])->name('user.block');
+    });
 
-    Route::post('/user/{user}/block', [BlockUserController::class, 'toggle'])->name('user.block');
-
-    Route::post('/post', [PostController::class, 'store'])->name('post.store');
-    Route::patch('/post/{post}', [PostController::class, 'update'])->name('post.update');
-    Route::delete('/post/{post}', [PostController::class, 'delete'])->name('post.delete');
+    Route::prefix('post')->name('post.')->group(function () {
+        Route::post('/', [PostController::class, 'store'])->name('store');
+        Route::patch('{post}', [PostController::class, 'update'])->name('update');
+        Route::delete('{post}', [PostController::class, 'delete'])->name('delete');
+    });
 
     Route::post('/post/{post}/comment', [CommentController::class, 'store'])->name('comment.store');
     Route::patch('/comment/{comment}', [CommentController::class, 'update'])->name('comment.update');
@@ -43,27 +46,38 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('notification.index');
-    Route::patch('/notifications/read', [NotificationController::class, 'markAllAsRead'])->name('notification.markAllAsRead');
-    Route::patch('/notifications/read/{id}', [NotificationController::class, 'markOneAsRead'])->name('notification.markOneAsRead');
+    Route::prefix('notifications')->name('notification.')->group(function () {
+      Route::get('/', [NotificationController::class, 'index'])->name('index');
+      Route::patch('read', [NotificationController::class, 'markAllAsRead'])->name('markAllAsRead');
+      Route::patch('read/{id}', [NotificationController::class, 'markOneAsRead'])->name('markOneAsRead');
+    });
 
-    Route::redirect('admin', 'admin/site');
-    Route::get('admin/site', [AdminSiteController::class, 'edit'])->name('admin.site.edit');
-    Route::patch('admin/site', [AdminSiteController::class, 'update'])->name('admin.site.update');
-    Route::get('admin/users', [AdminUserController::class, 'index'])->name('admin.user.index');
-    Route::get('admin/users/create', [AdminUserController::class, 'create'])->name('admin.user.create');
-    Route::post('admin/users/create', [AdminUserController::class, 'store'])->name('admin.user.store');
-    Route::get('admin/{user}', [AdminUserController::class, 'edit'])->name('admin.user.edit');
-    Route::patch('admin/{user}', [AdminUserController::class, 'update'])->name('admin.user.update');
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::redirect('/', 'admin/site')->name('index');
+
+        Route::prefix('site')->name('site.')->group(function () {
+          Route::get('/', [AdminSiteController::class, 'edit'])->name('edit');
+          Route::patch('/', [AdminSiteController::class, 'update'])->name('update');
+        });
+
+        Route::prefix('users')->name('user.')->group(function () {
+            Route::get('/', [AdminUserController::class, 'index'])->name('index');
+            Route::get('create', [AdminUserController::class, 'create'])->name('create');
+            Route::post('create', [AdminUserController::class, 'store'])->name('store');
+            Route::get('{user}', [AdminUserController::class, 'edit'])->name('edit');
+            Route::patch('{user}', [AdminUserController::class, 'update'])->name('update');
+        });
+    });
 });
 
 Route::get('/user/{user}', [ProfileController::class, 'show'])->name('profile.show');
 Route::get('/post/{post}', [PostController::class, 'show'])->name('post.show');
+Route::get('/post/{post}/comment/{comment}', [PostController::class, 'show'])->name('post.comment.show');
 
 Route::get('/comment/{comment}', function (Request $request, Comment $comment) {
-    return redirect()->route('post.show', [
+    return redirect()->route('post.comment.show', [
         'post' => $comment->post_id,
-        'comment_id' => $comment->id,
+        'comment' => $comment->id,
     ]);
 })->name('comment.show');
 

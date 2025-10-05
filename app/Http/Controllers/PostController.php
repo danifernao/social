@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\PostResource;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use App\Notifications\NewPostOnProfile;
@@ -88,8 +89,9 @@ class PostController extends Controller
      * 
      * @param Request $request Datos de la petición HTTP.
      * @param Post $post Publicación que se va a mostrar.
+     * @param Comment|null $comment Comentario individual que se va a mostrar.
      */
-    public function show(Request $request, Post $post)
+    public function show(Request $request, Post $post, Comment $comment = null)
     {
         $user = $request->user();
 
@@ -102,16 +104,17 @@ class PostController extends Controller
             }
         }
 
+        // Si se recibió un comentario, se valida que pertenezca a la publicación.
+        if ($comment && $comment->post_id !== $post->id) {
+            abort(404);
+        }
+
         // Carga relaciones y reacciones.
         $post->load('user')->loadCount('comments');
         $post->reactions = $post->reactionsSummary($user?->id);
 
         // Se captura el cursor de la paginación.
         $cursor = $request->header('X-Cursor');
-
-        // Se captura, en caso de existir, el identificador de un
-        // comentario específico a enfocar.
-        $focus_comment_id = $request->query('comment_id');
 
         // Número de elementos por página en la paginación de comentarios.
         $per_page = 15;
@@ -125,18 +128,13 @@ class PostController extends Controller
             $comments_query->whereNotIn('user_id', $excluded_ids);
         }
 
-        if ($focus_comment_id) {
-            // Se busca el comentario solicitado dentro de la consulta.
-            $focused = (clone $comments_query)->where('id', $focus_comment_id)->first();
-            if ($focused) {
-                // Si existe, se construye un paginador manual con un único comentario.
-                $comments = new CursorPaginator([$focused], $per_page, null, [
-                    'path' => $request->url(),
-                    'cursorName' => 'cursor',
-                ]);
-            } else {
-                $comments = $comments_query->cursorPaginate($per_page, ['*'], 'cursor', $cursor);
-            }
+        // Si hay comentario específico, se crea paginador manual.
+        if ($comment) {
+            $comment->load('user');
+            $comments = new CursorPaginator([$comment], $per_page, null, [
+                'path' => $request->url(),
+                'cursorName' => 'cursor',
+            ]);
         } else {
             $comments = $comments_query->cursorPaginate($per_page, ['*'], 'cursor', $cursor);
         }

@@ -36,7 +36,7 @@ export default function Profile() {
     } = usePaginatedData<Post>({
         initialItems: posts.data, // Lista inicial de publicaciones.
         initialCursor: posts.meta.next_cursor, // Cursor inicial.
-        fetchUrl: route('profile.show', { user: user.username }), // Ruta para solicitar más publicaciones.
+        fetchUrl: route('profile.show', user.username), // Ruta para solicitar más publicaciones.
         propKey: 'posts', // Nombre de la propiedad que devuelve Inertia con los datos a usar.
         isEntry: true, // Indica que se está trabajando con entradas tipo "Entry" (publicación o comentario).
     });
@@ -45,7 +45,7 @@ export default function Profile() {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('userProfile', { username: user.username }),
-            href: route('profile.show', { user: user.username }),
+            href: route('profile.show', user.username),
         },
     ];
 

@@ -18,7 +18,7 @@ export default function UserListItem({ user }: UserListItemProps) {
             <div className="flex flex-1 items-center justify-center gap-3">
                 <UserAvatar className="h-10 w-10" user={user} />
                 <div className="flex flex-1 items-center font-semibold">
-                    <Link href={`/user/${user.username}`}>{user.username}</Link>
+                    <Link href={route('profile.show', user.username)}>{user.username}</Link>
                     <UserRoleBadge role={user.role} />
                 </div>
             </div>
