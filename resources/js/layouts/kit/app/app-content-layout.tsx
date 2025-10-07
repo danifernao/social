@@ -10,7 +10,7 @@ interface ContentInnerProps {
 export function AppContentLayout({ children, fullWidth, noMargin }: ContentInnerProps) {
     return (
         <div
-            className={cn('flex h-full w-full flex-1 flex-col gap-8 rounded-xl', !fullWidth && 'mx-auto max-w-[40rem]', !noMargin && 'mt-8 mb-8 p-4')}
+            className={cn('flex h-full w-full flex-1 flex-col gap-8 rounded-xl', !fullWidth && 'mx-auto max-w-[45rem]', !noMargin && 'mt-8 mb-8 p-4')}
         >
             {children}
         </div>

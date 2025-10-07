@@ -3,13 +3,13 @@ import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import type { Comment, Entry, Post } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TextareaAutosize from 'react-textarea-autosize';
 import { toast } from 'sonner';
-import { MarkdownHelp } from './entry-form-markdown-help';
 import FormErrors from './form-errors';
 import FormattedText from './formatted-text';
+import FormattingToolbar from './formatting-toolbar';
 
 interface EntryFormProps {
     entry?: Entry; // Una entrada existente, la cual puede ser una publicación o un comentario.
@@ -24,6 +24,9 @@ interface EntryFormProps {
 export default function EntryForm({ profileUserId, entry, postId, onSubmit }: EntryFormProps) {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
+
+    // Referencia al elemento textarea del formulario.
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     // Determina si el formulario es para una publicación o un comentario.
     const formType = entry ? (entry.type === 'post' ? 'post' : 'comment') : postId ? 'comment' : 'post';
@@ -117,7 +120,10 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
                 <form onSubmit={submitForm} className="space-y-3">
                     <FormErrors errors={errors} />
 
+                    <FormattingToolbar text={data.content} onChange={(val) => setData('content', val)} textareaRef={textareaRef} />
+
                     <TextareaAutosize
+                        ref={textareaRef}
                         className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                         minRows={1}
                         maxRows={10}
@@ -129,7 +135,6 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
                     />
 
                     <div className="flex items-center gap-4">
-                        <MarkdownHelp />
                         <div className="ml-auto flex items-center gap-2">
                             {data.content.trim().length > 0 && (
                                 <Button type="button" variant="outline" onClick={() => setPreviewMode(true)}>
