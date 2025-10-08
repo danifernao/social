@@ -1,6 +1,7 @@
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
+import { canActOnUser } from '@/lib/utils';
 import type { Entry } from '@/types';
-import { router } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { EllipsisVertical } from 'lucide-react';
 import { useContext, useState } from 'react';
@@ -81,6 +82,13 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                                 {t('delete')}
                             </Button>
                         </DropdownMenuItem>
+                        {canActOnUser(entry.user) && (
+                            <DropdownMenuItem>
+                                <Button asChild variant="link" className="hover:no-underline">
+                                    <Link href={route('admin.user.edit', entry.user.id)}>{t('manageUser')}</Link>
+                                </Button>
+                            </DropdownMenuItem>
+                        )}
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
             </DropdownMenu>
