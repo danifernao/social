@@ -53,7 +53,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('admin')->name('admin.')->group(function () {
-        Route::redirect('/', 'admin/site')->name('index');
+        Route::get('/', function () {
+            $user = auth()->user();
+
+            if ($user->isAdmin()) {
+                return redirect()->route('admin.site.edit');
+            }
+
+            if ($user->isMod()) {
+                return redirect()->route('admin.user.index');
+            }
+
+            abort(403);
+        })->name('index');
 
         Route::prefix('site')->name('site.')->group(function () {
           Route::get('/', [AdminSiteController::class, 'edit'])->name('edit');

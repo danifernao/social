@@ -2,7 +2,7 @@ import Heading from '@/components/kit/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { type NavItem } from '@/types';
+import { Auth, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,24 +13,30 @@ interface AdminLayoutProps {
 }
 
 export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
-    // Obtiene las traducciones de la página.
-    const { t } = useTranslation();
-
     // When server-side rendering, we only render the layout on the client...
     if (typeof window === 'undefined') {
         return null;
     }
 
+    // Obtiene las traducciones de la página.
+    const { t } = useTranslation();
+
+    // Obtiene el usuario autenticado y el nombre de la ruta proporcionados por Inertia.
+    const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
+
     const currentPath = window.location.pathname;
-    const { routeName } = usePage<{ routeName: string }>().props;
 
     const sidebarNavItems: NavItem[] = [
-        {
-            title: t('siteSettings'),
-            href: route('admin.site.edit'),
-            icon: null,
-            isActive: ['admin.site.edit'].includes(routeName),
-        },
+        ...(auth.user.is_admin
+            ? [
+                  {
+                      title: t('siteSettings'),
+                      href: route('admin.site.edit'),
+                      icon: null,
+                      isActive: ['admin.site.edit'].includes(routeName),
+                  },
+              ]
+            : []),
         {
             title: t('users'),
             href: route('admin.user.index'),
