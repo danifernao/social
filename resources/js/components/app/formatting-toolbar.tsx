@@ -3,6 +3,7 @@ import {
     CaptionsOff,
     Code,
     EyeOff,
+    Heading,
     Heading1,
     Heading2,
     Image,
@@ -16,8 +17,8 @@ import {
     PaintBucket,
     Quote,
     SquareCode,
+    SquarePlay,
     Type,
-    Youtube,
 } from 'lucide-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -42,6 +43,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     // Obtiene la selección actual del textarea.
     function getSelection() {
         const textarea = textareaRef.current;
+
         if (!textarea) return null;
 
         const start = textarea.selectionStart;
@@ -55,6 +57,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     // Reemplaza la selección con un texto nuevo.
     function replaceSelection(replacement: string, moveCursorOffset = 0): void {
         const textarea = textareaRef.current;
+
         if (!textarea) return;
 
         const start = textarea.selectionStart ?? 0;
@@ -62,6 +65,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         const before = text.substring(0, start);
         const after = text.substring(end);
         const newText = before + replacement + after;
+
         onChange(newText);
 
         requestAnimationFrame(() => {
@@ -84,16 +88,22 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     // Acciones básicas
     const onBold = () => applyOrInsert({ fnWhenSelected: (s) => `**${s}**`, fallback: '** **' });
     const onItalic = () => applyOrInsert({ fnWhenSelected: (s) => `*${s}*`, fallback: '* *' });
-    const onH1 = () => applyOrInsert({ fnWhenSelected: (s) => `# ${s}`, fallback: '# ' });
-    const onH2 = () => applyOrInsert({ fnWhenSelected: (s) => `## ${s}`, fallback: '## ' });
+
+    // Encabezados
+    function onHeading(level: number): void {
+        applyOrInsert({
+            fnWhenSelected: (s) => `${'#'.repeat(level)} ${s}`,
+            fallback: `${'#'.repeat(level)} `,
+        });
+    }
 
     // Mapas estáticos de estilo.
     const colors = {
-        red: 'bg-red-500',
-        blue: 'bg-blue-500',
-        green: 'bg-green-500',
         yellow: 'bg-yellow-400',
-        gray: 'bg-gray-500',
+        blue: 'bg-blue-500',
+        red: 'bg-red-500',
+        green: 'bg-green-500',
+        pink: 'bg-pink-400',
     } as const;
 
     const sizes = {
@@ -104,7 +114,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     // Color de fuente
     function onColorSelected(key: keyof typeof colors): void {
         const sel = getSelection();
-        const content = sel && sel.start !== sel.end ? sel.value : key;
+        const content = sel && sel.start !== sel.end ? sel.value : t(`toolbar.colors.${key}`);
         replaceSelection(`:style[${content}]{color=${key}}`);
     }
 
@@ -203,15 +213,15 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     // Separador
     const onSeparator = () => replaceSelection('\n---\n');
 
-    // YouTube
-    const [youtubeUrl, setYoutubeUrl] = React.useState('');
+    // Video
+    const [videoUrl, setVideoUrl] = React.useState('');
 
-    function applyYouTube(): void {
+    function applyVideo(): void {
         const sel = getSelection();
-        const url = youtubeUrl.trim() || (sel ? sel.value : '');
+        const url = videoUrl.trim() || (sel ? sel.value : '');
         const finalUrl = url || 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-        replaceSelection(`\n::youtube[${finalUrl}]\n`);
-        setYoutubeUrl('');
+        replaceSelection(`\n::video[${finalUrl}]\n`);
+        setVideoUrl('');
     }
 
     return (
@@ -224,18 +234,30 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
                 <Italic className="h-4 w-4" />
             </Button>
 
-            <Button type="button" variant="ghost" size="icon" title={t('toolbar.title')} onClick={onH1}>
-                <Heading1 className="h-4 w-4" />
-            </Button>
-
-            <Button type="button" variant="ghost" size="icon" title={t('toolbar.subtitle')} onClick={onH2}>
-                <Heading2 className="h-4 w-4" />
-            </Button>
-
-            {/* Color */}
+            {/* Encabezados (H1 y H2) */}
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" title={t('toolbar.color')}>
+                    <Button variant="ghost" size="icon" title={t('toolbar.heading')}>
+                        <Heading className="h-4 w-4" />
+                    </Button>
+                </PopoverTrigger>
+
+                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
+                    <Button variant="ghost" className="flex items-center gap-2 text-sm" onClick={() => onHeading(1)}>
+                        <Heading1 className="h-4 w-4" />
+                        {t('toolbar.h1')}
+                    </Button>
+                    <Button variant="ghost" className="flex items-center gap-2 text-sm" onClick={() => onHeading(2)}>
+                        <Heading2 className="h-4 w-4" />
+                        {t('toolbar.h2')}
+                    </Button>
+                </PopoverContent>
+            </Popover>
+
+            {/* Color de fuente */}
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" title={t('toolbar.fontColor')}>
                         <PaintBucket className="h-4 w-4" />
                     </Button>
                 </PopoverTrigger>
@@ -243,7 +265,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
                     {(Object.keys(colors) as (keyof typeof colors)[]).map((key) => (
                         <button
                             key={key}
-                            title={key}
+                            title={t(`toolbar.colors.${key}`)}
                             onClick={() => onColorSelected(key)}
                             className={`h-6 w-6 rounded-full ${colors[key]} border border-gray-300 transition-transform hover:scale-110`}
                         />
@@ -251,14 +273,14 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
                 </PopoverContent>
             </Popover>
 
-            {/* Tamaño */}
+            {/* Tamaño de fuente */}
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" title={t('toolbar.size')}>
+                    <Button variant="ghost" size="icon" title={t('toolbar.fontSize')}>
                         <Type className="h-4 w-4" />
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="flex w-auto flex-col gap-1 p-2">
+                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
                     {(Object.keys(sizes) as (keyof typeof sizes)[]).map((key) => (
                         <Button key={key} variant="ghost" className="flex items-center gap-2 text-sm" onClick={() => onSizeSelected(key)}>
                             <Type className={`h-4 w-4 ${key === 'small' ? 'scale-90' : 'scale-125'}`} />
@@ -348,21 +370,17 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
                 <CaptionsOff className="h-4 w-4" />
             </Button>
 
-            {/* YouTube */}
+            {/* Video */}
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button type="button" variant="ghost" size="icon" title={t('toolbar.youtubeVideo')}>
-                        <Youtube className="h-4 w-4" />
+                    <Button type="button" variant="ghost" size="icon" title={t('toolbar.video')}>
+                        <SquarePlay className="h-4 w-4" />
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="flex w-64 flex-col gap-2 p-4">
-                    <Input
-                        placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                        value={youtubeUrl}
-                        onChange={(e) => setYoutubeUrl(e.target.value)}
-                    />
-                    <Button size="sm" className="mt-2" onClick={applyYouTube}>
-                        <Youtube className="mr-2 h-4 w-4" /> {t('toolbar.insertYoutubeVideo')}
+                    <Input placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} />
+                    <Button size="sm" className="mt-2" onClick={applyVideo}>
+                        <SquarePlay className="mr-2 h-4 w-4" /> {t('toolbar.insertVideo')}
                     </Button>
                 </PopoverContent>
             </Popover>

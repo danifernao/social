@@ -9,11 +9,11 @@ import {
 
 // Constantes
 const colors = {
-  red: 'text-red-500',
-  blue: 'text-blue-500',
-  green: 'text-green-500',
   yellow: 'text-yellow-400',
-  gray: 'text-gray-500',
+  blue: 'text-blue-500',
+  red: 'text-red-500',
+  green: 'text-green-500',
+  pink: 'text-pink-400',
 };
 
 const sizes = {
@@ -81,44 +81,70 @@ export default function remarkCustomDirectives() {
           };
         }
 
-        // YouTube
-        if (node.type === 'leafDirective' && node.name === 'youtube') {
-          const youtubeNode = node as LeafDirective;
+        // Video
+        if (node.type === 'leafDirective' && node.name === 'video') {
+          const videoNode = node as LeafDirective;
           
           let url = '';
-          const firstChild = youtubeNode.children?.[0];
+          const firstChild =videoNode.children?.[0];
           
           if (firstChild && isLiteral(firstChild)) {
               url = firstChild.value;
           }
 
-          const videoId = extractVideoID(url);
-          if (!videoId) {
-            youtubeNode.data = {
+          const service = detectVideoService(url);
+
+          if (!service) {
+            videoNode.data = {
               hName: 'span',
             };
             return;
           }
 
-          const data = youtubeNode.data || (youtubeNode.data = {});
-          data.hName = 'iframe';
-          data.hProperties = {
-            src: `https://www.youtube.com/embed/${videoId}`,
-            width: 560,
-            height: 315,
-            frameBorder: 0,
-            allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
-            allowFullScreen: true,
+          const props = buildVideoIframeProps(service, url);
+
+          videoNode.data = {
+            hName: 'iframe',
+            hProperties: props,
           };
-          youtubeNode.children = [];
+
+          videoNode.children = [];
         }
       }
     });
   };
 }
 
+// Detecta el servicio de video según la URL.
+function detectVideoService(url: string): 'youtube' | null {
+  if (/youtu(\.be|be\.com)/i.test(url)) return 'youtube';
+  return null;
+}
+
+// Genera las propiedades del iframe según el servicio detectado.
+function buildVideoIframeProps(service: 'youtube', url: string) {
+  switch (service) {
+    case 'youtube': {
+      const videoId = extractYouTubeId(url);
+
+      if (!videoId) return {};
+
+      return {
+        src: `https://www.youtube.com/embed/${videoId}`,
+        width: 560,
+        height: 315,
+        frameBorder: 0,
+        allow:
+          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+        allowFullScreen: true,
+        'data-service': 'youtube',
+      };
+    }
+  }
+}
+
 // Extrae el ID del video de YouTube.
-function extractVideoID(url: string): string {
+function extractYouTubeId(url: string): string | null {
   const match = url.match(/(?:v=|\/)([a-zA-Z0-9_-]{11})/);
-  return match ? match[1] : '';
+  return match ? match[1] : null;
 }
