@@ -118,14 +118,22 @@ export default function FormattedText({ entryType, text, alwaysExpanded = false 
             return <>{children}</>;
         },
         iframe: ({ node, ...props }) => {
-            const src = node?.properties?.src;
+            const properties = node?.properties ?? {};
+            const service = node?.properties?.['data-service'] || 'generic';
+
+            const src = typeof properties.src === 'string' ? properties.src : undefined;
+            const width = typeof properties.width === 'string' || typeof properties.width === 'number' ? properties.width : undefined;
+            const height = typeof properties.height === 'string' || typeof properties.height === 'number' ? properties.height : undefined;
+
             return (
                 <iframe
                     {...props}
-                    src={typeof src === 'string' ? src : undefined}
+                    src={src}
+                    width={width ?? '100%'}
+                    height={height ?? '315'}
                     allowFullScreen
                     loading="lazy"
-                    className="mb-4 aspect-video h-full w-full rounded border-0 last:mb-0"
+                    className={cn('mb-4 aspect-video h-full w-full rounded border-0 last:mb-0', service === 'youtube' && 'bg-muted')}
                 />
             );
         },
