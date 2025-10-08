@@ -109,8 +109,8 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
         <>
             {previewMode ? (
                 <div className="flex flex-col gap-2">
-                    <div className="bg-card text-card-foreground pointer-events-none rounded-xl border px-6 py-6 shadow-sm">
-                        <FormattedText entryType={formType} text={data.content} alwaysExpanded={true} />
+                    <div className="bg-card text-card-foreground rounded-xl border px-6 py-6 shadow-sm">
+                        <FormattedText entryType={formType} text={data.content} alwaysExpanded={true} disableLinks={true} />
                     </div>
                     <Button variant="outline" className="ml-auto" onClick={() => setPreviewMode(false)}>
                         {t('backToEdit')}
