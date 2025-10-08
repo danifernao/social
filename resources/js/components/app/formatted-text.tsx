@@ -16,6 +16,7 @@ interface Props {
     entryType: EntryType; // Puede ser "post" o "comment".
     text: string; // El texto que será formateado y mostrado.
     alwaysExpanded?: boolean; // Fuerza que el contenido se muestre expandido.
+    disableLinks?: boolean; // Inhabilita los enlaces.
 }
 
 // Define un tipo que extienda Components permitiendo claves extra (como "youtube").
@@ -29,7 +30,7 @@ type ExtendedComponents = Components & {
  * - Convierte menciones (@usuario), etiquetas (#tema) y direcciones web en enlaces.
  * - Muestra botón "Leer más" si el contenido excede 300px de alto para expandirlo.
  */
-export default function FormattedText({ entryType, text, alwaysExpanded = false }: Props) {
+export default function FormattedText({ entryType, text, alwaysExpanded = false, disableLinks = false }: Props) {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 
@@ -59,9 +60,14 @@ export default function FormattedText({ entryType, text, alwaysExpanded = false 
         h2: ({ children }) => <h2 className="mb-4 text-lg font-bold">{children}</h2>,
         a: ({ href, node, children }) => {
             if (!href) return <>{children}</>;
+
+            const handleClick = (e: React.MouseEvent) => {
+                if (disableLinks) e.preventDefault();
+            };
+
             if (href.startsWith('/')) {
                 return (
-                    <Link href={href ?? '#'} className="text-blue-600 hover:underline">
+                    <Link href={href ?? '#'} onClick={handleClick} className="text-blue-600 hover:underline">
                         {children}
                     </Link>
                 );
