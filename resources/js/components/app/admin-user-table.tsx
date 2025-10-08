@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Auth, User } from '@/types';
+import { canActOnUser } from '@/lib/utils';
+import { User } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
 import { format, parseISO } from 'date-fns';
 import { ArrowUpDown } from 'lucide-react';
@@ -22,11 +23,8 @@ export default function AdminUserTable({ users, previous, next }: Props) {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 
-    // Captura la URL de la página y el usuario autenticado proporcionados por Inertia.
-    const {
-        url,
-        props: { auth },
-    } = usePage<{ auth: Auth }>();
+    // Captura la URL de la página proporcionado por Inertia.
+    const { url } = usePage();
 
     // Obtiene los parámetros de la consulta actual (por ejemplo, ?query=user&orderBy=id).
     const queryParams = new URLSearchParams(url.split('?')[1]);
@@ -85,15 +83,6 @@ export default function AdminUserTable({ users, previous, next }: Props) {
     // Convierte una fecha ISO en formato corto y legible.
     const formatDate = (date: string) => {
         return format(parseISO(date), 'dd/MM/yyyy h:mm a');
-    };
-
-    // Determina si el usuario autenticado puede administrar al usuario especificado.
-    // No permite la acción en los siguientes casos:
-    //    - Es el mismo usuario.
-    //    - El usuario especificado es administrador, pero el autenticado no.
-    const canActOnUser = (user: User) => {
-        const isAllowed = auth.user.id !== user.id && (auth.user.is_admin || !user.is_admin);
-        return isAllowed;
     };
 
     // Devuelve una clase de color si "value" tiene contenido.
