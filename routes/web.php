@@ -7,6 +7,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReactionController;
@@ -70,6 +71,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::prefix('site')->name('site.')->group(function () {
           Route::get('/', [AdminSiteController::class, 'edit'])->name('edit');
           Route::patch('/', [AdminSiteController::class, 'update'])->name('update');
+        });
+
+        Route::prefix('pages')->name('page.')->group(function () {
+          Route::get('/', [PageController::class, 'index'])->name('index');
         });
 
         Route::prefix('users')->name('user.')->group(function () {
