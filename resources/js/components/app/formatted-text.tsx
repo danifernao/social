@@ -13,7 +13,7 @@ import remarkDirective from 'remark-directive';
 import { Button } from '../ui/button';
 
 interface Props {
-    entryType: EntryType; // Puede ser "post" o "comment".
+    entryType: EntryType | 'page'; // Puede ser "post", "comment" o "page".
     text: string; // El texto que será formateado y mostrado.
     alwaysExpanded?: boolean; // Fuerza que el contenido se muestre expandido.
     disableLinks?: boolean; // Inhabilita los enlaces.
