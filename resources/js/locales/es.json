@@ -1,6 +1,7 @@
 {
   "accept": "Aceptar",
   "activate": "Activar",
+  "actions": "Acciones",
   "accountStatus": "Cambiar el estado de la cuenta",  
   "accountStatusDescription": "Al inhabilitar una cuenta, se bloquea el inicio de sesión y se cierran todas las sesiones activas asociadas a ella.",
   "admin": "Admin",
@@ -31,6 +32,7 @@
   "confirmYourPassword": "Confirma tu contraseña",
   "confirmYourPasswordDescription": "Esta es una zona segura de la aplicación. Por favor, confirma tu contraseña antes de continuar.",
   "connections": "Conexiones",
+  "content": "Contenido",
   "create": "Crear",
   "createdAt": "Fecha de publicación",
   "createPage": "Crear página",
@@ -231,6 +233,7 @@
   "verified": "Verificado",
   "verifyEmail": "Verificar correo electrónico",
   "verifyEmailMessage": "Por favor, verifica tu dirección de correo electrónico haciendo clic en el enlace que acabamos de enviarte.",
+  "view": "Ver",
   "warning": "Advertencia",
   "warningDescription": "Procede con precaución, esta acción no se puede deshacer.",
   "welcome": "Bienvenido",
