@@ -35,6 +35,12 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
                       icon: null,
                       isActive: ['admin.site.edit'].includes(routeName),
                   },
+                  {
+                      title: t('pages'),
+                      href: route('admin.page.index'),
+                      icon: null,
+                      isActive: ['admin.page.index', 'admin.page.create', 'admin.page.edit'].includes(routeName),
+                  },
               ]
             : []),
         {
