@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Page } from '@/types/modules/page';
 import { Link, router } from '@inertiajs/react';
-import { format, parseISO } from 'date-fns';
+import { Edit, Eye, Trash } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
     AlertDialog,
@@ -29,11 +29,6 @@ export default function AdminPageTable({ pages, previous, next }: Props) {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 
-    // Convierte una fecha ISO en formato corto y legible.
-    const formatDate = (date: string) => {
-        return format(parseISO(date), 'dd/MM/yyyy h:mm a');
-    };
-
     // Gestiona la eliminación de una página informativa.
     const handleDelete = (id: number) => {
         router.delete(route('admin.page.destroy', id));
@@ -46,27 +41,31 @@ export default function AdminPageTable({ pages, previous, next }: Props) {
                     <TableHeader>
                         <TableRow className="[&_button]:px-0 [&_th]:px-4">
                             <TableHead>{t('title')}</TableHead>
-                            <TableHead>{t('createdAt')}</TableHead>
-                            <TableHead className="w-0"></TableHead>
-                            <TableHead className="w-0"></TableHead>
+                            <TableHead className="w-0 text-center">{t('actions')}</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {pages.length > 0 ? (
                             pages.map((page) => (
                                 <TableRow key={page.id} className="[&_td]:px-4">
-                                    <TableCell>{page.title}</TableCell>
-                                    <TableCell>{formatDate(page.created_at)}</TableCell>
                                     <TableCell>
-                                        <Button variant="outline" size="sm" asChild>
-                                            <Link href={route('admin.page.edit', page.id)}>{t('edit')}</Link>
-                                        </Button>
+                                        <Link href={route('admin.page.edit', page.id)}>{page.title}</Link>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="flex gap-3">
+                                        <Button variant="outline" size="sm" asChild>
+                                            <a href={route('page.show', page.slug)} target="_blank" title={t('view')} aria-label={t('view')}>
+                                                <Eye className="h-4 w-4" />
+                                            </a>
+                                        </Button>
+                                        <Button variant="outline" size="sm" asChild>
+                                            <Link href={route('admin.page.edit', page.id)} title={t('edit')} aria-label={t('edit')}>
+                                                <Edit className="h-4 w-4" />
+                                            </Link>
+                                        </Button>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
-                                                <Button variant="destructive" size="sm">
-                                                    {t('delete')}
+                                                <Button variant="destructive" size="sm" title={t('delete')} aria-label={t('delete')}>
+                                                    <Trash className="h-4 w-4" />
                                                 </Button>
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>

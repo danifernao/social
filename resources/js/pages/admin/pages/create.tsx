@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 /**
  *
  */
-export default function UsersEdit() {
+export default function PagesCreate() {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 
@@ -27,7 +27,7 @@ export default function UsersEdit() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={t('createPage')} />
-            <AdminLayout>
+            <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
                     <AdminPageForm />
                 </AppContentLayout>

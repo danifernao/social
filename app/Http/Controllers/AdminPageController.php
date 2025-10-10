@@ -29,6 +29,20 @@ class AdminPageController extends Controller
     }
 
     /**
+     * Muestra una página informativa específica.
+     * 
+     * @param string $slug Slug de la página a mostrar.
+     */
+    public function show(string $slug)
+    {
+        $page = Page::where('slug', $slug)->firstOrFail();
+
+        return inertia('admin/pages/show', [
+            'page' => (new PageResource($page))->resolve(),
+        ]);
+    }
+
+    /**
      * Muestra el formulario para crear una nueva página informativa.
      * 
      * @param Request $request Datos de la petición HTTP.

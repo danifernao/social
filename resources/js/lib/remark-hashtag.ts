@@ -30,7 +30,7 @@ export default function remarkHashtag({ entryType }: HashtagOptions) {
 
         const hashtag = match[0];
 
-        if (entryType === 'post') {
+        if (['page', 'post'].includes(entryType)) {
           parts.push({
             type: 'link',
             url: `/search?query=${encodeURIComponent(hashtag)}`,

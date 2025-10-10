@@ -95,6 +95,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/user/{user}', [ProfileController::class, 'show'])->name('profile.show');
 Route::get('/post/{post}', [PostController::class, 'show'])->name('post.show');
 Route::get('/post/{post}/comment/{comment}', [PostController::class, 'show'])->name('post.comment.show');
+Route::get('/page/{slug}', [AdminPageController::class, 'show'])->name('page.show');
 
 Route::get('/comment/{comment}', function (Request $request, Comment $comment) {
     return redirect()->route('post.comment.show', [
