@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminPageController;
 use App\Http\Controllers\AdminSiteController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\BlockUserController;
@@ -7,7 +8,6 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReactionController;
@@ -74,9 +74,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         Route::prefix('pages')->name('page.')->group(function () {
-          Route::get('/', [PageController::class, 'index'])->name('index');
+          Route::get('/', [AdminPageController::class, 'index'])->name('index');
+          Route::get('/create', [AdminPageController::class, 'create'])->name('create');
+          Route::post('/create', [AdminPageController::class, 'store'])->name('store');
+          Route::get('/{page}/edit', [AdminPageController::class, 'edit'])->name('edit');
+          Route::patch('/{page}/edit', [AdminPageController::class, 'update'])->name('update');
+          Route::delete('{page}', [AdminPageController::class, 'destroy'])->name('destroy');
         });
-
+        
         Route::prefix('users')->name('user.')->group(function () {
             Route::get('/', [AdminUserController::class, 'index'])->name('index');
             Route::get('create', [AdminUserController::class, 'create'])->name('create');
