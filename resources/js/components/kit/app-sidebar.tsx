@@ -13,60 +13,62 @@ export function AppSidebar() {
 
     const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
 
-    const navAuth = [
-        {
-            title: t('home'),
-            href: '/home',
-            icon: Home,
-        },
-        {
-            title: t('profile'),
-            href: route('profile.show', auth.user?.username),
-            icon: User,
-        },
-        {
-            title: t('explore'),
-            href: `/search`,
-            icon: Search,
-        },
-        {
-            title: t('connections'),
-            href: route('follow.following', auth.user?.username),
-            icon: Users,
-            isActive: ['follow.following', 'follow.followers'].includes(routeName),
-        },
-        {
-            name: 'notifications',
-            title: t('notifications'),
-            href: route('notification.index'),
-            icon: Bell,
-        },
-        ...(auth.user?.can_moderate
-            ? [
-                  {
-                      title: t('management'),
-                      href: route('admin.index'),
-                      icon: UserCog,
-                      isActive: ['admin.site.edit', 'admin.user.index', 'admin.user.create', 'admin.user.edit'].includes(routeName),
-                  },
-              ]
-            : []),
-    ];
+    let mainNavItems: NavItem[];
 
-    const navGuest = [
-        {
-            title: t('login'),
-            href: route('login'),
-            icon: LogIn,
-        },
-        {
-            title: t('register'),
-            href: route('register'),
-            icon: UserPlus,
-        },
-    ];
-
-    const mainNavItems: NavItem[] = auth.user ? navAuth : navGuest;
+    if (auth.user) {
+        mainNavItems = [
+            {
+                title: t('home'),
+                href: '/home',
+                icon: Home,
+            },
+            {
+                title: t('profile'),
+                href: route('profile.show', auth.user.username),
+                icon: User,
+            },
+            {
+                title: t('explore'),
+                href: `/search`,
+                icon: Search,
+            },
+            {
+                title: t('connections'),
+                href: route('follow.following', auth.user.username),
+                icon: Users,
+                isActive: ['follow.following', 'follow.followers'].includes(routeName),
+            },
+            {
+                name: 'notifications',
+                title: t('notifications'),
+                href: route('notification.index'),
+                icon: Bell,
+            },
+            ...(auth.user.can_moderate
+                ? [
+                      {
+                          title: t('management'),
+                          href: route('admin.index'),
+                          icon: UserCog,
+                          isActive: ['admin.site.edit', 'admin.user.index', 'admin.user.create', 'admin.user.edit'].includes(routeName),
+                      },
+                  ]
+                : []),
+        ];
+    } else {
+        mainNavItems = [
+            {
+                title: t('login'),
+                href: route('login'),
+                icon: LogIn,
+            },
+            {
+                title: t('register'),
+                href: route('register'),
+                icon: UserPlus,
+            },
+        ];
+    }
 
     const footerNavItems: NavItem[] = [];
 
