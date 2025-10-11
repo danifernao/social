@@ -24,6 +24,11 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
     // Obtiene el usuario autenticado y el nombre de la ruta proporcionados por Inertia.
     const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
 
+    // Obtiene el idioma pasado por parámetro URL.
+    const lang = {
+        ...(route().params.lang ? { lang: route().params.lang } : {}),
+    };
+
     const currentPath = window.location.pathname;
 
     const sidebarNavItems: NavItem[] = [
@@ -37,7 +42,7 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
                   },
                   {
                       title: t('pages'),
-                      href: route('admin.page.index'),
+                      href: route('admin.page.index', lang),
                       icon: null,
                       isActive: ['admin.page.index', 'admin.page.create', 'admin.page.edit'].includes(routeName),
                   },

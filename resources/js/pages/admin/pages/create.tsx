@@ -13,10 +13,16 @@ export default function PagesCreate() {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 
+    // Obtiene el idioma pasado por parámetro URL.
+    const lang = {
+        ...(route().params.lang ? { lang: route().params.lang } : {}),
+    };
+
+    // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('pagesManagement'),
-            href: route('admin.page.index'),
+            href: route('admin.page.index', lang),
         },
         {
             title: t('createPage'),

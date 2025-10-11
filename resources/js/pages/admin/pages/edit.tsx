@@ -17,10 +17,11 @@ export default function PagesEdit() {
     // Captura el usuario proporcionado por Inertia.
     const { page } = usePage<{ page: Page }>().props;
 
+    // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('pagesManagement'),
-            href: route('admin.user.index'),
+            href: route('admin.page.index', { lang: page.language }),
         },
         {
             title: page.title,

@@ -2,12 +2,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Auth } from '@/types';
+import { Locale } from '@/types/modules/locale';
 import { Page } from '@/types/modules/page';
-import { Link, useForm } from '@inertiajs/react';
+import { Link, router, useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TextareaAutosize from 'react-textarea-autosize';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import FormattedText from './formatted-text';
 import FormattingToolbar from './formatting-toolbar';
 
@@ -24,6 +27,15 @@ export default function AdminPageForm({ page }: Props) {
     // Obtiene las traducciones de la aplicación.
     const { t } = useTranslation();
 
+    // Captura la lista de idiomas y el usuario autenticado proporcionados por Inertia.
+    const { locales, auth } = usePage<{ locales: Locale[]; auth: Auth }>().props;
+
+    // Obtiene el código de idioma pasado como consulta por URL.
+    const queryLang = new URLSearchParams(window.location.search).get('lang') ?? undefined;
+
+    // Determina si el idioma pasado como parámetro por URL es válido.
+    const isValidLang = queryLang ? locales.some(({ lang }) => lang === queryLang) : false;
+
     // Referencia al elemento textarea del formulario.
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -38,19 +50,27 @@ export default function AdminPageForm({ page }: Props) {
         title: page?.title ?? '',
         slug: page?.slug ?? '',
         content: page?.content ?? '',
+        language: page?.language ?? (isValidLang ? queryLang : auth.user.language),
     });
 
-    /**
-     * Gestiona el envío del formulario, enviando la petición adecuada según el modo.
-     */
+    // Gestiona el envío del formulario, enviando la petición adecuada según el modo.
     const handleSubmit = (e: React.FormEvent) => {
         if (isEditing) {
             patch(route('admin.page.edit', page!.id));
         } else {
             post(route('admin.page.create'));
         }
-
         e.preventDefault();
+    };
+
+    // Actualiza el idioma seleccionado y cambia el parámetro de la URL.
+    const handleLanguageChange = (lang: string) => {
+        setData('language', lang);
+        router.replace({
+            url: `${window.location.pathname}?lang=${lang}`,
+            preserveState: true,
+            preserveScroll: true,
+        });
     };
 
     return (
@@ -62,6 +82,26 @@ export default function AdminPageForm({ page }: Props) {
 
                 <CardContent>
                     <div className="space-y-2 py-4">
+                        <Label htmlFor="language" className="block text-sm font-medium">
+                            {t('language')}
+                        </Label>
+                        <Select disabled={isEditing || processing} value={data.language} onValueChange={handleLanguageChange}>
+                            <SelectTrigger id="language" className="w-48">
+                                <SelectValue placeholder={t('selectLanguage')} />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {locales.map(({ lang, label }) => (
+                                    <SelectItem key={lang} value={lang}>
+                                        {label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <p className="text-muted-foreground text-sm italic">{t('pageLanguageDescription')}</p>
+                        {errors.language && <p className="text-sm text-red-500">{errors.language}</p>}
+                    </div>
+
+                    <div className="space-y-2 py-4">
                         <Label htmlFor="title" className="block text-sm font-medium">
                             {t('title')}
                         </Label>
@@ -71,6 +111,7 @@ export default function AdminPageForm({ page }: Props) {
                             onChange={(e) => setData('title', e.target.value)}
                             placeholder={t('pageTitle')}
                             disabled={processing}
+                            className="w-full max-w-xl"
                         />
                         {errors.title && <p className="text-sm text-red-500">{errors.title}</p>}
                     </div>
@@ -85,7 +126,9 @@ export default function AdminPageForm({ page }: Props) {
                             onChange={(e) => setData('slug', e.target.value)}
                             placeholder={t('pageSlug')}
                             disabled={processing}
+                            className="w-full max-w-xl"
                         />
+                        <p className="text-muted-foreground text-sm italic">{t('pageSlugDescription')}</p>
                         {errors.slug && <p className="text-sm text-red-500">{errors.slug}</p>}
                     </div>
 
@@ -132,7 +175,7 @@ export default function AdminPageForm({ page }: Props) {
                                     )}
 
                                     <Button variant="ghost" size="sm" className="ml-auto" asChild>
-                                        <Link href={route('admin.page.index')}>{t('cancel')}</Link>
+                                        <Link href={route('admin.page.index', { lang: data.language })}>{t('cancel')}</Link>
                                     </Button>
                                 </div>
                             </>

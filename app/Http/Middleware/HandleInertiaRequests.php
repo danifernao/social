@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Http\Resources\UserResource;
 use App\Models\SiteSetting;
-use Illuminate\Foundation\Inspiring;
+use App\Utils\Locales;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
@@ -39,8 +39,6 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
-
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -67,7 +65,7 @@ class HandleInertiaRequests extends Middleware
             'post' => fn () => $request->session()->get('post'),
             'comment' => fn () => $request->session()->get('comment'),
             'unreadNotisCount' => fn () => $request->user()?->unreadNotifications()->count() ?? 0,
-            'quote' => ['message' => trim($message), 'author' => trim($author)],
+            'locales' => Locales::all(),
         ];
     }
 }

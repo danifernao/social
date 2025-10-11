@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Page;
 use App\Http\Resources\PageResource;
+use App\Rules\SlugRule;
+use App\Utils\Locales;
 use App\Utils\SlugGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AdminPageController extends Controller
 {
@@ -21,21 +24,36 @@ class AdminPageController extends Controller
             abort(403);
         }
 
-        $pages = Page::latest()->cursorPaginate(50);
+        // Usa idioma pasado como parámetro de consulta o el del usuario autenticado.
+        $language = $request->query('lang', $request->user()->language);
+
+        // Valida que sea un idioma permitido, si no, usa el idioma del usuario.
+        if (!in_array($language, Locales::codes(), true)) {
+            $language = $request->user()->language;
+        }
+
+        $pages = Page::where('language', $language)
+            ->latest()
+            ->cursorPaginate(50)
+            ->withQueryString();
 
         return inertia('admin/pages/index', [
             'pages' => PageResource::collection($pages),
+            'language' => $language,
         ]);
     }
 
     /**
      * Muestra una página informativa específica.
      * 
+     * @param string $lang Idioma de la página a mostrar.
      * @param string $slug Slug de la página a mostrar.
      */
-    public function show(string $slug)
+    public function show(string $lang, string $slug)
     {
-        $page = Page::where('slug', $slug)->firstOrFail();
+        $page = Page::where('language', $lang)
+            ->where('slug', $slug)
+            ->firstOrFail();
 
         return inertia('admin/pages/show', [
             'page' => (new PageResource($page))->resolve(),
@@ -71,19 +89,24 @@ class AdminPageController extends Controller
 
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255', new SlugRule()],
+            'language' => ['required', 'string', 'in:' . implode(',', Locales::codes())],
             'content' => ['nullable', 'string'],
         ]);
 
         // Genera un slug válido y único.
         $validated['slug'] = SlugGenerator::generate(
+            $validated['title'],
             $validated['slug'] ?? null,
-            $validated['title']
+            $validated['language'],
         );
 
-        Page::create($validated);
+        $page = new Page($validated);
+        $page->language = $validated['language'];
+        $page->save();
 
-        return redirect()->route('admin.page.index')->with('message', 'Página creada.');
+        return redirect()->route('admin.page.index', ['lang' => $page->language])
+            ->with('message', 'Página creada.');
     }
 
     /**
@@ -119,20 +142,22 @@ class AdminPageController extends Controller
 
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255', new SlugRule($page)],
             'content' => ['nullable', 'string'],
         ]);
 
         // Genera slug válido y único (ignorando la página actual).
         $validated['slug'] = SlugGenerator::generate(
-            $validated['slug'] ?? null,
             $validated['title'],
-            $page->id
+            $validated['slug'] ?? null,
+            $page->language,
+            $page->id,
         );
 
         $page->update($validated);
 
-        return redirect()->route('admin.page.index')->with('message', 'Página actualizada.');
+        return redirect()->route('admin.page.index', ['lang' => $page->language])
+            ->with('message', 'Página actualizada.');
     }
 
     /**
@@ -150,6 +175,7 @@ class AdminPageController extends Controller
 
         $page->delete();
 
-        return redirect()->route('admin.page.index')->with('message', 'Página eliminada.');
+        return redirect()->route('admin.page.index', ['lang' => $page->language])
+            ->with('message', 'Página eliminada.');
     }
 }

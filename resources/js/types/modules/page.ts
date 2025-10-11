@@ -2,6 +2,7 @@ export interface Page {
     id: number;
     title: string;
     slug: string;
+    language: string;
     content: string | null;
     created_at: string;
 }
