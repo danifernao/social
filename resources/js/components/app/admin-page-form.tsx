@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Auth } from '@/types';
 import { Locale } from '@/types/modules/locale';
-import { Page } from '@/types/modules/page';
+import { Page, PageType } from '@/types/modules/page';
 import { Link, router, useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { useRef, useState } from 'react';
@@ -47,10 +47,11 @@ export default function AdminPageForm({ page }: Props) {
 
     // Inicializa el estado del formulario usando el hook de Inertia.
     const { data, setData, post, patch, processing, errors } = useForm({
+        language: page?.language ?? (isValidLang ? queryLang : auth.user.language),
+        type: page?.type ?? 'normal',
         title: page?.title ?? '',
         slug: page?.slug ?? '',
         content: page?.content ?? '',
-        language: page?.language ?? (isValidLang ? queryLang : auth.user.language),
     });
 
     // Gestiona el envío del formulario, enviando la petición adecuada según el modo.
@@ -81,6 +82,7 @@ export default function AdminPageForm({ page }: Props) {
                 </CardHeader>
 
                 <CardContent>
+                    {/* Idioma */}
                     <div className="space-y-2 py-4">
                         <Label htmlFor="language" className="block text-sm font-medium">
                             {t('language')}
@@ -101,6 +103,26 @@ export default function AdminPageForm({ page }: Props) {
                         {errors.language && <p className="text-sm text-red-500">{errors.language}</p>}
                     </div>
 
+                    {/* Tipo de página */}
+                    <div className="space-y-2 py-4">
+                        <Label htmlFor="type" className="block text-sm font-medium">
+                            {t('type')}
+                        </Label>
+                        <Select disabled={processing} value={data.type} onValueChange={(value: PageType) => setData('type', value)}>
+                            <SelectTrigger id="type" className="w-48">
+                                <SelectValue placeholder={t('selectPageType')} />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="normal">{t('pageTypes.normal')}</SelectItem>
+                                <SelectItem value="policy">{t('pageTypes.policy')}</SelectItem>
+                                <SelectItem value="guidelines">{t('pageTypes.guidelines')}</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <p className="text-muted-foreground text-sm italic">{t('pageTypeDescription')}</p>
+                        {errors.type && <p className="text-sm text-red-500">{errors.type}</p>}
+                    </div>
+
+                    {/* Título de la página */}
                     <div className="space-y-2 py-4">
                         <Label htmlFor="title" className="block text-sm font-medium">
                             {t('title')}
@@ -116,6 +138,7 @@ export default function AdminPageForm({ page }: Props) {
                         {errors.title && <p className="text-sm text-red-500">{errors.title}</p>}
                     </div>
 
+                    {/* Slug de la URL de la página */}
                     <div className="space-y-2 py-4">
                         <Label htmlFor="slug" className="block text-sm font-medium">
                             {t('slug')}
@@ -132,6 +155,7 @@ export default function AdminPageForm({ page }: Props) {
                         {errors.slug && <p className="text-sm text-red-500">{errors.slug}</p>}
                     </div>
 
+                    {/* Contenido de la página */}
                     <div className="space-y-2 py-4">
                         <Label htmlFor="content" className="block text-sm font-medium">
                             {t('content')}

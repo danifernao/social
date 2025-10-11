@@ -41,6 +41,7 @@ export default function AdminPageTable({ pages, previous, next }: Props) {
                     <TableHeader>
                         <TableRow className="[&_button]:px-0 [&_th]:px-4">
                             <TableHead>{t('title')}</TableHead>
+                            <TableHead>{t('type')}</TableHead>
                             <TableHead className="w-0 text-center">{t('actions')}</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -50,6 +51,11 @@ export default function AdminPageTable({ pages, previous, next }: Props) {
                                 <TableRow key={page.id} className="[&_td]:px-4">
                                     <TableCell>
                                         <Link href={route('admin.page.edit', { page: page.id, lang: page.language })}>{page.title}</Link>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Link href={route('admin.page.edit', { page: page.id, lang: page.language })}>
+                                            {t(`pageTypes.${page.type}`)}
+                                        </Link>
                                     </TableCell>
                                     <TableCell className="flex gap-3">
                                         <Button variant="outline" size="sm" asChild>
