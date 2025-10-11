@@ -24,8 +24,13 @@ class AdminPageController extends Controller
             abort(403);
         }
 
-        // Usa idioma pasado como parámetro de consulta o el del usuario autenticado.
-        $language = $request->query('lang', $request->user()->language);
+        // Obtiene el idioma pasado como parámetro de consulta.
+        $language = $request->query('lang');
+
+        // Si el idioma pasado no es válido, usa el idioma del usuario autenticado.
+        if (!in_array($language, Locales::codes(), true)) {
+            $language = $request->user()->language;
+        }
 
         // Valida que sea un idioma permitido, si no, usa el idioma del usuario.
         if (!in_array($language, Locales::codes(), true)) {
@@ -91,6 +96,7 @@ class AdminPageController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', new SlugRule()],
             'language' => ['required', 'string', 'in:' . implode(',', Locales::codes())],
+            'type' => ['required', Rule::in(['normal', 'policy', 'guidelines'])],
             'content' => ['nullable', 'string'],
         ]);
 
@@ -100,6 +106,15 @@ class AdminPageController extends Controller
             $validated['slug'] ?? null,
             $validated['language'],
         );
+
+        // Valida que no haya duplicados de policy/guidelines por idioma.
+        if (in_array($validated['type'], ['policy', 'guidelines'])) {
+            if (Page::existsOfTypeInLanguage($validated['type'], $validated['language'])) {
+                return back()->withErrors([
+                    'type' => 'Ya existe una página de este tipo para este idioma.',
+                ]);
+            }
+        }
 
         $page = new Page($validated);
         $page->language = $validated['language'];
@@ -143,6 +158,7 @@ class AdminPageController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', new SlugRule($page)],
+            'type' => ['required', Rule::in(['normal', 'policy', 'guidelines'])],
             'content' => ['nullable', 'string'],
         ]);
 
@@ -153,6 +169,15 @@ class AdminPageController extends Controller
             $page->language,
             $page->id,
         );
+
+        // Valida que no haya duplicados de policy/guidelines por idioma.
+        if (in_array($validated['type'], ['policy', 'guidelines'])) {
+            if (Page::existsOfTypeInLanguage($validated['type'], $page->language, $page->id)) {
+                return back()->withErrors([
+                    'type' => 'Ya existe una página de este tipo para este idioma.',
+                ]);
+            }
+        }
 
         $page->update($validated);
 

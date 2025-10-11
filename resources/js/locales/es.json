@@ -127,6 +127,12 @@
   "pageSlugDescription": "Si el campo se deja vacío, la página se guardará con un identificador aleatorio.",
   "pagesManagement": "Administración de páginas",
   "pageTitle": "Título de la página",
+  "pageTypeDescription": "Solo se permite una página de Política de privacidad y una de Reglas de la comunidad por idioma.",
+  "pageTypes": {
+    "normal": "Página normal",
+    "policy": "Política de privacidad",
+    "guidelines": "Reglas de la comunidad"
+  },
   "partial": "parcial",
   "password": "Contraseña",
   "passwordSettings": "Configuración de contraseña",
@@ -169,6 +175,7 @@
   "searchUserPlaceholder": "Buscar por nombre o ID de usuario...",
   "seeFullThread": "Ver hilo completo",
   "selectLanguage": "Seleccionar idioma",
+  "selectPageType": "Seleccionar tipo de página",
   "sendPasswordResetLink": "Enviar enlace para restablecer contraseña",
   "sendVerificationEmail": "Enviar correo electrónico de verificación de cuenta.",
   "settings": "Configuración",
@@ -215,6 +222,7 @@
     "unorderedList": "Lista sin orden",
     "video": "Video"
   },
+  "type": "Tipo",
   "unblock": "Desbloquear",
   "unfollow": "Dejar de seguir",
   "updatePassword": "Actualizar contraseña",

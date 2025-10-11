@@ -128,6 +128,12 @@
   "pageSlugDescription": "If the field is left empty, the page will be saved with a random identifier.",
   "pagesManagement": "Pages management",
   "pageTitle": "Page title",
+  "pageTypeDescription": "Only one Privacy Policy page and one Community Guidelines page are allowed per language.",
+  "pageTypes": {
+    "normalPage": "Normal page",
+    "privacyPolicy": "Privacy policy",
+    "communityGuidelines": "Community guidelines"
+  },
   "partial": "partial",
   "password": "Password",
   "passwordSettings": "Password settings",
@@ -170,6 +176,7 @@
   "searchUserPlaceholder": "Search by name or user ID...",
   "seeFullThread": "See full thread",
   "selectLanguage": "Select language",
+  "selectPageType": "Select page type",
   "sendPasswordResetLink": "Send password reset link",
   "sendVerificationEmail": "Send account verification email.",
   "settings": "Settings",
@@ -215,6 +222,7 @@
     "unorderedList": "Unordered list",
     "video": "Video"
   },
+  "type": "Type",
   "unblock": "Unblock",
   "unfollow": "Unfollow",
   "updatePassword": "Update password",
