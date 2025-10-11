@@ -49,19 +49,30 @@ export default function AdminPageTable({ pages, previous, next }: Props) {
                             pages.map((page) => (
                                 <TableRow key={page.id} className="[&_td]:px-4">
                                     <TableCell>
-                                        <Link href={route('admin.page.edit', page.id)}>{page.title}</Link>
+                                        <Link href={route('admin.page.edit', { page: page.id, lang: page.language })}>{page.title}</Link>
                                     </TableCell>
                                     <TableCell className="flex gap-3">
                                         <Button variant="outline" size="sm" asChild>
-                                            <a href={route('page.show', page.slug)} target="_blank" title={t('view')} aria-label={t('view')}>
+                                            <a
+                                                href={route('page.show', { lang: page.language, slug: page.slug })}
+                                                target="_blank"
+                                                title={t('view')}
+                                                aria-label={t('view')}
+                                            >
                                                 <Eye className="h-4 w-4" />
                                             </a>
                                         </Button>
+
                                         <Button variant="outline" size="sm" asChild>
-                                            <Link href={route('admin.page.edit', page.id)} title={t('edit')} aria-label={t('edit')}>
+                                            <Link
+                                                href={route('admin.page.edit', { page: page.id, lang: page.language })}
+                                                title={t('edit')}
+                                                aria-label={t('edit')}
+                                            >
                                                 <Edit className="h-4 w-4" />
                                             </Link>
                                         </Button>
+
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
                                                 <Button variant="destructive" size="sm" title={t('delete')} aria-label={t('delete')}>

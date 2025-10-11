@@ -18,6 +18,7 @@ class PageResource extends JsonResource
             'id'              => $this->id,
             'title'           => $this->title,
             'slug'            => $this->slug,
+            'language'        => $this->language,
             'content'         => $this->content,
             'created_at'      => $this->created_at,
             'updated_at'      => $this->updated_at,

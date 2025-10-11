@@ -13,14 +13,14 @@ export default function PagesShow() {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 
-    // Captura el usuario autenticado, el usuario del perfil y la lista de publicaciones proporcionados por Inertia.
+    // Captura los datos de la página actual proporcionados por Inertia.
     const { page } = usePage<{ page: Page }>().props;
 
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: page.title,
-            href: route('page.show', page.slug),
+            href: route('page.show', { lang: page.language, slug: page.slug }),
         },
     ];
 
