@@ -130,6 +130,7 @@
   "pageTypeDescription": "Solo se permite una página de Política de privacidad y una de Reglas de la comunidad por idioma.",
   "pageTypes": {
     "normal": "Página normal",
+    "terms": "Términos y condiciones",
     "policy": "Política de privacidad",
     "guidelines": "Reglas de la comunidad"
   },
@@ -152,6 +153,11 @@
   "registerDescription": "Ingresa tus datos a continuación para crear tu cuenta.",
   "registerTitle": "Crea una cuenta",  
   "registered": "Registrado",
+  "registrationDisclaimer": {
+    "terms": "Al registrarte, aceptas nuestros <0>términos y condiciones</0>.",
+    "policy": "Al registrarte, aceptas uestra <0>política de privacidad</0>.",
+    "termsAndPolicy": "Al registrarte, aceptas nuestros <0>términos y condiciones</0> y nuestra <1>política de privacidad</1>."
+  },
   "rememberMe": "Recuérdame",
   "removeAvatar": "Quitar avatar",
   "removeReaction": "Quitar reacción",

@@ -130,9 +130,10 @@
   "pageTitle": "Page title",
   "pageTypeDescription": "Only one Privacy Policy page and one Community Guidelines page are allowed per language.",
   "pageTypes": {
-    "normalPage": "Normal page",
-    "privacyPolicy": "Privacy policy",
-    "communityGuidelines": "Community guidelines"
+    "normal": "Normal page",
+    "terms": "Terms and conditions",
+    "policy": "Privacy policy",
+    "guidelines": "Community guidelines"
   },
   "partial": "partial",
   "password": "Password",
@@ -153,6 +154,11 @@
   "registerDescription": "Enter your details below to create your account.",
   "registerTitle": "Create an account",
   "registered": "Registered",
+  "registrationDisclaimer": {
+    "terms": "By registering, you accept our <0>terms and conditions</0>.",
+    "policy": "By registering, you accept our <0>privacy policy</0>.",
+    "termsAndPolicy": "By registering, you accept our <0>terms and conditions</0> and our <1>privacy policy</1>."
+  },
   "rememberMe": "Remember me",
   "removeAvatar": "Remove avatar",
   "removeReaction": "Remove reaction",
