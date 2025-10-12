@@ -57,10 +57,10 @@ export default function ConfirmActionDialog({ open, onOpenChange, password, onPa
             <DialogContent>
                 <form onSubmit={handleSubmit}>
                     <DialogHeader>
-                        <DialogTitle>{t('confirmAction')}</DialogTitle>
+                        <DialogTitle>{t('admin.confirmAction.title')}</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
-                        <p>{t('confirmActionDescription')}</p>
+                        <p>{t('admin.confirmAction.description')}</p>
                         <Input
                             type="password"
                             placeholder="Contraseña"
@@ -71,10 +71,10 @@ export default function ConfirmActionDialog({ open, onOpenChange, password, onPa
                     </div>
                     <DialogFooter className="mt-4">
                         <Button variant="outline" onClick={() => onOpenChange(false)}>
-                            {t('cancel')}
+                            {t('common.cancel')}
                         </Button>
                         <Button type="submit" ref={buttonRef} disabled={!password.trim()}>
-                            {t('confirm')}
+                            {t('common.confirm')}
                         </Button>
                     </DialogFooter>
                 </form>

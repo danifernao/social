@@ -1,204 +1,261 @@
 {
-  "accept": "Accept",
-  "activate": "Activate",
-  "actions": "Actions",
-  "accountStatus": "Change account status",
-  "accountStatusDescription": "Disabling an account blocks login and logs out all active sessions.",
-  "admin": "Admin",
-  "administrator": "Administrator",
-  "alreadyHaveAccount": "Already have an account? <0>Log in</0>",
-  "appearance": "Appearance",
-  "appearanceSettings": "Appearance settings",
-  "appearanceSettingsDescription": "Update your account's appearance settings.",
-  "avatar": "Avatar",
-  "avatarSizeAndFormat": "Max size: 2MB. PNG or JPG only.",
-  "backToEdit": "Back to edit",
-  "block": "Block",
-  "cancel": "Cancel",
-  "change": "Change",
-  "changeEmail": "Change email",
-  "changePassword": "Change password",
-  "changeRole": "Change role",
-  "changeUsername": "Change username",
-  "changeUsernameDescription": "If the field is left empty, the record will be saved with a random username.",
-  "clickToSendVerificationEmail": "Click here to resend the verification email.",
-  "comment": "Comment",
-  "commentDeleted": "Comment deleted",
-  "comments": "Comments",
-  "confirm": "Confirm",
-  "confirmAction": "Confirm action",
-  "confirmActionDescription": "To continue, enter your privileged account password.",
-  "confirmPassword": "Confirm password",
-  "confirmYourPassword": "Confirm your password",
-  "confirmYourPasswordDescription": "This is a secure area of the application. Please confirm your password before continuing.",
-  "connections": "Connections",
-   "content": "Content",
-  "create": "Create",
-  "createdAt": "Publication date",
-  "createPage": "Create page",
-  "createPost": "Post",
-  "createUser": "Create user",
-  "createUserDescription": "Fill in the fields to create a new user.",
-  "currentPassword": "Current password",
-  "dark": "Dark",
-  "deactivate": "Deactivate",
-  "delete": "Delete",
-  "deleteAccount": "Delete account",
-  "deleteAccountConfirmation": "Are you sure you want to delete your account?",
-  "deleteAccountConfirmationDescription": "Once your account is deleted, all its resources and data will be permanently removed. Enter your password to confirm permanent deletion.",
-  "deleteAccountDescription": "Delete your account and all its resources",
-  "deleteAvatar": "Delete avatar",
-  "deleteComment": "Delete comment",
-  "deleteCommentConfirmation": "Are you sure you want to delete this comment? This action cannot be undone.",
-  "deletePage": "Delete page",
-  "deletePageConfirmation": "Are you sure you want to delete this page? This action is irreversible.",
-  "deletePost": "Delete post",
-  "deletePostConfirmation": "Are you sure you want to delete this post? This action cannot be undone.",
-  "deleteUserAccountDescription": "Deletes the user account and all associated data.",
-  "description": "Description",
-  "disabled": "Disabled",
-  "dummyEmail": "email@example.com",
-  "edit": "Edit",
-  "editComment": "Edit comment",
-  "editCommentDescription": "Edit the content of your comment.",
-  "editPage": "Edit page", 
-  "editPost": "Edit post",
-  "editPostDescription": "Edit the content of your post.",
-  "edited": "Edited",
-  "email": "Email",
-  "emailAddress": "Email address",
-  "emailNoVerified": "Your email address is not verified.",
-  "emptyMessage": "Nothing to display yet.",
-  "enabled": "Enabled",
-  "error": "Oops! Unexpected error.",
-  "example": "Example",
-  "explore": "Explore",
-  "follow": "Follow",
-  "followedByUser": "Followed by {{username}}",
-  "followers": "Followers",
-  "following": "Following",
-  "forgotPassword": "Forgot your password?",
-  "forgotPasswordDescription": "Enter your email to receive a password reset link.",
-  "hasCommentedInPost": "<0>{{username}}</0> has <1>commented</1> on a post you're participating in.",
-  "hasCommentedOnYourPost": "<0>{{username}}</0> has <1>commented</1> on your post.",
-  "hasFollowedYou": "<0>{{username}}</0> <1>followed</1> you.",
-  "hashtag": "Hashtag",
-  "hasMentionedYouInComment": "<0>{{username}}</0> <1>mentioned</1> you in a comment.",
-  "hasMentionedYouInPost": "<0>{{username}}</0> <1>mentioned</1> you in a post.",
-  "hasPostOnYourProfile": "<0>{{username}}</0> has <1>posted</1> on your profile.",
-  "hideContent": "Hide content",
-  "home": "Home",
-  "id": "ID",
-  "language": "Language",
-  "languageSettings": "Language settings",
-  "languageSettingsDescription": "Change the interface language.",
-  "light": "Light",
-  "loadMore": "Load more",
-  "loading": "Loading",
-  "login": "Log in",
-  "loginDescription": "Enter your email and password to log in.",
-  "loginTitle": "Log in to your account",
-  "logout": "Log out",
-  "manage": "Manage",
-  "management": "Management",
-  "managementDescription": "Manage the configuration and administration of the social network.",
-  "manageUser": "Manage user",
-  "markAsRead": "Mark as read",
-  "menu": "Menu",
-  "mod": "Mod",
-  "moderator": "Moderator",
-  "nComments": "{{total}} comments",
-  "newEmail": "New email",
-  "newPassword": "New password",
-  "next": "Next",
-  "no": "No",
-  "noAccountYet": "Don't have an account? <0>Create one</0>",
-  "noComments": "No one has commented yet.",
-  "noFollowers": "This user has no followers yet.",
-  "noFollowing": "This user isn’t following anyone yet.",
-  "noPages": "No pages yet.",
-  "noPosts": "No posts yet.",
-  "noResults": "No results found.",
-  "notifications": "Notifications",
-  "options": "Options",
-  "pageContent": "Page Content",
-  "pages": "Pages",
-  "pageLanguageDescription": "The language cannot be changed once the page is created.",
-  "pageSlug": "Page slug",
-  "pageSlugDescription": "If the field is left empty, the page will be saved with a random identifier.",
-  "pagesManagement": "Pages management",
-  "pageTitle": "Page title",
-  "pageTypeDescription": "Only one Privacy Policy page and one Community Guidelines page are allowed per language.",
-  "pageTypes": {
-    "normal": "Normal page",
-    "about": "About",
-    "terms": "Terms and conditions",
-    "policy": "Privacy policy",
-    "guidelines": "Community guidelines"
+  "admin": {
+    "confirmAction": {
+      "title": "Confirm Action",
+      "description": "To continue, please enter your privileged user password."
+    },
+    "layout": {
+      "title": "Administration",
+      "description": "Manage the settings and administration of the social network."
+    },
+    "page": {
+      "create": {
+        "title": "Create Page"
+      },
+      "edit": {
+        "title": "Edit Page"
+      },
+      "form": {
+        "content": {
+          "placeholder": "Page content"
+        },
+        "language": {
+          "notice": "The language cannot be changed once the page is created."
+        },
+        "slug": {
+          "title": "URL identifier (slug)",
+          "notice": "If left empty, the page will be saved with a random identifier.",
+          "placeholder": "Page URL ending"
+        },
+        "title": {
+          "placeholder": "Page title"
+        },
+        "type": {
+          "notice": "Only one About, Terms and Conditions, Privacy Policy, and Community Guidelines page is allowed per language.",
+          "placeholder": "Select page type"
+        }
+      },
+      "index": {
+        "create": "Create Page",
+        "delete": {
+          "title": "Delete Page",
+          "description": "Are you sure you want to delete this page? This action cannot be undone."
+        }
+      },
+      "layout": {
+        "menu": "Pages",
+        "title": "Page Administration"
+      }
+    },
+    "site": {
+      "edit": {
+        "notice": "Enable or disable registration of new users.",
+        "title": "User Registration"
+      },
+      "layout": {
+        "menu": "General",
+        "title": "Website Administration"
+      }
+    },
+    "user": {
+      "create": {
+        "confirm": {
+          "title": "Confirm Action",
+          "description": "To continue, please enter your privileged user password."
+        },
+        "description": "Fill out the fields to register a new user.",
+        "passwordNotice": "A link will be sent to the registered email for the user to set their password.",
+        "title": "Create User"
+      },
+      "edit": {
+        "avatar": {
+          "title": "Remove Avatar"
+        },
+        "confirm": {
+          "title": "Confirm Action",
+          "description": "To continue, enter your privileged user password."
+        },
+        "deleteAccount": {
+          "description": "Delete the user account and all associated data.",
+          "title": "Delete User"              
+        },
+        "email": {
+          "sendVerificationEmail": "Send account verification email.",
+          "title": "Change Email"
+        },
+        "password": {
+          "title": "Change Password"
+        },
+        "resetPassword": {
+          "description": "Send the user an email to reset their password.",
+          "title": "Reset Password",              
+          "useRandomPass": "Replace the current password with a random one."
+        },
+        "role": {
+          "title": "Change Role",
+          "description": {        
+            "User": "Manage their account, post, comment, and follow others.",
+            "Moderator": "All user privileges plus manage posts and other users' accounts.",
+            "Administrator": "All of the above plus manage the site, assign roles, and delete accounts."
+          },
+          "placeholder": "Select a role"
+        },
+        "status": {
+          "notice": "Disabling an account blocks login and closes all active sessions associated with it.",
+          "title": "Change Account Status"              
+        },
+        "title": "Edit User",
+        "username": {
+          "notice": "If left empty, the account will be saved with a random username.",
+          "title": "Change Username"              
+        }
+      },
+      "index": {
+        "create": "Create User",
+        "searchPlaceholder": "Search by username or user ID..."
+      },
+      "layout": {
+        "menu": "Users",
+        "title": "User Administration"
+      }
+    }
   },
-  "partial": "partial",
-  "password": "Password",
-  "passwordSettings": "Password settings",
-  "post": "Post",
-  "postDeleted": "Post deleted",
-  "posts": "Posts",
-  "preview": "Preview",
-  "previous": "Previous",
-  "profile": "Profile",
-  "profileInfo": "Profile info",
-  "profileInfoDescription": "Update your username and email address.",
-  "profileSettings": "Profile settings",
-  "react": "React",
-  "reactWith": "React with {{emoji}}",
-  "readMore": "Read more",
-  "register": "Register",
-  "registerDescription": "Enter your details below to create your account.",
-  "registerTitle": "Create an account",
-  "registered": "Registered",
-  "registrationDisclaimer": {
-    "terms": "By registering, you accept our <0>terms and conditions</0>.",
-    "policy": "By registering, you accept our <0>privacy policy</0>.",
-    "termsAndPolicy": "By registering, you accept our <0>terms and conditions</0> and our <1>privacy policy</1>."
+  "auth": {
+    "confirmPassword": {
+      "description": "This is a secure area of the application. Please confirm your password before continuing.",
+      "title": "Confirm Your Password"
+    },
+    "forgotPassword": {
+      "description": "Enter your email to receive a password reset link.",
+      "returnToLogin": "Or return to <0>sign in</0>",
+      "sendEmail": "Send Password Reset Link",
+      "title": "Forgot Your Password?"
+    },
+    "login": {
+      "description": "Enter your email and password to sign in.",
+      "forgotPassword": "Forgot your password?",
+      "noAccountYet": "Don't have an account? <0>Create one</0>",
+      "title": "Sign in to Your Account"
+    },
+    "register": {
+      "alreadyHaveAccount": "Already have an account? <0>Sign in</0>",
+      "description": "Enter your details below to create your account.",
+      "disclaimer": {
+        "terms": "By signing up, you agree to our <0>Terms and Conditions</0>.",
+        "policy": "By signing up, you agree to our <0>Privacy Policy</0>.",
+        "termsAndPolicy": "By signing up, you agree to our <0>Terms and Conditions</0> and <1>Privacy Policy</1>."
+      },
+      "title": "Create an Account"
+    },
+    "resetPassword": {
+      "description": "Enter your new password below.",
+      "title": "Reset Password"
+    },
+    "verifyEmail": {
+      "description": "Please verify your email address by clicking the link we just sent you.",
+      "title": "Verify Email Address",
+      "emailSent": "A new verification link has been sent to the email you provided during registration.",
+      "resendEmail": "Resend Verification Email"
+    }
   },
-  "rememberMe": "Remember me",
-  "removeAvatar": "Remove avatar",
-  "removeReaction": "Remove reaction",
-  "resendVerificationEmail": "Resend verification email",
-  "reset": "Reset",
-  "resetPassword": "Reset password",
-  "resetPasswordDescription": "Enter your new password below.",
-  "resetUserPasswordDescription": "Send the user a password reset email.",
-  "returnToLogin": "Or go back to <0>log in</0>",
-  "role": "Role",
-  "roles": {
-    "User": "Manage their account, post, comment, and follow other users.",
-    "Moderator": "Everything a User can do, plus manage posts and other users' accounts.",
-    "Administrator": "Everything above, plus manage the site, assign roles, and delete accounts."
+  "comment": {
+    "delete": {
+      "description": "Are you sure you want to delete this comment? This action cannot be undone.",
+      "success": "Comment deleted",
+      "title": "Delete Comment"
+    },
+    "edit": {
+      "description": "Edit the content of your comment.",
+      "title": "Edit Comment"
+    }
   },
-  "save": "Save",
-  "savePassword": "Save password",
-  "saved": "Saved",
-  "search": "Search",
-  "searchPlaceholder": "Search {{type}}...",
-  "searchUserPlaceholder": "Search by name or user ID...",
-  "seeFullThread": "See full thread",
-  "selectLanguage": "Select language",
-  "selectPageType": "Select page type",
-  "sendPasswordResetLink": "Send password reset link",
-  "sendVerificationEmail": "Send account verification email.",
-  "settings": "Settings",
-  "settingsDescription": "Manage your profile and account settings.",
-  "showContent": "show content",
-  "signUp": "Sign up",
-  "siteSettings": "Site settings",
-  "slug": "Slug",
-  "system": "System",
-  "title": "Title",
-  "toolbar": {
-    "alternativeText": "Alternative text",
+  "common": {
+    "accept": "Accept",
+    "actions": "Actions",
+    "appearance": "Appearance",
+    "avatar": "Avatar",
+    "backToEdit": "Back to Edit",
+    "block": "Block",
+    "cancel": "Cancel",
+    "change": "Change",
+    "create": "Create",
+    "comment": "Comment",
+    "comments": "Comments",
+    "confirm": "Confirm",
+    "confirmPassword": "Confirm Password",
+    "connections": "Connections",
+    "content": "Content",
+    "currentPassword": "Current Password",
+    "dark": "Dark",
+    "delete": "Delete",
+    "disabled": "Disabled",
+    "dummyEmail": "email@example.com",
+    "edit": "Edit",
+    "email": "Email",
+    "enabled": "Enabled",
+    "error": "Oops! Something went wrong.",
+    "explore": "Explore",
+    "follow": "Follow",
+    "followers": "Followers",
+    "following": "Following",
+    "hideContent": "Hide Content",
+    "home": "Home",
+    "id": "ID",
+    "language": "Language",
+    "light": "Light",
+    "loading": "Loading",
+    "loadMore": "Load More",
+    "login": "Sign In",
+    "logout": "Sign Out",
+    "manage": "Manage",
+    "manageUser": "Manage User",
+    "management": "Management",
+    "markAsRead": "Mark as Read",
+    "menu": "Menu",
+    "newEmail": "New Email",
+    "newPassword": "New Password",
+    "next": "Next",
+    "notifications": "Notifications",
+    "options": "Options",
+    "password": "Password",
+    "post": "Post",
+    "posts": "Posts",
+    "previous": "Previous",
+    "preview": "Preview",
+    "profile": "Profile",
+    "readMore": "Read More",
+    "rememberMe": "Remember Me",
+    "register": "Register",
+    "registered": "Registered",
+    "reset": "Reset",
+    "role": "Role",
+    "save": "Save",
+    "saved": "Changes Saved.",
+    "search": "Search",
+    "searchPlaceholder": "Search {{type}}...",
+    "seeFullThread": "See Full Thread",
+    "selectLanguage": "Select Language",
+    "settings": "Settings",
+    "showContent": "Show Hidden Content",
+    "signUp": "Sign Up",
+    "system": "System",
+    "title": "Title",
+    "type": "Type",
+    "unblock": "Unblock",
+    "unfollow": "Unfollow",
+    "username": "Username",
+    "users": "Users",
+    "view": "View",
+    "verified": "Verified",
+    "whatsOnYourMind": "What's on your mind?",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "formattingToolbar": {
+    "alternativeText": "Alternative Text",
     "big": "Large",
     "bold": "Bold",
-    "codeBlock": "Code block",
+    "codeBlock": "Code Block",
     "colors": {
       "blue": "Blue",
       "green": "Green",
@@ -206,57 +263,134 @@
       "red": "Red",
       "yellow": "Yellow"
     },
-    "firstItem": "First item",
-    "fontColor": "Font color",
-    "fontSize": "Font size",
-    "h1": "Title",
-    "h2": "Subtitle",
-    "hiddenBlock": "Hidden block",
-    "hiddenInline": "Hidden text",
-    "inlineCode": "Inline code",
-    "insertImage": "Insert image",
-    "insertLink": "Insert link",
-    "insertVideo": "Insert video",
+    "firstItem": "First Item",
+    "fontColor": "Font Color",
+    "fontSize": "Font Size",
+    "h1": "Heading 1",
+    "h2": "Heading 2",
+    "heading": "Heading",
+    "hiddenBlock": "Hidden Block",
+    "hiddenInline": "Hidden Text",
+    "inlineCode": "Inline Code",
+    "insertImage": "Insert Image",
+    "insertLink": "Insert Link",
+    "insertVideo": "Insert Video",
     "italic": "Italic",
-    "orderedList": "Ordered list",
+    "orderedList": "Ordered List",
     "quote": "Quote",
-    "secondItem": "Second item",
+    "secondItem": "Second Item",
     "separator": "Separator",
     "small": "Small",
     "spoiler": "No, I am your father.",
-    "textPlaceholder": "Link text",
-    "thirdItem": "Third item",
-    "unorderedList": "Unordered list",
+    "textPlaceholder": "Link Text",
+    "thirdItem": "Third Item",
+    "unorderedList": "Unordered List",
     "video": "Video"
   },
-  "type": "Type",
-  "unblock": "Unblock",
-  "unfollow": "Unfollow",
-  "updatePassword": "Update password",
-  "updatePasswordDescription": "Make sure your account uses a long, random password to stay secure.",
-  "user": "User",
-  "useRandomPassword": "Replace the current password with a random one.",
-  "userFollowers": "{{username}}’s followers",
-  "userManagement": "User management",  
-  "userPasswordSetupNotice": "A link will be sent to the registered email so the user can set their password.",
-  "userPost": "{{username}}’s post",
-  "userProfile": "{{username}}’s profile",
-  "userRegistration": "User registration",
-  "userRegistrationVisibility": "Enable or disable new user registrations.",
-  "userSettings": "User settings",
-  "username": "Username",
-  "users": "Users",
-  "verificationEmailSent": "A new verification link has been sent to the email you provided during registration.",
-  "verificationLinkSent": "A new verification link has been sent to your email address.",
-  "verified": "Verified",
-  "verifyEmail": "Verify email",
-  "verifyEmailMessage": "Please verify your email address by clicking the link we just sent you.",
-  "view": "View",
-  "warning": "Warning",
-  "warningDescription": "Proceed with caution, this action cannot be undone.",
-  "welcome": "Welcome",
-  "welcomeMessage": "Connect, share, and discover what others are thinking.",
-  "welcomeTitle": "Welcome to {{siteName}}",
-  "whatsOnYourMind": "What’s on your mind?",
-  "yes": "Yes"
+  "noResults": {
+    "comments": "No comments yet.",
+    "followers": "This user has no followers yet.",
+    "following": "This user is not following anyone yet.",
+    "general": "Nothing to display yet.",
+    "pages": "No pages have been created yet.",
+    "posts": "No posts yet.",
+    "search": "No results found."
+  },
+  "notification": {
+    "hasCommentedInPost": "<0>{{username}}</0> <1>commented</1> on a post you're involved in.",
+    "hasCommentedOnYourPost": "<0>{{username}}</0> <1>commented</1> on your post.",
+    "hasFollowedYou": "<0>{{username}}</0> <1>followed</1> you.",
+    "hasMentionedYouInComment": "<0>{{username}}</0> <1>mentioned</1> you in a comment.",
+    "hasMentionedYouInPost": "<0>{{username}}</0> <1>mentioned</1> you in a post.",
+    "hasPostOnYourProfile": "<0>{{username}}</0> <1>posted</1> on your profile."
+  },
+  "page": {
+    "types": {
+      "normal": "Standard Page",
+      "about": "About",
+      "terms": "Terms and Conditions",
+      "policy": "Privacy Policy",
+      "guidelines": "Community Guidelines"
+    }
+  },
+  "post": {
+    "delete": {
+      "description": "Are you sure you want to delete this post? This action cannot be undone.",
+      "success": "Post deleted",
+      "title": "Delete Post"
+    },
+    "edit": {
+      "description": "Edit the content of your post.",
+      "title": "Edit Post"
+    },
+    "show": {
+      "comments": "{{total}} comments"
+    }
+  },
+  "profile": {
+    "title": "{{username}}'s Profile",
+    "following": "Following by {{username}}",
+    "followers": "Followers of {{username}}"
+  },
+  "reaction": {
+    "react": "React",
+    "reactWith": "React with {{emoji}}",
+    "remove": "Remove Reaction"
+  },
+  "settings": {
+    "appearance": {
+      "description": "Update your account's appearance settings.",
+      "title": "Appearance Settings"
+    },
+    "language": {
+      "description": "Change the interface language.",
+      "title": "Language Settings"
+    },
+    "layout": {
+      "description": "Manage your profile and account preferences.",
+      "title": "Account Settings"
+    },
+    "password": {
+      "description": "Ensure your account uses a long, random password for security.",
+      "title": "Password Settings"
+    },
+    "profile": {
+      "description": "Ensure your account uses a long, random password for security.",
+      "email": {
+        "address": "Email Address",
+        "sendVerificationEmail": "Click here to resend the verification email.",
+        "noVerified": "Your email address is not verified.",
+        "verificationLinkSent": "A new verification link has been sent to your email address."
+      },
+      "info": {
+        "avatar": {
+          "remove": "Remove Avatar",
+          "format": "Maximum size: 2MB. PNG or JPG only."
+        },
+        "description": "Update your username and email address.",        
+        "title": "Profile Information"
+      },
+      "title": "Profile Settings"
+    }
+  },
+  "userRoles": {
+    "admin": {
+      "short": "Admin",
+      "long": "Administrator"
+    },
+    "mod": {
+      "short": "Mod",
+      "long": "Moderator"
+    },
+    "user": {
+      "long": "User"
+    }
+  },
+  "welcome": {
+    "description": "Connect, share, and discover what others are thinking.",
+    "layout": {
+      "title": "Welcome"
+    },
+    "title": "Welcome to {{siteName}}"    
+  }
 }

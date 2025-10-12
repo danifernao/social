@@ -66,14 +66,14 @@ export default function Notifications() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('notifications'),
+            title: t('common.notifications'),
             href: route('notification.index'),
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={t('notifications')} />
+            <Head title={t('common.notifications')} />
             <AppContentLayout>
                 <NotificationHeader markAsRead={markAsRead} isProcessing={isMarkReadProcessing} />
                 <NotificationList notifications={notificationsList} />

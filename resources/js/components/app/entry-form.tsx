@@ -81,7 +81,7 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
                 setData('content', '');
             },
             onError: (errors) => {
-                toast(t('error'));
+                toast(t('common.error'));
                 console.error(errors);
             },
         });
@@ -117,7 +117,7 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
                         <FormattedText entryType={formType} text={data.content} alwaysExpanded={true} disableLinks={true} />
                     </div>
                     <Button variant="outline" className="ml-auto" onClick={() => setPreviewMode(false)}>
-                        {t('backToEdit')}
+                        {t('common.backToEdit')}
                     </Button>
                 </div>
             ) : (
@@ -134,7 +134,7 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
                         value={data.content}
                         onChange={(e) => setData('content', e.target.value)}
                         disabled={processing}
-                        placeholder={t('whatsOnYourMind')}
+                        placeholder={t('common.whatsOnYourMind')}
                         maxLength={3000}
                     />
 
@@ -145,19 +145,19 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
                                     href={route('page.show', { lang: auth.user.language, slug: specialPages[i18n.language].guidelines?.slug })}
                                     target="_black"
                                 >
-                                    {t('pageTypes.guidelines')}
+                                    {t('page.types.guidelines')}
                                 </a>
                             )}
                         </div>
                         <div className="flex items-center gap-2">
                             {data.content.trim().length > 0 && (
                                 <Button type="button" variant="outline" onClick={() => setPreviewMode(true)}>
-                                    {t('preview')}
+                                    {t('common.preview')}
                                 </Button>
                             )}
                             <Button type="submit" disabled={processing || data.content.trim().length === 0}>
                                 {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                                {formType === 'post' ? t('createPost') : t('comment')}
+                                {formType === 'post' ? t('common.post') : t('common.comment')}
                             </Button>
                         </div>
                     </div>

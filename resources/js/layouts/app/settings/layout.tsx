@@ -19,22 +19,22 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
 
     const sidebarNavItems: NavItem[] = [
         {
-            title: t('profile'),
+            title: t('common.profile'),
             href: '/settings/profile',
             icon: null,
         },
         {
-            title: t('password'),
+            title: t('common.password'),
             href: '/settings/password',
             icon: null,
         },
         {
-            title: t('language'),
+            title: t('common.language'),
             href: '/settings/language',
             icon: null,
         },
         {
-            title: t('appearance'),
+            title: t('common.appearance'),
             href: '/settings/appearance',
             icon: null,
         },
@@ -42,7 +42,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
 
     return (
         <div className="px-4 py-6">
-            <Heading title={t('settings')} description={t('settingsDescription')} />
+            <Heading title={t('settings.layout.title')} description={t('settings.layout.description')} />
 
             <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12">
                 <aside className="w-full max-w-xl lg:w-48">

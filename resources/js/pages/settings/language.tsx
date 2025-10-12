@@ -21,10 +21,10 @@ export default function Appearance() {
             preserveScroll: true,
             onSuccess: () => {
                 router.flushAll();
-                toast('¡Cambios guardados!');
+                toast(t('common.saved'));
             },
             onError: (errors) => {
-                toast(t('error'));
+                toast(t('common.error'));
                 console.log(errors);
             },
         });
@@ -32,7 +32,7 @@ export default function Appearance() {
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('languageSettings'),
+            title: t('settings.language.title'),
             href: '/settings/language',
         },
     ];
@@ -45,11 +45,11 @@ export default function Appearance() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={t('languageSettings')} />
+            <Head title={t('settings.language.title')} />
 
             <SettingsLayout>
                 <div className="space-y-6">
-                    <HeadingSmall title={t('languageSettings')} description={t('languageSettingsDescription')} />
+                    <HeadingSmall title={t('settings.language.title')} description={t('settings.language.description')} />
                     <Select value={data.lang} onValueChange={(value: 'en' | 'es') => setData('lang', value)} disabled={processing}>
                         <SelectTrigger className="w-[200px]">
                             <SelectValue placeholder="Elige un idioma" />

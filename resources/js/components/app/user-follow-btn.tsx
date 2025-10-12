@@ -27,7 +27,7 @@ export default function UserFollowBtn({ user }: UserFollowBtnProps) {
         >
             {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />}
             {user.is_followed ? <UserMinus className={iconClass} /> : <UserPlus className={iconClass} />}
-            <span className={textClass}>{user.is_followed ? t('unfollow') : t('follow')}</span>
+            <span className={textClass}>{user.is_followed ? t('common.unfollow') : t('common.follow')}</span>
         </Button>
     );
 }

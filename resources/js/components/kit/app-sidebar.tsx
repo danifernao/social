@@ -18,36 +18,36 @@ export function AppSidebar() {
     if (auth.user) {
         mainNavItems = [
             {
-                title: t('home'),
+                title: t('common.home'),
                 href: '/home',
                 icon: Home,
             },
             {
-                title: t('profile'),
+                title: t('common.profile'),
                 href: route('profile.show', auth.user.username),
                 icon: User,
             },
             {
-                title: t('explore'),
+                title: t('common.explore'),
                 href: `/search`,
                 icon: Search,
             },
             {
-                title: t('connections'),
+                title: t('common.connections'),
                 href: route('follow.following', auth.user.username),
                 icon: Users,
                 isActive: ['follow.following', 'follow.followers'].includes(routeName),
             },
             {
                 name: 'notifications',
-                title: t('notifications'),
+                title: t('common.notifications'),
                 href: route('notification.index'),
                 icon: Bell,
             },
             ...(auth.user.can_moderate
                 ? [
                       {
-                          title: t('management'),
+                          title: t('common.management'),
                           href: route('admin.index'),
                           icon: UserCog,
                           isActive: ['admin.site.edit', 'admin.user.index', 'admin.user.create', 'admin.user.edit'].includes(routeName),
@@ -58,12 +58,12 @@ export function AppSidebar() {
     } else {
         mainNavItems = [
             {
-                title: t('login'),
+                title: t('common.login'),
                 href: route('login'),
                 icon: LogIn,
             },
             {
-                title: t('register'),
+                title: t('common.register'),
                 href: route('register'),
                 icon: UserPlus,
             },

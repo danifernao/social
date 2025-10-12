@@ -86,7 +86,7 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                 <EntryListItemReactions entry={entry} />
                 {entry.type === 'post' && routeName !== 'post.show' && (
                     <div className="ml-auto">
-                        <Link href={`/post/${entry.id}#comments`} className={buttonVariants({ variant: 'outline' })} title={t('comment')}>
+                        <Link href={`/post/${entry.id}#comments`} className={buttonVariants({ variant: 'outline' })} title={t('common.comment')}>
                             {(entry as Post).comments_count} <MessageSquare />
                         </Link>
                     </div>

@@ -109,26 +109,44 @@ export default function NotificationListItem({ notification }: NotificationListI
             className={`flex flex-col border-b px-4 py-4 last:border-b-0 ${notification.read_at || shouldShowAsRead ? 'text-gray-500' : ''}`}
         >
             <Link href={url}>
-                {type === 'follow' && <Trans i18nKey="hasFollowedYou" values={{ username: sender.username }} components={[<strong />, <strong />]} />}
+                {type === 'follow' && (
+                    <Trans i18nKey="notification.hasFollowedYou" values={{ username: sender.username }} components={[<strong />, <strong />]} />
+                )}
 
                 {type === 'post' && (
-                    <Trans i18nKey="hasPostOnYourProfile" values={{ username: sender.username }} components={[<strong />, <strong />]} />
+                    <Trans i18nKey="notification.hasPostOnYourProfile" values={{ username: sender.username }} components={[<strong />, <strong />]} />
                 )}
 
                 {type === 'comment' &&
                     context &&
                     (context.author_id === auth.user.id ? (
-                        <Trans i18nKey="hasCommentedOnYourPost" values={{ username: sender.username }} components={[<strong />, <strong />]} />
+                        <Trans
+                            i18nKey="notification.hasCommentedOnYourPost"
+                            values={{ username: sender.username }}
+                            components={[<strong />, <strong />]}
+                        />
                     ) : (
-                        <Trans i18nKey="hasCommentedInPost" values={{ username: sender.username }} components={[<strong />, <strong />]} />
+                        <Trans
+                            i18nKey="notification.hasCommentedInPost"
+                            values={{ username: sender.username }}
+                            components={[<strong />, <strong />]}
+                        />
                     ))}
 
                 {type === 'mention' && context && context.type === 'post' && (
-                    <Trans i18nKey="hasMentionedYouInPost" values={{ username: sender.username }} components={[<strong />, <strong />]} />
+                    <Trans
+                        i18nKey="notification.hasMentionedYouInPost"
+                        values={{ username: sender.username }}
+                        components={[<strong />, <strong />]}
+                    />
                 )}
 
                 {type === 'mention' && context && context.type === 'comment' && (
-                    <Trans i18nKey="hasMentionedYouInComment" values={{ username: sender.username }} components={[<strong />, <strong />]} />
+                    <Trans
+                        i18nKey="notification.hasMentionedYouInComment"
+                        values={{ username: sender.username }}
+                        components={[<strong />, <strong />]}
+                    />
                 )}
             </Link>
             <time className="text-sm" dateTime={notification.created_at} title={formattedDate}>
