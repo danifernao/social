@@ -51,7 +51,7 @@ export default function Search() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('search'),
+            title: t('common.search'),
             href: route('search.index'),
         },
     ];

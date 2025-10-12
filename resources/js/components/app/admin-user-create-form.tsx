@@ -27,39 +27,39 @@ export default function AdminUserCreateForm() {
         <form className="space-y-8" onSubmit={handleSubmit}>
             <Card className="gap-4">
                 <CardHeader>
-                    <CardTitle>{t('createUser')}</CardTitle>
-                    <CardDescription>{t('createUserDescription')}</CardDescription>
+                    <CardTitle>{t('admin.user.create.title')}</CardTitle>
+                    <CardDescription>{t('admin.user.create.description')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <FormErrors errors={form.errors} />
 
                     <div className="space-y-2 py-4">
-                        <label className="block text-sm font-medium">{t('email')}</label>
+                        <label className="block text-sm font-medium">{t('common.email')}</label>
                         <Input
                             type="email"
-                            placeholder={t('email')}
+                            placeholder={t('common.email')}
                             value={form.data.email}
                             onChange={(e) => form.setData('email', e.target.value)}
                             disabled={form.processing}
                         />
-                        <p className="text-muted-foreground text-sm italic">{t('userPasswordSetupNotice')}</p>
+                        <p className="text-muted-foreground text-sm italic">{t('admin.user.create.passwordNotice')}</p>
                     </div>
 
                     <div className="space-y-2 py-4">
-                        <label className="block text-sm font-medium">{t('confirmAction')}</label>
+                        <label className="block text-sm font-medium">{t('admin.user.create.confirm.title')}</label>
                         <Input
                             type="password"
-                            placeholder={t('password')}
+                            placeholder={t('common.password')}
                             value={form.data.privileged_password}
                             onChange={(e) => form.setData('privileged_password', e.target.value)}
                             disabled={form.processing}
                         />
-                        <p className="text-muted-foreground text-sm italic">{t('confirmActionDescription')}</p>
+                        <p className="text-muted-foreground text-sm italic">{t('admin.user.create.confirm.description')}</p>
                     </div>
 
                     <Button type="submit" disabled={form.processing} className="mt-4 flex items-center justify-center gap-2">
                         {form.processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('createUser')}
+                        {t('common.create')}
                     </Button>
                 </CardContent>
             </Card>

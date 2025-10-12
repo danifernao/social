@@ -18,14 +18,14 @@ export default function UsersEdit() {
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('siteSettings'),
+            title: t('admin.site.layout.title'),
             href: route('admin.site.edit'),
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={t('siteSettings')} />
+            <Head title={t('admin.site.layout.title')} />
             <AdminLayout>
                 <AppContentLayout noMargin={true} fullWidth={true}>
                     <AdminSiteEditForm settings={site_settings} />

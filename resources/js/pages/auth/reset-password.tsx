@@ -40,13 +40,13 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
     };
 
     return (
-        <AuthLayout title={t('resetPassword')} description={t('resetPasswordDescription')}>
-            <Head title={t('resetPassword')} />
+        <AuthLayout title={t('auth.resetPassword.title')} description={t('auth.resetPassword.description')}>
+            <Head title={t('auth.resetPassword.title')} />
 
             <form onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="email">{t('email')}</Label>
+                        <Label htmlFor="email">{t('common.email')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -61,7 +61,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password">{t('password')}</Label>
+                        <Label htmlFor="password">{t('common.password')}</Label>
                         <Input
                             id="password"
                             type="password"
@@ -71,13 +71,13 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                             className="mt-1 block w-full"
                             autoFocus
                             onChange={(e) => setData('password', e.target.value)}
-                            placeholder={t('password')}
+                            placeholder={t('common.password')}
                         />
                         <InputError message={errors.password} />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password_confirmation">{t('confirmPassword')}</Label>
+                        <Label htmlFor="password_confirmation">{t('common.confirmPassword')}</Label>
                         <Input
                             id="password_confirmation"
                             type="password"
@@ -86,14 +86,14 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                             value={data.password_confirmation}
                             className="mt-1 block w-full"
                             onChange={(e) => setData('password_confirmation', e.target.value)}
-                            placeholder={t('confirmPassword')}
+                            placeholder={t('common.confirmPassword')}
                         />
                         <InputError message={errors.password_confirmation} className="mt-2" />
                     </div>
 
                     <Button type="submit" className="mt-4 w-full" disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('resetPassword')}
+                        {t('common.reset')}
                     </Button>
                 </div>
             </form>

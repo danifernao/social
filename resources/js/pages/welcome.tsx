@@ -14,23 +14,23 @@ export default function Welcome() {
     return (
         <div className="bg-background flex min-h-screen flex-col">
             <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
-                <Head title={t('welcome')} />
+                <Head title={t('welcome.layout.title')} />
 
-                <h1 className="mb-4 text-4xl font-bold md:text-6xl">{t('welcomeTitle', { siteName: 'Social' })}</h1>
+                <h1 className="mb-4 text-4xl font-bold md:text-6xl">{t('welcome.title', { siteName: 'Social' })}</h1>
 
-                <p className="mb-8 max-w-2xl text-lg md:text-xl">{t('welcomeMessage')}</p>
+                <p className="mb-8 max-w-2xl text-lg md:text-xl">{t('welcome.description')}</p>
 
                 {/* Botones de inicio de sesión y registro */}
                 <div className="flex flex-col gap-4 sm:flex-row">
                     <Link href="/login">
                         <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                            {t('login')}
+                            {t('common.login')}
                         </Button>
                     </Link>
                     {siteSettings.is_user_registration_enabled && (
                         <Link href="/register">
                             <Button size="lg" className="w-full sm:w-auto">
-                                {t('signUp')}
+                                {t('common.register')}
                             </Button>
                         </Link>
                     )}
@@ -45,7 +45,7 @@ export default function Welcome() {
                             href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].about?.slug })}
                             className="hover:underline"
                         >
-                            {t('pageTypes.about')}
+                            {t('page.types.about')}
                         </Link>
                     )}
 
@@ -55,7 +55,7 @@ export default function Welcome() {
                             href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].terms?.slug })}
                             className="hover:underline"
                         >
-                            {t('pageTypes.terms')}
+                            {t('page.types.terms')}
                         </Link>
                     )}
 
@@ -65,7 +65,7 @@ export default function Welcome() {
                             href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].policy?.slug })}
                             className="hover:underline"
                         >
-                            {t('pageTypes.policy')}
+                            {t('page.types.policy')}
                         </Link>
                     )}
                 </div>

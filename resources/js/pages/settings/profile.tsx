@@ -72,18 +72,18 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('profileSettings'),
+            title: t('settings.profile.title'),
             href: '/settings/profile',
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={t('profileSettings')} />
+            <Head title={t('settings.profile.title')} />
 
             <SettingsLayout>
                 <div className="space-y-6">
-                    <HeadingSmall title={t('profileInfo')} description={t('profileInfoDescription')} />
+                    <HeadingSmall title={t('settings.profile.info.title')} description={t('settings.profile.info.description')} />
 
                     <form onSubmit={submit} className="space-y-6">
                         <div className="flex items-center gap-6">
@@ -97,7 +97,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                         type="button"
                                         onClick={handleRemoveAvatar}
                                         className="absolute top-0 right-0 flex h-6 w-6 items-center justify-center rounded-full bg-neutral-800 text-white hover:bg-red-600"
-                                        title={t('removeAvatar')}
+                                        title={t('settings.profile.info.avatar.remove')}
                                     >
                                         <Trash2 className="h-4 w-4" />
                                     </button>
@@ -106,13 +106,13 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
                             <div className="flex-1 space-y-2">
                                 <Input type="file" accept="image/png,image/jpeg,image/jpg" onChange={handleFileChange} ref={fileInputRef} />
-                                <p className="text-muted-foreground text-sm">{t('avatarSizeAndFormat')}</p>
+                                <p className="text-muted-foreground text-sm">{t('settings.profile.info.avatar.format')}</p>
                                 <InputError className="mt-2" message={errors.avatar} />
                             </div>
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="username">{t('username')}</Label>
+                            <Label htmlFor="username">{t('common.username')}</Label>
 
                             <Input
                                 id="username"
@@ -121,14 +121,14 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                 onChange={(e) => setData('username', e.target.value)}
                                 required
                                 autoComplete="username"
-                                placeholder={t('username')}
+                                placeholder={t('common.username')}
                             />
 
                             <InputError className="mt-2" message={errors.username} />
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="email">{t('emailAddress')}</Label>
+                            <Label htmlFor="email">{t('settings.profile.email.address')}</Label>
 
                             <Input
                                 id="email"
@@ -138,7 +138,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                 onChange={(e) => setData('email', e.target.value)}
                                 required
                                 autoComplete="email"
-                                placeholder={t('emailAddress')}
+                                placeholder={t('settings.profile.email.address')}
                             />
 
                             <InputError className="mt-2" message={errors.email} />
@@ -147,25 +147,25 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                         {mustVerifyEmail && auth.user.email_verified_at === null && (
                             <div>
                                 <p className="text-muted-foreground -mt-4 text-sm">
-                                    {t('emailNoVerified')}
+                                    {t('settings.profile.email.noVerified')}
                                     <Link
                                         href={route('verification.send')}
                                         method="post"
                                         as="button"
                                         className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                                     >
-                                        {t('clickToSendVerificationEmail')}
+                                        {t('settings.profile.email.sendVerificationEmail')}
                                     </Link>
                                 </p>
 
                                 {status === 'verification_link_sent' && (
-                                    <div className="mt-2 text-sm font-medium text-green-600">{t('verificationLinkSent')}</div>
+                                    <div className="mt-2 text-sm font-medium text-green-600">{t('settings.profile.email.verificationLinkSent')}</div>
                                 )}
                             </div>
                         )}
 
                         <div className="flex items-center gap-4">
-                            <Button disabled={processing}>{t('save')}</Button>
+                            <Button disabled={processing}>{t('common.save')}</Button>
 
                             <Transition
                                 show={recentlySuccessful}
@@ -174,7 +174,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                 leave="transition ease-in-out"
                                 leaveTo="opacity-0"
                             >
-                                <p className="text-sm text-neutral-600">{t('saved')}</p>
+                                <p className="text-sm text-neutral-600">{t('common.saved')}</p>
                             </Transition>
                         </div>
                     </form>

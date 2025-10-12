@@ -15,18 +15,18 @@ export default function UsersEdit() {
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('userManagement'),
+            title: t('admin.user.layout.title'),
             href: route('admin.user.index'),
         },
         {
-            title: t('createUser'),
+            title: t('admin.user.create.title'),
             href: route('admin.user.create'),
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={t('createUser')} />
+            <Head title={t('admin.user.create.title')} />
             <AdminLayout>
                 <AppContentLayout noMargin={true} fullWidth={true}>
                     <AdminUserCreateForm />

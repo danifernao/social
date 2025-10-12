@@ -78,18 +78,18 @@ export default function AdminPageForm({ page }: Props) {
         <form onSubmit={handleSubmit} className="space-y-8">
             <Card>
                 <CardHeader>
-                    <CardTitle>{isEditing ? t('editPage') : t('createPage')}</CardTitle>
+                    <CardTitle>{isEditing ? t('admin.page.edit.title') : t('admin.page.create.title')}</CardTitle>
                 </CardHeader>
 
                 <CardContent>
                     {/* Idioma */}
                     <div className="space-y-2 py-4">
                         <Label htmlFor="language" className="block text-sm font-medium">
-                            {t('language')}
+                            {t('common.language')}
                         </Label>
                         <Select disabled={isEditing || processing} value={data.language} onValueChange={handleLanguageChange}>
                             <SelectTrigger id="language" className="w-max">
-                                <SelectValue placeholder={t('selectLanguage')} />
+                                <SelectValue placeholder={t('common.selectLanguage')} />
                             </SelectTrigger>
                             <SelectContent>
                                 {locales.map(({ lang, label }) => (
@@ -99,49 +99,49 @@ export default function AdminPageForm({ page }: Props) {
                                 ))}
                             </SelectContent>
                         </Select>
-                        <p className="text-muted-foreground text-sm italic">{t('pageLanguageDescription')}</p>
+                        <p className="text-muted-foreground text-sm italic">{t('admin.page.form.language.notice')}</p>
                         {errors.language && <p className="text-sm text-red-500">{errors.language}</p>}
                     </div>
 
                     {/* Tipo de página */}
                     <div className="space-y-2 py-4">
                         <Label htmlFor="type" className="block text-sm font-medium">
-                            {t('type')}
+                            {t('common.type')}
                         </Label>
                         <Select disabled={processing} value={data.type} onValueChange={(value: PageType) => setData('type', value)}>
                             <SelectTrigger id="type" className="w-max">
-                                <SelectValue placeholder={t('selectPageType')} />
+                                <SelectValue placeholder={t('admin.page.form.type.placeholder')} />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="normal">{t('pageTypes.normal')}</SelectItem>
+                                <SelectItem value="normal">{t('page.types.normal')}</SelectItem>
                                 <SelectItem value="about" disabled={!!specialPages[data.language!].about}>
-                                    {t('pageTypes.about')}
+                                    {t('page.types.about')}
                                 </SelectItem>
                                 <SelectItem value="terms" disabled={!!specialPages[data.language!].terms}>
-                                    {t('pageTypes.terms')}
+                                    {t('page.types.terms')}
                                 </SelectItem>
                                 <SelectItem value="policy" disabled={!!specialPages[data.language!].policy}>
-                                    {t('pageTypes.policy')}
+                                    {t('page.types.policy')}
                                 </SelectItem>
                                 <SelectItem value="guidelines" disabled={!!specialPages[data.language!].guidelines}>
-                                    {t('pageTypes.guidelines')}
+                                    {t('page.types.guidelines')}
                                 </SelectItem>
                             </SelectContent>
                         </Select>
-                        <p className="text-muted-foreground text-sm italic">{t('pageTypeDescription')}</p>
+                        <p className="text-muted-foreground text-sm italic">{t('admin.page.form.type.notice')}</p>
                         {errors.type && <p className="text-sm text-red-500">{errors.type}</p>}
                     </div>
 
                     {/* Título de la página */}
                     <div className="space-y-2 py-4">
                         <Label htmlFor="title" className="block text-sm font-medium">
-                            {t('title')}
+                            {t('common.title')}
                         </Label>
                         <Input
                             id="title"
                             value={data.title}
                             onChange={(e) => setData('title', e.target.value)}
-                            placeholder={t('pageTitle')}
+                            placeholder={t('admin.page.form.title.placeholder')}
                             disabled={processing}
                             className="w-full max-w-xl"
                         />
@@ -151,24 +151,24 @@ export default function AdminPageForm({ page }: Props) {
                     {/* Slug de la URL de la página */}
                     <div className="space-y-2 py-4">
                         <Label htmlFor="slug" className="block text-sm font-medium">
-                            {t('slug')}
+                            {t('admin.page.form.slug.title')}
                         </Label>
                         <Input
                             id="slug"
                             value={data.slug}
                             onChange={(e) => setData('slug', e.target.value)}
-                            placeholder={t('pageSlug')}
+                            placeholder={t('admin.page.form.slug.placeholder')}
                             disabled={processing}
                             className="w-full max-w-xl"
                         />
-                        <p className="text-muted-foreground text-sm italic">{t('pageSlugDescription')}</p>
+                        <p className="text-muted-foreground text-sm italic">{t('admin.page.form.slug.notice')}</p>
                         {errors.slug && <p className="text-sm text-red-500">{errors.slug}</p>}
                     </div>
 
                     {/* Contenido de la página */}
                     <div className="space-y-2 py-4">
                         <Label htmlFor="content" className="block text-sm font-medium">
-                            {t('content')}
+                            {t('common.content')}
                         </Label>
 
                         {previewMode ? (
@@ -191,7 +191,7 @@ export default function AdminPageForm({ page }: Props) {
                                     value={data.content ?? ''}
                                     onChange={(e) => setData('content', e.target.value)}
                                     disabled={processing}
-                                    placeholder={t('pageContent')}
+                                    placeholder={t('admin.page.form.content.placeholder')}
                                 />
 
                                 {errors.content && <p className="text-sm text-red-500">{errors.content}</p>}
@@ -199,17 +199,17 @@ export default function AdminPageForm({ page }: Props) {
                                 <div className="flex items-center gap-4 py-4">
                                     <Button type="submit" disabled={processing}>
                                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                                        {isEditing ? t('save') : t('create')}
+                                        {isEditing ? t('common.save') : t('common.create')}
                                     </Button>
 
                                     {data.content.trim().length > 0 && (
                                         <Button type="button" variant="outline" onClick={() => setPreviewMode(true)}>
-                                            {t('preview')}
+                                            {t('common.preview')}
                                         </Button>
                                     )}
 
                                     <Button variant="ghost" size="sm" className="ml-auto" asChild>
-                                        <Link href={route('admin.page.index', { lang: data.language })}>{t('cancel')}</Link>
+                                        <Link href={route('admin.page.index', { lang: data.language })}>{t('common.cancel')}</Link>
                                     </Button>
                                 </div>
                             </>

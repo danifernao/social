@@ -44,11 +44,11 @@ export default function Follow() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('userProfile', { username: user.username }),
+            title: t('profile.title', { username: user.username }),
             href: route('profile.show', { user: user.username }),
         },
         {
-            title: pageName === 'following' ? t('following') : t('followers'),
+            title: pageName === 'following' ? t('common.following') : t('common.followers'),
             href: route(routeName, { user: user.username }),
         },
     ];
@@ -56,7 +56,7 @@ export default function Follow() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head
-                title={`${pageName === 'following' ? t('followedByUser', { username: user.username }) : t('userFollowers', { username: user.username })} ${user.username}`}
+                title={`${pageName === 'following' ? t('profile.following', { username: user.username }) : t('profile.followers', { username: user.username })} ${user.username}`}
             />
             <AppContentLayout>
                 <FollowNav pageName={pageName} username={user.username} />

@@ -36,14 +36,14 @@ export default function Home() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('home'),
+            title: t('common.home'),
             href: route('home.index'),
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={t('home')} />
+            <Head title={t('common.home')} />
             <AppContentLayout>
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>
                     <EntryForm />

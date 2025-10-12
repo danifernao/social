@@ -73,12 +73,12 @@ export default function Home() {
                             {post.comments_count > 0 && (
                                 <>
                                     <div className="flex items-center gap-2">
-                                        <h2>{t('nComments', { total: post.comments_count })}</h2>
+                                        <h2>{t('post.show.comments', { total: post.comments_count })}</h2>
                                         {isPartialView && (
                                             <>
                                                 <span className="text-muted-foreground text-sm">({t('partial')})</span>
                                                 <Link href={route('post.show', post.id)} className="text-sm text-blue-600 hover:underline">
-                                                    {t('seeFullThread')}
+                                                    {t('common.seeFullThread')}
                                                 </Link>
                                             </>
                                         )}

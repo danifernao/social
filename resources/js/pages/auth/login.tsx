@@ -43,13 +43,13 @@ export default function Login({ status, canResetPassword }: LoginProps) {
     };
 
     return (
-        <AuthLayout title={t('loginTitle')} description={t('loginDescription')}>
-            <Head title={t('login')} />
+        <AuthLayout title={t('auth.login.title')} description={t('auth.login.description')}>
+            <Head title={t('common.login')} />
 
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="email">{t('email')}</Label>
+                        <Label htmlFor="email">{t('common.email')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -59,17 +59,17 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             autoComplete="email"
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
-                            placeholder={t('dummyEmail')}
+                            placeholder={t('common.dummyEmail')}
                         />
                         <InputError message={errors.email} />
                     </div>
 
                     <div className="grid gap-2">
                         <div className="flex items-center">
-                            <Label htmlFor="password">{t('password')}</Label>
+                            <Label htmlFor="password">{t('common.password')}</Label>
                             {canResetPassword && (
                                 <TextLink href={route('password.request')} className="ml-auto text-sm" tabIndex={5}>
-                                    {t('forgotPassword')}
+                                    {t('auth.login.forgotPassword')}
                                 </TextLink>
                             )}
                         </div>
@@ -81,7 +81,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             autoComplete="current-password"
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
-                            placeholder={t('password')}
+                            placeholder={t('common.password')}
                         />
                         <InputError message={errors.password} />
                     </div>
@@ -94,18 +94,18 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             onClick={() => setData('remember', !data.remember)}
                             tabIndex={3}
                         />
-                        <Label htmlFor="remember">{t('rememberMe')}</Label>
+                        <Label htmlFor="remember">{t('common.rememberMe')}</Label>
                     </div>
 
                     <Button type="submit" className="mt-4 w-full" tabIndex={4} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('login')}
+                        {t('common.login')}
                     </Button>
                 </div>
 
                 {siteSettings.is_user_registration_enabled && (
                     <div className="text-muted-foreground text-center text-sm">
-                        <Trans i18nKey="noAccountYet">
+                        <Trans i18nKey="auth.login.noAccountYet">
                             <TextLink href={route('register')} tabIndex={5}></TextLink>
                         </Trans>
                     </div>

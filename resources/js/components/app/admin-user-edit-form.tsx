@@ -59,7 +59,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             {auth.user.is_admin && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>{t('changeRole')}</CardTitle>
+                        <CardTitle>{t('admin.user.edit.role.title')}</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {form.data.action === 'change_role' && <FormErrors errors={form.errors} />}
@@ -70,17 +70,17 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                             disabled={form.processing && form.data.action === 'change_role'}
                         >
                             <SelectTrigger className="w-[200px]">
-                                <SelectValue placeholder="Selecciona un rol" />
+                                <SelectValue placeholder={t('admin.user.edit.role.placeholder')} />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="admin">{t('administrator')}</SelectItem>
-                                <SelectItem value="mod">{t('moderator')}</SelectItem>
-                                <SelectItem value="user">{t('user')}</SelectItem>
+                                <SelectItem value="admin">{t('userRoles.admin.long')}</SelectItem>
+                                <SelectItem value="mod">{t('userRoles.mod.long')}</SelectItem>
+                                <SelectItem value="user">{t('userRoles.user.long')}</SelectItem>
                             </SelectContent>
                         </Select>
 
                         <dl className="text-muted-foreground grid grid-cols-[min-content_1fr] gap-2 text-sm">
-                            {Object.entries(t('roles', { returnObjects: true })).map(([role, description]) => (
+                            {Object.entries(t('admin.user.edit.role.description', { returnObjects: true })).map(([role, description]) => (
                                 <Fragment key={role}>
                                     <dt className="font-semibold">{role}:</dt>
                                     <dd>{description}</dd>
@@ -94,7 +94,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                             disabled={form.processing && form.data.action === 'change_role'}
                         >
                             {form.processing && form.data.action === 'change_role' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            {t('change')}
+                            {t('common.change')}
                         </Button>
                     </CardContent>
                 </Card>
@@ -104,19 +104,19 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             {user.avatar_url && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>{t('deleteAvatar')}</CardTitle>
+                        <CardTitle>{t('admin.user.edit.avatar.title')}</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {form.data.action === 'delete_avatar' && <FormErrors errors={form.errors} />}
                         <div className="flex items-center gap-4">
-                            <img src={user.avatar_url} alt="Avatar" className="h-24 w-24 rounded-sm bg-neutral-200 object-cover" />
+                            <img src={user.avatar_url} alt={t('common.avatar')} className="h-24 w-24 rounded-sm bg-neutral-200 object-cover" />
                             <Button
                                 type="button"
                                 onClick={() => handleAction('delete_avatar')}
                                 disabled={form.processing && form.data.action === 'delete_avatar'}
                             >
                                 {form.processing && form.data.action === 'delete_avatar' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                                {t('delete')}
+                                {t('common.delete')}
                             </Button>
                         </div>
                     </CardContent>
@@ -126,24 +126,24 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             {/* Nombre de usuario */}
             <Card>
                 <CardHeader>
-                    <CardTitle>{t('changeUsername')}</CardTitle>
+                    <CardTitle>{t('admin.user.edit.username.title')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     {form.data.action === 'change_username' && <FormErrors errors={form.errors} />}
                     <Input
-                        placeholder={t('username')}
+                        placeholder={t('common.username')}
                         value={form.data.new_username}
                         onChange={(e) => form.setData('new_username', e.target.value)}
                         disabled={form.processing && form.data.action === 'change_username'}
                     />
-                    <p className="text-muted-foreground text-sm italic">{t('changeUsernameDescription')}</p>
+                    <p className="text-muted-foreground text-sm italic">{t('admin.user.edit.username.notice')}</p>
                     <Button
                         type="button"
                         onClick={() => handleAction('change_username')}
                         disabled={form.processing && form.data.action === 'change_username'}
                     >
                         {form.processing && form.data.action === 'change_username' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('change')}
+                        {t('common.change')}
                     </Button>
                 </CardContent>
             </Card>
@@ -151,13 +151,13 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             {/* Correo */}
             <Card>
                 <CardHeader>
-                    <CardTitle>{t('changeEmail')}</CardTitle>
+                    <CardTitle>{t('admin.user.edit.email.title')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     {form.data.action === 'change_email' && <FormErrors errors={form.errors} />}
 
                     <Input
-                        placeholder={t('newEmail')}
+                        placeholder={t('common.newEmail')}
                         value={form.data.new_email}
                         onChange={(e) => form.setData('new_email', e.target.value)}
                         disabled={form.processing && form.data.action === 'change_email'}
@@ -170,7 +170,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                             onCheckedChange={(checked) => form.setData('email_verification_link', !!checked)}
                             disabled={form.processing && form.data.action === 'change_email'}
                         />
-                        <label htmlFor="email-verification-link">{t('sendVerificationEmail')}</label>
+                        <label htmlFor="email-verification-link">{t('admin.user.edit.email.sendVerificationEmail')}</label>
                     </div>
 
                     <Button
@@ -179,7 +179,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                         disabled={form.processing && form.data.action === 'change_email'}
                     >
                         {form.processing && form.data.action === 'change_email' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('change')}
+                        {t('common.change')}
                     </Button>
                 </CardContent>
             </Card>
@@ -187,11 +187,11 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             {/* Contraseña */}
             <Card>
                 <CardHeader>
-                    <CardTitle>{t('resetPassword')}</CardTitle>
+                    <CardTitle>{t('admin.user.edit.resetPassword.title')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     {form.data.action === 'reset_password' && <FormErrors errors={form.errors} />}
-                    <p>{t('resetUserPasswordDescription')}</p>
+                    <p>{t('admin.user.edit.resetPassword.description')}</p>
                     <div className="flex items-center gap-2">
                         <Checkbox
                             id="reset-password"
@@ -199,7 +199,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                             onCheckedChange={(checked) => form.setData('random_password', !!checked)}
                             disabled={form.processing && form.data.action === 'reset_password'}
                         />
-                        <label htmlFor="reset-password">{t('useRandomPassword')}</label>
+                        <label htmlFor="reset-password">{t('admin.user.edit.resetPassword.useRandomPass')}</label>
                     </div>
                     <Button
                         type="button"
@@ -207,7 +207,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                         disabled={form.processing && form.data.action === 'reset_password'}
                     >
                         {form.processing && form.data.action === 'reset_password' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('reset')}
+                        {t('common.reset')}
                     </Button>
                 </CardContent>
             </Card>
@@ -215,7 +215,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             {/* Habilitación / Inhabilitación de la cuenta */}
             <Card>
                 <CardHeader>
-                    <CardTitle>{t('accountStatus')}</CardTitle>
+                    <CardTitle>{t('admin.user.edit.status.title')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     {form.data.action === 'toggle_account_status' && <FormErrors errors={form.errors} />}
@@ -231,12 +231,12 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                             variant="outline"
                             disabled={form.processing && form.data.action === 'toggle_account_status'}
                         >
-                            <ToggleGroupItem value="true">{t('enabled')}</ToggleGroupItem>
-                            <ToggleGroupItem value="false">{t('disabled')}</ToggleGroupItem>
+                            <ToggleGroupItem value="true">{t('common.enabled')}</ToggleGroupItem>
+                            <ToggleGroupItem value="false">{t('common.disabled')}</ToggleGroupItem>
                         </ToggleGroup>
                         {form.processing && form.data.action === 'toggle_account_status' && <LoaderCircle className="h-4 w-4 animate-spin" />}
                     </div>
-                    <p className="text-muted-foreground text-sm italic">{t('accountStatusDescription')}</p>
+                    <p className="text-muted-foreground text-sm italic">{t('admin.user.edit.status.notice')}</p>
                 </CardContent>
             </Card>
 
@@ -244,11 +244,11 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             {auth.user.is_admin && !user.is_admin && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>{t('deleteAccount')}</CardTitle>
+                        <CardTitle>{t('admin.user.edit.deleteAccount.title')}</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {form.data.action === 'delete_account' && <FormErrors errors={form.errors} />}
-                        <p>{t('deleteUserAccountDescription')}</p>
+                        <p>{t('admin.user.edit.deleteAccount.description')}</p>
                         <Button
                             type="button"
                             variant="destructive"
@@ -256,7 +256,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                             disabled={form.processing && form.data.action === 'delete_account'}
                         >
                             {form.processing && form.data.action === 'delete_account' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            {t('delete')}
+                            {t('common.delete')}
                         </Button>
                     </CardContent>
                 </Card>

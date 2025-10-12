@@ -26,15 +26,15 @@ export default function ForgotPassword({ status }: { status?: string }) {
     };
 
     return (
-        <AuthLayout title={t('forgotPassword')} description={t('forgotPasswordDescription')}>
-            <Head title={t('resetPassword')} />
+        <AuthLayout title={t('auth.forgotPassword.title')} description={t('auth.forgotPassword.description')}>
+            <Head title={t('auth.forgotPassword.title')} />
 
             {status && <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>}
 
             <div className="space-y-6">
                 <form onSubmit={submit}>
                     <div className="grid gap-2">
-                        <Label htmlFor="email">{t('email')}</Label>
+                        <Label htmlFor="email">{t('common.email')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -43,7 +43,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                             value={data.email}
                             autoFocus
                             onChange={(e) => setData('email', e.target.value)}
-                            placeholder={t('dummyEmail')}
+                            placeholder={t('common.dummyEmail')}
                         />
 
                         <InputError message={errors.email} />
@@ -52,13 +52,13 @@ export default function ForgotPassword({ status }: { status?: string }) {
                     <div className="my-6 flex items-center justify-start">
                         <Button className="w-full" disabled={processing}>
                             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            {t('sendPasswordResetLink')}
+                            {t('auth.forgotPassword.sendEmail')}
                         </Button>
                     </div>
                 </form>
 
                 <div className="text-muted-foreground space-x-1 text-center text-sm">
-                    <Trans i18nKey="returnToLogin">
+                    <Trans i18nKey="auth.forgotPassword.returnToLogin">
                         <TextLink href={route('login')}></TextLink>
                     </Trans>
                 </div>

@@ -40,9 +40,9 @@ export default function AdminPageTable({ pages, previous, next }: Props) {
                 <Table>
                     <TableHeader>
                         <TableRow className="[&_button]:px-0 [&_th]:px-4">
-                            <TableHead>{t('title')}</TableHead>
-                            <TableHead>{t('type')}</TableHead>
-                            <TableHead className="w-0 text-center">{t('actions')}</TableHead>
+                            <TableHead>{t('common.title')}</TableHead>
+                            <TableHead>{t('common.type')}</TableHead>
+                            <TableHead className="w-0 text-center">{t('common.actions')}</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -54,7 +54,7 @@ export default function AdminPageTable({ pages, previous, next }: Props) {
                                     </TableCell>
                                     <TableCell>
                                         <Link href={route('admin.page.edit', { page: page.id, lang: page.language })}>
-                                            {t(`pageTypes.${page.type}`)}
+                                            {t(`page.types.${page.type}`)}
                                         </Link>
                                     </TableCell>
                                     <TableCell className="flex gap-3">
@@ -62,8 +62,8 @@ export default function AdminPageTable({ pages, previous, next }: Props) {
                                             <a
                                                 href={route('page.show', { lang: page.language, slug: page.slug })}
                                                 target="_blank"
-                                                title={t('view')}
-                                                aria-label={t('view')}
+                                                title={t('common.view')}
+                                                aria-label={t('common.view')}
                                             >
                                                 <Eye className="h-4 w-4" />
                                             </a>
@@ -72,8 +72,8 @@ export default function AdminPageTable({ pages, previous, next }: Props) {
                                         <Button variant="outline" size="sm" asChild>
                                             <Link
                                                 href={route('admin.page.edit', { page: page.id, lang: page.language })}
-                                                title={t('edit')}
-                                                aria-label={t('edit')}
+                                                title={t('common.edit')}
+                                                aria-label={t('common.edit')}
                                             >
                                                 <Edit className="h-4 w-4" />
                                             </Link>
@@ -81,22 +81,22 @@ export default function AdminPageTable({ pages, previous, next }: Props) {
 
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
-                                                <Button variant="destructive" size="sm" title={t('delete')} aria-label={t('delete')}>
+                                                <Button variant="destructive" size="sm" title={t('common.delete')} aria-label={t('common.delete')}>
                                                     <Trash className="h-4 w-4" />
                                                 </Button>
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader>
-                                                    <AlertDialogTitle>{t('deletePage')}</AlertDialogTitle>
+                                                    <AlertDialogTitle>{t('admin.page.index.delete.title')}</AlertDialogTitle>
                                                     <AlertDialogDescription>
-                                                        {t('deletePageConfirmation', {
+                                                        {t('admin.page.index.delete.description', {
                                                             title: page.title,
                                                         })}
                                                     </AlertDialogDescription>
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
-                                                    <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDelete(page.id)}>{t('delete')}</AlertDialogAction>
+                                                    <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => handleDelete(page.id)}>{t('common.delete')}</AlertDialogAction>
                                                 </AlertDialogFooter>
                                             </AlertDialogContent>
                                         </AlertDialog>
@@ -106,7 +106,7 @@ export default function AdminPageTable({ pages, previous, next }: Props) {
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={6} className="py-4 text-center">
-                                    {t('noPages')}
+                                    {t('noResults.pages')}
                                 </TableCell>
                             </TableRow>
                         )}
@@ -118,21 +118,21 @@ export default function AdminPageTable({ pages, previous, next }: Props) {
             <div className="flex justify-end gap-2">
                 {previous ? (
                     <Button variant="outline" size="sm" asChild>
-                        <Link href={previous}>{t('previous')}</Link>
+                        <Link href={previous}>{t('common.previous')}</Link>
                     </Button>
                 ) : (
                     <Button variant="outline" size="sm" disabled>
-                        {t('previous')}
+                        {t('common.previous')}
                     </Button>
                 )}
 
                 {next ? (
                     <Button variant="outline" size="sm" asChild>
-                        <Link href={next}>{t('next')}</Link>
+                        <Link href={next}>{t('common.next')}</Link>
                     </Button>
                 ) : (
                     <Button variant="outline" size="sm" disabled>
-                        {t('next')}
+                        {t('common.next')}
                     </Button>
                 )}
             </div>

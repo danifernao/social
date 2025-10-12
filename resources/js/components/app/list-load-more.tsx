@@ -26,10 +26,10 @@ export default function ListLoadMore({ type, cursor, isProcessing, autoClick = t
 
     // Objeto que asigna a cada tipo de lista su descripción en plural para mostrar en el texto del botón.
     const listType = {
-        post: t('posts').toLowerCase(),
-        comment: t('comments').toLowerCase(),
-        user: t('users').toLowerCase(),
-        notification: t('notifications').toLowerCase(),
+        post: t('common.posts').toLowerCase(),
+        comment: t('common.comments').toLowerCase(),
+        user: t('common.users').toLowerCase(),
+        notification: t('common.notifications').toLowerCase(),
     };
 
     // Hace clic en el botón apenas aparezca en la ventana de visualización del navegador.
@@ -57,7 +57,7 @@ export default function ListLoadMore({ type, cursor, isProcessing, autoClick = t
     return (
         <Button ref={ref} variant="outline" disabled={isProcessing} onClick={onClick}>
             {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-            {isProcessing ? t('loading') : t('loadMore')} {listType[type]}
+            {isProcessing ? t('common.loading') : t('common.loadMore')} {listType[type]}
         </Button>
     );
 }

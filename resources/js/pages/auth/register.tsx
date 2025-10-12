@@ -41,12 +41,12 @@ export default function Register() {
     };
 
     return (
-        <AuthLayout title={t('registerTitle')} description={t('registerDescription')}>
-            <Head title={t('register')} />
+        <AuthLayout title={t('auth.register.title')} description={t('auth.register.description')}>
+            <Head title={t('common.register')} />
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="username">{t('username')}</Label>
+                        <Label htmlFor="username">{t('common.username')}</Label>
                         <Input
                             id="username"
                             type="text"
@@ -57,13 +57,13 @@ export default function Register() {
                             value={data.username}
                             onChange={(e) => setData('username', e.target.value)}
                             disabled={processing}
-                            placeholder={t('username')}
+                            placeholder={t('common.username')}
                         />
                         <InputError message={errors.username} className="mt-2" />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="email">{t('email')}</Label>
+                        <Label htmlFor="email">{t('common.email')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -73,13 +73,13 @@ export default function Register() {
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
                             disabled={processing}
-                            placeholder={t('dummyEmail')}
+                            placeholder={t('common.dummyEmail')}
                         />
                         <InputError message={errors.email} />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password">{t('password')}</Label>
+                        <Label htmlFor="password">{t('common.password')}</Label>
                         <Input
                             id="password"
                             type="password"
@@ -89,13 +89,13 @@ export default function Register() {
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             disabled={processing}
-                            placeholder={t('password')}
+                            placeholder={t('common.password')}
                         />
                         <InputError message={errors.password} />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password_confirmation">{t('confirmPassword')}</Label>
+                        <Label htmlFor="password_confirmation">{t('common.confirmPassword')}</Label>
                         <Input
                             id="password_confirmation"
                             type="password"
@@ -105,7 +105,7 @@ export default function Register() {
                             value={data.password_confirmation}
                             onChange={(e) => setData('password_confirmation', e.target.value)}
                             disabled={processing}
-                            placeholder={t('confirmPassword')}
+                            placeholder={t('common.confirmPassword')}
                         />
                         <InputError message={errors.password_confirmation} />
                     </div>
@@ -113,7 +113,7 @@ export default function Register() {
                     {(specialPages[i18n.language].policy || specialPages[i18n.language].terms) && (
                         <div className="text-muted-foreground text-center text-sm">
                             {!specialPages[i18n.language].policy && (
-                                <Trans i18nKey="registrationDisclaimer.terms">
+                                <Trans i18nKey="auth.register.disclaimer.terms">
                                     <TextLink
                                         href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].terms?.slug })}
                                         tabIndex={6}
@@ -122,7 +122,7 @@ export default function Register() {
                             )}
 
                             {!specialPages[i18n.language].terms && (
-                                <Trans i18nKey="registrationDisclaimer.policy">
+                                <Trans i18nKey="auth.register.disclaimer.policy">
                                     <TextLink
                                         href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].policy?.slug })}
                                         tabIndex={6}
@@ -131,7 +131,7 @@ export default function Register() {
                             )}
 
                             {specialPages[i18n.language].policy && specialPages[i18n.language].terms && (
-                                <Trans i18nKey="registrationDisclaimer.termsAndPolicy">
+                                <Trans i18nKey="auth.register.disclaimer.termsAndPolicy">
                                     <TextLink
                                         href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].terms?.slug })}
                                         tabIndex={6}
@@ -147,12 +147,12 @@ export default function Register() {
 
                     <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('signUp')}
+                        {t('common.signUp')}
                     </Button>
                 </div>
 
                 <div className="text-muted-foreground text-center text-sm">
-                    <Trans i18nKey="alreadyHaveAccount">
+                    <Trans i18nKey="auth.register.alreadyHaveAccount">
                         <TextLink href={route('login')} tabIndex={6}></TextLink>
                     </Trans>
                 </div>

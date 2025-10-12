@@ -39,7 +39,7 @@ export default function AdminSiteEditForm({ settings }: AdminSiteEditFormProps) 
             {/* Habilitación / Inhabilitación de la página de registro de usuario */}
             <Card>
                 <CardHeader>
-                    <CardTitle>{t('userRegistration')}</CardTitle>
+                    <CardTitle>{t('admin.site.edit.title')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     {form.data.action === 'toggle_user_registration' && <FormErrors errors={form.errors} />}
@@ -55,12 +55,12 @@ export default function AdminSiteEditForm({ settings }: AdminSiteEditFormProps) 
                             variant="outline"
                             disabled={form.processing && form.data.action === 'toggle_user_registration'}
                         >
-                            <ToggleGroupItem value="true">{t('enabled')}</ToggleGroupItem>
-                            <ToggleGroupItem value="false">{t('disabled')}</ToggleGroupItem>
+                            <ToggleGroupItem value="true">{t('common.enabled')}</ToggleGroupItem>
+                            <ToggleGroupItem value="false">{t('common.disabled')}</ToggleGroupItem>
                         </ToggleGroup>
                         {form.processing && form.data.action === 'toggle_user_registration' && <LoaderCircle className="h-4 w-4 animate-spin" />}
                     </div>
-                    <p className="text-muted-foreground text-sm italic">{t('userRegistrationVisibility')}</p>
+                    <p className="text-muted-foreground text-sm italic">{t('admin.site.edit.notice')}</p>
                 </CardContent>
             </Card>
 

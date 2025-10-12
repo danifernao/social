@@ -40,9 +40,9 @@ export default function AdminUserTable({ users, previous, next }: Props) {
 
     // Nombres para cada rol de usuario.
     const roles = {
-        admin: t('administrator'),
-        mod: t('moderator'),
-        user: t('user'),
+        admin: t('userRoles.admin.long'),
+        mod: t('userRoles.mod.long'),
+        user: t('userRoles.user.long'),
     };
 
     // Gestiona el formulario de búsqueda.
@@ -95,7 +95,7 @@ export default function AdminUserTable({ users, previous, next }: Props) {
         <div className="w-full space-y-4">
             {/* Buscador */}
             <form onSubmit={handleSearch}>
-                <Input placeholder={t('searchUserPlaceholder')} value={query} onChange={(e) => setQuery(e.target.value)} />
+                <Input placeholder={t('admin.user.index.searchPlaceholder')} value={query} onChange={(e) => setQuery(e.target.value)} />
             </form>
 
             {/* Tabla */}
@@ -105,33 +105,33 @@ export default function AdminUserTable({ users, previous, next }: Props) {
                         <TableRow className="[&_button]:px-0 [&_th]:px-4">
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('id')}>
-                                    {t('id')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('common.id')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
-                            <TableHead>{t('avatar')}</TableHead>
+                            <TableHead>{t('common.avatar')}</TableHead>
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('username')}>
-                                    {t('username')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('common.username')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('email_verified_at')}>
-                                    {t('verified')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('common.verified')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('is_active')}>
-                                    {t('enabled')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('common.enabled')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('role')}>
-                                    {t('role')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('common.role')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('created_at')}>
-                                    {t('registered')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('common.registered')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
                             <TableHead></TableHead>
@@ -149,15 +149,17 @@ export default function AdminUserTable({ users, previous, next }: Props) {
                                         <Link href={route('profile.show', user.id)}>{user.username}</Link>
                                     </TableCell>
                                     <TableCell className={addTextColor(user.email_verified_at)}>
-                                        {user.email_verified_at ? t('yes') : t('no')}
+                                        {user.email_verified_at ? t('common.yes') : t('common.no')}
                                     </TableCell>
-                                    <TableCell className={addTextColor(user.is_active)}>{user.is_active ? t('yes') : t('no')}</TableCell>
+                                    <TableCell className={addTextColor(user.is_active)}>
+                                        {user.is_active ? t('common.yes') : t('common.no')}
+                                    </TableCell>
                                     <TableCell>{roles[user.role]}</TableCell>
                                     <TableCell>{formatDate(user.created_at)}</TableCell>
                                     <TableCell>
                                         {canActOnUser(user) && (
                                             <Button variant="outline" asChild>
-                                                <Link href={route('admin.user.edit', user.id)}>{t('manage')}</Link>
+                                                <Link href={route('admin.user.edit', user.id)}>{t('common.manage')}</Link>
                                             </Button>
                                         )}
                                     </TableCell>
@@ -166,7 +168,7 @@ export default function AdminUserTable({ users, previous, next }: Props) {
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={6} className="py-4 text-center">
-                                    {t('noResults')}
+                                    {t('noResults.search')}
                                 </TableCell>
                             </TableRow>
                         )}
@@ -178,21 +180,21 @@ export default function AdminUserTable({ users, previous, next }: Props) {
             <div className="flex justify-end gap-2">
                 {previous ? (
                     <Button variant="outline" size="sm" asChild>
-                        <Link href={previous}>{t('previous')}</Link>
+                        <Link href={previous}>{t('common.previous')}</Link>
                     </Button>
                 ) : (
                     <Button variant="outline" size="sm" disabled>
-                        {t('previous')}
+                        {t('common.previous')}
                     </Button>
                 )}
 
                 {next ? (
                     <Button variant="outline" size="sm" asChild>
-                        <Link href={next}>{t('next')}</Link>
+                        <Link href={next}>{t('common.next')}</Link>
                     </Button>
                 ) : (
                     <Button variant="outline" size="sm" disabled>
-                        {t('next')}
+                        {t('common.next')}
                     </Button>
                 )}
             </div>
