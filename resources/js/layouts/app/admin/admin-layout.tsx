@@ -35,13 +35,13 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
         ...(auth.user.is_admin
             ? [
                   {
-                      title: t('siteSettings'),
+                      title: t('admin.site.layout.menu'),
                       href: route('admin.site.edit'),
                       icon: null,
                       isActive: ['admin.site.edit'].includes(routeName),
                   },
                   {
-                      title: t('pages'),
+                      title: t('admin.page.layout.menu'),
                       href: route('admin.page.index', lang),
                       icon: null,
                       isActive: ['admin.page.index', 'admin.page.create', 'admin.page.edit'].includes(routeName),
@@ -49,7 +49,7 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
               ]
             : []),
         {
-            title: t('users'),
+            title: t('admin.user.layout.menu'),
             href: route('admin.user.index'),
             icon: null,
             isActive: ['admin.user.index', 'admin.user.create', 'admin.user.edit'].includes(routeName),
@@ -58,7 +58,7 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
 
     return (
         <div className="px-4 py-6">
-            <Heading title={t('management')} description={t('managementDescription')} />
+            <Heading title={t('admin.layout.title')} description={t('admin.layout.description')} />
 
             <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12">
                 <aside className="w-full max-w-xl lg:w-48">

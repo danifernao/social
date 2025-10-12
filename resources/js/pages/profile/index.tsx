@@ -44,14 +44,14 @@ export default function Profile() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('userProfile', { username: user.username }),
+            title: t('profile.title', { username: user.username }),
             href: route('profile.show', user.username),
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={t('userProfile', { username: user.username })} />
+            <Head title={t('profile.title', { username: user.username })} />
             <AppContentLayout>
                 <ProfileHeader user={user} />
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>

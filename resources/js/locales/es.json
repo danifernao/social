@@ -1,199 +1,257 @@
 {
-  "accept": "Aceptar",
-  "activate": "Activar",
-  "actions": "Acciones",
-  "accountStatus": "Cambiar el estado de la cuenta",  
-  "accountStatusDescription": "Al inhabilitar una cuenta, se bloquea el inicio de sesión y se cierran todas las sesiones activas asociadas a ella.",
-  "admin": "Admin",
-  "administrator": "Administrador",
-  "alreadyHaveAccount": "¿Ya tienes una cuenta? <0>Inicia sesión</0>",
-  "appearance": "Apariencia",
-  "appearanceSettings": "Configuración de apariencia",
-  "appearanceSettingsDescription": "Actualiza la configuración de apariencia de tu cuenta.",
-  "avatar": "Avatar",
-  "avatarSizeAndFormat": "Tamaño máximo: 2MB. Solo PNG o JPG.",
-  "backToEdit": "Volver a editar",
-  "block": "Bloquear",
-  "cancel": "Cancelar",
-  "change": "Cambiar",
-  "changeEmail": "Cambiar correo electrónico",
-  "changePassword": "Cambiar contraseña",
-  "changeRole": "Cambiar rol",
-  "changeUsername": "Cambiar nombre de usuario",
-  "changeUsernameDescription": "Si el campo se deja vacío, el registro se guardará con un nombre de usuario aleatorio.",
-  "clickToSendVerificationEmail": "Haz clic aquí para reenviar el correo de verificación.",
-  "comment": "Comentar",
-  "commentDeleted": "Comentario eliminado",
-  "comments": "Comentarios",
-  "confirm": "Confirmar",
-  "confirmAction": "Confirmar acción",
-  "confirmActionDescription": "Para continuar, ingresa tu contraseña de usuario con privilegios.",
-  "confirmPassword": "Confirmar contraseña",
-  "confirmYourPassword": "Confirma tu contraseña",
-  "confirmYourPasswordDescription": "Esta es una zona segura de la aplicación. Por favor, confirma tu contraseña antes de continuar.",
-  "connections": "Conexiones",
-  "content": "Contenido",
-  "create": "Crear",
-  "createdAt": "Fecha de publicación",
-  "createPage": "Crear página",
-  "createPost": "Publicar",
-  "createUser": "Crear usuario",
-  "createUserDescription": "Rellene los campos para registrar un nuevo usuario.",
-  "currentPassword": "Contraseña actual",
-  "dark": "Oscuro",
-  "delete": "Eliminar",
-  "deleteAccount": "Eliminar cuenta",
-  "deleteAccountConfirmation": "¿Estás seguro de que deseas eliminar tu cuenta?",
-  "deleteAccountConfirmationDescription": "Una vez que tu cuenta sea eliminada, todos sus recursos y datos también serán eliminados permanentemente. Ingresa tu contraseña para confirmar que deseas eliminar tu cuenta de forma permanente.",
-  "deleteAccountDescription": "Elimina tu cuenta y todos sus recursos",
-  "deleteAvatar": "Eliminar avatar",
-  "deleteComment": "Eliminar comentario",
-  "deleteCommentConfirmation": "¿Estás seguro de eliminar este comentario? Esta acción es irreversible.",
-  "deletePage": "Eliminar página",
-  "deletePageConfirmation": "¿Estás seguro de eliminar esta página? Esta acción es irreversible.",
-  "deletePost": "Eliminar publicación",
-  "deletePostConfirmation": "¿Estás seguro de eliminar esta publicación? Esta acción es irreversible.",
-  "deleteUserAccountDescription": "Elimina la cuenta de usuario y todos los datos asociados a ella.",
-  "description": "Descripción",
-  "disabled": "Inhabilitado",
-  "dummyEmail": "correo@ejemplo.com",
-  "edit": "Editar",
-  "editComment": "Editar comentario",
-  "editCommentDescription": "Edita el contenido de tu comentario.",
-  "editPage": "Editar página", 
-  "editPost": "Editar publicación",
-  "editPostDescription": "Edita el contenido de tu publicación.",
-  "edited": "Editado",
-  "email": "Correo electrónico",
-  "emailAddress": "Dirección de correo electrónico",
-  "emailNoVerified": "Tu dirección de correo electrónico no está verificada.",
-  "emptyMessage": "No hay nada que mostrar aún.",
-  "enabled": "Habilitado",
-  "error": "¡Ups! Error inesperado.",
-  "example": "Ejemplo",
-  "explore": "Explorar",
-  "follow": "Seguir",
-  "followedByUser": "Seguidos por {{username}}",
-  "followers": "Seguidores",
-  "following": "Seguidos",
-  "forgotPassword": "¿Olvidaste tu contraseña?",
-  "forgotPasswordDescription": "Ingresa tu correo para recibir un enlace de restablecimiento de contraseña.",
-  "hasCommentedInPost": "<0>{{username}}</0> ha <1>comentado</1> en una publicación en la que participas.",
-  "hasCommentedOnYourPost": "<0>{{username}}</0> ha <1>comentado</1> en una publicación tuya.",
-  "hasFollowedYou": "<0>{{username}}</0> te ha <1>seguido</1>.",
-  "hashtag": "Etiqueta",
-  "hasMentionedYouInComment": "<0>{{username}}</0> te ha <1>mencionado</1> en un comentario.",
-  "hasMentionedYouInPost": "<0>{{username}}</0> te ha <1>mencionado</1> en una publicación.",
-  "hasPostOnYourProfile": "<0>{{username}}</0> ha <1>publicado</1> en tu perfil.",
-  "hideContent": "Ocultar contenido",
-  "home": "Inicio",
-  "id": "ID",
-  "light": "Claro",
-  "language": "Idioma",
-  "languageSettings": "Configuración del idioma",
-  "languageSettingsDescription": "Cambia el idioma de la interfaz.",
-  "loadMore": "Cargar más",
-  "loading": "Cargando",
-  "login": "Iniciar sesión",
-  "loginDescription": "Ingresa tu correo electrónico y contraseña para iniciar sesión.",
-  "loginTitle": "Inicia sesión en tu cuenta",
-  "logout": "Cerrar sesión",
-  "manage": "Administrar",
-  "management": "Administración",
-  "managementDescription": "Gestiona la configuración y administración de la red social.",
-  "manageUser": "Administrar usuario",
-  "markAsRead": "Marcar como leídas",
-  "menu": "Menú",
-  "mod": "Mod",
-  "moderator": "Moderador",
-  "nComments": "{{total}} comentarios",
-  "newEmail": "Nuevo correo electrónico",
-  "newPassword": "Nueva contraseña",
-  "next": "Siguiente",
-  "no": "No",
-  "noAccountYet": "¿No tienes una cuenta? <0>Crea una</0>",
-  "noComments": "Nadie ha comentado aún.",
-  "noFollowers": "Este usuario aún no tiene seguidores.",
-  "noFollowing": "Este usuario no sigue a nadie por ahora.",
-  "noPages": "No se ha creado ninguna página todavía.",
-  "noPosts": "Aún no hay publicaciones.",
-  "noResults": "No se encontraron resultados.",
-  "notifications": "Notificaciones",
-  "options": "Opciones",
-  "pageContent": "Contenido de la página",
-  "pages": "Páginas",
-  "pageLanguageDescription": "No se podrá cambiar el idioma una vez creada la página.",
-  "pageSlug": "Parte final de la URL de la página",
-  "pageSlugDescription": "Si el campo se deja vacío, la página se guardará con un identificador aleatorio.",
-  "pagesManagement": "Administración de páginas",
-  "pageTitle": "Título de la página",
-  "pageTypeDescription": "Solo se permite una página de Política de privacidad y una de Reglas de la comunidad por idioma.",
-  "pageTypes": {
-    "normal": "Página normal",
-    "about": "Acerca de",
-    "terms": "Términos y condiciones",
-    "policy": "Política de privacidad",
-    "guidelines": "Reglas de la comunidad"
+  "admin": {
+    "confirmAction": {
+      "title": "Confirmar acción",
+      "description": "Para continuar, ingrese su contraseña de usuario con privilegios."
+    },
+    "layout": {
+      "title": "Administración",
+      "description": "Gestiona la configuración y administración de la red social."
+    },
+    "page": {
+      "create": {
+        "title": "Crear página"
+      },
+      "edit": {
+        "title": "Editar página"
+      },
+      "form": {
+        "content": {
+          "placeholder": "Contenido de la página"
+        },
+        "language": {
+          "notice": "No se podrá cambiar el idioma una vez creada la página."
+        },
+        "slug": {
+          "title": "Identificador de URL (slug)",
+          "notice": "Si el campo se deja vacío, la página se guardará con un identificador aleatorio.",
+          "placeholder": "Parte final de la URL de la página"
+        },
+        "title": {
+          "placeholder": "Título de la pagina"
+        },
+        "type": {
+          "notice": "Solo se permite una página de Acerca de, Términos y Condiciones, Política de Privacidad y Reglas de la Comunidad por idioma.",
+          "placeholder": "Seleccionar tipo de página"
+        }
+      },
+      "index": {
+        "create": "Crear página",
+        "delete": {
+          "title": "Eliminar página",
+          "description": "¿Estás seguro de eliminar esta página? Esta acción es irreversible."
+        }
+      },
+      "layout": {
+        "menu": "Páginas",
+        "title": "Administración de páginas"
+      }
+    },
+    "site": {
+      "edit": {
+        "notice": "Habilita o inhabilita el registro de nuevos usuarios.",
+        "title": "Registro de usuarios"
+      },
+      "layout": {
+        "menu": "General",
+        "title": "Administración del sitio web"
+      }
+    },
+    "user": {
+      "create": {
+        "confirm": {
+          "title": "Confirmar acción",
+          "description": "Para continuar, ingrese su contraseña de usuario con privilegios."
+        },
+        "description": "Rellene los campos para registrar un nuevo usuario.",
+        "passwordNotice": "Se enviará un enlace al correo registrado para que el usuario establezca su contraseña.",
+        "title": "Crear usuario"
+      },
+      "edit": {
+        "avatar": {
+          "title": "Eliminar avatar"
+        },
+        "confirm": {
+          "title": "Confirmar Acción",
+          "description": "Para continuar, ingresa tu contraseña de usuario con privilegios."
+        },
+        "deleteAccount": {
+          "description": "Elimina la cuenta de usuario y todos los datos asociados a ella.",
+          "title": "Eliminar usuario"              
+        },
+        "email": {
+          "sendVerificationEmail": "Enviar correo electrónico de verificación de cuenta.",
+          "title": "Cambiar correo electrónico"
+        },
+        "password": {
+          "title": "Cambiar contraseña"
+        },
+        "resetPassword": {
+          "description": "Envía al usuario un correo electrónico para el restablecimiento de la contraseña.",
+          "title": "Restablecer contraseña",              
+          "useRandomPass": "Reemplazar la contraseña actual por una aleatoria."
+        },
+        "role": {
+          "title": "Cambiar rol",
+          "description": {        
+            "Usuario": "Gestionar su cuenta, publicar, comentar y seguir a otros.",
+            "Moderador": "Todo lo del Usuario más gestionar publicaciones y cuentas ajenas.",
+            "Administrador": "Todo lo anterior más administrar el sitio, asignar roles y eliminar cuentas."
+          },
+          "placeholder": "Selecciona un rol"
+        },
+        "status": {
+          "notice": "Al inhabilitar una cuenta, se bloquea el inicio de sesión y se cierran todas las sesiones activas asociadas a ella.",
+          "title": "Cambiar el estado de la cuenta"              
+        },
+        "title": "Editar usuario",
+        "username": {
+          "notice": "Si el campo se deja vacío, el registro se guardará con un nombre de usuario aleatorio.",
+          "title": "Cambiar nombre de usuario"              
+        }
+      },
+      "index": {
+        "create": "Crear usuario",
+        "searchPlaceholder": "Buscar por nombre o ID de usuario..."
+      },
+      "layout": {
+        "menu": "Usuarios",
+        "title": "Administración de usuarios"
+      }
+    }
   },
-  "partial": "parcial",
-  "password": "Contraseña",
-  "passwordSettings": "Configuración de contraseña",
-  "post": "Publicación",
-  "postDeleted": "Publicación eliminada",
-  "posts": "Publicaciones",
-  "preview": "Vista previa",
-  "previous": "Anterior",
-  "profile": "Perfil",
-  "profileInfo": "Información del perfil",
-  "profileInfoDescription": "Actualiza tu nombre de usuario y dirección de correo electrónico.",
-  "profileSettings": "Configuración del perfil",
-  "react": "Reaccionar",
-  "reactWith": "Reaccionar con {{emoji}}",
-  "readMore": "Leer más",
-  "register": "Registrarse",
-  "registerDescription": "Ingresa tus datos a continuación para crear tu cuenta.",
-  "registerTitle": "Crea una cuenta",  
-  "registered": "Registrado",
-  "registrationDisclaimer": {
-    "terms": "Al registrarte, aceptas nuestros <0>términos y condiciones</0>.",
-    "policy": "Al registrarte, aceptas uestra <0>política de privacidad</0>.",
-    "termsAndPolicy": "Al registrarte, aceptas nuestros <0>términos y condiciones</0> y nuestra <1>política de privacidad</1>."
+  "auth": {
+    "confirmPassword": {
+      "description": "Esta es una zona segura de la aplicación. Por favor, confirma tu contraseña antes de continuar.",
+      "title": "Confirma tu contraseña"
+    },
+    "forgotPassword": {
+      "description": "Ingresa tu correo para recibir un enlace de restablecimiento de contraseña.",
+      "returnToLogin": "O bien, vuelve a <0>iniciar sesión</0>",
+      "sendEmail": "Enviar enlace para restablecer contraseña",
+      "title": "¿Olvidaste tu contraseña?"
+    },
+    "login": {
+      "description": "Ingresa tu correo electrónico y contraseña para iniciar sesión.",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "noAccountYet": "¿No tienes una cuenta? <0>Crea una</0>",
+      "title": "Inicia sesión en tu cuenta"
+    },
+    "register": {
+      "alreadyHaveAccount": "¿Ya tienes una cuenta? <0>Inicia sesión</0>",
+      "description": "Ingresa tus datos a continuación para crear tu cuenta.",
+      "disclaimer": {
+        "terms": "Al registrarte, aceptas nuestros <0>términos y condiciones</0>.",
+        "policy": "Al registrarte, aceptas uestra <0>política de privacidad</0>.",
+        "termsAndPolicy": "Al registrarte, aceptas nuestros <0>términos y condiciones</0> y nuestra <1>política de privacidad</1>."
+      },
+      "title": "Crea una cuenta"
+    },
+    "resetPassword": {
+      "description": "Ingresa tu nueva contraseña a continuación.",
+      "title": "Restablecer contraseña"
+    },
+    "verifyEmail": {
+      "description": "Por favor, verifica tu dirección de correo electrónico haciendo clic en el enlace que acabamos de enviarte.",
+      "title": "Verificar correo electrónico",
+      "emailSent": "Se ha enviado un nuevo enlace de verificación al correo que proporcionaste durante el registro.",
+      "resendEmail": "Reenviar correo de verificación"
+    }
   },
-  "rememberMe": "Recuérdame",
-  "removeAvatar": "Quitar avatar",
-  "removeReaction": "Quitar reacción",
-  "resendVerificationEmail": "Reenviar correo de verificación",
-  "reset": "Restablecer",
-  "resetPassword": "Restablecer contraseña",
-  "resetPasswordDescription": "Ingresa tu nueva contraseña a continuación.",
-  "resetUserPasswordDescription": "Envía al usuario un correo electrónico para el restablecimiento de la contraseña.",
-  "returnToLogin": "O bien, vuelve a <0>iniciar sesión</0>",
-  "role": "Rol",
-  "roles": {
-    "Usuario": "Gestionar su cuenta, publicar, comentar y seguir a otros.",
-    "Moderador": "Todo lo del Usuario más gestionar publicaciones y cuentas ajenas.",
-    "Administrador": "Todo lo anterior más administrar el sitio, asignar roles y eliminar cuentas."
+  "comment": {
+    "delete": {
+      "description": "¿Estás seguro de eliminar este comentario? Esta acción es irreversible.",
+      "success": "Comentario eliminado",
+      "title": "Eliminar comentario"
+    },
+    "edit": {
+      "description": "Edita el contenido de tu comentario.",
+      "title": "Editar comentario"
+    }
   },
-  "save": "Guardar",
-  "savePassword": "Guardar contraseña",
-  "saved": "Guardado",
-  "search": "Buscar",
-  "searchPlaceholder": "Buscar {{type}}...",
-  "searchUserPlaceholder": "Buscar por nombre o ID de usuario...",
-  "seeFullThread": "Ver hilo completo",
-  "selectLanguage": "Seleccionar idioma",
-  "selectPageType": "Seleccionar tipo de página",
-  "sendPasswordResetLink": "Enviar enlace para restablecer contraseña",
-  "sendVerificationEmail": "Enviar correo electrónico de verificación de cuenta.",
-  "settings": "Configuración",
-  "settingsDescription": "Administra tu perfil y los ajustes de tu cuenta.",
-  "showContent": "Mostrar contenido oculto",
-  "signUp": "Crear cuenta",
-  "siteSettings": "Ajustes del sitio",
-  "slug": "Identificador de URL (slug)",
-  "system": "Sistema",
-  "title": "Título",
-  "toolbar": {
+  "common": {
+    "accept": "Aceptar",
+    "actions": "Acciones",
+    "appearance": "Apariencia",
+    "avatar": "Avatar",
+    "backToEdit": "Volver a editar",
+    "block": "Bloquear",
+    "cancel": "Cancelar",
+    "change": "Cambiar",
+    "create": "Crear",
+    "comment": "Comentar",
+    "comments": "Comentarios",
+    "confirm": "Confirmar",
+    "confirmPassword": "Confirmar contraseña",
+    "connections": "Conexiones",
+    "content": "Contenido",
+    "currentPassword": "Contraseña actual",
+    "dark": "Oscuro",
+    "delete": "Eliminar",
+    "disabled": "Inhabilitado",
+    "dummyEmail": "correo@ejemplo.com",
+    "edit": "Editar",
+    "email": "Correo electrónico",
+    "enabled": "Habilitado",
+    "error": "¡Ups! Error inesperado.",
+    "explore": "Explorar",
+    "follow": "Seguir",
+    "followers": "Seguidores",
+    "following": "Seguidos",
+    "hideContent": "Ocultar contenido",
+    "home": "Inicio",
+    "id": "ID",
+    "language": "Idioma",
+    "light": "Claro",
+    "loading": "Cargando",
+    "loadMore": "Cargar más",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "manage": "Administrar",
+    "manageUser": "Administrar usuario",
+    "management": "Administración",
+    "markAsRead": "Marcar como leídas",
+    "menu": "Menú",
+    "newEmail": "Nuevo correo electrónico",
+    "newPassword": "Nueva contraseña",
+    "next": "Siguiente",
+    "notifications": "Notificaciones",
+    "options": "Opciones",
+    "password": "Contraseña",
+    "post": "Publicar",
+    "posts": "Publicaciones",
+    "previous": "Anterior",
+    "preview": "Vista previa",
+    "profile": "Perfil",
+    "readMore": "Leer más",
+    "rememberMe": "Recuérdame",
+    "register": "Registrarse",
+    "registered": "Registrado",
+    "reset": "Restablecer",
+    "role": "Rol",
+    "save": "Guardar",
+    "saved": "Cambios guardados.",
+    "search": "Buscar",
+    "searchPlaceholder": "Buscar {{type}}...",
+    "seeFullThread": "Ver hilo completo",
+    "selectLanguage": "Seleccionar idioma",
+    "settings": "Configuración",
+    "showContent": "Mostrar contenido oculto",
+    "signUp": "Crear cuenta",
+    "system": "Sistema",
+    "title": "Título",
+    "type": "Tipo",
+    "unblock": "Desbloquear",
+    "unfollow": "Dejar de seguir",
+    "username": "Nombre de usuario",
+    "users": "Usuarios",
+    "view": "Ver",
+    "verified": "Verificado",
+    "whatsOnYourMind": "¿En qué estás pensando?",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "formattingToolbar": {
     "alternativeText": "Texto alternativo",
     "big": "Grande",
     "bold": "Negrita",
@@ -229,34 +287,110 @@
     "unorderedList": "Lista sin orden",
     "video": "Video"
   },
-  "type": "Tipo",
-  "unblock": "Desbloquear",
-  "unfollow": "Dejar de seguir",
-  "updatePassword": "Actualizar contraseña",
-  "updatePasswordDescription": "Asegúrate de que tu cuenta utilice una contraseña larga y aleatoria para mantener la seguridad.",
-  "user": "Usuario",
-  "useRandomPassword": "Reemplazar la contraseña actual por una aleatoria.",
-  "userFollowers": "Seguidores de {{username}}",
-  "userManagement": "Administración de usuarios",
-  "userPasswordSetupNotice": "Se enviará un enlace al correo registrado para que el usuario establezca su contraseña.",
-  "userPost": "Publicación de {{username}}",
-  "userProfile": "Perfil de {{username}}",
-  "userRegistration": "Registro de usuarios",
-  "userRegistrationVisibility": "Habilita o inhabilita el registro de nuevos usuarios.",
-  "userSettings": "Configuración de usuario",
-  "username": "Nombre de usuario",
-  "users": "Usuarios",
-  "verificationEmailSent": "Se ha enviado un nuevo enlace de verificación al correo que proporcionaste durante el registro.",
-  "verificationLinkSent": "Se ha enviado un nuevo enlace de verificación a tu dirección de correo electrónico.",
-  "verified": "Verificado",
-  "verifyEmail": "Verificar correo electrónico",
-  "verifyEmailMessage": "Por favor, verifica tu dirección de correo electrónico haciendo clic en el enlace que acabamos de enviarte.",
-  "view": "Ver",
-  "warning": "Advertencia",
-  "warningDescription": "Procede con precaución, esta acción no se puede deshacer.",
-  "welcome": "Bienvenido",
-  "welcomeMessage": "Conecta, comparte y descubre lo que otros piensan.",
-  "welcomeTitle": "Bienvenido a {{siteName}}",
-  "whatsOnYourMind": "¿En qué estás pensando?",
-  "yes": "Sí"
+  "noResults": {
+    "comments": "Nadie ha comentado aún.",
+    "followers": "Este usuario aún no tiene seguidores.",
+    "following": "Este usuario no sigue a nadie por ahora.",
+    "general":  "No hay nada que mostrar aún.",
+    "pages": "No se ha creado ninguna página todavía.",
+    "posts": "Aún no hay publicaciones.",
+    "search": "No se encontraron resultados."
+  },
+  "notification": {
+    "hasCommentedInPost": "<0>{{username}}</0> ha <1>comentado</1> en una publicación en la que participas.",
+    "hasCommentedOnYourPost": "<0>{{username}}</0> ha <1>comentado</1> en una publicación tuya.",
+    "hasFollowedYou": "<0>{{username}}</0> te ha <1>seguido</1>.",
+    "hasMentionedYouInComment": "<0>{{username}}</0> te ha <1>mencionado</1> en un comentario.",
+    "hasMentionedYouInPost": "<0>{{username}}</0> te ha <1>mencionado</1> en una publicación.",
+    "hasPostOnYourProfile": "<0>{{username}}</0> ha <1>publicado</1> en tu perfil."
+  },
+  "page": {
+    "types": {
+      "normal": "Página normal",
+      "about": "Acerca de",
+      "terms": "Términos y condiciones",
+      "policy": "Política de privacidad",
+      "guidelines": "Reglas de la comunidad"
+    }
+  },
+  "post": {
+    "delete": {
+      "description": "¿Estás seguro de eliminar esta publicación? Esta acción es irreversible.",
+      "success": "Publicación eliminada",
+      "title": "Eliminar publicación"
+    },
+    "edit": {
+      "description": "Edita el contenido de tu publicación.",
+      "title": "Editar publicación"
+    },
+    "show": {
+      "comments": "{{total}} comentarios"
+    }
+  },
+  "profile": {
+    "title": "Perfil de {{username}}",
+    "following": "Seguidos por {{username}}",
+    "followers": "Seguidores de {{username}}"
+  },
+  "reaction": {
+    "react": "Reaccionar",
+    "reactWith": "Reaccionar con {{emoji}}",
+    "remove": "Quitar reacción"
+  },
+  "settings": {
+    "appearance": {
+      "description": "Actualiza la configuración de apariencia de tu cuenta.",
+      "title": "Configuración de apariencia"
+    },
+    "language": {
+      "description": "Cambia el idioma de la interfaz.",
+      "title": "Configuración del idioma"
+    },
+    "layout": {
+      "description": "Administra tu perfil y los ajustes de tu cuenta.",
+      "title": "Configuración de la cuenta"
+    },
+    "password": {
+      "description": "Asegúrate de que tu cuenta utilice una contraseña larga y aleatoria para mantener la seguridad.",
+      "title": "Configuración de contraseña"
+    },
+    "profile": {
+      "description": "Asegúrate de que tu cuenta utilice una contraseña larga y aleatoria para mantener la seguridad.",
+      "email": {
+        "address": "Dirección de correo electrónico",
+        "sendVerificationEmail": "Haz clic aquí para reenviar el correo de verificación.",
+        "noVerified": "Tu dirección de correo electrónico no está verificada.",
+        "verificationLinkSent": "Se ha enviado un nuevo enlace de verificación a tu dirección de correo electrónico."
+      },
+      "info": {
+        "avatar": {
+          "remove": "Quitar avatar",
+          "format": "Tamaño máximo: 2MB. Solo PNG o JPG."
+        },
+        "description": "Actualiza tu nombre de usuario y dirección de correo electrónico.",        
+        "title": "Información del perfil"
+      },
+      "title": "Configuración del perfil"
+    }
+  },
+  "userRoles": {
+    "admin": {
+      "short": "Admin",
+      "long": "Administrador"
+    },
+    "mod": {
+      "short": "Mod",
+      "long": "Moderador"
+    },
+    "user": {
+      "long": "Usuario"
+    }
+  },
+  "welcome": {
+    "description": "Conecta, comparte y descubre lo que otros piensan.",
+    "layout": {
+      "title": "Bienvenido"
+    },
+    "title": "Bienvenido a {{siteName}}"    
+  }
 }

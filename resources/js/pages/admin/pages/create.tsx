@@ -21,18 +21,18 @@ export default function PagesCreate() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('pagesManagement'),
+            title: t('admin.page.layout.title'),
             href: route('admin.page.index', lang),
         },
         {
-            title: t('createPage'),
+            title: t('admin.page.create.title'),
             href: route('admin.page.create'),
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={t('createPage')} />
+            <Head title={t('admin.page.create.title')} />
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
                     <AdminPageForm />

@@ -23,7 +23,7 @@ export default function UserBlockBtn({ user }: UserBlockBtnProps) {
         <Button className="group relative gap-0 overflow-hidden" onClick={() => execute('user.block', { user: user.id })} disabled={isProcessing}>
             {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />}
             {user.is_blocked ? <LockOpen className={iconClass} /> : <Lock className={iconClass} />}
-            <span className={textClass}>{user.is_blocked ? t('unblock') : t('block')}</span>
+            <span className={textClass}>{user.is_blocked ? t('common.unblock') : t('common.block')}</span>
         </Button>
     );
 }

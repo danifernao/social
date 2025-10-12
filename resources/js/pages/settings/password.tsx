@@ -45,22 +45,22 @@ export default function Password() {
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('passwordSettings'),
+            title: t('settings.password.title'),
             href: '/settings/password',
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={t('passwordSettings')} />
+            <Head title={t('settings.password.title')} />
 
             <SettingsLayout>
                 <div className="space-y-6">
-                    <HeadingSmall title={t('updatePassword')} description={t('updatePasswordDescription')} />
+                    <HeadingSmall title={t('settings.password.title')} description={t('settings.password.description')} />
 
                     <form onSubmit={updatePassword} className="space-y-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="current_password">{t('currentPassword')}</Label>
+                            <Label htmlFor="current_password">{t('common.currentPassword')}</Label>
 
                             <Input
                                 id="current_password"
@@ -70,14 +70,14 @@ export default function Password() {
                                 type="password"
                                 className="mt-1 block w-full"
                                 autoComplete="current-password"
-                                placeholder={t('currentPassword')}
+                                placeholder={t('common.currentPassword')}
                             />
 
                             <InputError message={errors.current_password} />
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="password">{t('newPassword')}</Label>
+                            <Label htmlFor="password">{t('common.newPassword')}</Label>
 
                             <Input
                                 id="password"
@@ -87,14 +87,14 @@ export default function Password() {
                                 type="password"
                                 className="mt-1 block w-full"
                                 autoComplete="new-password"
-                                placeholder={t('newPassword')}
+                                placeholder={t('common.newPassword')}
                             />
 
                             <InputError message={errors.password} />
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="password_confirmation">{t('confirmPassword')}</Label>
+                            <Label htmlFor="password_confirmation">{t('common.confirmPassword')}</Label>
 
                             <Input
                                 id="password_confirmation"
@@ -103,14 +103,14 @@ export default function Password() {
                                 type="password"
                                 className="mt-1 block w-full"
                                 autoComplete="new-password"
-                                placeholder={t('confirmPassword')}
+                                placeholder={t('common.confirmPassword')}
                             />
 
                             <InputError message={errors.password_confirmation} />
                         </div>
 
                         <div className="flex items-center gap-4">
-                            <Button disabled={processing}>{t('savePassword')}</Button>
+                            <Button disabled={processing}>{t('common.save')}</Button>
 
                             <Transition
                                 show={recentlySuccessful}
@@ -119,7 +119,7 @@ export default function Password() {
                                 leave="transition ease-in-out"
                                 leaveTo="opacity-0"
                             >
-                                <p className="text-sm text-neutral-600">{t('saved')}</p>
+                                <p className="text-sm text-neutral-600">{t('common.saved')}</p>
                             </Transition>
                         </div>
                     </form>

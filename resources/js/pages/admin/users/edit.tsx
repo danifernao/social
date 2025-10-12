@@ -18,7 +18,7 @@ export default function UsersEdit() {
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('userManagement'),
+            title: t('admin.user.layout.title'),
             href: route('admin.user.index'),
         },
         {
@@ -29,7 +29,7 @@ export default function UsersEdit() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={t('userSettings')} />
+            <Head title={t('admin.user.edit.title')} />
             <AdminLayout>
                 <AppContentLayout noMargin={true} fullWidth={true}>
                     <h2 className="text-2xl font-semibold tracking-tight">

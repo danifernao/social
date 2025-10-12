@@ -115,7 +115,7 @@ export default function FormattedText({ entryType, text, alwaysExpanded = false,
                             }}
                             className="text-blue-600 hover:underline"
                         >
-                            {show ? t('hideContent') : t('showContent')}
+                            {show ? t('common.hideContent') : t('common.showContent')}
                         </button>
                         {show && <div>{children}</div>}
                     </div>
@@ -211,7 +211,7 @@ export default function FormattedText({ entryType, text, alwaysExpanded = false,
             {!expanded && showExpandButton && (
                 <div className="absolute right-0 bottom-0 left-0 flex items-center justify-center bg-gradient-to-t from-black to-transparent p-4">
                     <Button variant="link" onClick={() => setExpanded(true)} className="mt-2 text-sm">
-                        {t('readMore')}
+                        {t('common.readMore')}
                     </Button>
                 </div>
             )}
