@@ -114,6 +114,9 @@ export default function AdminPageForm({ page }: Props) {
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="normal">{t('pageTypes.normal')}</SelectItem>
+                                <SelectItem value="about" disabled={!!specialPages[data.language!].about}>
+                                    {t('pageTypes.about')}
+                                </SelectItem>
                                 <SelectItem value="terms" disabled={!!specialPages[data.language!].terms}>
                                     {t('pageTypes.terms')}
                                 </SelectItem>

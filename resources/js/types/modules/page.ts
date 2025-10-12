@@ -8,7 +8,7 @@ export interface Page {
     created_at: string;
 }
 
-export type PageType = 'normal' | 'terms' | 'policy' | 'guidelines';
+export type PageType = 'normal' | 'about' | 'terms' | 'policy' | 'guidelines';
 
 export interface Pages {
     data: Page[];
@@ -20,6 +20,7 @@ export interface Pages {
 
 export interface SpecialPages {
     [language: string]: {
+        about: { slug: string } | null;
         terms: { slug: string } | null;
         policy: { slug: string } | null;
         guidelines: { slug: string } | null;

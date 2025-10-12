@@ -17,7 +17,7 @@ class PageUtils
      */
     public static function getTypes(): array
     {
-        return ['normal', 'terms', 'policy', 'guidelines'];
+        return ['normal', 'about', 'terms', 'policy', 'guidelines'];
     }
 
     /**
@@ -27,7 +27,7 @@ class PageUtils
      */
     public static function getSpecialTypes(): array
     {
-        return ['terms', 'policy', 'guidelines'];
+        return ['about', 'terms', 'policy', 'guidelines'];
     }
 
     /**
