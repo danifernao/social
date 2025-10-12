@@ -131,6 +131,7 @@
   "pageTypeDescription": "Only one Privacy Policy page and one Community Guidelines page are allowed per language.",
   "pageTypes": {
     "normal": "Normal page",
+    "about": "About",
     "terms": "Terms and conditions",
     "policy": "Privacy policy",
     "guidelines": "Community guidelines"
