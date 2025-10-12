@@ -130,6 +130,7 @@
   "pageTypeDescription": "Solo se permite una página de Política de privacidad y una de Reglas de la comunidad por idioma.",
   "pageTypes": {
     "normal": "Página normal",
+    "about": "Acerca de",
     "terms": "Términos y condiciones",
     "policy": "Política de privacidad",
     "guidelines": "Reglas de la comunidad"
