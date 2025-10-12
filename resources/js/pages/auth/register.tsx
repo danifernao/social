@@ -1,4 +1,4 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
 
@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/kit/auth-layout';
 
+import { SpecialPages } from '@/types/modules/page';
 import { Trans, useTranslation } from 'react-i18next';
 
 type RegisterForm = {
@@ -21,6 +22,8 @@ type RegisterForm = {
 
 export default function Register() {
     const { t, i18n } = useTranslation();
+
+    const { specialPages } = usePage<{ specialPages: SpecialPages }>().props;
 
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
         username: '',
@@ -106,6 +109,41 @@ export default function Register() {
                         />
                         <InputError message={errors.password_confirmation} />
                     </div>
+
+                    {(specialPages[i18n.language].policy || specialPages[i18n.language].terms) && (
+                        <div className="text-muted-foreground text-center text-sm">
+                            {!specialPages[i18n.language].policy && (
+                                <Trans i18nKey="registrationDisclaimer.terms">
+                                    <TextLink
+                                        href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].terms?.slug })}
+                                        tabIndex={6}
+                                    ></TextLink>
+                                </Trans>
+                            )}
+
+                            {!specialPages[i18n.language].terms && (
+                                <Trans i18nKey="registrationDisclaimer.policy">
+                                    <TextLink
+                                        href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].policy?.slug })}
+                                        tabIndex={6}
+                                    ></TextLink>
+                                </Trans>
+                            )}
+
+                            {specialPages[i18n.language].policy && specialPages[i18n.language].terms && (
+                                <Trans i18nKey="registrationDisclaimer.termsAndPolicy">
+                                    <TextLink
+                                        href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].terms?.slug })}
+                                        tabIndex={6}
+                                    ></TextLink>
+                                    <TextLink
+                                        href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].policy?.slug })}
+                                        tabIndex={6}
+                                    ></TextLink>
+                                </Trans>
+                            )}
+                        </div>
+                    )}
 
                     <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}

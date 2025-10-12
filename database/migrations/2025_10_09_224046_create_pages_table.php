@@ -13,8 +13,12 @@ return new class extends Migration
     {
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
+            $table->string('language', 5)->default('es');
+            $table->enum('type', ['normal', 'terms', 'policy', 'guidelines'])
+                ->default('normal');
             $table->string('title');
-            $table->string('slug')->unique();
+            $table->string('slug');
+            $table->unique(['slug', 'language']);
             $table->text('content')->nullable();
             $table->timestamps();
         });

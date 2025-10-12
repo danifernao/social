@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use App\Http\Resources\UserResource;
 use App\Models\SiteSetting;
 use App\Utils\Locales;
-use App\Utils\SpecialPages;
+use App\Utils\PageUtils;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
@@ -67,7 +67,7 @@ class HandleInertiaRequests extends Middleware
             'comment' => fn () => $request->session()->get('comment'),
             'unreadNotisCount' => fn () => $request->user()?->unreadNotifications()->count() ?? 0,
             'locales' => Locales::all(),
-            'specialPages' => fn() => SpecialPages::get(),
+            'specialPages' => fn() => PageUtils::getSpecialPages(),
         ];
     }
 }

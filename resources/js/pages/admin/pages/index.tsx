@@ -4,11 +4,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AdminLayout from '@/layouts/app/admin/admin-layout';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
-import type { Auth, BreadcrumbItem } from '@/types';
+import type { BreadcrumbItem } from '@/types';
 import { Locale } from '@/types/modules/locale';
 import { Pages } from '@/types/modules/page';
 import { Head, Link, router, usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
 /**
  *
@@ -18,7 +20,12 @@ export default function PagesIndex() {
     const { t } = useTranslation();
 
     // Captura los datos proporcionadas por Inertia.
-    const { auth, locales, pages, language: currentLanguage } = usePage<{ auth: Auth; locales: Locale[]; pages: Pages; language: string }>().props;
+    const {
+        message,
+        locales,
+        pages,
+        language: currentLanguage,
+    } = usePage<{ message: string; locales: Locale[]; pages: Pages; language: string }>().props;
 
     // Cambia el idioma de la consulta de páginas.
     const handleLanguageChange = (lang: string) => {
@@ -32,6 +39,13 @@ export default function PagesIndex() {
             href: route('admin.page.index', { lang: currentLanguage }),
         },
     ];
+
+    useEffect(() => {
+        // Si se ha proporcionado un mensaje, lo muestra.
+        if (message) {
+            toast(message);
+        }
+    }, []);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

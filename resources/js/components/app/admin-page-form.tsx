@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Auth } from '@/types';
 import { Locale } from '@/types/modules/locale';
-import { Page, PageType } from '@/types/modules/page';
+import { Page, PageType, SpecialPages } from '@/types/modules/page';
 import { Link, router, useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { useRef, useState } from 'react';
@@ -28,7 +28,7 @@ export default function AdminPageForm({ page }: Props) {
     const { t } = useTranslation();
 
     // Captura la lista de idiomas y el usuario autenticado proporcionados por Inertia.
-    const { locales, auth } = usePage<{ locales: Locale[]; auth: Auth }>().props;
+    const { locales, auth, specialPages } = usePage<{ locales: Locale[]; auth: Auth; specialPages: SpecialPages }>().props;
 
     // Obtiene el código de idioma pasado como consulta por URL.
     const queryLang = new URLSearchParams(window.location.search).get('lang') ?? undefined;
@@ -88,7 +88,7 @@ export default function AdminPageForm({ page }: Props) {
                             {t('language')}
                         </Label>
                         <Select disabled={isEditing || processing} value={data.language} onValueChange={handleLanguageChange}>
-                            <SelectTrigger id="language" className="w-48">
+                            <SelectTrigger id="language" className="w-max">
                                 <SelectValue placeholder={t('selectLanguage')} />
                             </SelectTrigger>
                             <SelectContent>
@@ -109,13 +109,20 @@ export default function AdminPageForm({ page }: Props) {
                             {t('type')}
                         </Label>
                         <Select disabled={processing} value={data.type} onValueChange={(value: PageType) => setData('type', value)}>
-                            <SelectTrigger id="type" className="w-48">
+                            <SelectTrigger id="type" className="w-max">
                                 <SelectValue placeholder={t('selectPageType')} />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="normal">{t('pageTypes.normal')}</SelectItem>
-                                <SelectItem value="policy">{t('pageTypes.policy')}</SelectItem>
-                                <SelectItem value="guidelines">{t('pageTypes.guidelines')}</SelectItem>
+                                <SelectItem value="terms" disabled={!!specialPages[data.language!].terms}>
+                                    {t('pageTypes.terms')}
+                                </SelectItem>
+                                <SelectItem value="policy" disabled={!!specialPages[data.language!].policy}>
+                                    {t('pageTypes.policy')}
+                                </SelectItem>
+                                <SelectItem value="guidelines" disabled={!!specialPages[data.language!].guidelines}>
+                                    {t('pageTypes.guidelines')}
+                                </SelectItem>
                             </SelectContent>
                         </Select>
                         <p className="text-muted-foreground text-sm italic">{t('pageTypeDescription')}</p>

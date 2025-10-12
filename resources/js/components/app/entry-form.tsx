@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
-import type { Comment, Entry, Post } from '@/types';
-import { useForm } from '@inertiajs/react';
+import type { Auth, Comment, Entry, Post } from '@/types';
+import { SpecialPages } from '@/types/modules/page';
+import { useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +24,10 @@ interface EntryFormProps {
  */
 export default function EntryForm({ profileUserId, entry, postId, onSubmit }: EntryFormProps) {
     // Obtiene las traducciones de la página.
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+
+    // Captura los datos proporcionadas por Inertia.
+    const { auth, specialPages } = usePage<{ auth: Auth; specialPages: SpecialPages }>().props;
 
     // Referencia al elemento textarea del formulario.
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -135,7 +139,17 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
                     />
 
                     <div className="flex items-center gap-4">
-                        <div className="ml-auto flex items-center gap-2">
+                        <div className="text-muted-foreground flex-1 text-sm hover:underline">
+                            {specialPages[auth.user.language].guidelines && (
+                                <a
+                                    href={route('page.show', { lang: auth.user.language, slug: specialPages[i18n.language].guidelines?.slug })}
+                                    target="_black"
+                                >
+                                    {t('pageTypes.guidelines')}
+                                </a>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-2">
                             {data.content.trim().length > 0 && (
                                 <Button type="button" variant="outline" onClick={() => setPreviewMode(true)}>
                                     {t('preview')}

@@ -6,6 +6,7 @@ use App\Models\Page;
 use App\Http\Resources\PageResource;
 use App\Rules\SlugRule;
 use App\Utils\Locales;
+use App\Utils\PageUtils;
 use App\Utils\SlugGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -93,10 +94,10 @@ class AdminPageController extends Controller
         }
 
         $validated = $request->validate([
+            'language' => ['required', 'string', Rule::in(Locales::codes())],
+            'type' => ['required', 'string', Rule::in(PageUtils::getTypes())],
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', new SlugRule()],
-            'language' => ['required', 'string', 'in:' . implode(',', Locales::codes())],
-            'type' => ['required', Rule::in(['normal', 'policy', 'guidelines'])],
             'content' => ['nullable', 'string'],
         ]);
 
@@ -107,8 +108,8 @@ class AdminPageController extends Controller
             $validated['language'],
         );
 
-        // Valida que no haya duplicados de policy/guidelines por idioma.
-        if (in_array($validated['type'], ['policy', 'guidelines'])) {
+        // Valida que no haya duplicados de las páginas de tipo especial por idioma.
+        if (in_array($validated['type'], PageUtils::getSpecialTypes())) {
             if (Page::existsOfTypeInLanguage($validated['type'], $validated['language'])) {
                 return back()->withErrors([
                     'type' => 'Ya existe una página de este tipo para este idioma.',
@@ -156,9 +157,9 @@ class AdminPageController extends Controller
         }
 
         $validated = $request->validate([
+            'type' => ['required', 'string', Rule::in(PageUtils::getTypes())],
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', new SlugRule($page)],
-            'type' => ['required', Rule::in(['normal', 'policy', 'guidelines'])],
             'content' => ['nullable', 'string'],
         ]);
 
@@ -170,8 +171,8 @@ class AdminPageController extends Controller
             $page->id,
         );
 
-        // Valida que no haya duplicados de policy/guidelines por idioma.
-        if (in_array($validated['type'], ['policy', 'guidelines'])) {
+        // Valida que no haya duplicados de las páginas de tipo especial por idioma.
+        if (in_array($validated['type'], PageUtils::getSpecialTypes())) {
             if (Page::existsOfTypeInLanguage($validated['type'], $page->language, $page->id)) {
                 return back()->withErrors([
                     'type' => 'Ya existe una página de este tipo para este idioma.',
