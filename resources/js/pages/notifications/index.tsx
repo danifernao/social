@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 /**
  * Muestra la página de notificaciones del usuario autenticado.
  */
-export default function Notifications() {
+export default function NotificationIndex() {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 

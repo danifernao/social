@@ -20,7 +20,7 @@ interface PageProps {
 /**
  * Muestra la página de seguidos o seguidores de un usuario.
  */
-export default function Follow() {
+export default function FollowIndex() {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 

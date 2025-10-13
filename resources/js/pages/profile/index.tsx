@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 /**
  * Muestra la página de perfil de un usuario.
  */
-export default function Profile() {
+export default function ProfileIndex() {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 

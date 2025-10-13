@@ -19,7 +19,7 @@ interface Props {
 /**
  * Lista a todos los usuarios registrados en la red para su administración.
  */
-export default function AdminUserTable({ users, previous, next }: Props) {
+export default function AdminUserList({ users, previous, next }: Props) {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 
