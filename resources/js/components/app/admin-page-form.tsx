@@ -177,7 +177,7 @@ export default function AdminPageForm({ page }: Props) {
                                     <FormattedText entryType="page" text={data.content} alwaysExpanded={true} disableLinks={true} />
                                 </div>
                                 <Button variant="outline" onClick={() => setPreviewMode(false)}>
-                                    {t('backToEdit')}
+                                    {t('common.backToEdit')}
                                 </Button>
                             </div>
                         ) : (

@@ -77,7 +77,7 @@
         },
         "deleteAccount": {
           "description": "Delete the user account and all associated data.",
-          "title": "Delete User"              
+          "title": "Delete User"
         },
         "email": {
           "sendVerificationEmail": "Send account verification email.",
@@ -88,12 +88,12 @@
         },
         "resetPassword": {
           "description": "Send the user an email to reset their password.",
-          "title": "Reset Password",              
+          "title": "Reset Password",
           "useRandomPass": "Replace the current password with a random one."
         },
         "role": {
           "title": "Change Role",
-          "description": {        
+          "description": {
             "User": "Manage their account, post, comment, and follow others.",
             "Moderator": "All user privileges plus manage posts and other users' accounts.",
             "Administrator": "All of the above plus manage the site, assign roles, and delete accounts."
@@ -102,12 +102,12 @@
         },
         "status": {
           "notice": "Disabling an account blocks login and closes all active sessions associated with it.",
-          "title": "Change Account Status"              
+          "title": "Change Account Status"
         },
         "title": "Edit User",
         "username": {
           "notice": "If left empty, the account will be saved with a random username.",
-          "title": "Change Username"              
+          "title": "Change Username"
         }
       },
       "index": {
@@ -217,12 +217,14 @@
     "next": "Next",
     "notifications": "Notifications",
     "options": "Options",
+    "partial": "Partial",
     "password": "Password",
     "post": "Post",
     "posts": "Posts",
     "previous": "Previous",
     "preview": "Preview",
     "profile": "Profile",
+    "publication": "Post",
     "readMore": "Read More",
     "rememberMe": "Remember Me",
     "register": "Register",
@@ -324,6 +326,7 @@
       "title": "Edit Post"
     },
     "show": {
+      "author": "{{username}}'s Post",
       "comments": "{{total}} comments"
     }
   },
@@ -355,6 +358,17 @@
       "title": "Password Settings"
     },
     "profile": {
+      "delete": {
+        "confirmation": {
+          "description": "Are you sure you want to delete your account?"
+        },
+        "description": "Permanently delete your account and all associated data",
+        "title": "Delete Account",
+        "warning": {
+          "description": "Proceed with caution — this action cannot be undone.",
+          "title": "Warning"
+        }
+      },
       "description": "Ensure your account uses a long, random password for security.",
       "email": {
         "address": "Email Address",
@@ -367,7 +381,7 @@
           "remove": "Remove Avatar",
           "format": "Maximum size: 2MB. PNG or JPG only."
         },
-        "description": "Update your username and email address.",        
+        "description": "Update your username and email address.",
         "title": "Profile Information"
       },
       "title": "Profile Settings"
@@ -391,6 +405,6 @@
     "layout": {
       "title": "Welcome"
     },
-    "title": "Welcome to {{siteName}}"    
+    "title": "Welcome to {{siteName}}"
   }
 }
