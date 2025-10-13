@@ -31,7 +31,9 @@ export default function AdminPageList({ pages, previous, next }: Props) {
 
     // Gestiona la eliminación de una página informativa.
     const handleDelete = (id: number) => {
-        router.delete(route('admin.page.destroy', id));
+        router.delete(route('admin.page.destroy', id), {
+            preserveScroll: true,
+        });
     };
 
     return (
