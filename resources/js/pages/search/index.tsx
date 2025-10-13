@@ -20,7 +20,7 @@ interface PageProps {
 /**
  * Muestra la página de resultados de una búsqueda o de una etiqueta.
  */
-export default function Search() {
+export default function SearchIndex() {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 

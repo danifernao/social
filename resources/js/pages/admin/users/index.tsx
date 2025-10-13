@@ -1,4 +1,4 @@
-import AdminUserTable from '@/components/app/admin-user-table';
+import AdminUserList from '@/components/app/admin-user-list';
 import { Button } from '@/components/ui/button';
 import AdminLayout from '@/layouts/app/admin/admin-layout';
 import AppLayout from '@/layouts/kit/app-layout';
@@ -44,7 +44,7 @@ export default function UsersIndex() {
                             <Link href={route('admin.user.create')}>{t('admin.user.index.create')}</Link>
                         </Button>
                     </div>
-                    <AdminUserTable users={users.data} previous={users.links.prev} next={users.links.next} />
+                    <AdminUserList users={users.data} previous={users.links.prev} next={users.links.next} />
                 </AppContentLayout>
             </AdminLayout>
         </AppLayout>
