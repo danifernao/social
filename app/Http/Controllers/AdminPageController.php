@@ -61,7 +61,7 @@ class AdminPageController extends Controller
             ->where('slug', $slug)
             ->firstOrFail();
 
-        return inertia('admin/pages/show', [
+        return inertia('page/show', [
             'page' => (new PageResource($page))->resolve(),
         ]);
     }
