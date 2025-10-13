@@ -107,7 +107,7 @@ export default function AdminPageList({ pages, previous, next }: Props) {
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={6} className="py-4 text-center">
+                                <TableCell colSpan={3} className="py-4 text-center">
                                     {t('noResults.pages')}
                                 </TableCell>
                             </TableRow>

@@ -167,7 +167,7 @@ export default function AdminUserList({ users, previous, next }: Props) {
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={6} className="py-4 text-center">
+                                <TableCell colSpan={8} className="py-4 text-center">
                                     {t('noResults.search')}
                                 </TableCell>
                             </TableRow>
