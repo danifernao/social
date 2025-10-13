@@ -217,9 +217,11 @@
     "next": "Siguiente",
     "notifications": "Notificaciones",
     "options": "Opciones",
+    "partial": "parcial",
     "password": "Contraseña",
     "post": "Publicar",
     "posts": "Publicaciones",
+    "publication": "Publicación",
     "previous": "Anterior",
     "preview": "Vista previa",
     "profile": "Perfil",
@@ -324,6 +326,7 @@
       "title": "Editar publicación"
     },
     "show": {
+      "author": "Publicación de {{username}}",
       "comments": "{{total}} comentarios"
     }
   },
@@ -355,6 +358,17 @@
       "title": "Configuración de contraseña"
     },
     "profile": {
+      "delete": {
+        "confirmation": {
+          "description": "¿Estás seguro de que deseas eliminar tu cuenta?"
+        },
+        "description": "Elimina tu cuenta y todos sus recursos",
+        "title": "Eliminar cuenta",
+        "warning": {
+          "description": "Procede con precaución, esta acción no se puede deshacer.",
+          "title": "Advertencia"
+        }
+      },
       "description": "Asegúrate de que tu cuenta utilice una contraseña larga y aleatoria para mantener la seguridad.",
       "email": {
         "address": "Dirección de correo electrónico",

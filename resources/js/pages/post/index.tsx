@@ -46,11 +46,11 @@ export default function PostIndex() {
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('userProfile', { username: post.user.username }),
+            title: t('profile.title', { username: post.user.username }),
             href: route('profile.show', post.user.username),
         },
         {
-            title: t('post'),
+            title: t('common.publication'),
             href: route('post.show', post.id),
         },
     ];
@@ -58,13 +58,13 @@ export default function PostIndex() {
     // Desplaza a la sección de comentarios si es vista parcial.
     useEffect(() => {
         if (isPartialView && commentsRef.current) {
-            commentsRef.current.scrollIntoView({ behavior: 'smooth' });
+            commentsRef.current.scrollIntoView();
         }
     }, [isPartialView]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={t('userPost', { username: post.user.username })} />
+            <Head title={t('post.show.author', { username: post.user.username })} />
             <AppContentLayout>
                 <article className="flex flex-col gap-8">
                     <EntryListItem entry={post} />
@@ -76,7 +76,7 @@ export default function PostIndex() {
                                         <h2>{t('post.show.comments', { total: post.comments_count })}</h2>
                                         {isPartialView && (
                                             <>
-                                                <span className="text-muted-foreground text-sm">({t('partial')})</span>
+                                                <span className="text-muted-foreground text-sm">({t('common.partial')})</span>
                                                 <Link href={route('post.show', post.id)} className="text-sm text-blue-600 hover:underline">
                                                     {t('common.seeFullThread')}
                                                 </Link>
