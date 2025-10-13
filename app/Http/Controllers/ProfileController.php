@@ -86,7 +86,7 @@ class ProfileController extends Controller
             );
         }
 
-        return Inertia::render('profile/index', [
+        return Inertia::render('profile/show', [
             'user' => (new UserResource($user))->resolve(),
             'posts' => PostResource::collection($posts),
         ]);
