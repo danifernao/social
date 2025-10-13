@@ -8,6 +8,7 @@ import { format, parseISO } from 'date-fns';
 import { ArrowUpDown } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import AdminTablePagination from './admin-table-pagination';
 import UserAvatar from './user-avatar';
 
 interface Props {
@@ -177,27 +178,7 @@ export default function AdminUserList({ users, previous, next }: Props) {
             </div>
 
             {/* Paginación */}
-            <div className="flex justify-end gap-2">
-                {previous ? (
-                    <Button variant="outline" size="sm" asChild>
-                        <Link href={previous}>{t('common.previous')}</Link>
-                    </Button>
-                ) : (
-                    <Button variant="outline" size="sm" disabled>
-                        {t('common.previous')}
-                    </Button>
-                )}
-
-                {next ? (
-                    <Button variant="outline" size="sm" asChild>
-                        <Link href={next}>{t('common.next')}</Link>
-                    </Button>
-                ) : (
-                    <Button variant="outline" size="sm" disabled>
-                        {t('common.next')}
-                    </Button>
-                )}
-            </div>
+            <AdminTablePagination previous={previous} next={next} />
         </div>
     );
 }
