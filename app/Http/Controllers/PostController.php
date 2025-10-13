@@ -147,7 +147,7 @@ class PostController extends Controller
             })
         );
 
-        return Inertia::render('post/index', [
+        return Inertia::render('post/show', [
             'post' => (new PostResource($post))->resolve(),
             'comments' => CommentResource::collection($comments),
         ]);
