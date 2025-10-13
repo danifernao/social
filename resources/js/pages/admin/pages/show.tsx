@@ -29,7 +29,7 @@ export default function PagesShow() {
             <Head title={page.title} />
             <AppContentLayout>
                 <h1 className="text-3xl">{page.title}</h1>
-                <FormattedText entryType="page" text={page.content || ''} />
+                <FormattedText entryType="page" text={page.content || ''} alwaysExpanded={true} />
             </AppContentLayout>
         </AppLayout>
     );
