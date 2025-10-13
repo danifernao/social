@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 /**
  * Muestra la página de inicio del usuario autenticado.
  */
-export default function Home() {
+export default function HomeIndex() {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 

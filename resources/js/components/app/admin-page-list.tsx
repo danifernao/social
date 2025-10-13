@@ -25,7 +25,7 @@ interface Props {
 /**
  * Lista todas las páginas informativas.
  */
-export default function AdminPageTable({ pages, previous, next }: Props) {
+export default function AdminPageList({ pages, previous, next }: Props) {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 

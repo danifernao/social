@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 /**
  * Muestra la página de una publicación y sus comentarios.
  */
-export default function Home() {
+export default function PostIndex() {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 

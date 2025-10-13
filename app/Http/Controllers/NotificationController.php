@@ -20,7 +20,7 @@ class NotificationController extends Controller
 
         $notifications = $request->user()->notifications()->latest()->cursorPaginate(15, ['*'], 'cursor', $cursor);
 
-        return Inertia::render('notification/index', [
+        return Inertia::render('notifications/index', [
             'notifications' => NotificationResource::collection($notifications),
         ]);
     }

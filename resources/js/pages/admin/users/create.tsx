@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 /**
  *
  */
-export default function UsersEdit() {
+export default function UsersCreate() {
     // Obtiene las traducciones de la página.
     const { t } = useTranslation();
 
