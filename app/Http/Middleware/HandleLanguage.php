@@ -27,7 +27,7 @@ class HandleLanguage
             $locale = strtolower(substr($locale, 0, 2));
 
             if (!in_array($locale, Locales::codes())) {
-                $locale = config('app.fallback_locale');
+                $locale = head(Locales::codes());
             }
 
             App::setLocale($locale);
