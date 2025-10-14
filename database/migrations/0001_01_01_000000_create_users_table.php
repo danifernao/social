@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('role', ['admin','mod','user'])->default('user');
             $table->string('avatar_path')->nullable();
             $table->boolean('is_active')->default(true);
-            $table->string('language', 5)->default('es');
+            $table->string('language', 5)->default('en');
             $table->rememberToken();
             $table->timestamps();
         });
