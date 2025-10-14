@@ -142,7 +142,10 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
                         <div className="text-muted-foreground flex-1 text-sm hover:underline">
                             {specialPages[auth.user.language].guidelines && (
                                 <a
-                                    href={route('page.show', { lang: auth.user.language, slug: specialPages[i18n.language].guidelines?.slug })}
+                                    href={route('page.show', {
+                                        lang: auth.user.language,
+                                        slug: specialPages[i18n.currentLang].guidelines?.slug,
+                                    })}
                                     target="_black"
                                 >
                                     {t('page.types.guidelines')}
