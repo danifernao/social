@@ -15,8 +15,9 @@ class Locales
     public static function all(): array
     {
         return [
-            ['lang' => 'es', 'label' => 'Español'],
+            
             ['lang' => 'en', 'label' => 'English'],
+            ['lang' => 'es', 'label' => 'Español'],
         ];
     }
 
