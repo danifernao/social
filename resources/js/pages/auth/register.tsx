@@ -30,7 +30,7 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
-        language: i18n.language,
+        language: i18n.currentLang,
     });
 
     const submit: FormEventHandler = (e) => {
@@ -110,34 +110,46 @@ export default function Register() {
                         <InputError message={errors.password_confirmation} />
                     </div>
 
-                    {(specialPages[i18n.language].policy || specialPages[i18n.language].terms) && (
+                    {(specialPages[i18n.currentLang].policy || specialPages[i18n.currentLang].terms) && (
                         <div className="text-muted-foreground text-center text-sm">
-                            {!specialPages[i18n.language].policy && (
+                            {!specialPages[i18n.currentLang].policy && (
                                 <Trans i18nKey="auth.register.disclaimer.terms">
                                     <TextLink
-                                        href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].terms?.slug })}
+                                        href={route('page.show', {
+                                            lang: i18n.currentLang,
+                                            slug: specialPages[i18n.currentLang].terms?.slug,
+                                        })}
                                         tabIndex={6}
                                     ></TextLink>
                                 </Trans>
                             )}
 
-                            {!specialPages[i18n.language].terms && (
+                            {!specialPages[i18n.currentLang].terms && (
                                 <Trans i18nKey="auth.register.disclaimer.policy">
                                     <TextLink
-                                        href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].policy?.slug })}
+                                        href={route('page.show', {
+                                            lang: i18n.currentLang,
+                                            slug: specialPages[i18n.currentLang].policy?.slug,
+                                        })}
                                         tabIndex={6}
                                     ></TextLink>
                                 </Trans>
                             )}
 
-                            {specialPages[i18n.language].policy && specialPages[i18n.language].terms && (
+                            {specialPages[i18n.currentLang].policy && specialPages[i18n.currentLang].terms && (
                                 <Trans i18nKey="auth.register.disclaimer.termsAndPolicy">
                                     <TextLink
-                                        href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].terms?.slug })}
+                                        href={route('page.show', {
+                                            lang: i18n.currentLang,
+                                            slug: specialPages[i18n.currentLang].terms?.slug,
+                                        })}
                                         tabIndex={6}
                                     ></TextLink>
                                     <TextLink
-                                        href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].policy?.slug })}
+                                        href={route('page.show', {
+                                            lang: i18n.currentLang,
+                                            slug: specialPages[i18n.currentLang].policy?.slug,
+                                        })}
                                         tabIndex={6}
                                     ></TextLink>
                                 </Trans>

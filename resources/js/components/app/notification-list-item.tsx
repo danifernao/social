@@ -49,7 +49,7 @@ export default function NotificationListItem({ notification }: NotificationListI
     };
 
     // Selecciona el idioma adecuado según el idioma actual de la aplicación.
-    const locale = localeMap[i18n.language] ?? es;
+    const locale = localeMap[i18n.currentLang] ?? enUS;
 
     // Fecha de creación de la notificación en formato corto y legible.
     const formattedDate = format(parseISO(notification.created_at), 'dd/MM/yyyy h:mm a');

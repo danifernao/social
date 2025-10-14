@@ -25,12 +25,12 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
 
     // Relación entre idioma y formato de fecha.
     const localeMap: Record<string, Locale> = {
-        es,
         en: enUS,
+        es,
     };
 
     // Selecciona el idioma adecuado según el idioma actual de la aplicación.
-    const locale = localeMap[i18n.language] ?? es;
+    const locale = localeMap[i18n.currentLang] ?? enUS;
 
     // Captura el usuario autenticado y la ruta actual proporcionados por Inertia.
     const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;

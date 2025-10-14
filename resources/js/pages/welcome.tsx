@@ -37,12 +37,12 @@ export default function Welcome() {
                 </div>
             </div>
 
-            {(specialPages[i18n.language].about || specialPages[i18n.language].terms || specialPages[i18n.language].policy) && (
+            {(specialPages[i18n.currentLang].about || specialPages[i18n.currentLang].terms || specialPages[i18n.currentLang].policy) && (
                 <div className="text-muted-foreground flex justify-end gap-4 p-6 text-right text-sm">
                     {/* Enlace de acerca de */}
-                    {specialPages[i18n.language].about && (
+                    {specialPages[i18n.currentLang].about && (
                         <Link
-                            href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].about?.slug })}
+                            href={route('page.show', { lang: i18n.currentLang, slug: specialPages[i18n.currentLang].about?.slug })}
                             className="hover:underline"
                         >
                             {t('page.types.about')}
@@ -50,9 +50,9 @@ export default function Welcome() {
                     )}
 
                     {/* Enlace de términos y condiciones */}
-                    {specialPages[i18n.language].terms && (
+                    {specialPages[i18n.currentLang].terms && (
                         <Link
-                            href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].terms?.slug })}
+                            href={route('page.show', { lang: i18n.currentLang, slug: specialPages[i18n.currentLang].terms?.slug })}
                             className="hover:underline"
                         >
                             {t('page.types.terms')}
@@ -60,9 +60,9 @@ export default function Welcome() {
                     )}
 
                     {/* Enlace de política de privacidad */}
-                    {specialPages[i18n.language].policy && (
+                    {specialPages[i18n.currentLang].policy && (
                         <Link
-                            href={route('page.show', { lang: i18n.language, slug: specialPages[i18n.language].policy?.slug })}
+                            href={route('page.show', { lang: i18n.currentLang, slug: specialPages[i18n.currentLang].policy?.slug })}
                             className="hover:underline"
                         >
                             {t('page.types.policy')}
