@@ -9,11 +9,17 @@ i18n.use(initReactI18next).init({
     en: { translation: en },
     es: { translation: es },
   },
-  lng: "es",
+  lng: "en",
   fallbackLng: "en",
   interpolation: {
-    escapeValue: false, // react ya lo maneja
+    escapeValue: false,
   },
+});
+
+i18n.currentLang = i18n.resolvedLanguage ?? "en";
+
+i18n.on("languageChanged", (_) => {
+  i18n.currentLang = i18n.resolvedLanguage ?? "en";
 });
 
 export default i18n;
