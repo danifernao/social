@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Utils\Locales;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -41,7 +43,7 @@ class RegisteredUserController extends Controller
             ],
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'language' => 'in:es,en',
+            'language' => Rule::in(Locales::codes()),
         ]);
 
         $user = User::create([
@@ -49,7 +51,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => User::exists() ? 'user' : 'admin',
-            'language' => $request->language ?? 'es',
+            'language' => $request->language ?? head(Locales::codes()),
         ]);
 
         event(new Registered($user));
