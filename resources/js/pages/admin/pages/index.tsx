@@ -54,7 +54,7 @@ export default function PagesIndex() {
                 <AppContentLayout noMargin={true} fullWidth={true}>
                     <div className="flex items-center justify-between">
                         <Button variant="outline" asChild>
-                            <Link href={route('admin.page.create', { lang: currentLanguage })}>{t('admin.page.index.create')}</Link>
+                            <Link href={route('admin.page.create', { lang: currentLanguage })}>{t('admin.page.index.create.title')}</Link>
                         </Button>
                         <Select value={currentLanguage} onValueChange={handleLanguageChange}>
                             <SelectTrigger className="w-40">
