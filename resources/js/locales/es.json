@@ -36,7 +36,9 @@
         }
       },
       "index": {
-        "create": "Crear página",
+        "create": {
+          "title": "Crear página"
+        },
         "delete": {
           "title": "Eliminar página",
           "description": "¿Estás seguro de eliminar esta página? Esta acción es irreversible."
@@ -72,8 +74,8 @@
           "title": "Eliminar avatar"
         },
         "confirm": {
-          "title": "Confirmar Acción",
-          "description": "Para continuar, ingresa tu contraseña de usuario con privilegios."
+          "description": "Para continuar, ingresa tu contraseña de usuario con privilegios.",
+          "title": "Confirmar Acción"          
         },
         "deleteAccount": {
           "description": "Elimina la cuenta de usuario y todos los datos asociados a ella.",
@@ -92,13 +94,13 @@
           "useRandomPass": "Reemplazar la contraseña actual por una aleatoria."
         },
         "role": {
-          "title": "Cambiar rol",
           "description": {        
             "Usuario": "Gestionar su cuenta, publicar, comentar y seguir a otros.",
             "Moderador": "Todo lo del Usuario más gestionar publicaciones y cuentas ajenas.",
             "Administrador": "Todo lo anterior más administrar el sitio, asignar roles y eliminar cuentas."
           },
-          "placeholder": "Selecciona un rol"
+          "placeholder": "Selecciona un rol",
+          "title": "Cambiar rol"
         },
         "status": {
           "notice": "Al inhabilitar una cuenta, se bloquea el inicio de sesión y se cierran todas las sesiones activas asociadas a ella.",
@@ -153,9 +155,9 @@
     },
     "verifyEmail": {
       "description": "Por favor, verifica tu dirección de correo electrónico haciendo clic en el enlace que acabamos de enviarte.",
-      "title": "Verificar correo electrónico",
       "emailSent": "Se ha enviado un nuevo enlace de verificación al correo que proporcionaste durante el registro.",
-      "resendEmail": "Reenviar correo de verificación"
+      "resendEmail": "Reenviar correo de verificación",
+      "title": "Verificar correo electrónico"
     }
   },
   "comment": {
@@ -312,7 +314,7 @@
       "about": "Acerca de",
       "terms": "Términos y condiciones",
       "policy": "Política de privacidad",
-      "guidelines": "Reglas de la comunidad"
+      "guidelines": "Normas de la comunidad"
     }
   },
   "post": {
@@ -332,8 +334,8 @@
   },
   "profile": {
     "title": "Perfil de {{username}}",
-    "following": "Seguidos por {{username}}",
-    "followers": "Seguidores de {{username}}"
+    "followers": "Seguidores de {{username}}",
+    "following": "Seguidos por {{username}}"    
   },
   "reaction": {
     "react": "Reaccionar",
@@ -405,6 +407,6 @@
     "layout": {
       "title": "Bienvenido"
     },
-    "title": "Bienvenido a {{siteName}}"    
+    "title": "Bienvenido a {{siteName}}"
   }
 }

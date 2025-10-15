@@ -36,7 +36,9 @@
         }
       },
       "index": {
-        "create": "Create Page",
+        "create": {
+          "title": "Create Page"
+        },
         "delete": {
           "title": "Delete Page",
           "description": "Are you sure you want to delete this page? This action cannot be undone."
@@ -72,8 +74,8 @@
           "title": "Remove Avatar"
         },
         "confirm": {
-          "title": "Confirm Action",
-          "description": "To continue, enter your privileged user password."
+          "description": "To continue, enter your privileged user password.",
+          "title": "Confirm Action"          
         },
         "deleteAccount": {
           "description": "Delete the user account and all associated data.",
@@ -92,13 +94,13 @@
           "useRandomPass": "Replace the current password with a random one."
         },
         "role": {
-          "title": "Change Role",
           "description": {
             "User": "Manage their account, post, comment, and follow others.",
             "Moderator": "All user privileges plus manage posts and other users' accounts.",
             "Administrator": "All of the above plus manage the site, assign roles, and delete accounts."
           },
-          "placeholder": "Select a role"
+          "placeholder": "Select a role",
+          "title": "Change Role"
         },
         "status": {
           "notice": "Disabling an account blocks login and closes all active sessions associated with it.",
@@ -153,9 +155,9 @@
     },
     "verifyEmail": {
       "description": "Please verify your email address by clicking the link we just sent you.",
-      "title": "Verify Email Address",
       "emailSent": "A new verification link has been sent to the email you provided during registration.",
-      "resendEmail": "Resend Verification Email"
+      "resendEmail": "Resend Verification Email",
+      "title": "Verify Email Address"
     }
   },
   "comment": {
@@ -332,8 +334,8 @@
   },
   "profile": {
     "title": "{{username}}'s Profile",
-    "following": "Following by {{username}}",
-    "followers": "Followers of {{username}}"
+    "followers": "Followers of {{username}}",
+    "following": "Following by {{username}}"
   },
   "reaction": {
     "react": "React",
