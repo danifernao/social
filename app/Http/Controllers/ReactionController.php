@@ -41,7 +41,7 @@ class ReactionController extends Controller
 
             if ($existing->emoji === $emoji) {
                 // Si el emoji es el mismo, solo se borra la reacción (toggle off).
-                return back()->with('status', 'deleted');
+                return back()->with('status', 'reaction_deleted');
             }
             
             // Si el emoji es diferente, se reemplaza con la nueva reacción.
@@ -50,7 +50,7 @@ class ReactionController extends Controller
                 'emoji' => $emoji,
             ]);
                   
-            return back()->with('status', 'replaced');
+            return back()->with('status', 'reaction_replaced');
         }
 
         // Si no había reacción previa, se crea una nueva.
@@ -59,6 +59,6 @@ class ReactionController extends Controller
             'emoji' => $emoji,
         ]);
 
-        return back()->with('status', 'created');
+        return back()->with('status', 'reaction_created');
     }
 }

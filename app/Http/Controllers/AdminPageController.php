@@ -112,7 +112,7 @@ class AdminPageController extends Controller
         if (in_array($validated['type'], PageUtils::getSpecialTypes())) {
             if (Page::existsOfTypeInLanguage($validated['type'], $validated['language'])) {
                 return back()->withErrors([
-                    'type' => 'Ya existe una página de este tipo para este idioma.',
+                    'type' => __('A page of this type already exists for this language.'),
                 ]);
             }
         }
@@ -122,7 +122,7 @@ class AdminPageController extends Controller
         $page->save();
 
         return redirect()->route('admin.page.index', ['lang' => $page->language])
-            ->with('message', 'Página creada.');
+            ->with('message', __('Page successfully created.'));
     }
 
     /**
@@ -175,7 +175,7 @@ class AdminPageController extends Controller
         if (in_array($validated['type'], PageUtils::getSpecialTypes())) {
             if (Page::existsOfTypeInLanguage($validated['type'], $page->language, $page->id)) {
                 return back()->withErrors([
-                    'type' => 'Ya existe una página de este tipo para este idioma.',
+                    'type' => __('A page of this type already exists for this language.'),
                 ]);
             }
         }
@@ -183,7 +183,7 @@ class AdminPageController extends Controller
         $page->update($validated);
 
         return redirect()->route('admin.page.index', ['lang' => $page->language])
-            ->with('message', 'Página actualizada.');
+            ->with('message', __('Page successfully updated.'));
     }
 
     /**
@@ -202,6 +202,6 @@ class AdminPageController extends Controller
         $page->delete();
 
         return redirect()->route('admin.page.index', ['lang' => $page->language])
-            ->with('message', 'Página eliminada.');
+            ->with('message', __('Page successfully deleted.'));
     }
 }
