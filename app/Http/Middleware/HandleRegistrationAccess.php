@@ -19,7 +19,7 @@ class HandleRegistrationAccess
         $siteSettings = SiteSetting::first();
 
         if (!$siteSettings?->is_user_registration_enabled) {
-            abort(403, 'El registro de usuarios está inhabilitado.');
+            abort(403, __('User registration is disabled.'));
         }
 
         return $next($request);

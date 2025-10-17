@@ -128,7 +128,7 @@ class AdminUserController extends Controller
 
         return redirect()
             ->route('admin.user.index')
-            ->with('message', 'Usuario creado');
+            ->with('message', __('User successfully created.'));
     }
     
     /**
@@ -355,7 +355,7 @@ class AdminUserController extends Controller
             DB::table('sessions')->where('user_id', $user->id)->delete();
         }
 
-        return back()->with('status', $user->is_active ? 'activated' : 'deactivated');
+        return back()->with('status', $user->is_active ? 'account_activated' : 'account_deactivated');
     }
 
     /**
@@ -378,6 +378,7 @@ class AdminUserController extends Controller
         // Elimina al ususario.
         $user->delete();
 
-        return redirect()->route('admin.user.index')->with('message', 'Usuario eliminado.');
+        return redirect()->route('admin.user.index')
+            ->with('message', __('User successfully deleted.'));
     }
 }

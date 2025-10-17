@@ -50,7 +50,7 @@ class NotificationController extends Controller
 
         return response()->json([
             'status' => 'ok',
-            'message' => 'Notification marked as read.',
+            'message' => __('Notification marked as read.'),
         ]);
     }
 }

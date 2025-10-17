@@ -36,7 +36,7 @@ trait HandlesPasswordConfirmation
             RateLimiter::hit($key, $decaySeconds);
 
             throw ValidationException::withMessages([
-                'pass_confirmation' => 'La contraseña de confirmación es incorrecta.',
+                'pass_confirmation' => __('Password confirmation is incorrect.'),
             ]);
         }
 

@@ -20,27 +20,35 @@ class BlockUserController extends Controller
 
         // Los moderadores no pueden bloquear a nadie.
         if ($auth_user->canModerate()) {
-            return back()->withErrors(['message' => 'Opción desactivada para moderadores.']);
+            return back()->withErrors([
+                'message' => __('Option disabled for moderators.'),
+            ]);
         }
 
         // No puede bloquearse a sí mismo.
         if ($auth_user->id === $user->id) {
-            return back()->withErrors(['message' => 'No puedes bloquearte a ti mismo.']);
+            return back()->withErrors([
+                'message' => __('Blocking yourself is not allowed.'),
+            ]);
         }
 
         // A los moderadores no se pueden bloquear.
         if ($user->canModerate()) {
-            return back()->withErrors(['message' => 'No puedes bloquear a un moderador.']);
+            return back()->withErrors([
+                'message' => __('Blocking a moderator is not allowed.'),
+            ]);
         }
 
         // Si el usuario destino ya ha bloqueado al autenticado, no se puede bloquear.
         if ($user->hasBlocked($auth_user)) {
-            return back()->withErrors(['message' => 'No puedes bloquear a un usuario que ya te ha bloqueado.']);
+            return back()->withErrors([
+                'message' => __('Blocking a user who has already blocked you is not allowed.'),
+            ]);
         }
 
         // Alterna bloqueo.
         $auth_user->toggleBlock($user);
 
-        return back();
+        return back()->with('status', 'block_toggled');
     }
 }
