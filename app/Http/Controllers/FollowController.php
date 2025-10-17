@@ -23,12 +23,16 @@ class FollowController extends Controller
 
         // No se permite que un usuario se siga a sí mismo.
         if ($auth_user->id === $user->id) {
-            return back()->withErrors(['message' => 'No puedes seguirte a ti mismo.']);
+            return back()->withErrors([
+                'message' => __('Following yourself is not allowed.'),
+            ]);
         }
 
         // Si hay un bloqueo entre ambos usuarios, no se permite seguir.
         if ($auth_user->hasBlocked($user) || $user->hasBlocked($auth_user)) {
-            return back()->withErrors(['message' => 'No puedes seguir a este usuario porque existe un bloqueo entre ustedes.']);
+            return back()->withErrors([
+                'message' => 'Following this user is not allowed because there is a block between you.',
+            ]);
         }
 
         // Alterna la relación de seguimiento (si ya seguía, se elimina; si no, se agrega).
@@ -42,7 +46,7 @@ class FollowController extends Controller
             $user->notify(new NewFollower($auth_user));
         }
 
-        return back()->with('status', 'toggled');
+        return back()->with('status', 'follow_toggled');
     }
 
     /**

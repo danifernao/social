@@ -28,7 +28,7 @@ class SlugRule implements ValidationRule
     {
         // Verifica que el slug tenga formato válido.
         if ($value !== Str::slug($value)) {
-            $fail('El slug contiene caracteres no válidos.');
+            $fail(__('Slug contains invalid characters.'));
             return;
         }
 
@@ -45,7 +45,7 @@ class SlugRule implements ValidationRule
         }
 
         if ($query->exists()) {
-            $fail('El slug ya está en uso en este idioma.');
+            $fail(__('Slug already in use in this language.'));
         }
     }
 }
