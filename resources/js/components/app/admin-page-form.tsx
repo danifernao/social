@@ -144,6 +144,7 @@ export default function AdminPageForm({ page }: Props) {
                             placeholder={t('admin.page.form.title.placeholder')}
                             disabled={processing}
                             className="w-full max-w-xl"
+                            required
                         />
                         {errors.title && <p className="text-sm text-red-500">{errors.title}</p>}
                     </div>
