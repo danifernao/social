@@ -279,5 +279,7 @@ return [
         'winner'                   => 'ganador',
         'work'                     => 'trabajo',
         'year'                     => 'año',
+
+        'new_email'                => 'nuevo correo',
     ],
 ];
