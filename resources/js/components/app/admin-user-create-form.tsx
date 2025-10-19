@@ -57,7 +57,11 @@ export default function AdminUserCreateForm() {
                         <p className="text-muted-foreground text-sm italic">{t('admin.user.create.confirm.description')}</p>
                     </div>
 
-                    <Button type="submit" disabled={form.processing} className="mt-4 flex items-center justify-center gap-2">
+                    <Button
+                        type="submit"
+                        disabled={form.processing || form.data.email.trim().length === 0 || form.data.privileged_password.trim().length === 0}
+                        className="mt-4 flex items-center justify-center gap-2"
+                    >
                         {form.processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         {t('common.create')}
                     </Button>
