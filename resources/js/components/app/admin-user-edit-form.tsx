@@ -176,7 +176,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                     <Button
                         type="button"
                         onClick={() => handleAction('change_email')}
-                        disabled={form.processing && form.data.action === 'change_email'}
+                        disabled={(form.processing && form.data.action === 'change_email') || form.data.new_email.trim().length === 0}
                     >
                         {form.processing && form.data.action === 'change_email' && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         {t('common.change')}
