@@ -57,9 +57,9 @@ export default function AdminPageForm({ page }: Props) {
     // Gestiona el envío del formulario, enviando la petición adecuada según el modo.
     const handleSubmit = (e: React.FormEvent) => {
         if (isEditing) {
-            patch(route('admin.page.edit', page!.id));
+            patch(route('admin.page.edit', page!.id), { preserveScroll: true });
         } else {
-            post(route('admin.page.create'));
+            post(route('admin.page.create'), { preserveScroll: true });
         }
         e.preventDefault();
     };
