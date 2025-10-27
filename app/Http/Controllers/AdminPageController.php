@@ -25,19 +25,15 @@ class AdminPageController extends Controller
             abort(403);
         }
 
-        // Obtiene el idioma pasado como parámetro de consulta.
+        // Obtiene el idioma enviado como parámetro en la URL.
         $language = $request->query('lang');
 
-        // Si el idioma pasado no es válido, usa el idioma del usuario autenticado.
+        // Si el idioma no es válido, usa el idioma del usuario autenticado.
         if (!in_array($language, Locales::codes(), true)) {
             $language = $request->user()->language;
         }
 
-        // Valida que sea un idioma permitido, si no, usa el idioma del usuario.
-        if (!in_array($language, Locales::codes(), true)) {
-            $language = $request->user()->language;
-        }
-
+        // Obtiene las páginas informativas más recientes en el idioma solicitado.
         $pages = Page::where('language', $language)
             ->latest()
             ->cursorPaginate(50)
@@ -117,6 +113,7 @@ class AdminPageController extends Controller
             }
         }
 
+        // Crea la página informativa en el idioma solicitado.
         $page = new Page($validated);
         $page->language = $validated['language'];
         $page->save();
@@ -144,7 +141,7 @@ class AdminPageController extends Controller
     }
 
     /**
-     * Actualiza una página informativa existente en la base de datos.
+     * Actualiza una página informativa existente.
      * 
      * @param Request $request Datos de la petición HTTP.
      * @param Page $page Página que se va a editar.
@@ -180,6 +177,7 @@ class AdminPageController extends Controller
             }
         }
 
+        // Actualiza los datos de la página informativa.
         $page->update($validated);
 
         return redirect()->route('admin.page.index', ['lang' => $page->language])
@@ -199,6 +197,7 @@ class AdminPageController extends Controller
             abort(403);
         }
 
+        // Elimina la página informativa.
         $page->delete();
 
         return redirect()->route('admin.page.index', ['lang' => $page->language])
