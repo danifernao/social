@@ -24,7 +24,7 @@ class AdminPageController extends Controller
         $this->authorize('access-admin-area');
 
         // Obtiene el idioma enviado como parámetro en la URL.
-        $language = $request->query('lang');
+        $language = strtolower($request->query('lang'));
 
         // Si el idioma no es válido, usa el idioma del usuario autenticado.
         if (!in_array($language, Locales::codes(), true)) {
