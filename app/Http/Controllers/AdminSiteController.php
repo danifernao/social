@@ -21,9 +21,7 @@ class AdminSiteController extends Controller
     public function edit(Request $request)
     {
         // Deniega acceso si el usuario autenticado no es administrador.
-        if (!$request->user()->isAdmin()) {
-            abort(403);
-        }
+        $this->authorize('access-admin-area');
         
         // Obtiene la configuración del sitio.
         $siteSettings = SiteSetting::firstOrFail();
@@ -41,9 +39,7 @@ class AdminSiteController extends Controller
     public function update(Request $request)
     {
         // Deniega acceso si el usuario autenticado no es administrador.
-        if (!$request->user()->isAdmin()) {
-            abort(403);
-        }
+        $this->authorize('access-admin-area');
         
         $request->validate([
             'action' => ['required', Rule::in(['toggle_user_registration'])],

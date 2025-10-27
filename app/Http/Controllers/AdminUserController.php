@@ -81,9 +81,7 @@ class AdminUserController extends Controller
     public function create(Request $request)
     {
         // Deniega acceso si el usuario autenticado no es administrador.
-        if (!$request->user()->isAdmin()) {
-            abort(403);
-        }
+        $this->authorize('access-admin-area');
 
         return Inertia::render('admin/users/create');
     }
@@ -97,9 +95,7 @@ class AdminUserController extends Controller
     public function store(Request $request)
     {
         // Deniega acceso si el usuario autenticado no es administrador.
-        if (!$request->user()->isAdmin()) {
-            abort(403);
-        }
+        $this->authorize('access-admin-area');
 
         $request->validate([
             'email' => ['required', 'email', 'unique:users,email'],
