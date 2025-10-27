@@ -21,9 +21,7 @@ class AdminPageController extends Controller
     public function index(Request $request)
     {
         // Deniega acceso si el usuario autenticado no es administrador.
-        if (!$request->user()->isAdmin()) {
-            abort(403);
-        }
+        $this->authorize('access-admin-area');
 
         // Obtiene el idioma enviado como parámetro en la URL.
         $language = $request->query('lang');
@@ -70,9 +68,7 @@ class AdminPageController extends Controller
     public function create(Request $request)
     {
         // Deniega acceso si el usuario autenticado no es administrador.
-        if (!$request->user()->isAdmin()) {
-            abort(403);
-        }
+        $this->authorize('access-admin-area');
 
         return inertia('admin/pages/create');
     }
@@ -85,9 +81,7 @@ class AdminPageController extends Controller
     public function store(Request $request)
     {
         // Deniega acceso si el usuario autenticado no es administrador.
-        if (!$request->user()->isAdmin()) {
-            abort(403);
-        }
+        $this->authorize('access-admin-area');
 
         $validated = $request->validate([
             'language' => ['required', 'string', Rule::in(Locales::codes())],
@@ -131,9 +125,7 @@ class AdminPageController extends Controller
     public function edit(Request $request, Page $page)
     {
         // Deniega acceso si el usuario autenticado no es administrador.
-        if (!$request->user()->isAdmin()) {
-            abort(403);
-        }
+        $this->authorize('access-admin-area');
 
         return inertia('admin/pages/edit', [
             'page' => (new PageResource($page))->resolve(),
@@ -149,9 +141,7 @@ class AdminPageController extends Controller
     public function update(Request $request, Page $page)
     {
         // Deniega acceso si el usuario autenticado no es administrador.
-        if (!$request->user()->isAdmin()) {
-            abort(403);
-        }
+        $this->authorize('access-admin-area');
 
         $validated = $request->validate([
             'type' => ['required', 'string', Rule::in(PageUtils::getTypes())],
@@ -193,9 +183,7 @@ class AdminPageController extends Controller
     public function destroy(Request $request, Page $page)
     {
         // Deniega acceso si el usuario autenticado no es administrador.
-        if (!$request->user()->isAdmin()) {
-            abort(403);
-        }
+        $this->authorize('access-admin-area');
 
         // Elimina la página informativa.
         $page->delete();
