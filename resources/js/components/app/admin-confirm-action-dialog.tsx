@@ -59,8 +59,8 @@ export default function ConfirmActionDialog({ open, onOpenChange, password, onPa
                     <DialogHeader>
                         <DialogTitle>{t('admin.confirmAction.title')}</DialogTitle>
                     </DialogHeader>
-                    <div className="space-y-4">
-                        <p>{t('admin.confirmAction.description')}</p>
+                    <div className="mt-4 space-y-4">
+                        <p className="text-sm font-medium">{t('admin.confirmAction.description')}</p>
                         <Input
                             type="password"
                             placeholder="Contraseña"
