@@ -23,7 +23,8 @@ class AdminSiteController extends Controller
         // Deniega acceso si el usuario autenticado no es administrador.
         $this->authorize('access-admin-area');
         
-        // Obtiene la configuración del sitio.
+        // Obtiene el registro de configuración del sitio.
+        // Se asume que existe un único registro con los valores globales.
         $siteSettings = SiteSetting::firstOrFail();
 
         return Inertia::render('admin/site/edit', [
@@ -59,17 +60,20 @@ class AdminSiteController extends Controller
     }
 
     /**
-     * Inhabilita / habilita la página de registro de usuario.
+     * Inhabilita o habilita la página de registro de usuario.
      */
     private function toggleUserRegistrationEnabled()
     {
-        // Obtiene la configuración del sitio.
+        // Obtiene el registro de configuración del sitio.
+        // Se asume que existe un único registro con los valores globales.
         $siteSettings = SiteSetting::firstOrFail();
 
         // Inhabilita o habilita la página de registro de usuario.
         $siteSettings->is_user_registration_enabled = !$siteSettings->is_user_registration_enabled;
         $siteSettings->save();
 
-        return back()->with('status', $siteSettings->is_user_registration_enabled ? 'user_registration_enabled' : 'user_registration_disabled');
+        return back()->with('status', $siteSettings->is_user_registration_enabled 
+            ? 'user_registration_enabled' 
+            : 'user_registration_disabled');
     }
 }
