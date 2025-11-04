@@ -25,7 +25,7 @@ class AdminUserController extends Controller
 
     /**
      * Muestra una lista paginada de usuarios para el panel de administración.
-     * Aplica búsqueda, ordenamiento y paginación basada en cursor.
+     * Aplica búsqueda y ordenamiento.
      * 
      * @param Request $request Datos de la petición HTTP.
      */
@@ -58,7 +58,7 @@ class AdminUserController extends Controller
         if ($query !== '') {
             $users_query->where(function($q) use ($query) {
                 $q->where('username', 'like', "%{$query}%")
-                  ->orWhere('id', $query); // Búsqueda por ID exacta.
+                  ->orWhere('id', $query);
             });
         }
 
@@ -132,11 +132,11 @@ class AdminUserController extends Controller
      * Los administradores solo pueden ser editados por otros administradores.
      * 
      * @param Request $request Datos de la petición HTTP.
-     * @param User $user Usuario cuyos datos se van a editar.
+     * @param User $user Usuario que se va a editar.
      */
     public function edit(Request $request, User $user)
     {
-        // Obtiene el usuario autenticado.
+        // Obtiene el registro del usuario autenticado.
         $auth_user = $request->user();
 
         // Deniega el acceso si el usuario autenticado no tiene permiso para
@@ -145,23 +145,20 @@ class AdminUserController extends Controller
             abort(403);
         }
 
-        // Convierte el usuario en un arreglo usando UserResource.
-        $user_data = (new UserResource($user))->resolve();
-
         return Inertia::render('admin/users/edit', [
-            'user' => $user_data
+            'user' => (new UserResource($user))->resolve(),
         ]);
     }
 
     /**
-     * Procesa las acciones de administración sobre un usuario.
+     * Procesa las acciones para la gestión de los datos de un usuario.
      * 
      * @param Request $request Datos de la petición HTTP.
-     * @param User $user Usuario cuyos datos se van a actualizar.
+     * @param User $user Usuario que se va a editar.
      */
     public function update(Request $request, User $user)
     {
-        // Obtiene el usuario autenticado.
+        // Obtiene el registro del usuario autenticado.
         $auth_user = $request->user();
 
         // Deniega el acceso si el usuario autenticado no tiene permiso para
@@ -200,7 +197,7 @@ class AdminUserController extends Controller
     }
 
     /**
-     * Cambia el rol del usuario (user <-> admin).
+     * Cambia el rol del usuario.
      * 
      * @param Request $request Datos de la petición HTTP.
      * @param User $user Usuario al que se le va a cambiar el rol.
@@ -208,9 +205,7 @@ class AdminUserController extends Controller
     private function changeRole(Request $request, User $user)
     {
         // Deniega acceso si el usuario autenticado no es administrador.
-        if (!$request->user()->isAdmin()) {
-            abort(403);
-        }
+        $this->authorize('access-admin-area');
 
         $request->validate([
             'new_role' => 'required|in:admin,mod,user',
@@ -221,7 +216,7 @@ class AdminUserController extends Controller
             $user->role = $request->new_role;
             $user->save();
 
-            // Si el rol es administrador o moderador, elimina bloqueos asociados al usuario.
+            // Si el rol es administrador o moderador, elimina bloqueos asociados a él.
             if ($request->new_role !== 'user') {
                 // Elimina bloqueos hechos POR el administrador o moderador.
                 UserBlock::where('blocker_id', $user->id)->delete();
@@ -336,9 +331,9 @@ class AdminUserController extends Controller
     }
 
     /**
-     * Inhabilita / habilita a un usuario.
+     * Inhabilita o habilita a un usuario.
      * 
-     * @param User $user Usuario que se va a inhabilitar / habilitar.
+     * @param User $user Usuario que se va a inhabilitar o habilitar.
      */
     private function toggleAccountStatus(User $user)
     {
@@ -351,7 +346,9 @@ class AdminUserController extends Controller
             DB::table('sessions')->where('user_id', $user->id)->delete();
         }
 
-        return back()->with('status', $user->is_active ? 'account_activated' : 'account_deactivated');
+        return back()->with('status', $user->is_active ?
+            'account_activated' :
+            'account_deactivated');
     }
 
     /**
