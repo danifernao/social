@@ -47,6 +47,7 @@ export default function AdminUserCreateForm() {
 
                     <div className="space-y-2 py-4">
                         <label className="block text-sm font-medium">{t('admin.user.create.confirm.title')}</label>
+                        <p className="text-sm font-medium">{t('admin.user.create.confirm.description')}</p>
                         <Input
                             type="password"
                             placeholder={t('common.password')}
@@ -54,7 +55,6 @@ export default function AdminUserCreateForm() {
                             onChange={(e) => form.setData('privileged_password', e.target.value)}
                             disabled={form.processing}
                         />
-                        <p className="text-muted-foreground text-sm italic">{t('admin.user.create.confirm.description')}</p>
                     </div>
 
                     <Button
