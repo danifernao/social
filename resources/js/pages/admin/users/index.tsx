@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import AdminLayout from '@/layouts/app/admin/admin-layout';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
-import type { BreadcrumbItem, Users } from '@/types';
+import type { Auth, BreadcrumbItem, Users } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +17,7 @@ export default function UsersIndex() {
     const { t } = useTranslation();
 
     // Captura la lista de usuarios y el mensaje, si existe, proporcionados por Inertia.
-    const { users, message } = usePage<{ users: Users; message: string }>().props;
+    const { auth, users, message } = usePage<{ auth: Auth; users: Users; message: string }>().props;
 
     // Ruta de navegación actual usada como migas de pan.
     const breadcrumbs: BreadcrumbItem[] = [
@@ -39,11 +39,13 @@ export default function UsersIndex() {
             <Head title={t('admin.user.layout.title')} />
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
-                    <div>
-                        <Button variant="outline" asChild>
-                            <Link href={route('admin.user.create')}>{t('admin.user.index.create')}</Link>
-                        </Button>
-                    </div>
+                    {auth.user.is_admin && (
+                        <div>
+                            <Button variant="outline" asChild>
+                                <Link href={route('admin.user.create')}>{t('admin.user.index.create')}</Link>
+                            </Button>
+                        </div>
+                    )}
                     <AdminUserList users={users.data} previous={users.links.prev} next={users.links.next} />
                 </AppContentLayout>
             </AdminLayout>
