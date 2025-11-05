@@ -145,8 +145,11 @@ class AdminUserController extends Controller
             abort(403);
         }
 
+        // Prepara el recurso del usuario y lo convierte en un arreglo.
+        $user_data = (new UserResource($user))->resolve();
+
         return Inertia::render('admin/users/edit', [
-            'user' => (new UserResource($user))->resolve(),
+            'user' => $user_data,
         ]);
     }
 

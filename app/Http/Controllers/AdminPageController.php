@@ -127,8 +127,11 @@ class AdminPageController extends Controller
         // Deniega acceso si el usuario autenticado no es administrador.
         $this->authorize('access-admin-area');
 
+        // Prepara el recurso de la página y lo convierte en un arreglo.
+        $page_data = (new PageResource($page))->resolve();
+
         return inertia('admin/pages/edit', [
-            'page' => (new PageResource($page))->resolve(),
+            'page' => $page_data,
         ]);
     }
 
