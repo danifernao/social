@@ -74,10 +74,10 @@ class FollowController extends Controller
         $following_ids = $auth_user->followedUserIds();
 
         // Agrega a cada usuario la propiedad "is_followed" indicando si el usuario autenticado lo sigue.
-        // Si no hay usuario autenticado, todos los elementos de la colección tendrán "is_followed" con valor null.
+        // Si no hay usuario autenticado, todos los elementos de la colección tendrán "is_followed" con valor "null".
         $following->setCollection(
             $auth_user
-                ? $auth_user->markFollowStateForCollection($following->getCollection())
+                ? $auth_user->withFollowStatus($following->getCollection())
                 : $following->getCollection()->map(fn($u) => $u->setAttribute('is_followed', null))
         );
 
@@ -113,10 +113,10 @@ class FollowController extends Controller
         $following_ids = $auth_user->followedUserIds();
 
         // Agrega a cada usuario la propiedad "is_followed" indicando si el usuario autenticado lo sigue.
-        // Si no hay usuario autenticado, todos los elementos de la colección tendrán "is_followed" con valor null.
+        // Si no hay usuario autenticado, todos los elementos de la colección tendrán "is_followed" con valor "null".
         $followers->setCollection(
             $auth_user
-                ? $auth_user->markFollowStateForCollection($followers->getCollection())
+                ? $auth_user->withFollowStatus($followers->getCollection())
                 : $followers->getCollection()->map(fn($u) => $u->setAttribute('is_followed', null))
         );
 

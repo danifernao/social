@@ -218,13 +218,14 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Marca cada usuario de una colección con la propiedad "is_followed".
-     * Si el usuario es el mismo que el autenticado, se marca como "null".
+     * Agrega a cada usuario de la colección la propiedad "is_followed",
+     * indicando si el usuario autenticado lo sigue.
+     * Si el usuario de la colección es el mismo que el autenticado, se asigna "null".
      *
-     * @param Collection<int, User> $users
-     * @return Collection<int, User>
+     * @param Collection<int, User> $users Colección de usuarios a evaluar.
+     * @return Collection<int, User> Colección con la propiedad "is_followed" añadida.
      */
-    public function markFollowStateForCollection(Collection $users): Collection
+    public function withFollowStatus(Collection $users): Collection
     {
         $followed_ids = $this->followedUserIds();
 
