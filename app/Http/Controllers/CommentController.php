@@ -89,7 +89,7 @@ class CommentController extends Controller
             $user->notify(new NewCommentOnPost($auth_user, $post->id, $post->user_id));
         });
 
-        // Prepara el recurso del comentario y lo convierte en arreglo.
+        // Genera el arreglo final del comentario aplicando la transformación definida en CommentResource.
         $comment_data = (new CommentResource($comment))->resolve();
 
         return back()->with('comment', $comment_data);
@@ -120,7 +120,7 @@ class CommentController extends Controller
         // Sincroniza las menciones realizadas en el comentario.
         $this->mentionService->sync($comment, $request->user());
 
-        // Prepara el recurso del comentario y lo convierte en un arreglo.
+        // Genera el arreglo final del comentario aplicando la transformación definida en CommentResource.
         $comment_data = (new CommentResource($comment))->resolve();
         
         return back()->with('comment',  $comment_data);
