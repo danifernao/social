@@ -11,26 +11,29 @@ use Inertia\Inertia;
 class HomeController extends Controller
 {
     /**
-     * Muestra el feed principal con las publicaciones del usuario autenticado y sus seguidos.
+     * Muestra el feed principal del usuario autenticado.
      *
-     * - Para usuarios administradores muestra todas las publicaciones.
-     * - Para usuarios normales muestra solo publicaciones propias y de los usuarios que sigue.
+     * - Si el usuario es moderador, se muestran todas las publicaciones.
+     * - Si es un usuario normal, se muestran únicamente sus propias
+     *   publicaciones y las de los usuarios que sigue.
      * 
      * @param Request $request Datos de la petición HTTP.
      */
     public function index(Request $request)
     {
-        $user = $request->user();
+        $auth_user = $request->user();
         $cursor = $request->header('X-Cursor');
 
-        // Consulta para obtener las publicaciones con el autor y contador de comentarios.
+        // Construye la consulta base con el autor de cada publicación
+        // y el conteo de comentarios.
         $query = Post::with('user')->withCount('comments');
 
-        // Si el usuario no es moderador, filtra solo las publicaciones de sí mismo y de quienes sigue.
-        if (!$user->canModerate()) {
-            $following_ids = $user->followedUserIds();
-            $following_ids[] = $user->id; // Esto incluye sus propias publicaciones.
-
+        // Si el usuario autenticado no es moderador, limita el feed a
+        // sus publicaciones y a las de los usuarios que sigue.
+        if (!$auth_user->canModerate()) {
+            $following_ids = $auth_user->followedUserIds();
+            $following_ids[] = $auth_user->id;
+            
             $query->whereIn('user_id', $following_ids);
         }
 
@@ -40,8 +43,8 @@ class HomeController extends Controller
 
         // Agrega las reacciones a cada publicación.
         $posts->setCollection(
-            $posts->getCollection()->map(function ($post) use ($user) {
-                $post->reactions = $post->reactionsSummary($user->id);
+            $posts->getCollection()->map(function ($post) use ($auth_user) {
+                $post->reactions = $post->reactionsSummary($auth_user->id);
                 return $post;
             })
         );
