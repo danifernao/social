@@ -12,7 +12,8 @@ use Inertia\Inertia;
 class FollowController extends Controller
 {
     /**
-     * Alterna la relación de seguimiento entre el usuario autenticado y otro usuario.
+     * Alterna la relación de seguimiento entre el usuario autenticado
+     * y otro usuario.
      * 
      * @param Request $request Datos de la petición HTTP.
      * @param User $user Usuario al que se va a seguir o dejar de seguir.
@@ -28,10 +29,12 @@ class FollowController extends Controller
             ]);
         }
 
-        // Impide seguir a un usuario si existe un bloqueo en cualquier dirección.
+        // Impide seguir a un usuario si existe un bloqueo
+        // en cualquier dirección.
         if ($auth_user->hasBlocked($user) || $user->hasBlocked($auth_user)) {
             return back()->withErrors([
-                'message' => 'Following this user is not allowed because there is a block between you.',
+                'message' => 'Following this user is not allowed because ' . 
+                             'there is a block between you.',
             ]);
         }
 
@@ -62,7 +65,8 @@ class FollowController extends Controller
         $auth_user = $request->user();
         $cursor = $request->header('X-Cursor');
 
-        // IDs de usuarios bloqueados por el usuario autenticado o que lo han bloqueado.
+        // IDs de usuarios bloqueados por el usuario autenticado
+        // o que lo han bloqueado.
         $excluded_ids = $auth_user->excludedUserIds();
 
         // Obtiene los usuarios que el usuario dado sigue.
@@ -73,10 +77,14 @@ class FollowController extends Controller
         // IDs de usuarios seguidos por el usuario autenticado.
         $following_ids = $auth_user->followedUserIds();
 
-        // Agrega a cada usuario la propiedad "is_followed" indicando si el usuario autenticado lo sigue.
-        $following->setCollection($auth_user->withFollowStatus($following->getCollection()));
+        // Agrega a cada usuario la propiedad "is_followed"
+        // indicandosi el usuario autenticado lo sigue.
+        $following->setCollection(
+            $auth_user->withFollowStatus($following->getCollection())
+        );
 
-        // Genera el arreglo final del usuario aplicando la transformación definida en UserResource.
+        // Genera el arreglo final del usuario aplicando la transformación
+        // definida en UserResource.
         $user_data = (new UserResource($user))->resolve();
 
         return Inertia::render('follow/index', [
@@ -96,7 +104,8 @@ class FollowController extends Controller
         $auth_user = $request->user();
         $cursor = $request->header('X-Cursor');
 
-        // IDs de usuarios bloqueados por el usuario autenticado o que lo han bloqueado.
+        // IDs de usuarios bloqueados por el usuario autenticado
+        // o que lo han bloqueado.
         $excluded_ids = $auth_user->excludedUserIds();
 
         // Obtiene los usuarios que siguen al usuario dado.
@@ -107,10 +116,14 @@ class FollowController extends Controller
         // IDs de usuarios seguidos por el usuario autenticado.
         $following_ids = $auth_user->followedUserIds();
 
-        // Agrega a cada usuario la propiedad "is_followed" indicando si el usuario autenticado lo sigue.        
-        $followers->setCollection($auth_user->withFollowStatus($followers->getCollection()));
+        // Agrega a cada usuario la propiedad "is_followed"
+        // indicando si el usuario autenticado lo sigue.        
+        $followers->setCollection(
+            $auth_user->withFollowStatus($followers->getCollection())
+        );
 
-        // Genera el arreglo final del usuario aplicando la transformación definida en UserResource.
+        // Genera el arreglo final del usuario aplicando la transformación
+        // definida en UserResource.
         $user_data = (new UserResource($user))->resolve();
 
         return Inertia::render('follow/index', [
