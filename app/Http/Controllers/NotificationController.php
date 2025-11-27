@@ -10,7 +10,7 @@ use Inertia\Inertia;
 class NotificationController extends Controller
 {
     /**
-     * Muestra las notificaciones del usuario autenticado.
+     * Muestra el listado de notificaciones del usuario autenticado.
      * 
      * @param Request $request Datos de la petición HTTP.
      */
@@ -18,7 +18,10 @@ class NotificationController extends Controller
     {
         $cursor = $request->header('X-Cursor');
 
-        $notifications = $request->user()->notifications()->latest()->cursorPaginate(15, ['*'], 'cursor', $cursor);
+        $notifications = $request->user()
+            ->notifications()
+            ->latest()
+            ->cursorPaginate(15, ['*'], 'cursor', $cursor);
 
         return Inertia::render('notifications/index', [
             'notifications' => NotificationResource::collection($notifications),
@@ -26,7 +29,8 @@ class NotificationController extends Controller
     }
 
     /**
-     * Marca todas las notificaciones no leídas del usuario autenticado como leídas.
+     * Marca todas las notificaciones no leídas del usuario autenticado
+     * como leídas.
      * 
      * @param Request $request Datos de la petición HTTP.
      */
@@ -41,11 +45,14 @@ class NotificationController extends Controller
      * Marca una notificación específica como leída.
      *
      * @param Request $request Datos de la petición HTTP.
-     * @param string $id Identificador de la notificación.
+     * @param string $id ID de la notificación a marcar como leída.
      */
     public function markOneAsRead(Request $request, string $id)
     {
-        $notification = $request->user()->notifications()->findOrFail($id);
+        $notification = $request->user()
+            ->notifications()
+            ->findOrFail($id);
+            
         $notification->markAsRead();
 
         return response()->json([
