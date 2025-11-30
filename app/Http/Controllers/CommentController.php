@@ -36,6 +36,8 @@ class CommentController extends Controller
             abort(403);
         }
 
+        // Valida la solicitud y obtiene los datos que
+        // cumplen con las reglas definidas.
         $data = $request->validate([
             'content' => 'required|string|max:3000',
         ]);
@@ -50,7 +52,8 @@ class CommentController extends Controller
         // Relaciona el usuario autenticado con el comentario (solo en memoria).
         $comment->setRelation('user', $auth_user);
 
-        // Guarda menciones y envía notificaciones.
+        // Detecta, registra y notifica las menciones presentes
+        // en el comentario.
         $this->mentionService
             ->createWithNotifications($comment, $auth_user, 'comment');
 
@@ -126,6 +129,8 @@ class CommentController extends Controller
         // actualizar el comentario.
         $this->authorize('update', $comment);
 
+        // Valida la solicitud y obtiene los datos que
+        // cumplen con las reglas definidas.
         $data = $request->validate([
             'content' => 'required|string|max:3000',
         ]);
