@@ -228,7 +228,8 @@ class PostController extends Controller
         // Elimina la publicación.
         $post->delete();
 
-        // Elimina la relación de las etiquetas asociadas a la publicacón.
+        // Elimina la relación de etiquetas asociadas a la publicación
+        // y aquellas que ya no estén en uso.
         $this->hashtagService->detachAndClean($post);
 
         $referer = $request->header('referer');
