@@ -12,6 +12,7 @@ export function AppSidebar() {
     const { t } = useTranslation();
 
     const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
+    const params = route().params;
 
     let mainNavItems: NavItem[];
 
@@ -26,6 +27,7 @@ export function AppSidebar() {
                 title: t('common.profile'),
                 href: route('profile.show', auth.user.username),
                 icon: User,
+                isActive: routeName === 'profile.show' && params.user === auth.user.username,
             },
             {
                 title: t('common.explore'),
@@ -36,7 +38,7 @@ export function AppSidebar() {
                 title: t('common.connections'),
                 href: route('follow.following', auth.user.username),
                 icon: Users,
-                isActive: ['follow.following', 'follow.followers'].includes(routeName),
+                isActive: ['follow.following', 'follow.followers'].includes(routeName) && params.user === auth.user.username,
             },
             {
                 name: 'notifications',
