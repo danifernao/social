@@ -24,12 +24,13 @@ class ProfileController extends Controller
     {
         $auth_user = $request->user();
 
-        // Si está autenticado, verifica si ha sido bloqueado.
+        // Si hay usuario autenticado, se verifica que no exista bloqueo mutuo
+        // entre él y el dueño del perfil.
         if ($auth_user && $user->hasBlocked($auth_user)) {
-          abort(403); // No puede ver la publicación.
+          abort(403);
         }
 
-        // Carga el conteo de seguidores y seguidos del usuario cuyo perfil se está viendo.
+        // Carga el conteo de seguidores y seguidos del usuario del perfil.
         $user->loadCount(['followers', 'follows']);
 
         // Determina si el usuario autenticado sigue al perfil visitado.
@@ -38,12 +39,14 @@ class ProfileController extends Controller
                 ->where('followed_id', $user->id)
                 ->exists();
         } else {
-            $user->is_followed = null; // No aplica para uno mismo o usuarios no autenticados.
+            // No aplica para uno mismo o usuarios no autenticados.
+            $user->is_followed = null;
         }
 
         $is_blocked = false;
 
-        // Determina si el perfil está bloqueado desde la perspectiva del usuario autenticado.
+        // Verifica si el perfil aparece entre los usuarios bloqueados
+        // por el usuario autenticado.
         if ($auth_user && $auth_user->id !== $user->id) {
             $is_blocked = in_array($user->id, $auth_user->excludedUserIds());
         }
@@ -51,8 +54,10 @@ class ProfileController extends Controller
         $cursor = $request->header('X-Cursor');
 
         if ($is_blocked) {
-            // Si hay bloqueo mutuo, no se deben mostrar publicaciones.
-            $posts = collect([])->forPage(1, 7); // Crea una colección vacía paginada.
+            // Si existe un bloqueo, no se deben mostrar publicaciones.
+            // Se genera un paginador vacío para mantener la
+            // estructura esperada.
+            $posts = collect([])->forPage(1, 7);
             $posts = new CursorPaginator(
                 $posts,
                 null,
@@ -63,7 +68,7 @@ class ProfileController extends Controller
                 ]
             );
         } else {
-            // Obtiene las publicaciones del perfil.
+            // Obtiene las publicaciones asociadas al perfil del usuario.
             $posts = Post::with('user')
                 ->withCount('comments')
                 
@@ -86,8 +91,12 @@ class ProfileController extends Controller
             );
         }
 
+        // Genera el arreglo final del usuario del perfil
+        // aplicando la transformación definida en UserResource.
+        $user_data = (new UserResource($user))->resolve();
+
         return Inertia::render('profile/show', [
-            'user' => (new UserResource($user))->resolve(),
+            'user' => $user_data,
             'posts' => PostResource::collection($posts),
         ]);
     }
