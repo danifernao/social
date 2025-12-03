@@ -18,10 +18,14 @@ class ReactionController extends Controller
      */
     public function toggle(Request $request)
     {
+        // "type":  indica si la reacción pertenece a una publicación
+        //          o a un comentario.
+        // "id":    ID de la publicación o comentario al que se reacciona.
+        // "emoji": Emoji que representa la reacción.
         $request->validate([
-            'type' => 'required|in:post,comment', // Indica si la reacción pertenece a una publicación o a un comentario.
-            'id' => 'required|integer',           // ID de la publicación o comentario al que se reacciona.
-            'emoji' => 'required|string|max:20',  // Emoji que representa la reacción.
+            'type' => 'required|in:post,comment',
+            'id' => 'required|integer',
+            'emoji' => 'required|string|max:20',
         ]);
 
         $user = $request->user();
