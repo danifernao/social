@@ -39,20 +39,15 @@ class ReactionController extends Controller
         $existing = $model->reactions()->where('user_id', $user->id)->first();
 
         if ($existing) {
-            // Elimina la reacción existente.
-            $existing->delete();
-
-            // Si el usuario vuelve a reaccionar con el mismo emoji,
-            // solo se elimina.
+            // Si el emoji es el mismo, se elimina la reacción.
             if ($existing->emoji === $emoji) {
+                $existing->delete();
                 return back()->with('status', 'reaction_deleted');
             }
-            
-            // Si el usuario cambia el emoji, se crea la nueva reacción.
-            $model->reactions()->create([
-                'user_id' => $user->id,
-                'emoji' => $emoji,
-            ]);
+
+            // Si el emoji es distinto, se reemplaza la reacción anterior
+            // por la nueva.
+            $existing->update(['emoji' => $emoji]);
             
             return back()->with('status', 'reaction_replaced');
         }
