@@ -62,13 +62,14 @@ class SearchController extends Controller
 
             // Añade la propiedad is_followed para marcar si ya hay seguimiento.
             $users->setCollection(
-                $users->getCollection()->map(function ($user) use ($auth_user, $followed_ids) {
-                    $user->is_followed = $auth_user->id !== $user->id
-                        ? in_array($user->id, $followed_ids)
-                        : null; // NULL para sí mismo.
+                $users->getCollection()
+                    ->map(function ($user) use ($auth_user, $followed_ids) {
+                        $user->is_followed = $auth_user->id !== $user->id
+                            ? in_array($user->id, $followed_ids)
+                            : null; // NULL para sí mismo.
 
-                    return $user;
-                })
+                        return $user;
+                    })
             );
 
             return Inertia::render('search/index', [
@@ -86,7 +87,7 @@ class SearchController extends Controller
         // publicaciones de usuarios bloqueados.
         $posts_query = Post::with('user')
             ->withCount('comments')
-            ->whereNotIn('user_id', $excluded_ids) // Excluye publicaciones bloqueadas.
+            ->whereNotIn('user_id', $excluded_ids)
             ->latest();
 
         // Determina si la consulta corresponde a una etiqueta (#hashtag).
