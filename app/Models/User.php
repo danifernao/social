@@ -66,7 +66,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return string
      */
-    public function getTypeAttribute()
+    public function getTypeAttribute(): string
     {
         return 'user';
     }
