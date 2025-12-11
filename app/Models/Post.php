@@ -35,7 +35,7 @@ class Post extends Model
      *
      * @return string
      */
-    public function getTypeAttribute()
+    public function getTypeAttribute(): string
     {
         return 'post';
     }

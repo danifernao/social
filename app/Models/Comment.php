@@ -36,7 +36,7 @@ class Comment extends Model
      *
      * @return string
      */
-    public function getTypeAttribute()
+    public function getTypeAttribute(): string
     {
         return 'comment';
     }
