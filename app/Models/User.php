@@ -290,20 +290,18 @@ class User extends Authenticatable implements MustVerifyEmail
      * desbloquea si ya lo está.
      * Al bloquear, también se elimina el seguimiento mutuo.
      *
-     * @param User $user Usuario objetivo del bloqueo.
-     * @return bool TRUE si la acción se ejecutó correctamente.
+     * @param User $user Usuario objetivo del bloqueo / desbloqueo.
      */
-    public function toggleBlock(User $user): bool
+    public function toggleBlock(User $user): void
     {
         if ($this->hasBlocked($user)) {
-            $this->blockedUsers()->detach($user->id);
-            return true; // Desbloqueado.
+            $this->blockedUsers()->detach($user->id); // Desbloquea.
         } else {
-            $this->blockedUsers()->attach($user->id);
-            // Quitar seguimiento mutuo.
+            $this->blockedUsers()->attach($user->id); // Bloquea.
+
+            // Quita seguimiento mutuo.
             $this->follows()->detach($user->id);
             $user->follows()->detach($this->id);
-            return true; // Bloqueado.
         }
     }
 
