@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Modelo que representa una reacción (emoji) hecha por un usuario
- * sobre un Post o Comment.
+ * sobre una publicación (Post) o un comentario (Comment).
  */
 class Reaction extends Model
 {
@@ -28,7 +28,7 @@ class Reaction extends Model
 
     /**
      * Relación polimórfica: contenido en el que ocurrió la reacción.
-     * Puede ser un Post o un Comment.
+     * Puede ser una apublicación o un comentario.
      *
      * @return MorphTo<Model, Reaction>
      */

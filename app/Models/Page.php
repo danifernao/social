@@ -22,14 +22,19 @@ class Page extends Model
     ];
 
     /**
-     * Verifica si ya existe una página de un tipo específico en un idioma determinado.
+     * Verifica si ya existe una página de un tipo específico
+     * en un idioma determinado.
      *
      * @param string $type Tipo de la página.
      * @param string $language Idioma de la página.
-     * @param int|null $exceptId ID de la página que debe excluirse de la comprobación.
-     * @return bool Devuelve verdadero si existe otra página con el mismo tipo e idioma.
+     * @param int|null $exceptId ID de página a excluirse en la comprobación.
+     * @return bool Devuelve TRUE si existe otra página con mismo tipo e idioma.
      */
-    public static function existsOfTypeInLanguage(string $type, string $language, ?int $exceptId = null): bool
+    public static function existsOfTypeInLanguage(
+        string $type,
+        string $language, 
+        ?int $exceptId = null
+    ): bool
     {
         return static::where('language', $language)
             ->where('type', $type)

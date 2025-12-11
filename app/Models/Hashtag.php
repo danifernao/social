@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Modelo que representa una etiqueta (hashtag) utilizada
- * en una o varias publicaciones.
+ * Modelo que representa una etiqueta (hashtag) agregada
+ * en una o varias publicaciones (Post).
  */
 class Hashtag extends Model
 {
@@ -20,7 +20,7 @@ class Hashtag extends Model
     ];
 
     /**
-     * Relación: publicaciones que usan la etiqueta.
+     * Relación: publicaciones que contienen la etiqueta.
      *
      * @return BelongsToMany<Post, Hashtag>
      */
