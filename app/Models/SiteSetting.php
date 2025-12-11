@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Modelo que representa las configuraciones globales del sitio.
+ * Modelo que representa las configuraciones globales del sitio web.
  */
 class SiteSetting extends Model
 {
@@ -18,7 +18,8 @@ class SiteSetting extends Model
     public $incrementing = false;
 
     /**
-     * Clave primaria nula ya que la tabla funciona como un almacenamiento de pares clave-valor.
+     * Clave primaria nula, ya que la tabla funciona como
+     * un almacenamiento de pares clave-valor.
      *
      * @var null
      */

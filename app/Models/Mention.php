@@ -5,7 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Modelo que representa una mención a un usuario dentro de un Post o un Comment.
+ * Modelo que representa una mención a un usuario
+ * hecha en una publicación (Post) o un comentario (Comment).
  */
 class Mention extends Model
 {
@@ -32,7 +33,7 @@ class Mention extends Model
 
     /**
      * Relación polimórfica: contenido en el que ocurrió la mención.
-     * Puede ser un Post o un Comment.
+     * Puede ser una publicación o un comentario.
      *
      * @return MorphTo<Model, Mention>
      */

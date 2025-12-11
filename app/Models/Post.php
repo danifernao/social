@@ -61,7 +61,7 @@ class Post extends Model
     }
 
     /**
-     * Relación polimórfica: reacciones asociadas a esta publicación.
+     * Relación polimórfica: reacciones hechas en esta publicación.
      *
      * @return MorphMany<Reaction, Post>
      */
@@ -71,7 +71,7 @@ class Post extends Model
     }
 
     /**
-     * Relación: etiquetas asociadas a la publicación.
+     * Relación: etiquetas agregadas en esta publicación.
      *
      * @return BelongsToMany<Hashtag, Post>
      */
@@ -81,7 +81,7 @@ class Post extends Model
     }
 
     /**
-     * Relación polimórfica: menciones asociadas a esta publicación.
+     * Relación polimórfica: menciones hechas en esta publicación.
      *
      * @return MorphMany<Mention, Post>
      */

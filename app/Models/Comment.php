@@ -62,7 +62,7 @@ class Comment extends Model
     }
 
     /**
-     * Relación polimórfica: reacciones asociadas a este comentario.
+     * Relación polimórfica: reacciones hechas en este comentario.
      * 
      * @return MorphMany<Reaction, Comment>
      */
@@ -72,7 +72,7 @@ class Comment extends Model
     }
 
     /**
-     * Relación polimórfica: menciones asociadas a este comentario.
+     * Relación polimórfica: menciones hechas en este comentario.
      *
      * @return MorphMany<Mention, Comment>
      */

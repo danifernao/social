@@ -78,7 +78,9 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getAvatarUrlAttribute(): ?string
     {
-        return $this->avatar_path ? asset('storage/' . $this->avatar_path) : null;
+        return $this->avatar_path
+            ? asset('storage/' . $this->avatar_path)
+            : null;
     }
 
     /**
@@ -88,7 +90,13 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function follows()
     {
-        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'followed_id')->withTimestamps();
+        return $this->belongsToMany(
+                User::class,
+                'follows',
+                'follower_id',
+                'followed_id'
+            )
+            ->withTimestamps();
     }
     
     /**
@@ -98,7 +106,13 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function followers()
     {
-        return $this->belongsToMany(User::class, 'follows', 'followed_id', 'follower_id')->withTimestamps();
+        return $this->belongsToMany(
+                User::class,
+                'follows',
+                'followed_id',
+                'follower_id'
+            )
+            ->withTimestamps();
     }
 
     /**
@@ -138,7 +152,12 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function blockedUsers()
     {
-        return $this->belongsToMany(User::class, 'user_blocks', 'blocker_id', 'blocked_id');
+        return $this->belongsToMany(
+                User::class,
+                'user_blocks',
+                'blocker_id',
+                'blocked_id'
+            );
     }
 
     /**
@@ -148,7 +167,12 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function blockedByUsers()
     {
-        return $this->belongsToMany(User::class, 'user_blocks', 'blocked_id', 'blocker_id');
+        return $this->belongsToMany(
+                User::class,
+                'user_blocks',
+                'blocked_id',
+                'blocker_id'
+            );
     }
 
     /**
@@ -220,10 +244,11 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Agrega a cada usuario de la colección la propiedad "is_followed",
      * indicando si el usuario autenticado lo sigue.
-     * Si el usuario de la colección es el mismo que el autenticado, se asigna "null".
+     * Si el usuario de la colección es el mismo que el autenticado,
+     * se asigna "null".
      *
      * @param Collection<int, User> $users Colección de usuarios a evaluar.
-     * @return Collection<int, User> Colección con la propiedad "is_followed" añadida.
+     * @return Collection<int, User> Colección con la propiedad "is_followed".
      */
     public function withFollowStatus(Collection $users): Collection
     {
@@ -241,7 +266,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Verifica si el usuario ha bloqueado a otro usuario.
      *
-     * @param User $user
+     * @param User $user Usuario a comprobar.
      * @return bool
      */
     public function hasBlocked(User $user): bool
@@ -261,7 +286,8 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Alterna el bloqueo de un usuario: bloquea si no lo está, desbloquea si ya lo está.
+     * Alterna el bloqueo de un usuario: bloquea si no lo está,
+     * desbloquea si ya lo está.
      * Al bloquear, también se elimina el seguimiento mutuo.
      *
      * @param User $user Usuario objetivo del bloqueo.
@@ -282,7 +308,8 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Devuelve un arreglo de IDs de usuarios bloqueados por este usuario o que lo bloquearon.
+     * Devuelve un arreglo de IDs de usuarios bloqueados por este usuario
+     * o que lo bloquearon.
      *
      * @return array<int>
      */
@@ -295,7 +322,8 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Filtra una colección de usuarios, dejando solo los que pueden ser mencionados.
+     * Filtra una colección de usuarios, dejando solo los que
+     * pueden ser mencionados.
      *
      * @param Collection<int, User> $mentionedUsers
      * @return Collection<int, User>
