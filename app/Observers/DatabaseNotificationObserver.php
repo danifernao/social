@@ -15,7 +15,8 @@ class DatabaseNotificationObserver
         // Obtiene el usuario que recibe la notificación.
         $user = $notification->notifiable;
 
-        // Dispara el evento con el nuevo conteo de notificaciones no leídas.
+        // Emite un evento para informar que el conteo de notificaciones
+        // no leídas del usuario ha cambiado.
         event(new UnreadNotificationsCountUpdated(
             $user->id,
             $user->unreadNotifications()->count()
@@ -32,7 +33,8 @@ class DatabaseNotificationObserver
             // Obtiene el usuario que recibe la notificación.
             $user = $notification->notifiable;
 
-            // Dispara el evento con el nuevo conteo de notificaciones no leídas.
+            // Emite un evento para informar que el conteo de notificaciones
+            // no leídas del usuario ha cambiado.
             event(new UnreadNotificationsCountUpdated(
                 $user->id,
                 $user->unreadNotifications()->count()

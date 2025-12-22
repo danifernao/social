@@ -10,14 +10,14 @@ use Illuminate\Notifications\DatabaseNotification;
 class CommentObserver
 {
     /**
-     * Método que se ejecuta automáticamente antes de que un modelo Comment sea eliminado.
+     * Método que se ejecuta antes de que un comentario sea eliminado.
      */
     public function deleting(Comment $comment): void
     {
-        // Elimina las menciones hechas en este comentario.
+        // Elimina las menciones hechas en el comentario.
         $comment->mentions()->delete();
 
-        // Elimina las notificaciones de menciones hechas en este comentario.
+        // Elimina las notificaciones de menciones hechas en el comentario.
         DatabaseNotification::where('type', NewMention::class)
             ->where('data->data->context->type', 'comment')
             ->where('data->data->context->id', $comment->id)
