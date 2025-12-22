@@ -11,11 +11,11 @@ use Illuminate\Notifications\DatabaseNotification;
 class PostObserver
 {
     /**
-     * Método que se ejecuta automáticamente antes de que un modelo Post sea eliminado.
+     * Método que se ejecuta antes de que una publicación sea eliminada.
      */
     public function deleting(Post $post)
     {
-        // Elimina las menciones hechas en esta publicación.
+        // Elimina las menciones hechas en la publicación.
         $post->mentions()->delete();
 
         // Recorre los comentarios de la publicación.
@@ -30,13 +30,13 @@ class PostObserver
                 ->delete();
         });
         
-        // Elimina las notificaciones de comentarios en esta publicación.
+        // Elimina las notificaciones de comentarios en la publicación.
         DatabaseNotification::where('type', NewCommentOnPost::class)
             ->where('data->data->context->type', 'post')
             ->where('data->data->context->id', $post->id)
             ->delete();
 
-        // Elimina las notificaciones de menciones hechas en esta publicación.
+        // Elimina las notificaciones de menciones hechas en la publicación.
         DatabaseNotification::where('type', NewMention::class)
             ->where('data->data->context->type', 'post')
             ->where('data->data->context->id', $post->id)
