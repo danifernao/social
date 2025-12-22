@@ -29,18 +29,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Restringe el acceso a la zona administrativa solo a usuarios con rol de administrador.
+        // Garantiza que solo los usuarios con rol de administrador
+        // puedan acceder a la zona administrativa.
         Gate::define('access-admin-area', function (User $user) {
             return $user->isAdmin();
         });
 
-        // Permite que las rutas como /user/{user} acepten tanto IDs numéricos como nombres de usuario.
+        // Permite que las rutas como /user/{user} acepten tanto IDs numéricos
+        // como nombres de usuario.
         Route::bind('user', function ($value) {
-            // Si el valor es numérico, se asume que es un ID y se busca al usuario por ID.
+            // Si el valor es numérico, se asume que es un ID
+            // y se busca al usuario por ID.
             if (is_numeric($value)) {
                 return User::findOrFail($value);
             }
-            // Si no es numérico, se asume que es un nombre de usuario y se busca por ese campo.
+            // Si no es numérico, se asume que es un nombre de usuario
+            // y se busca por ese campo.
             return User::where('username', $value)->firstOrFail();
         });
 
