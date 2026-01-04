@@ -6,6 +6,9 @@ use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
+/**
+ * Notificación enviada cuando un moderador publica en el perfil de un usuario.
+ */
 class NewPostOnProfile extends Notification
 {
     use Queueable;
@@ -13,8 +16,8 @@ class NewPostOnProfile extends Notification
     /**
      * Crea una nueva instancia de la notificación.
      *
-     * @param User $sender  El moderador que creó la publicación.
-     * @param int  $postId  El ID de la publicación creada.
+     * @param User $sender  Usuario que creó la publicación.
+     * @param int  $postId  ID de la publicación creada.
      */
     public function __construct(
         public User $sender,
@@ -25,7 +28,7 @@ class NewPostOnProfile extends Notification
      * Define los canales por los que se enviará la notificación.
      * En este caso, solo se guarda en la base de datos.
      *
-     * @param object $notifiable El usuario que recibirá la notificación.
+     * @param object $notifiable Usuario que recibirá la notificación.
      * @return array<string>
      */
     public function via(object $notifiable): array
@@ -34,21 +37,21 @@ class NewPostOnProfile extends Notification
     }
 
     /**
-     * Define la estructura de la notificación al almacenarla en la base de datos.
+     * Define la estructura de la notificación al guardarse en la base de datos.
      *
-     * @param object $notifiable El usuario que recibirá la notificación.
+     * @param object $notifiable Usuario que recibirá la notificación.
      * @return array<string, mixed>
      */
     public function toArray(object $notifiable): array
     {
         return [
-            'type' => 'post', // Tipo de notificación para frontend.
+            'type' => 'post', // Tipo de notificación.
             'data' => [
-                'sender' => [ // Moderador que creó la publicación.
+                'sender' => [ // Usuario que creó la publicación.
                     'id' => $this->sender->id,
                     'username' => $this->sender->username,
                 ],
-                'context' => [ // Contexto: la publicación.
+                'context' => [ // Contexto de la publicación creada.
                     'type' => 'post',
                     'id' => $this->postId,
                 ],

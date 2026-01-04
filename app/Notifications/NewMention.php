@@ -7,7 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
 /**
- * Notificación enviada cuando un usuario es mencionado en una publicación o comentario.
+ * Notificación enviada cuando un usuario es mencionado en un contenido.
  */
 class NewMention extends Notification
 {
@@ -16,9 +16,9 @@ class NewMention extends Notification
     /**
      * Crea una nueva instancia de la notificación.
      *
-     * @param User $sender           Usuario que realizó la mención.
-     * @param string $contextType    Tipo de contenido donde ocurrió la mención ("post" o "comment").
-     * @param int $contextId         ID del contenido mencionado.
+     * @param User $sender          Usuario que realizó la mención.
+     * @param string $contextType   Tipo de contenido donde ocurrió la mención.
+     * @param int $contextId        ID del contenido mencionado.
      */
     public function __construct(
         public User $sender,
@@ -30,7 +30,7 @@ class NewMention extends Notification
      * Define los canales por los que se enviará la notificación.
      * En este caso, solo se almacena en la base de datos.
      *
-     * @param object $notifiable El usuario que recibirá la notificación.
+     * @param object $notifiable Usuario que recibirá la notificación.
      * @return array<string>
      */
     public function via(object $notifiable): array
@@ -39,23 +39,23 @@ class NewMention extends Notification
     }
 
     /**
-     * Define el contenido que se guardará en la base de datos para la notificación.
+     * Define la estructura de la notificación al guardarse en la base de datos.
      *
-     * @param object $notifiable El usuario que recibirá la notificación.
+     * @param object $notifiable Usuario que recibirá la notificación.
      * @return array<string, mixed>
      */
     public function toDatabase(object $notifiable): array
     {
         return [
-            'type' => 'mention', // Tipo de notificación (útil para el frontend).
+            'type' => 'mention', // Tipo de notificación.
             'data' => [
-                'sender' => [ // Usuario que hizo la mención.
+                'sender' => [ // Usuario que realizó la mención.
                     'id' => $this->sender->id,
                     'username' => $this->sender->username,
                 ],
-                'context' => [ // Información del contenido donde ocurrió la mención.
+                'context' => [ // Contenido donde ocurrió la mención.
                     'type' => $this->contextType, // "post" o "comment".
-                    'id' => $this->contextId, // ID de la publicación o comentario.
+                    'id' => $this->contextId, // ID de publicación o comentario.
                 ],
             ],
         ];
