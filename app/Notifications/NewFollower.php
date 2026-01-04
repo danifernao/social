@@ -16,14 +16,15 @@ class NewFollower extends Notification
     /**
      * Crea una nueva instancia de la notificación.
      *
-     * @param User $follower El seguidor.
+     * @param User $follower Usuario que inició el seguimiento.
      */
     public function __construct(public User $follower){}
 
     /**
      * Define los canales por los que se enviará la notificación.
+     * En este caso, solo se almacena en la base de datos.
      *
-     * @param object $notifiable El usuario que recibirá la notificación.
+     * @param object $notifiable Usuario que recibirá la notificación.
      * @return array<string>
      */
     public function via(object $notifiable): array
@@ -32,17 +33,17 @@ class NewFollower extends Notification
     }
 
     /**
-     * Define la estructura de la notificación al almacenarla en la base de datos.
+     * Define la estructura de la notificación al guardarse en la base de datos.
      *
-     * @param object $notifiable El usuario que recibirá la notificación.
+     * @param object $notifiable Usuario que recibirá la notificación.
      * @return array<string, mixed>
      */
     public function toDatabase(object $notifiable): array
     {
         return [
-            'type' => 'follow', // Tipo de notificación (útil para el frontend).
+            'type' => 'follow', // Tipo de notificación.
             'data' => [
-                'sender' => [ // Usuario que comenzó a seguir.
+                'sender' => [ // Usuario que inició el seguimiento.
                     'id' => $this->follower->id,
                     'username' => $this->follower->username,
                 ],

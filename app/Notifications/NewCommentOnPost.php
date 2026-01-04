@@ -7,7 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
 /**
- * Notificación enviada cuando un usuario comenta en una publicación de otro usuario.
+ * Notificación enviada cuando un usuario comenta en una publicación ajena.
  */
 class NewCommentOnPost extends Notification
 {
@@ -16,8 +16,9 @@ class NewCommentOnPost extends Notification
     /**
      * Crea una nueva instancia de la notificación.
      *
-     * @param User $sender  El usuario que escribió el comentario.
-     * @param int  $postId  El ID de la publicación comentada.
+     * @param User $sender        Usuario que realizó el comentario.
+     * @param int  $postId        ID de la publicación comentada.
+     * @param int  $postAuthorId  ID del autor de la publicación.
      */
     public function __construct(
         public User $sender,
@@ -27,9 +28,9 @@ class NewCommentOnPost extends Notification
 
     /**
      * Define los canales por los que se enviará la notificación.
-     * En este caso, solo se guarda en la base de datos.
+     * En este caso, solo se almacena en la base de datos.
      *
-     * @param object $notifiable El usuario que recibirá la notificación.
+     * @param object $notifiable  Usuario que recibirá la notificación.
      * @return array<string>
      */
     public function via(object $notifiable): array
@@ -38,21 +39,21 @@ class NewCommentOnPost extends Notification
     }
 
     /**
-     * Define la estructura de la notificación al almacenarla en la base de datos.
+     * Define la estructura de la notificación al guardarse en la base de datos.
      *
-     * @param object $notifiable El usuario que recibirá la notificación.
+     * @param object $notifiable  Usuario que recibirá la notificación.
      * @return array<string, mixed>
      */
     public function toDatabase(object $notifiable): array
     {
         return [
-            'type' => 'comment', // Tipo de notificación (útil para el frontend).
+            'type' => 'comment', // Tipo de notificación.
             'data' => [
-                'sender' => [ // Usuario que hizo el comentario.
+                'sender' => [ // Usuario que realizó el comentario.
                     'id' => $this->sender->id,
                     'username' => $this->sender->username,
                 ],
-                'context' => [ // Contexto: en qué publicación ocurrió.
+                'context' => [ // Contexto donde ocurrió el comentario.
                     'type' => 'post',
                     'id' => $this->postId,
                     'author_id' => $this->postAuthorId,
