@@ -10,14 +10,23 @@ use App\Models\Post;
  */
 class HashtagService
 {
-    // Extrae las etiquetas del contenido de una publicación.
+    /**
+     * Extrae las etiquetas del contenido de una publicación.
+     *
+     * @param string $content Texto del cual se extraerán las etiquetas.
+     * @return array<int, string>
+     */
     public function extractFrom(string $content): array
     {
         preg_match_all('/#([a-z0-9]+)/i', $content, $matches);
         return array_unique(array_map('mb_strtolower', $matches[1]));
     }
 
-    // Asocia a la publicación las etiquetas encontradas en su contenido.
+    /**
+     * Asocia a la publicación las etiquetas encontradas en su contenido.
+     *
+     * @param Post $post Publicación cuyo contenido será analizado.
+     */
     public function sync(Post $post): void
     {
         $tags = $this->extractFrom($post->content);
@@ -31,7 +40,11 @@ class HashtagService
         $post->hashtags()->sync($hashtags);
     }
 
-    // Elimina relaciones y limpia etiquetas sin asociaciones activas.
+    /**
+     * Elimina relaciones y limpia etiquetas sin asociaciones activas.
+     *
+     * @param Post $post Publicación cuyas etiquetas serán limpiadas.
+     */
     public function detachAndClean(Post $post): void
     {
         $hashtags = $post->hashtags;
