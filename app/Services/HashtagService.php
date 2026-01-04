@@ -41,7 +41,7 @@ class HashtagService
 
         // Elimina etiquetas que ya no están asociadas a ninguna publicación.
         foreach ($hashtags as $hashtag) {
-            if ($hashtag->posts()->exists()) {
+            if (!$hashtag->posts()->exists()) {
                 $hashtag->delete();
             }
         }
