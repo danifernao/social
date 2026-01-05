@@ -5,10 +5,13 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * Define la representación de una página informativa para el frontend.
+ */
 class PageResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
+     * Convierte el recurso en un arreglo para ser enviado al frontend.
      *
      * @return array<string, mixed>
      */
