@@ -6,6 +6,10 @@ use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
+/**
+ * Define las reglas de autorización para las acciones que pueden
+ * realizarse sobre los comentarios.
+ */
 class CommentPolicy
 {
     /**
