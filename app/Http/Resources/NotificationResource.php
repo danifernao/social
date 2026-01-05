@@ -5,10 +5,13 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * Define la representación de una notificación para el frontend.
+ */
 class NotificationResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
+     * Convierte el recurso en un arreglo para ser enviado al frontend.
      *
      * @return array<string, mixed>
      */
