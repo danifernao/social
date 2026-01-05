@@ -5,6 +5,10 @@ namespace App\Observers;
 use App\Events\UnreadNotificationsCountUpdated;
 use Illuminate\Notifications\DatabaseNotification;
 
+/**
+ * Observa eventos del modelo DatabaseNotification para reaccionar
+ * a cambios relevantes en su estado.
+ */
 class DatabaseNotificationObserver
 {
     /**

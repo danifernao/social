@@ -6,6 +6,10 @@ use App\Models\User;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Observa eventos del modelo User para manejar efectos secundarios
+ * relacionados con su ciclo de vida.
+ */
 class UserObserver
 {
     /**

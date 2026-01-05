@@ -8,6 +8,10 @@ use App\Notifications\NewCommentOnPost;
 use App\Notifications\NewMention;
 use Illuminate\Notifications\DatabaseNotification;
 
+/**
+ * Observa eventos del modelo Post para manejar efectos secundarios
+ * relacionados con su ciclo de vida.
+ */
 class PostObserver
 {
     /**
