@@ -7,6 +7,10 @@ use App\Models\Mention;
 use App\Notifications\NewMention;
 use Illuminate\Notifications\DatabaseNotification;
 
+/**
+ * Observa eventos del modelo Comment para manejar efectos secundarios
+ * relacionados con su ciclo de vida.
+ */
 class CommentObserver
 {
     /**
