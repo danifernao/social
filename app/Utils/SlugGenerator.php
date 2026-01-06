@@ -11,38 +11,54 @@ use Illuminate\Support\Str;
 class SlugGenerator
 {
     /**
-     * Genera un slug único a partir de un valor dado o un título.
+     * Genera un slug único para una página.
      *
-     * - Si se proporciona un slug, se valida su formato.
+     * Comportamiento:
+     * - Si se proporciona un slug, se normaliza y valida.
      * - Si no se proporciona, se genera a partir del título.
-     * - Si el slug ya existe, se agrega un sufijo aleatorio.
+     * - Si el slug ya existe en el mismo idioma,
+     *   se añade un sufijo aleatorio.
+     * 
+     * @param string      $title     Texto base desde el cual
+     *                               se puede generar el slug.
+     * @param string|null $slug      Slug proporcionado por el usuario.
+     * @param string      $language  Idioma de la página.
+     * @param int|null    $excludeId ID del registro a excluir
+     *                               al verificar unicidad
+     *                               (útil en actualizaciones).
      *
-     * @param string $title Texto base (título de la página).
-     * @param string|null $slug Slug proporcionado por el usuario.
-     * @param string $language Idioma de la página.
-     * @param int|null $excludeId ID a excluir en la verificación de unicidad (para actualizaciones).
      * @return string Slug único y válido.
      */
-    public static function generate(string $title, ?string $slug, string $language, ?int $excludeId = null): string
+    public static function generate(
+        string $title,
+        ?string $slug,
+        string $language,
+        ?int $excludeId = null
+    ): string
     {
-        // Si el usuario no proporcionó slug, se genera desde el título.
+        // Si no se proporciona un slug, se genera a partir del título.
         $baseSlug = $slug ?: Str::slug($title);
 
-        // Si el título no contiene caracteres válidos, crea uno genérico.
+        // Si el resultado está vacío (por ejemplo,
+        // títulos sin caracteres válidos), se asigna un valor genérico.
         if (empty($baseSlug)) {
             $baseSlug = 'page';
         }
 
-        // Si el slug ya existe, se le añade un sufijo aleatorio hasta encontrar uno libre.
+        // Slug final que se validará contra la base de datos.
         $uniqueSlug = $baseSlug;
 
+        // Verifica que el slug sea único dentro del mismo idioma.
         while (
             Page::where('slug', $uniqueSlug)
                 ->where('language', $language)
-                ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+                ->when(
+                    $excludeId,
+                    fn($q) => $q->where('id', '!=', $excludeId)
+                )
                 ->exists()
         ) {
-            // Si el slug ya existe en ese idioma, se agrega un sufijo aleatorio.
+            // Si el slug ya existe, se agrega un sufijo aleatorio.
             $uniqueSlug = "{$baseSlug}-" . Str::lower(Str::random(5));
         }
 

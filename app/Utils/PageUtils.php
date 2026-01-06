@@ -6,12 +6,12 @@ use App\Models\Page;
 use App\Utils\Locales;
 
 /**
- * Clase utilitaria para manejar operaciones relacionadas con páginas informativas.
+ * Proporciona utilidades para gestionar páginas informativas.
  */
 class PageUtils
 {
     /**
-     * Devuelve todos los tipos de páginas válidos.
+     * Obtiene el listado completo de tipos de páginas válidos.
      *
      * @return string[]
      */
@@ -21,7 +21,8 @@ class PageUtils
     }
 
     /**
-     * Devuelve solo los tipos de páginas especiales.
+     * Obtiene únicamente los tipos de páginas consideradas
+     * como especiales.
      *
      * @return string[]
      */
@@ -31,11 +32,17 @@ class PageUtils
     }
 
     /**
-     * Devuelve las páginas especiales agrupadas por idioma.
-     * 
+     * Obtiene las páginas especiales agrupadas por idioma.
+     *
+     * Para cada idioma habilitado, se devuelve un arreglo con
+     * los tipos de páginas especiales y el slug correspondiente,
+     * o null si la página no existe.
+     *
      * @return array<string, array{
-     *    policy: array{slug: string}|null,
-     *    guidelines: array{slug: string}|null
+     *     about: array{slug: string}|null,
+     *     terms: array{slug: string}|null,
+     *     policy: array{slug: string}|null,
+     *     guidelines: array{slug: string}|null
      * }>
      */
     public static function getSpecialPages(): array
@@ -43,18 +50,24 @@ class PageUtils
         // Obtiene los códigos de idioma habilitados en la aplicación.
         $languages = Locales::codes();
 
-        // Estructura base de la respuesta.
+        // Inicializa la estructura base de la respuesta,
+        // asignando null a cada tipo especial por idioma.
         $pagesByLang = [];
         foreach ($languages as $lang) {
-            $pagesByLang[$lang] = array_fill_keys(self::getSpecialTypes(), null);
+            $pagesByLang[$lang] = array_fill_keys(
+                self::getSpecialTypes(), null
+            );
         }
 
-        // Busca todas las páginas de tipo especial.
+        // Recupera todas las páginas de tipo especial
+        // junto con su idioma y slug.
         $specialPages = Page::query()
             ->whereIn('type', self::getSpecialTypes())
             ->get(['language', 'type', 'slug']);
 
-        // Añade el slug de las páginas encontradas en la respuesta.
+        // Asigna el slug de cada página encontrada
+        // dentro de la estructura correspondiente
+        // a su idioma y tipo.
         foreach ($specialPages as $page) {
             $pagesByLang[$page->language][$page->type] = [
                 'slug' => $page->slug,

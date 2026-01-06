@@ -3,12 +3,17 @@
 namespace App\Utils;
 
 /**
- * Clase utilitaria para gestionar los idiomas habilitados en la aplicación.
+ * Proporciona utilidades para gestionar los idiomas
+ * habilitados en la aplicación.
  */
 class Locales
 {
     /**
-     * Retorna el listado completo de idiomas con su código y etiqueta.
+     * Obtiene el listado completo de idiomas disponibles.
+     * 
+     * Cada idioma incluye:
+     *  - lang: código del idioma (ej. "en", "es").
+     *  - label: nombre legible del idioma.
      *
      * @return array<int, array{lang: string, label: string}>
      */
@@ -21,7 +26,7 @@ class Locales
     }
 
     /**
-     * Retorna un listado con los códigos de idioma.
+     * Obtiene únicamente los códigos de los idiomas disponibles.
      *
      * @return array<int, string>
      */
@@ -31,11 +36,10 @@ class Locales
     }
 
     /**
-     * Retorna la etiqueta de un idioma dado su código.
-     * Devuelve nulo si el código no existe.
+     * Obtiene la etiqueta legible de un idioma a partir de su código.
      *
-     * @param string $lang
-     * @return string|null
+     * @param string $lang Código del idioma.
+     * @return string|null Etiqueta del idioma o null si no existe.
      */
     public static function label(string $lang): ?string
     {

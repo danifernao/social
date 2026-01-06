@@ -11,18 +11,20 @@ use Illuminate\Support\Str;
 class UsernameGenerator
 {
     /**
-     * Genera un nombre de usuario único con el prefijo "user_"
-     * seguido de 8 caracteres aleatorios en minúscula.
+     * Genera un nombre de usuario único.
+     * 
+     * El formato es: user_XXXXXXXX
+     * 
+     * Donde "XXXXXXXX" corresponde a 8 caracteres aleatorios en minúscula.
      *
-     * Si el nombre ya existe en la base de datos, repite el proceso
-     * hasta encontrar uno disponible.
+     * Si el nombre generado ya existe en la base de datos,
+     * el proceso se repite hasta encontrar uno disponible.
      *
      * @return string Nombre de usuario único.
      */
     public static function generate(): string
     {
         do {
-            // Construye un username con el prefijo y 8 caracteres aleatorios
             $username = 'user_' . Str::lower(Str::random(8));
         } while (User::where('username', $username)->exists());
 

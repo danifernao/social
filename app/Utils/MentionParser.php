@@ -3,30 +3,33 @@
 namespace App\Utils;
 
 use App\Models\User;
+use Illuminate\Support\Collection;
 
 /**
- * Clase utilitaria para detectar menciones de usuarios en un texto.
+ * Clase utilitaria para detectar menciones de usuarios dentro de un texto.
  */
 class MentionParser
 {
     /**
-     * Extrae hasta 5 usuarios mencionados en el contenido proporcionado.
+     * Extrae hasta cinco usuarios mencionados a partir
+     * del contenido proporcionado.
      *
-     * Una mención válida empieza con "@" seguida de un nombre de usuario
-     * entre 4 y 15 caracteres, compuesto por letras, números, puntos o guiones bajos.
-     *
-     * @param string $content Contenido a analizar.
-     * @return \Illuminate\Support\Collection<int, \App\Models\User> Colección de usuarios mencionados.
+     * @param string $content Contenido de texto a analizar.
+     * @return Collection Colección de usuarios mencionados existentes
+     *                    en la base de datos.
      */
-    public static function extractMentionedUsers(string $content)
+    public static function extractMentionedUsers(string $content): Collection
     {
-        // Busca menciones que empiecen con @ y cumplan con el patrón de nombre de usuario.
+        // Busca menciones que comiencen con "@" y cumplan
+        // con el patrón de nombre de usuario definido.
         preg_match_all('/@([a-zA-Z0-9._]{4,15})/', $content, $matches);
 
-        // Elimina duplicados y toma solo los primeros 5 nombres de usuario mencionados.
+        // Elimina nombres de usuario duplicados y limita
+        // el resultado a los primeros cinco.
         $usernames = array_slice(array_unique($matches[1]), 0, 5);
 
-        // Devuelve una colección de los usuarios encontrados en la base de datos.
+        // Obtiene y retorna los usuarios correspondientes desde
+        // la base de datos.
         return User::whereIn('username', $usernames)->get();
     }
 }
