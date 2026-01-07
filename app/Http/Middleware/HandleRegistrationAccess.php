@@ -10,14 +10,20 @@ use Symfony\Component\HttpFoundation\Response;
 class HandleRegistrationAccess
 {
     /**
-     * Handle an incoming request.
+     * Procesa la solicitud entrante y valida si el registro de usuarios
+     * está permitido según la configuración del sitio.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param Request $request Solicitud HTTP entrante.
+     * @param Closure $next    Siguiente middleware.
+     * @return Response        Respuesta HTTP.
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Obtiene la configuración global del sitio.
         $siteSettings = SiteSetting::first();
 
+        // Si el registro de usuarios está inhabilitado,
+        // se bloquea el acceso con un error 403.
         if (!$siteSettings?->is_user_registration_enabled) {
             abort(403, __('User registration is disabled.'));
         }
