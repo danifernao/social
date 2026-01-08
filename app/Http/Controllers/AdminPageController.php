@@ -11,27 +11,34 @@ use App\Utils\SlugGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
+/**
+ * Controlador responsable de la gestión administrativa de páginas informativas.
+ * Maneja el listado, creación, visualización, edición y eliminación de páginas.
+ */
 class AdminPageController extends Controller
 {
     /**
-     * Muestra una lista paginada de páginas informativas.
-     * 
+     * Muestra una lista paginada de páginas informativas
+     * según el idioma seleccionado.
+     *
      * @param Request $request Datos de la petición HTTP.
      */
     public function index(Request $request)
     {
-        // Deniega acceso si el usuario autenticado no es administrador.
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos de administrador.
         $this->authorize('access-admin-area');
 
         // Obtiene el idioma enviado como parámetro en la URL.
         $language = strtolower($request->query('lang'));
 
-        // Si el idioma no es válido, usa el idioma del usuario autenticado.
+        // Si el idioma no es válido, se utiliza
+        // el idioma del usuario autenticado.
         if (!in_array($language, Locales::codes(), true)) {
             $language = $request->user()->language;
         }
 
-        // Obtiene las páginas informativas más recientes en el idioma solicitado.
+        // Obtiene las páginas informativas más recientes filtradas por idioma.
         $pages = Page::where('language', $language)
             ->latest()
             ->cursorPaginate(50)
@@ -44,13 +51,14 @@ class AdminPageController extends Controller
     }
 
     /**
-     * Muestra una página informativa específica.
-     * 
+     * Muestra una página informativa pública específica.
+     *
      * @param string $lang Idioma de la página a mostrar.
      * @param string $slug Slug de la página a mostrar.
      */
     public function show(string $lang, string $slug)
     {
+        // Busca la página por idioma y slug o lanza una excepción si no existe.
         $page = Page::where('language', $lang)
             ->where('slug', $slug)
             ->firstOrFail();
@@ -62,27 +70,30 @@ class AdminPageController extends Controller
 
     /**
      * Muestra el formulario para crear una nueva página informativa.
-     * 
+     *
      * @param Request $request Datos de la petición HTTP.
      */
     public function create(Request $request)
     {
-        // Deniega acceso si el usuario autenticado no es administrador.
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos de administrador.
         $this->authorize('access-admin-area');
 
         return inertia('admin/pages/create');
     }
 
     /**
-     * Crea una nueva página informativa.
-     * 
+     * Almacena una nueva página informativa en la base de datos.
+     *
      * @param Request $request Datos de la petición HTTP.
      */
     public function store(Request $request)
     {
-        // Deniega acceso si el usuario autenticado no es administrador.
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos de administrador.
         $this->authorize('access-admin-area');
 
+        // Valida los datos enviados desde el formulario.
         $validated = $request->validate([
             'language' => ['required', 'string', Rule::in(Locales::codes())],
             'type' => ['required', 'string', Rule::in(PageUtils::getTypes())],
@@ -91,43 +102,51 @@ class AdminPageController extends Controller
             'content' => ['nullable', 'string'],
         ]);
 
-        // Genera un slug válido y único.
+        // Genera un slug válido y único a partir del título y el idioma.
         $validated['slug'] = SlugGenerator::generate(
             $validated['title'],
             $validated['slug'] ?? null,
             $validated['language'],
         );
 
-        // Valida que no haya duplicados de las páginas de tipo especial por idioma.
-        if (in_array($validated['type'], PageUtils::getSpecialTypes())) {
-            if (Page::existsOfTypeInLanguage($validated['type'], $validated['language'])) {
+        // Valida que no existan páginas duplicadas de tipo especial por idioma.
+        if (in_array($validated['type'], PageUtils::getSpecialTypes(), true)) {
+            if (
+                Page::existsOfTypeInLanguage(
+                    $validated['type'],
+                    $validated['language']
+                )
+            ) {
                 return back()->withErrors([
                     'type' => __('A page of this type already exists for this language.'),
                 ]);
             }
         }
 
-        // Crea la página informativa en el idioma solicitado.
+        // Crea y persiste la página informativa.
         $page = new Page($validated);
         $page->language = $validated['language'];
         $page->save();
 
-        return redirect()->route('admin.page.index', ['lang' => $page->language])
-            ->with('message', __('Page successfully created.'));
+        return redirect()->route(
+            'admin.page.index',
+            ['lang' => $page->language]
+        )->with('message', __('Page successfully created.'));
     }
 
     /**
      * Muestra el formulario para editar una página informativa existente.
-     * 
+     *
      * @param Request $request Datos de la petición HTTP.
-     * @param Page $page Página que se va a editar.
+     * @param Page    $page    Instancia de la página que se va a editar.
      */
     public function edit(Request $request, Page $page)
     {
-        // Deniega acceso si el usuario autenticado no es administrador.
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos de administrador.
         $this->authorize('access-admin-area');
 
-        // Genera el arreglo final de la página aplicando la transformación definida en PageResource.
+        // Transforma la página utilizando PageResource para el frontend.
         $page_data = (new PageResource($page))->resolve();
 
         return inertia('admin/pages/edit', [
@@ -137,15 +156,17 @@ class AdminPageController extends Controller
 
     /**
      * Actualiza una página informativa existente.
-     * 
+     *
      * @param Request $request Datos de la petición HTTP.
-     * @param Page $page Página que se va a editar.
+     * @param Page    $page    Instancia de la página que se va a actualizar.
      */
     public function update(Request $request, Page $page)
     {
-        // Deniega acceso si el usuario autenticado no es administrador.
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos de administrador.
         $this->authorize('access-admin-area');
 
+        // Valida los datos enviados desde el formulario.
         $validated = $request->validate([
             'type' => ['required', 'string', Rule::in(PageUtils::getTypes())],
             'title' => ['required', 'string', 'max:255'],
@@ -153,7 +174,7 @@ class AdminPageController extends Controller
             'content' => ['nullable', 'string'],
         ]);
 
-        // Genera slug válido y único (ignorando la página actual).
+        // Genera un slug válido y único, ignorando la página actual.
         $validated['slug'] = SlugGenerator::generate(
             $validated['title'],
             $validated['slug'] ?? null,
@@ -161,9 +182,14 @@ class AdminPageController extends Controller
             $page->id,
         );
 
-        // Valida que no haya duplicados de las páginas de tipo especial por idioma.
-        if (in_array($validated['type'], PageUtils::getSpecialTypes())) {
-            if (Page::existsOfTypeInLanguage($validated['type'], $page->language, $page->id)) {
+        // Valida que no existan páginas duplicadas de tipo especial por idioma.
+        if (in_array($validated['type'], PageUtils::getSpecialTypes(), true)) {
+            if (
+                Page::existsOfTypeInLanguage(
+                    $validated['type'],
+                    $page->language, $page->id
+                )
+            ) {
                 return back()->withErrors([
                     'type' => __('A page of this type already exists for this language.'),
                 ]);
@@ -173,25 +199,30 @@ class AdminPageController extends Controller
         // Actualiza los datos de la página informativa.
         $page->update($validated);
 
-        return redirect()->route('admin.page.index', ['lang' => $page->language])
-            ->with('message', __('Page successfully updated.'));
+        return redirect()->route(
+            'admin.page.index',
+            ['lang' => $page->language]
+        )->with('message', __('Page successfully updated.'));
     }
 
     /**
      * Elimina una página informativa existente.
-     * 
+     *
      * @param Request $request Datos de la petición HTTP.
-     * @param Page $page Página que se va a eliminar.
+     * @param Page    $page    Instancia de la página que se va a eliminar.
      */
     public function destroy(Request $request, Page $page)
     {
-        // Deniega acceso si el usuario autenticado no es administrador.
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos de administrador.
         $this->authorize('access-admin-area');
 
-        // Elimina la página informativa.
+        // Elimina la página informativa de la base de datos.
         $page->delete();
 
-        return redirect()->route('admin.page.index', ['lang' => $page->language])
-            ->with('message', __('Page successfully deleted.'));
+        return redirect()->route(
+            'admin.page.index',
+            ['lang' => $page->language]
+        )->with('message', __('Page successfully deleted.'));
     }
 }

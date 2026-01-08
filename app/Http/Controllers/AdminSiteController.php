@@ -9,18 +9,27 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
+/**
+ * Controlador responsable de la gestión administrativa
+ * de la configuración global del sitio.
+ *
+ * Permite visualizar y modificar ajustes sensibles del sistema,
+ * aplicando control de acceso y confirmación de contraseña para acciones
+ * privilegiadas.
+ */
 class AdminSiteController extends Controller
 {
     use HandlesPasswordConfirmation;
 
-    /**
+/**
      * Muestra el formulario de edición de la configuración del sitio.
-     * 
+     *
      * @param Request $request Datos de la petición HTTP.
      */
     public function edit(Request $request)
     {
-        // Deniega acceso si el usuario autenticado no es administrador.
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos de administrador.
         $this->authorize('access-admin-area');
         
         // Obtiene el registro de configuración del sitio.
@@ -33,21 +42,28 @@ class AdminSiteController extends Controller
     }
 
     /**
-     * Procesa las acciones para la gestión de la configuración del sitio.
-     * 
+     * Procesa las acciones relacionadas con la gestión
+     * de la configuración del sitio.
+     *
+     * Valida la acción solicitada, confirma la contraseña del administrador
+     * y delega la ejecución a métodos específicos.
+     *
      * @param Request $request Datos de la petición HTTP.
      */
     public function update(Request $request)
     {
-        // Deniega acceso si el usuario autenticado no es administrador.
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos de administrador.
         $this->authorize('access-admin-area');
         
+        // Valida los datos enviados desde el formulario.
         $request->validate([
             'action' => ['required', Rule::in(['toggle_user_registration'])],
             'privileged_password' => ['required', 'string'],
         ]);
 
-        // Verifica que la contraseña ingresada por el administrador sea la correcta.
+        // Verifica que la contraseña ingresada por el
+        // administrador sea correcta.
         $this->confirmPassword($request->input('privileged_password'));
 
         // Ejecuta la acción correspondiente delegando a métodos específicos.
@@ -60,7 +76,8 @@ class AdminSiteController extends Controller
     }
 
     /**
-     * Inhabilita o habilita la página de registro de usuario.
+     * Habilita o inhabilita el registro de usuarios en el sitio.
+     * Alterna el estado de disponibilidad de la página de registro de usuarios.
      */
     private function toggleUserRegistrationEnabled()
     {
@@ -68,12 +85,17 @@ class AdminSiteController extends Controller
         // Se asume que existe un único registro con los valores globales.
         $siteSettings = SiteSetting::firstOrFail();
 
-        // Inhabilita o habilita la página de registro de usuario.
-        $siteSettings->is_user_registration_enabled = !$siteSettings->is_user_registration_enabled;
+        // Alterna el estado de habilitación del registro de usuarios.
+        $siteSettings->is_user_registration_enabled =
+            !$siteSettings->is_user_registration_enabled;
+
         $siteSettings->save();
 
-        return back()->with('status', $siteSettings->is_user_registration_enabled 
-            ? 'user_registration_enabled' 
-            : 'user_registration_disabled');
+        return back()->with(
+            'status',
+            $siteSettings->is_user_registration_enabled 
+                ? 'user_registration_enabled' 
+                : 'user_registration_disabled'
+        );
     }
 }
