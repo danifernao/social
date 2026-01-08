@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Settings;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Utils\Locales;
@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
-class LanguageController extends Controller
+class SettingsLanguageController extends Controller
 {
     /**
      * Muestra la página para cambiar el idioma de la interfaz.
