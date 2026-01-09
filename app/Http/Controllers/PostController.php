@@ -17,12 +17,23 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Pagination\CursorPaginator;
 use Inertia\Inertia;
 
+/**
+ * Controlador responsable de la gestión de publicaciones.
+ *
+ * Proporciona funcionalidades para:
+ *   - Crear publicaciones en el perfil propio o de otros (si tiene permisos).
+ *   - Mostrar publicaciones individuales con sus comentarios y reacciones.
+ *   - Actualizar contenido de publicaciones existentes.
+ *   - Eliminar publicaciones, junto con sus etiquetas y relaciones asociadas.
+ */
 class PostController extends Controller
 {
     use AuthorizesRequests;
 
-    // Inyecta los servicios HashtagService y MentionService
-    // para gestionar las etiquetas y menciones presentes en una publicación.
+    /**
+     * Inyecta los servicios HashtagService y MentionService
+     * para gestionar etiquetas y menciones presentes en una publicación.
+     */
     public function __construct(
         protected HashtagService $hashtagService,
         protected MentionService $mentionService
@@ -35,19 +46,19 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        // Obtiene el usuario autenticado.
         $auth_user = $request->user();
 
-        // Valida la solicitud y obtiene los datos que
-        // cumplen con las reglas definidas.
+        // Valida los datos enviados desde el formulario.
         $data = $request->validate([
             'content' => 'required|string|max:3000',
             'profile_user_id' => 'nullable|integer|exists:users,id',
         ]);
         
-        // ID del perfil en donde se hará la publicación (si aplica).
-        // Por defecto, la publicación se asociará al perfil del
-        // usuario autenticado (user_id). profile_user_id solo cambia cuando
-        // el usuario autenticado publica en el perfil de otra persona.
+        // ID del perfil donde se hará la publicación (si aplica).
+        // Por defecto, se asocia al perfil del usuario autenticado (user_id).
+        // profile_user_id solo cambia cuando el usuario autenticado
+        // publica en el perfil de otra persona.
         $profile_user_id = null;
 
         // Permite publicar en el perfil de otro usuario solo si:
@@ -60,14 +71,14 @@ class PostController extends Controller
                 $profile_user_id = $data['profile_user_id'];
         }
 
-        // Crea la publicación.
+        // Crea la publicación en la base de datos.
         $post = Post::create([
             'user_id' => $auth_user->id,
             'content' => $data['content'],
             'profile_user_id' => $profile_user_id,
         ]);
 
-        // Si se publicó en un perfil ajeno, notifica al propietario del perfil.
+        // Notifica al propietario del perfil si se publicó en un perfil ajeno.
         if ($profile_user_id) {
             $profileUser = User::find($profile_user_id);
             if ($profileUser) {
@@ -89,26 +100,28 @@ class PostController extends Controller
         $this->mentionService
             ->createWithNotifications($post, $auth_user, 'post');
 
-        // Genera el arreglo final de la publicación
-        // aplicando la transformación definida en PostResource.
+        // Transforma la publicación utilizando UserResource para el frontend.
         $post_data = (new PostResource($post))->resolve();
 
         return back()->with('post', $post_data);
     }
 
     /**
-     * Muestra una publicación específica con sus comentarios.
+     * Muestra una publicación específica junto con sus comentarios.
      * 
-     * @param Request $request Datos de la petición HTTP.
-     * @param Post $post Publicación que se va a mostrar.
-     * @param Comment|null $comment Comentario específico a mostrar (opcional).
+     * @param Request      $request Datos de la petición HTTP.
+     * @param Post         $post    Instancia de la publicación
+     *                              que se va a mostrar.
+     * @param Comment|null $comment Instancia del omentario específico
+     *                              que se va a mostrar (opcional).
      */
     public function show(Request $request, Post $post, Comment $comment = null)
     {
+        // Obtiene el usuario autenticado.
         $user = $request->user();
 
-        // Si hay usuario autenticado, se verifica que no exista bloqueo mutuo
-        // entre él y el autor de la publicación.
+        // Verifica que no exista bloqueo mutuo entre el usuario autenticado
+        // y el autor de la publicación.
         if ($user) {
             $author = $post->user()->first();
             if ($user->hasBlockedOrBeenBlockedBy($author)) {
@@ -116,8 +129,8 @@ class PostController extends Controller
             }
         }
 
-        // Si se indicó un comentario, se confirma que
-        // pertenezca a la publicación.
+        // Si se indicó un comentario específico,
+        // valida que pertenezca a la publicación.
         if ($comment && $comment->post_id !== $post->id) {
             abort(404);
         }
@@ -128,13 +141,13 @@ class PostController extends Controller
         // Obtiene las reacciones de la publicación.
         $post->reactions = $post->reactionsSummary($user?->id);
 
-        // Captura el cursor de la paginación.
+        // Captura el cursor para la paginación de comentarios.
         $cursor = $request->header('X-Cursor');
 
         // Cantidad de comentarios por página.
         $per_page = 15;
 
-        // Consulta base de comentarios de la publicación.
+        // Consulta base de comentarios, ordenados de forma ascendente.
         $comments_query = $post->comments()->with('user')->oldest();
 
         // Excluye comentarios de usuarios con bloqueos mutuos.
@@ -157,7 +170,7 @@ class PostController extends Controller
                 ->cursorPaginate($per_page, ['*'], 'cursor', $cursor);
         }
 
-        // Agrega las reacciones a cada comentario.
+        // Agrega el resumen de reacciones a cada comentario.
         $comments->setCollection(
             $comments->getCollection()->map(function ($comment) use ($user) {
                 $comment->reactions = $comment->reactionsSummary($user?->id);
@@ -165,8 +178,7 @@ class PostController extends Controller
             })
         );
 
-        // Genera el arreglo final de la publicación
-        // aplicando la transformación definida en PostResource.
+        // Transforma la publicación utilizando PostResource para el frontend.
         $post_data = (new PostResource($post))->resolve();
 
         return Inertia::render('post/show', [
@@ -179,16 +191,16 @@ class PostController extends Controller
      * Actualiza una publicación existente.
      * 
      * @param Request $request Datos de la petición HTTP.
-     * @param Post $post Publicación que se va a actualizar.
+     * @param Post    $post    Instancia de la publicación
+     *                         que se va a actualizar.
      */
     public function update(Request $request, Post $post)
     {
-        // Deniega acceso si el usuario no está autorizado
-        // para actualizar la publicación.
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos para actualizar la publicación.
         $this->authorize('update', $post);
 
-        // Valida que los datos de la solicitud
-        // cumplan con los requisitos esperados.
+        // Valida los datos enviados desde el formulario.
         $request->validate([
             'content' => 'required|string|max:3000',
         ]);
@@ -200,14 +212,11 @@ class PostController extends Controller
         // Carga la relación con el usuario autor.
         $post->load('user');
 
-        // Actualiza las etiquetas presentes en la publicación.
+        // Actualiza las etiquetasy menciones presentes en la publicación.
         $this->hashtagService->sync($post);
-
-        // Actualiza las menciones presentes en la publicación.
         $this->mentionService->sync($post, $request->user());
 
-        // Genera el arreglo final de la publicación
-        // aplicando la transformación definida en PostResource.
+        // Transforma la publicación utilizando PostResource para el frontend.
         $post_data = (new PostResource($post))->resolve();
 
         return back()->with('post', $post_data);
@@ -217,21 +226,21 @@ class PostController extends Controller
      * Elimina una publicación.
      * 
      * @param Request $request Datos de la petición HTTP.
-     * @param Post $post Publicación que se va a eliminar.
+     * @param Post    $post    Instancia de la publicación que se va a eliminar.
      */
     public function delete(Request $request, Post $post)
     {
-        // Deniega acceso si el usuario no está autorizado
-        // para eliminar la publicación.
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos para eliminar la publicación.
         $this->authorize('delete', $post);
 
         // Elimina la publicación.
         $post->delete();
 
-        // Elimina la relación de etiquetas asociadas a la publicación
-        // y aquellas que ya no estén en uso.
+        // Elimina etiquetas asociadas y limpia las que queden sin uso.
         $this->hashtagService->detachAndClean($post);
 
+        // Obtiene la URL de la página desde la cual se hizo la petición.
         $referer = $request->header('referer');
 
         // Si el usuario estaba en la página de la publicación eliminada,

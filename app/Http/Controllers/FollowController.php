@@ -9,6 +9,17 @@ use App\Notifications\NewFollower;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+/**
+ * Controlador responsable de gestionar las relaciones
+ * de seguimiento entre usuarios.
+ *
+ * Permite al usuario autenticado:
+ *   - Seguir o dejar de seguir a otros usuarios.
+ *   - Consultar la lista de usuarios que sigue un usuario.
+ *   - Consultar la lista de seguidores de un usuario.
+ *
+ * También notifica a los usuarios cuando alguien comienza a seguirlos.
+ */
 class FollowController extends Controller
 {
     /**
@@ -16,10 +27,12 @@ class FollowController extends Controller
      * y otro usuario.
      * 
      * @param Request $request Datos de la petición HTTP.
-     * @param User $user Usuario al que se va a seguir o dejar de seguir.
+     * @param User    $user    Instancia del usuario al que
+     *                         se va a seguir o dejar de seguir.
      */
     public function toggle(Request $request, User $user)
     {
+        // Obtiene el usuario autenticado.
         $auth_user = $request->user();
 
         // Evita que el usuario autenticado se siga a sí mismo.
@@ -58,33 +71,33 @@ class FollowController extends Controller
      * Muestra la lista paginada de usuarios que sigue un usuario dado.
      * 
      * @param Request $request Datos de la petición HTTP.
-     * @param User $user Usuario cuya lista de seguidos se desea mostrar.
+     * @param User    $user    Instancia del usuario cuya lista de seguidos
+     *                         se desea mostrar.
      */
     public function showFollowing(Request $request, User $user)
     {
+        // Obtiene el usuario autenticado.
         $auth_user = $request->user();
+
+        // Obtiene el cursor para la paginación.
         $cursor = $request->header('X-Cursor');
 
         // IDs de usuarios bloqueados por el usuario autenticado
         // o que lo han bloqueado.
         $excluded_ids = $auth_user->excludedUserIds();
 
-        // Obtiene los usuarios que el usuario dado sigue.
+        // Obtiene los usuarios que el usuario dado sigue, excluyendo bloqueos.
         $following = $user->follows()
             ->whereNotIn('users.id', $excluded_ids)
             ->cursorPaginate(15, ['*'], 'cursor', $cursor);
 
-        // IDs de usuarios seguidos por el usuario autenticado.
-        $following_ids = $auth_user->followedUserIds();
-
         // Agrega a cada usuario la propiedad "is_followed"
-        // indicandosi el usuario autenticado lo sigue.
+        // indicando si el usuario autenticado lo sigue.
         $following->setCollection(
             $auth_user->withFollowStatus($following->getCollection())
         );
 
-        // Genera el arreglo final del usuario aplicando la transformación
-        // definida en UserResource.
+        // Transforma el usuario utilizando UserResource para el frontend.
         $user_data = (new UserResource($user))->resolve();
 
         return Inertia::render('follow/index', [
@@ -97,33 +110,33 @@ class FollowController extends Controller
      * Muestra la lista paginada de seguidores de un usuario.
      * 
      * @param Request $request Datos de la petición HTTP.
-     * @param User $user Usuario cuya lista de seguidores se desea mostrar.
+     * @param User    $user    Instancia del usuario cuya lista de seguidores
+     *                         se desea mostrar.
      */
     public function showFollowers(Request $request, User $user)
     {
+        // Obtiene el usuario autenticado.
         $auth_user = $request->user();
+
+        // Obtiene el cursor para la paginación.
         $cursor = $request->header('X-Cursor');
 
         // IDs de usuarios bloqueados por el usuario autenticado
         // o que lo han bloqueado.
         $excluded_ids = $auth_user->excludedUserIds();
 
-        // Obtiene los usuarios que siguen al usuario dado.
+        // Obtiene los usuarios que siguen al usuario dado, excluyendo bloqueos.
         $followers = $user->followers()
             ->whereNotIn('users.id', $excluded_ids)
             ->cursorPaginate(15, ['*'], 'cursor', $cursor);
 
-        // IDs de usuarios seguidos por el usuario autenticado.
-        $following_ids = $auth_user->followedUserIds();
-
         // Agrega a cada usuario la propiedad "is_followed"
-        // indicando si el usuario autenticado lo sigue.        
+        // indicando si el usuario autenticado lo sigue.
         $followers->setCollection(
             $auth_user->withFollowStatus($followers->getCollection())
         );
 
-        // Genera el arreglo final del usuario aplicando la transformación
-        // definida en UserResource.
+        // Transforma el usuario utilizando UserResource para el frontend.
         $user_data = (new UserResource($user))->resolve();
 
         return Inertia::render('follow/index', [

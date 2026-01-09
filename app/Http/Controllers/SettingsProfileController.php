@@ -12,75 +12,122 @@ use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
+/**
+ * Controlador responsable de la gestión del perfil del usuario.
+ *
+ * Permite mostrar y actualizar la información básica del perfil,
+ * gestionar el avatar y eliminar la cuenta del usuario, aplicando
+ * las validaciones y restricciones correspondientes.
+ */
 class SettingsProfileController extends Controller
 {
     /**
-     * Show the user's profile settings page.
+     * Muestra la página de configuración del perfil del usuario.
+     *
+     * @param Request $request Datos de la petición HTTP.
+     * @return Response        Respuesta Inertia con la vista del perfil.
      */
     public function edit(Request $request): Response
     {
         return Inertia::render('settings/profile', [
+            // Indica si el usuario debe verificar su correo electrónico.
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => $request->session()->get('status'),
         ]);
     }
 
     /**
-     * Update the user's profile settings.
+     * Actualiza la información del perfil del usuario.
+     *
+     * Gestiona la actualización de datos personales, el cambio
+     * o eliminación del avatar y la invalidación de la verificación
+     * del correo si este fue modificado.
+     *
+     * @param ProfileUpdateRequest $request Datos validados del perfil.
+     * @return RedirectResponse             Redirección tras actualizar
+     *                                      el perfil.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        // Obtiene el usuario autenticado.
         $user = $request->user();
-        $data = $request->validated();
-        
 
+        // Valida los datos enviados desde el formulario.
+        $data = $request->validated();
+
+        // Elimina el avatar actual si el usuario lo solicitó.
         if ($data['remove_avatar']) {
-            if ($user->avatar_path && Storage::disk('public')->exists($user->avatar_path)) {
+            if (
+                $user->avatar_path &&
+                Storage::disk('public')->exists($user->avatar_path)
+            ) {
                 Storage::disk('public')->delete($user->avatar_path);
             }
+
             $data['avatar_path'] = null;
         }
-        
+
+        // Procesa la carga de un nuevo avatar si fue enviado.
         if ($request->hasFile('avatar')) {
-            if ($user->avatar_path && Storage::disk('public')->exists($user->avatar_path)) {
+            if (
+                $user->avatar_path &&
+                Storage::disk('public')->exists($user->avatar_path)
+            ) {
                 Storage::disk('public')->delete($user->avatar_path);
             }
-            $data['avatar_path'] = $request->file('avatar')->store('avatars', 'public');
+
+            $data['avatar_path'] = $request
+                ->file('avatar')
+                ->store('avatars', 'public');
         }
 
+        // Asigna los nuevos datos al modelo de usuario.
         $user->fill($data);
 
+        // Si el correo fue modificado, invalida la verificación previa.
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
+        // Guarda los cambios en la base de datos.
         $user->save();
 
         return to_route('profile.edit');
     }
 
     /**
-     * Delete the user's account.
+     * Elimina la cuenta del usuario autenticado.
+     *
+     * Requiere confirmación de la contraseña y
+     * prohíbe la eliminación de cuentas administrativas.
+     *
+     * @param Request           $request Datos de la petición HTTP.
+     * @return RedirectResponse          Redirección tras eliminar la cuenta.
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // Valida los datos enviados desde el formulario.
         $request->validate([
             'password' => ['required', 'current_password'],
         ]);
 
+        // Obtiene el usuario autenticado.
         $user = $request->user();
 
-        // Si el usuario es administrador, prohíbe la acción.
+        // Si el usuario es administrador, se prohíbe la eliminación.
         if ($user->isAdmin()) {
             return back()->withErrors([
                 'password' => 'Esta cuenta es administrativa, no se puede eliminar.',
             ]);
         }
 
+        // Cierra la sesión del usuario.
         Auth::logout();
 
+        // Elimina definitivamente la cuenta.
         $user->delete();
 
+        // Invalida la sesión y regenera el token CSRF.
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
+/**
+ * Controlador responsable de la configuración del idioma de la interfaz.
+ * Permite al usuario visualizar el idioma actual y actualizarlo.
+ */
 class SettingsLanguageController extends Controller
 {
     /**
@@ -18,24 +22,31 @@ class SettingsLanguageController extends Controller
      */
     public function edit(Request $request)
     {
+        // Obtiene el usuario autenticado.
         $user = $request->user();
 
         return Inertia::render('settings/language', [
+            // Idioma actualmente configurado para el usuario.
             'lang' => $user->language,
         ]);
     }
 
     /**
-     * Cambia el idioma de la interfaz.
+     * Actualiza el idioma de la interfaz del usuario autenticado.
+     *
+     * Valida que el idioma enviado exista dentro del conjunto
+     * de idiomas soportados por la aplicación.
      * 
      * @param Request $request Datos de la petición HTTP.
      */
     public function update(Request $request)
     {
+        // Valida que el código de idioma sea válido.
         $request->validate([
             'lang' => ['required', Rule::in(Locales::codes())],
         ]);
 
+        // Obtiene el usuario autenticado y actualiza su idioma.
         $user = $request->user();
         $user->language = $request->lang;
         $user->save();
