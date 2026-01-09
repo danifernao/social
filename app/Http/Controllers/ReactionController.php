@@ -8,20 +8,32 @@ use App\Models\Post;
 use App\Models\Reaction;
 use Illuminate\Http\Request;
 
+/**
+ * Controlador responsable de gestionar las reacciones de los usuarios.
+ *
+ * Permite crear, reemplazar o eliminar reacciones (emojis) asociadas
+ * a publicaciones o comentarios, garantizando que cada usuario tenga
+ * una única reacción por elemento.
+ */
 class ReactionController extends Controller
 {
     /**
      * Crea, reemplaza o elimina una reacción de un usuario
-     * sobre una publicación o comentario.
+     * sobre una publicación o un comentario.
+     *
+     * El comportamiento es el siguiente:
+     * - Si el usuario no ha reaccionado antes, se crea una nueva reacción.
+     * - Si ya reaccionó con el mismo emoji, la reacción se elimina.
+     * - Si ya reaccionó con un emoji distinto, la reacción se reemplaza.
      * 
      * @param Request $request Datos de la petición HTTP.
      */
     public function toggle(Request $request)
     {
-        // "type":  indica si la reacción pertenece a una publicación
-        //          o a un comentario.
-        // "id":    ID de la publicación o comentario al que se reacciona.
-        // "emoji": Emoji que representa la reacción.
+        // Valida los datos de la solicitud:
+        // - type:   Indica si la reacción es para una publicación o comentario.
+        // - id:     ID del recurso al que se aplica la reacción.
+        // - emoji:  Emoji que representa la reacción.
         $request->validate([
             'type' => 'required|in:post,comment',
             'id' => 'required|integer',
@@ -34,12 +46,13 @@ class ReactionController extends Controller
         $emoji = $request->emoji;
 
         // Obtiene el modelo correspondiente (Post o Comment)
-        // o lanza 404 si no existe.
+        // o lanza una excepción 404 si no existe.
          $model = $type === 'post' 
             ? Post::findOrFail($id) 
             : Comment::findOrFail($id);
 
-        // Busca si ya existe una reacción previa del usuario.
+        // Busca si el usuario ya tiene una reacción registrada
+        // sobre el recurso.
         $existing = $model->reactions()->where('user_id', $user->id)->first();
 
         if ($existing) {
@@ -49,14 +62,13 @@ class ReactionController extends Controller
                 return back()->with('status', 'reaction_deleted');
             }
 
-            // Si el emoji es distinto, se reemplaza la reacción anterior
-            // por la nueva.
+            // Si el emoji es distinto, se reemplaza la reacción anterior.
             $existing->update(['emoji' => $emoji]);
             
             return back()->with('status', 'reaction_replaced');
         }
 
-        // Si no existe una reacción previa, se registra una nueva.
+        // Si no existe una reacción previa, se crea una nueva.
         $model->reactions()->create([
             'user_id' => $user->id,
             'emoji' => $emoji,
