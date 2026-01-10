@@ -59,27 +59,22 @@ class SettingsProfileController extends Controller
             'remove_avatar' => ['boolean'],
         ]);
 
+        // Función anónima para eliminar el avatar existente.
+        $deleteAvatar = fn() => 
+            $user->avatar_path &&
+            Storage::disk('public')->exists($user->avatar_path)
+                ? Storage::disk('public')->delete($user->avatar_path)
+                : null;
+
         // Elimina el avatar actual si el usuario lo solicitó.
         if ($data['remove_avatar']) {
-            if (
-                $user->avatar_path &&
-                Storage::disk('public')->exists($user->avatar_path)
-            ) {
-                Storage::disk('public')->delete($user->avatar_path);
-            }
-
+            $deleteAvatar();
             $data['avatar_path'] = null;
         }
 
         // Procesa la carga de un nuevo avatar si fue enviado.
         if ($request->hasFile('avatar')) {
-            if (
-                $user->avatar_path &&
-                Storage::disk('public')->exists($user->avatar_path)
-            ) {
-                Storage::disk('public')->delete($user->avatar_path);
-            }
-
+            $deleteAvatar();
             $data['avatar_path'] = $request
                 ->file('avatar')
                 ->store('avatars', 'public');
