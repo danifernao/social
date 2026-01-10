@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -15,10 +15,19 @@ use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class RegisteredUserController extends Controller
+/**
+ * Controlador responsable del registro de nuevos usuarios.
+ *
+ * Permite mostrar el formulario de registro, validar los datos
+ * ingresados, crear la cuenta y autenticar automáticamente
+ * al usuario recién registrado.
+ */
+class AuthSignUpController extends Controller
 {
     /**
-     * Show the registration page.
+     * Muestra la página de registro de usuario.
+     *
+     * @return Response Respuesta Inertia con la vista de registro de usuario.
      */
     public function create(): Response
     {
@@ -26,12 +35,15 @@ class RegisteredUserController extends Controller
     }
 
     /**
-     * Handle an incoming registration request.
+     * Registra un nuevo usuario.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @param Request           $request Datos de la petición HTTP.
+     * @return RedirectResponse          Redirección tras registrarse
+     *                                   correctamente.
      */
     public function store(Request $request): RedirectResponse
     {
+        // Valida los datos enviados desde el formulario.
         $request->validate([
             'username' => [
                 'required',
@@ -46,6 +58,7 @@ class RegisteredUserController extends Controller
             'language' => Rule::in(Locales::codes()),
         ]);
 
+        // Crea el nuevo usuario en la base de datos.
         $user = User::create([
             'username' => $request->username,
             'email' => $request->email,
@@ -54,8 +67,10 @@ class RegisteredUserController extends Controller
             'language' => $request->language ?? head(Locales::codes()),
         ]);
 
+        // Dispara el evento de usuario registrado.
         event(new Registered($user));
 
+        // Autentica automáticamente al nuevo usuario.
         Auth::login($user);
 
         return to_route('home.index');
