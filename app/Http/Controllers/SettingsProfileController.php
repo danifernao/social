@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Settings\ProfileUpdateRequest;
+use App\Rules\UserRules;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -43,17 +43,21 @@ class SettingsProfileController extends Controller
      * o eliminación del avatar y la invalidación de la verificación
      * del correo si este fue modificado.
      *
-     * @param ProfileUpdateRequest $request Datos validados del perfil.
-     * @return RedirectResponse             Redirección tras actualizar
-     *                                      el perfil.
+     * @param Request           $request Datos validados del perfil.
+     * @return RedirectResponse          Redirección tras actualizar el perfil.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request): RedirectResponse
     {
         // Obtiene el usuario autenticado.
         $user = $request->user();
 
         // Valida los datos enviados desde el formulario.
-        $data = $request->validated();
+        $data = $request->validate([
+            'username' => UserRules::username($user->id),
+            'email'    => UserRules::email($user->id),
+            'avatar' => ['nullable', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'remove_avatar' => ['boolean'],
+        ]);
 
         // Elimina el avatar actual si el usuario lo solicitó.
         if ($data['remove_avatar']) {
