@@ -1,8 +1,9 @@
 <?php
-
-use App\Http\Controllers\AdminPageController;
-use App\Http\Controllers\AdminSiteController;
-use App\Http\Controllers\AdminUserController;
+/*
+|--------------------------------------------------------------------------
+| Controladores sociales
+|--------------------------------------------------------------------------
+*/
 use App\Http\Controllers\BlockUserController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FollowController;
@@ -12,90 +13,286 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\SearchController;
+
+
+/*
+|--------------------------------------------------------------------------
+| Controladores de configuración
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\SettingsLanguageController;
+use App\Http\Controllers\SettingsPasswordController;
+use App\Http\Controllers\SettingsProfileController;
+
+
+/*
+|--------------------------------------------------------------------------
+| Controladores de administración
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\AdminPageController;
+use App\Http\Controllers\AdminSiteController;
+use App\Http\Controllers\AdminUserController;
+
+
+/*
+|--------------------------------------------------------------------------
+| Controladores de autenticación
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\AuthPasswordConfirmController;
+use App\Http\Controllers\AuthPasswordForgotController;
+use App\Http\Controllers\AuthPasswordResetController;
+use App\Http\Controllers\AuthSessionController;
+use App\Http\Controllers\AuthSignUpController;
+use App\Http\Controllers\AuthVerifyEmailController;
+
 use App\Models\Comment;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+
+/*
+|--------------------------------------------------------------------------
+| Página de inicio
+|--------------------------------------------------------------------------
+*/
 Route::get('/', function () {
     if (Auth::check()) {
         return redirect()->route('home.index');
     }
+
     return Inertia::render('welcome');
 })->name('home');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home.index');
 
-    Route::prefix('user')->group(function () {
-        Route::get('{user}/following', [FollowController::class, 'showFollowing'])->name('follow.following');
-        Route::get('{user}/followers', [FollowController::class, 'showFollowers'])->name('follow.followers');
-        Route::post('{user}/follow', [FollowController::class, 'toggle'])->name('follow.toggle');
-        Route::post('{user}/block', [BlockUserController::class, 'toggle'])->name('user.block');
-    });
+/*
+|--------------------------------------------------------------------------
+| Rutas para invitados
+|--------------------------------------------------------------------------
+*/
+Route::middleware('guest')->group(function () {
+    Route::get('register', [AuthSignUpController::class, 'create'])
+        ->middleware('registration.enabled')
+        ->name('register');
 
-    Route::prefix('post')->name('post.')->group(function () {
-        Route::post('/', [PostController::class, 'store'])->name('store');
-        Route::patch('{post}', [PostController::class, 'update'])->name('update');
-        Route::delete('{post}', [PostController::class, 'delete'])->name('delete');
-    });
+    Route::post('register', [AuthSignUpController::class, 'store']);
 
-    Route::post('/post/{post}/comment', [CommentController::class, 'store'])->name('comment.store');
-    Route::patch('/comment/{comment}', [CommentController::class, 'update'])->name('comment.update');
-    Route::delete('/comment/{comment}', [CommentController::class, 'delete'])->name('comment.delete');
+    Route::get('login', [AuthSessionController::class, 'create'])
+        ->name('login');
 
-    Route::put('/reaction', [ReactionController::class, 'toggle'])->name('reaction.toggle');
+    Route::post('login', [AuthSessionController::class, 'store']);
 
-    Route::get('/search', [SearchController::class, 'index'])->name('search.index');
+    Route::get('forgot-password', [AuthPasswordForgotController::class, 'create'])
+        ->name('password.request');
 
-    Route::prefix('notifications')->name('notification.')->group(function () {
-      Route::get('/', [NotificationController::class, 'index'])->name('index');
-      Route::patch('read', [NotificationController::class, 'markAllAsRead'])->name('markAllAsRead');
-      Route::patch('read/{id}', [NotificationController::class, 'markOneAsRead'])->name('markOneAsRead');
-    });
+    Route::post('forgot-password', [AuthPasswordForgotController::class, 'store'])
+        ->name('password.email');
 
-    Route::prefix('admin')->name('admin.')->group(function () {
-        Route::get('/', function () {
-            $user = auth()->user();
+    Route::get('reset-password/{token}', [AuthPasswordResetController::class, 'create'])
+        ->name('password.reset');
 
-            if ($user->isAdmin()) {
-                return redirect()->route('admin.site.edit');
-            }
-
-            if ($user->isMod()) {
-                return redirect()->route('admin.user.index');
-            }
-
-            abort(403);
-        })->name('index');
-
-        Route::prefix('site')->name('site.')->group(function () {
-          Route::get('/', [AdminSiteController::class, 'edit'])->name('edit');
-          Route::patch('/', [AdminSiteController::class, 'update'])->name('update');
-        });
-
-        Route::prefix('pages')->name('page.')->group(function () {
-          Route::get('/', [AdminPageController::class, 'index'])->name('index');
-          Route::get('/create', [AdminPageController::class, 'create'])->name('create');
-          Route::post('/create', [AdminPageController::class, 'store'])->name('store');
-          Route::get('/{page}/edit', [AdminPageController::class, 'edit'])->name('edit');
-          Route::patch('/{page}/edit', [AdminPageController::class, 'update'])->name('update');
-          Route::delete('{page}', [AdminPageController::class, 'destroy'])->name('destroy');
-        });
-        
-        Route::prefix('users')->name('user.')->group(function () {
-            Route::get('/', [AdminUserController::class, 'index'])->name('index');
-            Route::get('create', [AdminUserController::class, 'create'])->name('create');
-            Route::post('create', [AdminUserController::class, 'store'])->name('store');
-            Route::get('{user}', [AdminUserController::class, 'edit'])->name('edit');
-            Route::patch('{user}', [AdminUserController::class, 'update'])->name('update');
-        });
-    });
+    Route::post('reset-password', [AuthPasswordResetController::class, 'store'])
+        ->name('password.store');
 });
 
-Route::get('/user/{user}', [ProfileController::class, 'show'])->name('profile.show');
-Route::get('/post/{post}', [PostController::class, 'show'])->name('post.show');
-Route::get('/post/{post}/comment/{comment}', [PostController::class, 'show'])->name('post.comment.show');
-Route::get('/page/{lang}/{slug}', [AdminPageController::class, 'show'])->name('page.show');
+
+/*
+|--------------------------------------------------------------------------
+| Rutas autenticadas (sin verificación)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::get('verify-email', [AuthVerifyEmailController::class, 'prompt'])
+        ->name('verification.notice');
+
+    Route::get('verify-email/{id}/{hash}', [AuthVerifyEmailController::class, 'verify'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
+
+    Route::post('email/verification-notification', [AuthVerifyEmailController::class, 'notify'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+
+    Route::get('confirm-password', [AuthPasswordConfirmController::class, 'show'])
+        ->name('password.confirm');
+
+    Route::post('confirm-password', [AuthPasswordConfirmController::class, 'store']);
+
+    Route::post('logout', [AuthSessionController::class, 'destroy'])
+        ->name('logout');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| Rutas autenticadas y verificadas
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Feed principal
+    Route::get('/home', [HomeController::class, 'index'])
+        ->name('home.index');
+
+    // Usuarios y relaciones
+    Route::prefix('user')
+        ->group(function () {
+            Route::get('{user}/following', [FollowController::class, 'showFollowing'])
+                ->name('follow.following');
+            Route::get('{user}/followers', [FollowController::class, 'showFollowers'])
+                ->name('follow.followers');
+            Route::post('{user}/follow', [FollowController::class, 'toggle'])
+                ->name('follow.toggle');
+            Route::post('{user}/block', [BlockUserController::class, 'toggle'])
+                ->name('user.block');
+        });
+
+    // Publicaciones
+    Route::prefix('post')
+        ->name('post.')
+        ->group(function () {
+            Route::post('/', [PostController::class, 'store'])
+                ->name('store');
+            Route::patch('{post}', [PostController::class, 'update'])
+                ->name('update');
+            Route::delete('{post}', [PostController::class, 'delete'])
+                ->name('delete');
+        });
+
+    // Comentarios
+    Route::post('/post/{post}/comment', [CommentController::class, 'store'])
+        ->name('comment.store');
+    Route::patch('/comment/{comment}', [CommentController::class, 'update'])
+        ->name('comment.update');
+    Route::delete('/comment/{comment}', [CommentController::class, 'delete'])
+        ->name('comment.delete');
+    
+    // Reacciones
+    Route::put('/reaction', [ReactionController::class, 'toggle'])
+        ->name('reaction.toggle');
+
+    // Búsqueda
+    Route::get('/search', [SearchController::class, 'index'])
+        ->name('search.index');
+
+    // Notificaciones
+    Route::prefix('notifications')
+        ->name('notification.')
+        ->group(function () {
+            Route::get('/', [NotificationController::class, 'index'])
+                ->name('index');
+            Route::patch('read', [NotificationController::class, 'markAllAsRead'])
+                ->name('markAllAsRead');
+            Route::patch('read/{id}', [NotificationController::class, 'markOneAsRead'])
+                ->name('markOneAsRead');
+        });
+
+    // Configuración de cuenta
+    Route::prefix('settings')
+        ->group(function () {
+            Route::redirect('settings', 'settings/profile');
+
+            Route::get('settings/profile', [SettingsProfileController::class, 'edit'])
+                ->name('profile.edit');
+            Route::patch('settings/profile', [SettingsProfileController::class, 'update'])
+                ->name('profile.update');
+            Route::delete('settings/profile', [SettingsProfileController::class, 'destroy'])
+                ->name('profile.destroy');
+
+            Route::get('settings/password', [SettingsPasswordController::class, 'edit'])
+                ->name('password.edit');
+            Route::put('settings/password', [SettingsPasswordController::class, 'update'])
+                ->name('password.update');
+
+            Route::get('settings/language', [SettingsLanguageController::class, 'edit'])
+                ->name('language.edit');
+            Route::patch('settings/language', [SettingsLanguageController::class, 'update'])
+                ->name('language.update');
+
+            Route::get('settings/appearance', function () {
+                return Inertia::render('settings/appearance');
+            })->name('appearance');
+        });
+
+    // Administración
+    Route::prefix('admin')
+        ->name('admin.')
+        ->group(function () {
+            // Página de administración por defecto.
+            Route::get('/', function () {
+                $user = auth()->user();
+
+                if ($user->isAdmin()) {
+                    return redirect()->route('admin.site.edit');
+                }
+
+                if ($user->isMod()) {
+                    return redirect()->route('admin.user.index');
+                }
+
+                abort(403);
+            })
+            ->name('index');
+
+            // Administración del sitio
+            Route::prefix('site')
+                ->name('site.')
+                ->group(function () {
+                    Route::get('/', [AdminSiteController::class, 'edit'])
+                        ->name('edit');
+                    Route::patch('/', [AdminSiteController::class, 'update'])
+                        ->name('update');
+                });
+
+            // Administración de páginas informativas
+            Route::prefix('pages')
+                ->name('page.')
+                ->group(function () {
+                    Route::get('/', [AdminPageController::class, 'index'])
+                        ->name('index');
+                    Route::get('/create', [AdminPageController::class, 'create'])
+                        ->name('create');
+                    Route::post('/create', [AdminPageController::class, 'store'])
+                        ->name('store');
+                    Route::get('/{page}/edit', [AdminPageController::class, 'edit'])
+                        ->name('edit');
+                    Route::patch('/{page}/edit', [AdminPageController::class, 'update'])
+                        ->name('update');
+                    Route::delete('{page}', [AdminPageController::class, 'destroy'])
+                        ->name('destroy');
+                });
+
+            // Administración de usuarios        
+            Route::prefix('users')
+                ->name('user.')
+                ->group(function () {
+                    Route::get('/', [AdminUserController::class, 'index'])
+                        ->name('index');
+                    Route::get('create', [AdminUserController::class, 'create'])
+                        ->name('create');
+                    Route::post('create', [AdminUserController::class, 'store'])
+                        ->name('store');
+                    Route::get('{user}', [AdminUserController::class, 'edit'])
+                        ->name('edit');
+                    Route::patch('{user}', [AdminUserController::class, 'update'])
+                        ->name('update');
+                });
+        });
+});
+
+/*
+|--------------------------------------------------------------------------
+| Rutas públicas de visualización
+|--------------------------------------------------------------------------
+*/
+Route::get('/user/{user}', [ProfileController::class, 'show'])
+    ->name('profile.show');
+Route::get('/post/{post}', [PostController::class, 'show'])
+    ->name('post.show');
+Route::get('/post/{post}/comment/{comment}', [PostController::class, 'show'])
+    ->name('post.comment.show');
+Route::get('/page/{lang}/{slug}', [AdminPageController::class, 'show'])
+    ->name('page.show');
 
 Route::get('/comment/{comment}', function (Request $request, Comment $comment) {
     return redirect()->route('post.comment.show', [
@@ -103,6 +300,3 @@ Route::get('/comment/{comment}', function (Request $request, Comment $comment) {
         'comment' => $comment->id,
     ]);
 })->name('comment.show');
-
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
