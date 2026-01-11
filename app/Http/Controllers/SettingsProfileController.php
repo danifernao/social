@@ -83,13 +83,23 @@ class SettingsProfileController extends Controller
         // Asigna los nuevos datos al modelo de usuario.
         $user->fill($data);
 
+        // Detecta si el correo cambió.
+        $emailChanged = $user->isDirty('email');
+
+
         // Si el correo fue modificado, invalida la verificación previa.
-        if ($user->isDirty('email')) {
+        if ($emailChanged) {
             $user->email_verified_at = null;
         }
 
         // Guarda los cambios en la base de datos.
         $user->save();
+
+        // Envía al correo del usuario el enlace de verificación solo
+        // si la dirección cambió.
+        if ($emailChanged) {
+            $user->sendEmailVerificationNotification();
+        }
 
         return to_route('profile.edit');
     }
