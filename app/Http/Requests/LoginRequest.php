@@ -11,10 +11,20 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Gestiona la validación y autenticación de las solicitudes
+ * de inicio de sesión.
+ * 
+ * Esta clase se encarga de:
+ * - Validar los campos 'email' y 'password'.
+ * - Verificar las credenciales del usuario.
+ * - Controlar los intentos fallidos mediante rate limiting.
+ * - Iniciar sesión si las credenciales son correctas.
+ */
 class LoginRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Determina si el usuario está autorizado para realizar esta solicitud.
      */
     public function authorize(): bool
     {
@@ -22,7 +32,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Obtiene las reglas de validación que se aplican a la solicitud.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -35,66 +45,74 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Attempt to authenticate the request's credentials.
+     * Intenta autenticar las credenciales de la solicitud.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
     public function authenticate(): void
     {
+        // Verifica que la solicitud no haya excedido los intentos permitidos.
         $this->ensureIsNotRateLimited();
 
         // Obtiene las credenciales de la solicitud.
         $credentials = $this->only('email', 'password');
 
-        // Busca usuario por correo.
+        // Busca el usuario por correo electrónico.
         $user = User::where('email', $credentials['email'])->first();
 
-        // Verifica si el usuario existe, está activo y la contraseña es correcta
-        if (! $user || ! $user->is_active || ! Hash::check($credentials['password'], $user->password)) {
+        // Verifica si el usuario existe, está activo
+        // y la contraseña es correcta.
+        if (
+            ! $user ||
+            ! $user->is_active ||
+            ! Hash::check($credentials['password'], $user->password)
+        ) {
             RateLimiter::hit($this->throttleKey());
 
-            // Mensaje distinto si la cuenta está desactivada.
+            // Mensaje específico si la cuenta está desactivada.
             if ($user && ! $user->is_active) {
                 throw ValidationException::withMessages([
                     'email' => 'Tu cuenta está desactivada.',
                 ]);
             }
 
+            // Mensaje genérico de credenciales incorrectas.
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);
         }
 
-        // Si todo está bien, intenta iniciar sesión.
+        // Si todo está correcto, inicia sesión con la opción de "recordarme".
         Auth::login($user, $this->boolean('remember'));
 
-
-        /*if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
-        }*/
-
+        // Limpia los intentos fallidos del rate limiter.
         RateLimiter::clear($this->throttleKey());
     }
 
     /**
-     * Ensure the login request is not rate limited.
+     * Verifica que la solicitud de inicio de sesión no esté limitada
+     * por exceso de intentos.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
     public function ensureIsNotRateLimited(): void
     {
+        // Verifica si la clave de rate limiting NO ha superado el número máximo
+        // de intentos permitidos (5). Si aún no se ha excedido el límite,
+        // la ejecución continúa normalmente y no se aplica ningún bloqueo.
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
+        // Dispara el evento de bloqueo por exceso de intentos.
         event(new Lockout($this));
 
+        // Obtiene la cantidad de segundos restantes antes de
+        // que se levante el bloqueo.
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
+        // Mensaje que indica al usuario cuánto tiempo debe esperar
+        // antes de intentar iniciar sesión nuevamente.
         throw ValidationException::withMessages([
             'email' => __('auth.throttle', [
                 'seconds' => $seconds,
@@ -104,10 +122,12 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the rate limiting throttle key for the request.
+     * Obtiene la clave que se usa para el rate limiting de la solicitud.
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(
+            Str::lower($this->string('email')).'|'.$this->ip()
+        );
     }
 }
