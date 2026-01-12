@@ -47,6 +47,7 @@ use App\Http\Controllers\AuthSessionController;
 use App\Http\Controllers\AuthSignUpController;
 use App\Http\Controllers\AuthVerifyEmailController;
 
+use App\Http\Middleware\EnsureEmailNotVerified;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -102,7 +103,7 @@ Route::middleware('guest')->group(function () {
 | Rutas autenticadas (sin verificación)
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', EnsureEmailNotVerified::class])->group(function () {
     Route::get('verify-email', [AuthVerifyEmailController::class, 'prompt'])
         ->name('verification.notice');
 
@@ -114,10 +115,11 @@ Route::middleware('auth')->group(function () {
         ->middleware('throttle:6,1')
         ->name('verification.send');
 
-    Route::get('confirm-password', [AuthPasswordConfirmController::class, 'show'])
-        ->name('password.confirm');
+    Route::get('change-email', [AuthVerifyEmailController::class, 'edit'])
+        ->name('verification.email.edit');
 
-    Route::post('confirm-password', [AuthPasswordConfirmController::class, 'store']);
+    Route::post('change-email', [AuthVerifyEmailController::class, 'update'])
+        ->name('verification.email.update');
 
     Route::post('logout', [AuthSessionController::class, 'destroy'])
         ->name('logout');
@@ -278,6 +280,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
                         ->name('update');
                 });
         });
+
+    // Confirmación de contraseña
+    Route::get('confirm-password', [AuthPasswordConfirmController::class, 'show'])
+        ->name('password.confirm');
+    Route::post('confirm-password', [AuthPasswordConfirmController::class, 'store']);
 });
 
 /*

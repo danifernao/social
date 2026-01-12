@@ -33,10 +33,15 @@ export default function VerifyEmail({ status }: { status?: string }) {
                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                     {t('auth.verifyEmail.resendEmail')}
                 </Button>
-
-                <TextLink href={route('logout')} method="post" className="mx-auto block text-sm">
-                    {t('common.logout')}
-                </TextLink>
+                <div className="mx-auto text-center">
+                    <TextLink href={route('verification.email.edit')} className="text-sm">
+                        {t('auth.changeEmail.link')}
+                    </TextLink>
+                    <span className="mx-2">|</span>
+                    <TextLink href={route('logout')} method="post" className="text-sm">
+                        {t('common.logout')}
+                    </TextLink>
+                </div>
             </form>
         </AuthLayout>
     );
