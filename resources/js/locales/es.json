@@ -123,6 +123,11 @@
     }
   },
   "auth": {
+    "changeEmail": {
+      "description": "Ingresa a continuación la nueva dirección de correo electrónico donde deseas recibir el enlace de verificación de tu cuenta.",
+      "title": "Cambiar correo electrónico",
+      "link": "Cambiar correo electrónico"
+    },
     "confirmPassword": {
       "description": "Esta es una zona segura de la aplicación. Por favor, confirma tu contraseña antes de continuar.",
       "title": "Confirma tu contraseña"

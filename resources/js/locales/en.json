@@ -123,6 +123,11 @@
     }
   },
   "auth": {
+    "changeEmail": {
+      "description": "Enter the new email address where you want to receive your account verification link.",
+      "link": "Change Email Address",
+      "title": "Change Email Address"      
+    },
     "confirmPassword": {
       "description": "This is a secure area of the application. Please confirm your password before continuing.",
       "title": "Confirm Your Password"
