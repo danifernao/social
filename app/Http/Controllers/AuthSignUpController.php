@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Rules\UserRules;
 use App\Utils\Locales;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -45,15 +46,8 @@ class AuthSignUpController extends Controller
     {
         // Valida los datos enviados desde el formulario.
         $request->validate([
-            'username' => [
-                'required',
-                'string',
-                'min:4',
-                'max:15',
-                'regex:/^[a-zA-Z](?!.*[._]{2})[a-zA-Z0-9._]*[a-zA-Z0-9]$/',
-                'unique:users,username',
-            ],
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'username' => UserRules::username(),
+            'email' => UserRules::email(),
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'language' => Rule::in(Locales::codes()),
         ]);
