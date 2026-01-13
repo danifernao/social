@@ -7,18 +7,18 @@ import { Head } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 /**
- *
+ * Vista de administración para crear una nueva página informativa.
  */
 export default function PagesCreate() {
-    // Obtiene las traducciones de la página.
+    // Función para traducir textos de la interfaz.
     const { t } = useTranslation();
 
-    // Obtiene el idioma pasado por parámetro URL.
+    // Idioma pasado por parámetro en la URL.
     const lang = {
         ...(route().params.lang ? { lang: route().params.lang } : {}),
     };
 
-    // Ruta de navegación actual usada como migas de pan.
+    // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('admin.page.layout.title'),
@@ -32,9 +32,12 @@ export default function PagesCreate() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {/* Título del documento */}
             <Head title={t('admin.page.create.title')} />
+
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
+                    {/* Formulario para crear la página */}
                     <AdminPageForm />
                 </AppContentLayout>
             </AdminLayout>

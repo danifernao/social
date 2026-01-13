@@ -13,10 +13,11 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 /**
- *
+ * Vista de administración que muestra el listado de páginas
+ * informativas del sitio web.
  */
 export default function PagesIndex() {
-    // Obtiene las traducciones de la página.
+    // Función para traducir textos de la interfaz.
     const { t } = useTranslation();
 
     // Captura los datos proporcionadas por Inertia.
@@ -27,12 +28,12 @@ export default function PagesIndex() {
         language: currentLanguage,
     } = usePage<{ message: string; locales: Locale[]; pages: Pages; language: string }>().props;
 
-    // Cambia el idioma de la consulta de páginas.
+    // Cambia el idioma de consulta de páginas informativas.
     const handleLanguageChange = (lang: string) => {
         router.get(route('admin.page.index'), { lang }, { preserveState: true, preserveScroll: true });
     };
 
-    // Ruta de navegación actual usada como migas de pan.
+    // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('admin.page.layout.title'),
@@ -49,13 +50,18 @@ export default function PagesIndex() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {/* Título del documento */}
             <Head title={t('admin.page.layout.title')} />
+
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
                     <div className="flex items-center justify-between">
+                        {/* Enlace para crear una nueva página informativa */}
                         <Button variant="outline" asChild>
                             <Link href={route('admin.page.create', { lang: currentLanguage })}>{t('admin.page.index.create.title')}</Link>
                         </Button>
+
+                        {/* Selector de idioma */}
                         <Select value={currentLanguage} onValueChange={handleLanguageChange}>
                             <SelectTrigger className="w-40">
                                 <SelectValue placeholder={t('common.selectLanguage')} />
@@ -69,6 +75,8 @@ export default function PagesIndex() {
                             </SelectContent>
                         </Select>
                     </div>
+
+                    {/* Listado de páginas informativas */}
                     <AdminPageList pages={pages.data} previous={pages.links.prev} next={pages.links.next} />
                 </AppContentLayout>
             </AdminLayout>

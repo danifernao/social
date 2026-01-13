@@ -8,16 +8,16 @@ import { Head, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 /**
- *
+ * Vista de administración para editar una página informativa existente.
  */
 export default function PagesEdit() {
-    // Obtiene las traducciones de la página.
+    // Función para traducir textos de la interfaz.
     const { t } = useTranslation();
 
-    // Captura el usuario proporcionado por Inertia.
+    // Captura la página proporcionada por Inertia.
     const { page } = usePage<{ page: Page }>().props;
 
-    // Ruta de navegación actual usada como migas de pan.
+    // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('admin.page.layout.title'),
@@ -31,9 +31,12 @@ export default function PagesEdit() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {/* Título del documento */}
             <Head title={t('admin.page.edit.title')} />
+
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
+                    {/* Formulario de edición de la página */}
                     <AdminPageForm page={page} />
                 </AppContentLayout>
             </AdminLayout>
