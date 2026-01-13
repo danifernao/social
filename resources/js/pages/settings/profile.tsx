@@ -1,6 +1,6 @@
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Transition } from '@headlessui/react';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { FormEventHandler, useRef, useState } from 'react';
 
 import DeleteUser from '@/components/kit/delete-user';
@@ -22,7 +22,7 @@ type ProfileForm = {
     _method: 'PATCH';
 };
 
-export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
+export default function Profile() {
     const { t } = useTranslation();
     const { auth } = usePage<SharedData>().props;
 
@@ -143,26 +143,6 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
                             <InputError className="mt-2" message={errors.email} />
                         </div>
-
-                        {mustVerifyEmail && auth.user.email_verified_at === null && (
-                            <div>
-                                <p className="text-muted-foreground -mt-4 text-sm">
-                                    {t('settings.profile.email.noVerified')}
-                                    <Link
-                                        href={route('verification.send')}
-                                        method="post"
-                                        as="button"
-                                        className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
-                                    >
-                                        {t('settings.profile.email.sendVerificationEmail')}
-                                    </Link>
-                                </p>
-
-                                {status === 'verification_link_sent' && (
-                                    <div className="mt-2 text-sm font-medium text-green-600">{t('settings.profile.email.verificationLinkSent')}</div>
-                                )}
-                            </div>
-                        )}
 
                         <div className="flex items-center gap-4">
                             <Button disabled={processing}>{t('common.save')}</Button>
