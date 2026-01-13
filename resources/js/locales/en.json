@@ -378,10 +378,7 @@
       },
       "description": "Ensure your account uses a long, random password for security.",
       "email": {
-        "address": "Email Address",
-        "sendVerificationEmail": "Click here to resend the verification email.",
-        "noVerified": "Your email address is not verified.",
-        "verificationLinkSent": "A new verification link has been sent to your email address."
+        "address": "Email Address"
       },
       "info": {
         "avatar": {

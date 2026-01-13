@@ -378,10 +378,7 @@
       },
       "description": "Asegúrate de que tu cuenta utilice una contraseña larga y aleatoria para mantener la seguridad.",
       "email": {
-        "address": "Dirección de correo electrónico",
-        "sendVerificationEmail": "Haz clic aquí para reenviar el correo de verificación.",
-        "noVerified": "Tu dirección de correo electrónico no está verificada.",
-        "verificationLinkSent": "Se ha enviado un nuevo enlace de verificación a tu dirección de correo electrónico."
+        "address": "Dirección de correo electrónico"
       },
       "info": {
         "avatar": {
