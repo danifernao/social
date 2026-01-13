@@ -360,25 +360,14 @@ class AdminUserController extends Controller
 
         $user->email = $request->new_email;
 
-        // Si el correo cambió, anula la verificación previa
-        // y guarda los cambios.
+        // Si el correo cambió, anula la verificación previa,
+        // guarda los cambios y envía el enlace de verificación.
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
             $user->save();
-        }
-
-        // Envía el enlace de verificación si se solicitó
-        // y el correo aún no está verificado.
-        if (
-            filter_var(
-                $request->email_verification_link,
-                FILTER_VALIDATE_BOOLEAN
-            ) &&
-            !$user->email_verified_at
-        ) {
             $user->sendEmailVerificationNotification();
         }
-
+        
         return back()->with('status', 'email_updated');
     }
 
