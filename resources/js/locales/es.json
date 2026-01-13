@@ -82,7 +82,7 @@
           "title": "Eliminar usuario"              
         },
         "email": {
-          "sendVerificationEmail": "Enviar correo electrónico de verificación de cuenta.",
+          "notice": "Se enviará un correo electrónico de verificación de cuenta a la nueva dirección.",
           "title": "Cambiar correo electrónico"
         },
         "password": {

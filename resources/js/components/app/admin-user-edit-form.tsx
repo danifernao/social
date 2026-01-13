@@ -36,7 +36,6 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             new_username: user.username,
             new_email: user.email,
             new_role: user.role,
-            email_verification_link: false,
             random_password: false,
         },
         route: () => route('admin.user.update', user.id),
@@ -155,24 +154,13 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                 </CardHeader>
                 <CardContent className="space-y-4">
                     {form.data.action === 'change_email' && <FormErrors errors={form.errors} />}
-
                     <Input
                         placeholder={t('common.newEmail')}
                         value={form.data.new_email}
                         onChange={(e) => form.setData('new_email', e.target.value)}
                         disabled={form.processing && form.data.action === 'change_email'}
                     />
-
-                    <div className="flex items-center gap-2">
-                        <Checkbox
-                            id="email-verification-link"
-                            checked={form.data.email_verification_link}
-                            onCheckedChange={(checked) => form.setData('email_verification_link', !!checked)}
-                            disabled={form.processing && form.data.action === 'change_email'}
-                        />
-                        <label htmlFor="email-verification-link">{t('admin.user.edit.email.sendVerificationEmail')}</label>
-                    </div>
-
+                    <p className="text-muted-foreground text-sm italic">{t('admin.user.edit.email.notice')}</p>
                     <Button
                         type="button"
                         onClick={() => handleAction('change_email')}

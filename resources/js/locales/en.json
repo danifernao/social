@@ -82,7 +82,7 @@
           "title": "Delete User"
         },
         "email": {
-          "sendVerificationEmail": "Send account verification email.",
+          "notice": "A verification email will be sent to the new email address.",
           "title": "Change Email"
         },
         "password": {
