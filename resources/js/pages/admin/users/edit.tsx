@@ -7,15 +7,17 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 /**
- *
+ * Vista de administración que muestra el formulario
+ * para editar la información de un usuario específico.
  */
 export default function UsersEdit() {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Captura el usuario proporcionado por Inertia.
     const { user } = usePage<{ user: User }>().props;
 
+    // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('admin.user.layout.title'),
@@ -29,12 +31,17 @@ export default function UsersEdit() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {/* Título del documento */}
             <Head title={t('admin.user.edit.title')} />
+
             <AdminLayout>
                 <AppContentLayout noMargin={true} fullWidth={true}>
+                    {/* Encabezado con enlace al perfil del usuario */}
                     <h2 className="text-2xl font-semibold tracking-tight">
                         <Link href={route('profile.show', user.username)}>{user.username}</Link>
                     </h2>
+
+                    {/* Formulario de edición del usuario */}
                     <AdminUserEditForm user={user} />
                 </AppContentLayout>
             </AdminLayout>

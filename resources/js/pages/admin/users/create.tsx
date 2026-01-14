@@ -7,12 +7,14 @@ import { Head } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 /**
- *
+ * Vista de administración que muestra el formulario
+ * para crear un nuevo usuario.
  */
 export default function UsersCreate() {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
+    // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('admin.user.layout.title'),
@@ -26,9 +28,12 @@ export default function UsersCreate() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {/* Título del documento */}
             <Head title={t('admin.user.create.title')} />
+
             <AdminLayout>
                 <AppContentLayout noMargin={true} fullWidth={true}>
+                    {/* Formulario para crear un nuevo usuario */}
                     <AdminUserCreateForm />
                 </AppContentLayout>
             </AdminLayout>

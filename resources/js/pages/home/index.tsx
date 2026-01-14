@@ -10,30 +10,30 @@ import { Head, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 /**
- * Muestra la página de inicio del usuario autenticado.
+ * Vista principal que muestra el feed de publicaciones del usuario autenticado.
  */
 export default function HomeIndex() {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Captura la lista de publicaciones proporcionada por Inertia.
     const { posts } = usePage<{ posts: Posts }>().props;
 
-    // Usa el hook de paginación para gestionar la lista de publicaciones.
+    // Usa el hook de paginación para gestionar el feed de publicaciones.
     const {
-        items: entries, // Lista de publicaciones actuales.
-        nextCursor, // Cursor para la siguiente página de publicaciones.
-        processing, // Indica si se está cargando más publicaciones.
+        items: entries, // Lista actual de publicaciones visibles.
+        nextCursor, // Cursor para solicitar la siguiente página de publicaciones.
+        processing, // Indica si se está cargando más contenido.
         loadMore, // Función para cargar más publicaciones.
-        handleEntryChanges, // Función para actualizar la lista de publicaciones.
+        handleEntryChanges, // Función para sincronizar cambios en el listado.
     } = usePaginatedData<Post>({
-        initialItems: posts.data, // Lista inicial de publicaciones.
-        initialCursor: posts.meta.next_cursor, // Cursor inicial.
-        fetchUrl: route('home.index'), // Ruta para solicitar más publicaciones.
-        propKey: 'posts', // Nombre de la propiedad que devuelve Inertia con los datos a usar.
+        initialItems: posts.data, // Publicaciones iniciales cargadas desde el servidor.
+        initialCursor: posts.meta.next_cursor, // Cursor inicial de paginación.
+        fetchUrl: route('home.index'), // Ruta usada para solicitar más publicaciones.
+        propKey: 'posts', // Propiedad de la respuesta de Inertia que contiene los datos.
     });
 
-    // Ruta de navegación actual usada como migas de pan.
+    // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('common.home'),
@@ -43,12 +43,20 @@ export default function HomeIndex() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {/* Título del documento */}
             <Head title={t('common.home')} />
+
             <AppContentLayout>
+                {/* Contexto para sincronizar cambios en el feed de publicaciones */}
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>
+                    {/* Formulario para crear una nueva publicación */}
                     <EntryForm />
+
+                    {/* Listado de publicaciones del feed */}
                     <EntryList entries={entries} />
                 </EntryListUpdateContext.Provider>
+
+                {/* Botón para cargar más publicaciones */}
                 <ListLoadMore type="post" cursor={nextCursor} isProcessing={processing} onClick={loadMore} />
             </AppContentLayout>
         </AppLayout>

@@ -13,14 +13,15 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 /**
- * Vista de administración que muestra el listado de páginas
- * informativas del sitio web.
+ * Vista de administración que muestra el listado de páginas estáticas.
  */
 export default function PagesIndex() {
-    // Función para traducir textos de la interfaz.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Captura los datos proporcionadas por Inertia.
+    // Captura un mensaje informativo, los idiomas disponibles,
+    // la página estática y el idioma actualmente seleccionado
+    // proporcionados por Inertia.
     const {
         message,
         locales,
@@ -28,7 +29,7 @@ export default function PagesIndex() {
         language: currentLanguage,
     } = usePage<{ message: string; locales: Locale[]; pages: Pages; language: string }>().props;
 
-    // Cambia el idioma de consulta de páginas informativas.
+    // Cambia el idioma de consulta de páginas estáticas.
     const handleLanguageChange = (lang: string) => {
         router.get(route('admin.page.index'), { lang }, { preserveState: true, preserveScroll: true });
     };
@@ -56,7 +57,7 @@ export default function PagesIndex() {
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
                     <div className="flex items-center justify-between">
-                        {/* Enlace para crear una nueva página informativa */}
+                        {/* Enlace para crear una nueva página estática */}
                         <Button variant="outline" asChild>
                             <Link href={route('admin.page.create', { lang: currentLanguage })}>{t('admin.page.index.create.title')}</Link>
                         </Button>
@@ -76,7 +77,7 @@ export default function PagesIndex() {
                         </Select>
                     </div>
 
-                    {/* Listado de páginas informativas */}
+                    {/* Listado de páginas estáticas */}
                     <AdminPageList pages={pages.data} previous={pages.links.prev} next={pages.links.next} />
                 </AppContentLayout>
             </AdminLayout>

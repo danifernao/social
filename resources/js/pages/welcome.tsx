@@ -4,20 +4,28 @@ import { SpecialPages } from '@/types/modules/page';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Vista de inicio pública de la aplicación.
+ */
 export default function Welcome() {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz
+    // y acceso al idioma actualmente activo.
     const { t, i18n } = useTranslation();
 
-    // Captura la configuración del sitio proporcionado por Inertia.
+    // Captura las páginas especiales y la configuración del sitio
+    // proporcionadas por Inertia.
     const { specialPages, siteSettings } = usePage<{ specialPages: SpecialPages; siteSettings: SiteSettings }>().props;
 
     return (
         <div className="bg-background flex min-h-screen flex-col">
             <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
+                {/* Título del documento */}
                 <Head title={t('welcome.layout.title')} />
 
+                {/* Título principal de bienvenida */}
                 <h1 className="mb-4 text-4xl font-bold md:text-6xl">{t('welcome.title', { siteName: 'Social' })}</h1>
 
+                {/* Descripción principal de la aplicación */}
                 <p className="mb-8 max-w-2xl text-lg md:text-xl">{t('welcome.description')}</p>
 
                 {/* Botones de inicio de sesión y registro */}
@@ -37,6 +45,7 @@ export default function Welcome() {
                 </div>
             </div>
 
+            {/* Enlaces a páginas legales o informativas */}
             {(specialPages[i18n.currentLang].about || specialPages[i18n.currentLang].terms || specialPages[i18n.currentLang].policy) && (
                 <div className="text-muted-foreground flex justify-end gap-4 p-6 text-right text-sm">
                     {/* Enlace de acerca de */}

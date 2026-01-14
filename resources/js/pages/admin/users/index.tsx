@@ -10,16 +10,17 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 /**
- *
+ * Vista de administración que muestra el listado de usuarios registrados.
  */
 export default function UsersIndex() {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Captura la lista de usuarios y el mensaje, si existe, proporcionados por Inertia.
+    // Captura los datos de autenticación, la lista de usuarios
+    // y un posible mensaje proporcionados por Inertia.
     const { auth, users, message } = usePage<{ auth: Auth; users: Users; message: string }>().props;
 
-    // Ruta de navegación actual usada como migas de pan.
+    // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('admin.user.layout.title'),
@@ -36,9 +37,12 @@ export default function UsersIndex() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {/* Título del documento */}
             <Head title={t('admin.user.layout.title')} />
+
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
+                    {/* Botón para crear un nuevo usuario */}
                     {auth.user.is_admin && (
                         <div>
                             <Button variant="outline" asChild>
@@ -46,6 +50,8 @@ export default function UsersIndex() {
                             </Button>
                         </div>
                     )}
+
+                    {/* Listado paginado de usuarios */}
                     <AdminUserList users={users.data} previous={users.links.prev} next={users.links.next} />
                 </AppContentLayout>
             </AdminLayout>

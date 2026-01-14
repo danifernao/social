@@ -8,13 +8,13 @@ import { Head, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 /**
- * Vista de administración para editar una página informativa existente.
+ * Vista de administración para editar una página estática existente.
  */
 export default function PagesEdit() {
-    // Función para traducir textos de la interfaz.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Captura la página proporcionada por Inertia.
+    // Captura la página estática proporcionada por Inertia.
     const { page } = usePage<{ page: Page }>().props;
 
     // Migas de pan de la vista actual.
@@ -36,7 +36,7 @@ export default function PagesEdit() {
 
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
-                    {/* Formulario de edición de la página */}
+                    {/* Formulario de edición de la página estática */}
                     <AdminPageForm page={page} />
                 </AppContentLayout>
             </AdminLayout>
