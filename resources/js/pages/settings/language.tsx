@@ -8,18 +8,27 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
+/**
+ * Vista de configuración que permite al usuario cambiar el idioma de la aplicación.
+ */
 export default function Appearance() {
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
+
+    // Idioma actual proporcionado por Inertia.
     const { lang } = usePage<{ lang: string }>().props;
 
+    // Formulario para manejar el cambio de idioma.
     const { data, setData, patch, processing } = useForm({
         lang,
     });
 
+    // Envía la solicitud para actualizar el idioma del usuario.
     const changeLanguage = () => {
         patch(route('language.update'), {
             preserveScroll: true,
             onSuccess: () => {
+                // Limpia el estado del router para recargar traducciones.
                 router.flushAll();
                 toast(t('common.saved'));
             },
@@ -30,6 +39,7 @@ export default function Appearance() {
         });
     };
 
+    // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('settings.language.title'),
@@ -37,6 +47,7 @@ export default function Appearance() {
         },
     ];
 
+    // Detecta cambios en el idioma seleccionado y ejecuta la actualización.
     useEffect(() => {
         if (data.lang !== lang) {
             changeLanguage();
@@ -45,11 +56,15 @@ export default function Appearance() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {/* Título del documento */}
             <Head title={t('settings.language.title')} />
 
             <SettingsLayout>
                 <div className="space-y-6">
+                    {/* Encabezado descriptivo de la sección */}
                     <HeadingSmall title={t('settings.language.title')} description={t('settings.language.description')} />
+
+                    {/* Selector de idioma */}
                     <Select value={data.lang} onValueChange={(value: 'en' | 'es') => setData('lang', value)} disabled={processing}>
                         <SelectTrigger className="w-[200px]">
                             <SelectValue placeholder="Elige un idioma" />

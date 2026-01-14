@@ -7,15 +7,17 @@ import { Head, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 /**
- *
+ * Vista de administración que muestra el formulario
+ * para editar la configuración global del sitio web.
  */
 export default function SiteEdit() {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Captura la configuración del sitio proporcionado por Inertia.
+    // Captura la configuración global del sitio proporcionada por Inertia.
     const { site_settings } = usePage<{ site_settings: SiteSettings }>().props;
 
+    // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('admin.site.layout.title'),
@@ -25,7 +27,10 @@ export default function SiteEdit() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {/* Título del documento */}
             <Head title={t('admin.site.layout.title')} />
+
+            {/* Formulario para editar los datos globales del sitio */}
             <AdminLayout>
                 <AppContentLayout noMargin={true} fullWidth={true}>
                     <AdminSiteEditForm settings={site_settings} />

@@ -18,37 +18,40 @@ interface PageProps {
 }
 
 /**
- * Muestra la página de resultados de una búsqueda o de una etiqueta.
+ * Vista que muestra los resultados de una búsqueda global,
+ * ya sea por publicaciones o por usuarios.
  */
 export default function SearchIndex() {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Captura las propiedades de la página proporcionadas por Inertia.
     const { props } = usePage<PageProps>();
 
-    // Estado local para el tipo de búsqueda ('post' o 'user') y el término de búsqueda.
+    // Estado local para el tipo de búsqueda y el término consultado.
     const [type, setType] = useState<SearchType>(props.type);
     const [query, setQuery] = useState(props.query);
 
-    // Referencia para indicar cuándo se deben reiniciar los datos paginados al cambiar la búsqueda.
+    // Referencia para indicar cuándo deben reiniciarse los datos paginados
+    // tras ejecutar una nueva búsqueda.
     const shouldReset = useRef(false);
 
+    // Usa el hook de paginación para gestionar los resultados de búsqueda.
     const {
-        items: results, // Lista de los resultados.
-        nextCursor, // Cursor para la siguiente página de resultados.
-        processing, // Indica si se está cargando más resultados.
+        items: results, // Lista actual de resultados visibles.
+        nextCursor, // Cursor para solicitar la siguiente página de resultados.
+        processing, // Indica si se está cargando más contenido.
         loadMore, // Función para cargar más resultados.
-        handleEntryChanges, // Función para actualizar la lista de publicaciones.
-        resetProps, // Función para restablecer la lista y el cursor a sus valores iniciales.
+        handleEntryChanges, // Función para sincronizar cambios en publicaciones.
+        resetProps, // Función para restablecer los resultados a su estado inicial.
     } = usePaginatedData<Post | User>({
-        initialItems: props.results.data, // Lista inicial de resultados.
-        initialCursor: props.results.meta.next_cursor, // Cursor inicial.
-        fetchUrl: route('search.index', { type, query }), // Ruta para solicitar más resultados.
-        propKey: 'results', // Nombre de la propiedad que devuelve Inertia con los datos a usar.
+        initialItems: props.results.data, // Resultados iniciales cargados desde el servidor.
+        initialCursor: props.results.meta.next_cursor, // Cursor inicial de paginación.
+        fetchUrl: route('search.index', { type, query }), // Ruta usada para solicitar más resultados.
+        propKey: 'results', // Propiedad de la respuesta de Inertia que contiene los datos.
     });
 
-    // Ruta de navegación actual usada como migas de pan.
+    // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('common.search'),
@@ -56,11 +59,12 @@ export default function SearchIndex() {
         },
     ];
 
-    // Función que se ejecuta al enviar una nueva búsqueda, actualizando tipo y consulta.
+    // Ejecuta una nueva búsqueda actualizando el tipo y la consulta.
     const onSubmit = (newType: SearchType, newQuery: string) => {
         setType(newType);
         setQuery(newQuery);
 
+        // Marca que los resultados deben reiniciarse tras recibir la respuesta.
         shouldReset.current = true;
 
         router.get(
@@ -74,7 +78,7 @@ export default function SearchIndex() {
         );
     };
 
-    // Detecta cuándo se deben reiniciar los resultados paginados tras cambiar la búsqueda.
+    // Reinicia la paginación cuando cambian los resultados tras una nueva búsqueda.
     useEffect(() => {
         if (shouldReset.current) {
             resetProps();
@@ -84,12 +88,20 @@ export default function SearchIndex() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {/* Título del documento */}
             <Head title="Buscar" />
+
             <AppContentLayout>
+                {/* Barra de búsqueda */}
                 <SearchBar type={type} query={query} onSubmit={onSubmit} />
+
+                {/* Contexto para sincronizar cambios en los resultados */}
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>
+                    {/* Listado de resultados según el tipo de búsqueda */}
                     <SearchSearchResults results={type === 'post' ? (results as Post[]) : (results as User[])} />
                 </EntryListUpdateContext.Provider>
+
+                {/* Botón para cargar más resultados */}
                 <ListLoadMore type="post" cursor={nextCursor} isProcessing={processing} onClick={loadMore} />
             </AppContentLayout>
         </AppLayout>

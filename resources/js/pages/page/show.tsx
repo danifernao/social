@@ -7,16 +7,18 @@ import { Head, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 /**
- * Muestra la página de perfil de un usuario.
+ * Vista que muestra una página estática del sitio web,
+ * como términos y condiciones, política de privacidad u otras
+ * páginas de contenido estático.
  */
 export default function PageShow() {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Captura los datos de la página actual proporcionados por Inertia.
+    // Captura los datos de la página estática proporcionados por Inertia.
     const { page } = usePage<{ page: Page }>().props;
 
-    // Ruta de navegación actual usada como migas de pan.
+    // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: page.title,
@@ -26,9 +28,14 @@ export default function PageShow() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {/* Título del documento */}
             <Head title={page.title} />
+
             <AppContentLayout>
+                {/* Título de la página estática */}
                 <h1 className="text-3xl">{page.title}</h1>
+
+                {/* Contenido formateado de la página estática */}
                 <FormattedText entryType="page" text={page.content || ''} alwaysExpanded={true} />
             </AppContentLayout>
         </AppLayout>

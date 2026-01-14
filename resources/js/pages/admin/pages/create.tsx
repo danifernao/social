@@ -7,10 +7,10 @@ import { Head } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 /**
- * Vista de administración para crear una nueva página informativa.
+ * Vista de administración para crear una nueva página estática.
  */
 export default function PagesCreate() {
-    // Función para traducir textos de la interfaz.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Idioma pasado por parámetro en la URL.
@@ -37,7 +37,7 @@ export default function PagesCreate() {
 
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
-                    {/* Formulario para crear la página */}
+                    {/* Formulario para crear la página estática */}
                     <AdminPageForm />
                 </AppContentLayout>
             </AdminLayout>

@@ -11,32 +11,33 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 /**
- * Muestra la página de notificaciones del usuario autenticado.
+ * Vista que muestra el listado de notificaciones del usuario autenticado.
  */
 export default function NotificationIndex() {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Captura la lista de notificaciones proporcionada por Inertia.
     const { notifications } = usePage<{ notifications: Notifications }>().props;
 
-    // Estado local que indica si está en curso el proceso de marcar las notificaciones como leídas.
+    // Indica si está en curso el proceso de marcar todas las notificaciones como leídas.
     const [isMarkReadProcessing, setIsMarkReadProcessing] = useState(false);
 
+    // Usa el hook de paginación para gestionar el listado de notificaciones.
     const {
-        items: notificationsList, // Lista de notificaciones actuales.
-        nextCursor, // Cursor para la siguiente página de notificaciones.
-        processing, // Indica si se está cargando más notificaciones.
+        items: notificationsList, // Lista actual de notificaciones visibles.
+        nextCursor, // Cursor para solicitar la siguiente página de notificaciones.
+        processing, // Indica si se está cargando más contenido.
         loadMore, // Función para cargar más notificaciones.
-        updateItems, //
+        updateItems, // Función para actualizar manualmente la lista de notificaciones.
     } = usePaginatedData<Notification>({
-        initialItems: notifications.data, // Lista inicial de notificaciones.
-        initialCursor: notifications.meta.next_cursor, // Cursor inicial.
-        fetchUrl: route('notification.index'), // Ruta para solicitar más notificaciones.
-        propKey: 'notifications', // Nombre de la propiedad que devuelve Inertia con los datos a usar.
+        initialItems: notifications.data, // Notificaciones iniciales cargadas desde el servidor.
+        initialCursor: notifications.meta.next_cursor, // Cursor inicial de paginación.
+        fetchUrl: route('notification.index'), // Ruta usada para solicitar más notificaciones.
+        propKey: 'notifications', // Propiedad de la respuesta de Inertia que contiene los datos.
     });
 
-    // Marca las notificaciones como leídas.
+    // Marca todas las notificaciones como leídas.
     const markAsRead = () => {
         setIsMarkReadProcessing(true);
 
@@ -47,7 +48,8 @@ export default function NotificationIndex() {
                 preserveState: true,
                 preserveScroll: true,
                 preserveUrl: true,
-                // Al finalizar correctamente, actualiza la lista marcando cada notificación como leída.
+                // Al finalizar correctamente, actualiza el estado local
+                // marcando cada notificación como leída.
                 onSuccess: () => {
                     const newNotifications = notificationsList.map((n) => ({ ...n, read_at: new Date().toISOString() }));
                     updateItems(newNotifications);
@@ -63,7 +65,7 @@ export default function NotificationIndex() {
         );
     };
 
-    // Ruta de navegación actual usada como migas de pan.
+    // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('common.notifications'),
@@ -73,10 +75,17 @@ export default function NotificationIndex() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {/* Título del documento */}
             <Head title={t('common.notifications')} />
+
             <AppContentLayout>
+                {/* Encabezado con acciones de notificaciones */}
                 <NotificationHeader markAsRead={markAsRead} isProcessing={isMarkReadProcessing} />
+
+                {/* Listado de notificaciones */}
                 <NotificationList notifications={notificationsList} />
+
+                {/* Botón para cargar más notificaciones */}
                 <ListLoadMore type="notification" cursor={nextCursor} isProcessing={processing} onClick={loadMore} />
             </AppContentLayout>
         </AppLayout>

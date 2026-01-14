@@ -22,14 +22,27 @@ type ProfileForm = {
     _method: 'PATCH';
 };
 
+/**
+ * Vista de configuración que permite al usuario autenticado
+ * editar su perfil.
+ */
 export default function Profile() {
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
+
+    // Captura los datos compartidos del usuario autenticado desde Inertia.
     const { auth } = usePage<SharedData>().props;
 
+    // URL actual del avatar del usuario.
     const avatarUrl = auth.user.avatar_url;
+
+    // Estado local para previsualizar el avatar seleccionado.
     const [previewUrl, setPreviewUrl] = useState<string | null>(avatarUrl);
+
+    // Referencia al campo de archivo para poder resetearlo manualmente.
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    // Inicializa el formulario usando el helper de Inertia.
     const { data, setData, post, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
         username: auth.user.username,
         email: auth.user.email,
@@ -38,6 +51,7 @@ export default function Profile() {
         _method: 'PATCH',
     });
 
+    // Gestiona el envío del formulario de edición de perfil.
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         post(route('profile.update'), {
@@ -48,11 +62,15 @@ export default function Profile() {
         console.log(errors);
     };
 
+    // Gestiona la selección de un nuevo archivo de avatar.
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            // Guarda el archivo en el estado del formulario.
             setData('avatar', file);
             setData('remove_avatar', false);
+
+            // Genera una vista previa del avatar seleccionado.
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPreviewUrl(reader.result as string);
@@ -61,15 +79,20 @@ export default function Profile() {
         }
     };
 
+    // Marca el avatar actual para ser eliminado.
     const handleRemoveAvatar = () => {
         setPreviewUrl(null);
         setData('avatar', null);
         setData('remove_avatar', true);
+
+        // Limpia manualmente el campo de archivo.
         if (fileInputRef.current) fileInputRef.current.value = '';
     };
 
+    // Obtiene la inicial del nombre de usuario para mostrarla como avatar fallback.
     const getInitial = () => auth.user.username.charAt(0).toUpperCase();
 
+    // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('settings.profile.title'),
@@ -79,19 +102,24 @@ export default function Profile() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {/* Título del documento */}
             <Head title={t('settings.profile.title')} />
 
             <SettingsLayout>
                 <div className="space-y-6">
+                    {/* Encabezado descriptivo de la sección */}
                     <HeadingSmall title={t('settings.profile.info.title')} description={t('settings.profile.info.description')} />
 
+                    {/* Formulario de edición del perfil */}
                     <form onSubmit={submit} className="space-y-6">
+                        {/* Sección del avatar */}
                         <div className="flex items-center gap-6">
                             <div className="relative h-20 w-20">
                                 <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-neutral-200 text-4xl font-bold text-black dark:bg-neutral-700 dark:text-white">
                                     {previewUrl ? <img src={previewUrl} alt="Avatar" className="h-full w-full object-cover" /> : getInitial()}
                                 </div>
 
+                                {/* Botón para eliminar el avatar existente */}
                                 {previewUrl && avatarUrl && !data.remove_avatar && (
                                     <button
                                         type="button"
@@ -111,6 +139,7 @@ export default function Profile() {
                             </div>
                         </div>
 
+                        {/* Campo del nombre de usuario */}
                         <div className="grid gap-2">
                             <Label htmlFor="username">{t('common.username')}</Label>
 
@@ -127,6 +156,7 @@ export default function Profile() {
                             <InputError className="mt-2" message={errors.username} />
                         </div>
 
+                        {/* Campo del correo electrónico */}
                         <div className="grid gap-2">
                             <Label htmlFor="email">{t('settings.profile.email.address')}</Label>
 
@@ -145,8 +175,10 @@ export default function Profile() {
                         </div>
 
                         <div className="flex items-center gap-4">
+                            {/* Botón para guardar los cambios */}
                             <Button disabled={processing}>{t('common.save')}</Button>
 
+                            {/* Indicador visual de guardado exitoso */}
                             <Transition
                                 show={recentlySuccessful}
                                 enter="transition ease-in-out"
@@ -160,6 +192,7 @@ export default function Profile() {
                     </form>
                 </div>
 
+                {/* Sección para eliminar la cuenta */}
                 {!auth.user.is_admin && <DeleteUser />}
             </SettingsLayout>
         </AppLayout>

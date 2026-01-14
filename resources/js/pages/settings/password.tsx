@@ -12,17 +12,25 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Vista de configuración que permite al usuario cambiar su contraseña.
+ */
 export default function Password() {
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
+
+    // Referencias a los campos de contraseña para control de foco en errores.
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
 
+    // Formulario para manejar la actualización de la contraseña.
     const { data, setData, errors, put, reset, processing, recentlySuccessful } = useForm({
         current_password: '',
         password: '',
         password_confirmation: '',
     });
 
+    // Envía la solicitud para actualizar la contraseña del usuario.
     const updatePassword: FormEventHandler = (e) => {
         e.preventDefault();
 
@@ -30,11 +38,13 @@ export default function Password() {
             preserveScroll: true,
             onSuccess: () => reset(),
             onError: (errors) => {
+                // Si hay error en la nueva contraseña, limpia los campos y enfoca el input.
                 if (errors.password) {
                     reset('password', 'password_confirmation');
                     passwordInput.current?.focus();
                 }
 
+                // Si hay error en la contraseña actual, limpia el campo y enfoca el input.
                 if (errors.current_password) {
                     reset('current_password');
                     currentPasswordInput.current?.focus();
@@ -43,6 +53,7 @@ export default function Password() {
         });
     };
 
+    // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: t('settings.password.title'),
@@ -52,13 +63,17 @@ export default function Password() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            {/* Título del documento */}
             <Head title={t('settings.password.title')} />
 
             <SettingsLayout>
                 <div className="space-y-6">
+                    {/* Encabezado descriptivo de la sección */}
                     <HeadingSmall title={t('settings.password.title')} description={t('settings.password.description')} />
 
+                    {/* Formulario para cambiar la contraseña */}
                     <form onSubmit={updatePassword} className="space-y-6">
+                        {/* Campo de la contraseña actual */}
                         <div className="grid gap-2">
                             <Label htmlFor="current_password">{t('common.currentPassword')}</Label>
 
@@ -76,6 +91,7 @@ export default function Password() {
                             <InputError message={errors.current_password} />
                         </div>
 
+                        {/* Campo de la contraseña nueva */}
                         <div className="grid gap-2">
                             <Label htmlFor="password">{t('common.newPassword')}</Label>
 
@@ -93,6 +109,7 @@ export default function Password() {
                             <InputError message={errors.password} />
                         </div>
 
+                        {/* Campo de la confirmación de la contraseña nueva */}
                         <div className="grid gap-2">
                             <Label htmlFor="password_confirmation">{t('common.confirmPassword')}</Label>
 
@@ -110,8 +127,10 @@ export default function Password() {
                         </div>
 
                         <div className="flex items-center gap-4">
+                            {/* Botón para guardar los cambios */}
                             <Button disabled={processing}>{t('common.save')}</Button>
 
+                            {/* Indicador visual de guardado exitoso */}
                             <Transition
                                 show={recentlySuccessful}
                                 enter="transition ease-in-out"
