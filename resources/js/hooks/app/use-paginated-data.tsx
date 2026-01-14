@@ -6,13 +6,11 @@ import { toast } from 'sonner';
 interface UsePaginatedProps<T> {
     initialItems: T[]; // Lista inicial de elementos.
     initialCursor: string | null; // Cursor inicial de paginación.
-    fetchUrl: string; // URL que se usará para obtener más datos.
     propKey: string; // Clave con la que se recibe la nueva página desde los props.
-    isEntry?: boolean; // Habilita el método "handleChanges" para actualizar la lista de publicaciones o comentarios.
 }
 
 // Hook genérico que gestiona la paginación de las publicaciones, comentarios y usuarios.
-export function usePaginatedData<T>({ initialItems, initialCursor, fetchUrl, propKey, isEntry = false }: UsePaginatedProps<T>) {
+export function usePaginatedData<T>({ initialItems, initialCursor, propKey }: UsePaginatedProps<T>) {
     // Estado que contiene los elementos actuales.
     const [items, setItems] = useState<T[]>(initialItems);
 

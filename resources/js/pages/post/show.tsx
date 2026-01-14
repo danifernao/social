@@ -38,7 +38,6 @@ export default function PostShow() {
     } = usePaginatedData<Comment>({
         initialItems: comments.data, // Comentarios iniciales cargados desde el servidor.
         initialCursor: comments.meta.next_cursor, // Cursor inicial de paginación.
-        fetchUrl: route('post.show', post.id), // Ruta usada para solicitar más comentarios.
         propKey: 'comments', // Propiedad de la respuesta de Inertia que contiene los datos.
     });
 

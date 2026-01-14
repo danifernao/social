@@ -29,7 +29,6 @@ export default function HomeIndex() {
     } = usePaginatedData<Post>({
         initialItems: posts.data, // Publicaciones iniciales cargadas desde el servidor.
         initialCursor: posts.meta.next_cursor, // Cursor inicial de paginación.
-        fetchUrl: route('home.index'), // Ruta usada para solicitar más publicaciones.
         propKey: 'posts', // Propiedad de la respuesta de Inertia que contiene los datos.
     });
 

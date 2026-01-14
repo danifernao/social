@@ -42,9 +42,7 @@ export default function ProfileShow() {
     } = usePaginatedData<Post>({
         initialItems: posts.data, // Publicaciones iniciales cargadas desde el servidor.
         initialCursor: posts.meta.next_cursor, // Cursor inicial de paginación.
-        fetchUrl: route('profile.show', user.username), // Ruta usada para solicitar más publicaciones.
         propKey: 'posts', // Propiedad de la respuesta de Inertia que contiene los datos.
-        isEntry: true, // Indica que se trabaja con entradas tipo "Entry" (publicación o comentario).
     });
 
     // Migas de pan de la vista actual.

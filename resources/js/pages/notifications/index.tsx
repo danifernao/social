@@ -33,7 +33,6 @@ export default function NotificationIndex() {
     } = usePaginatedData<Notification>({
         initialItems: notifications.data, // Notificaciones iniciales cargadas desde el servidor.
         initialCursor: notifications.meta.next_cursor, // Cursor inicial de paginación.
-        fetchUrl: route('notification.index'), // Ruta usada para solicitar más notificaciones.
         propKey: 'notifications', // Propiedad de la respuesta de Inertia que contiene los datos.
     });
 
