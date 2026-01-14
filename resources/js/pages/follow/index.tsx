@@ -41,7 +41,6 @@ export default function FollowIndex() {
         initialItems: pageName === 'following' ? following.data : followers.data,
         // Cursor inicial según el tipo de listado.
         initialCursor: pageName === 'following' ? following.meta.next_cursor : followers.meta.next_cursor,
-        fetchUrl: route(routeName, { user: user.username }), // Ruta usada para solicitar más usuarios.
         propKey: 'users', // Propiedad de la respuesta de Inertia que contiene los datos.
     });
 

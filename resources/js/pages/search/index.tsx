@@ -47,7 +47,6 @@ export default function SearchIndex() {
     } = usePaginatedData<Post | User>({
         initialItems: props.results.data, // Resultados iniciales cargados desde el servidor.
         initialCursor: props.results.meta.next_cursor, // Cursor inicial de paginación.
-        fetchUrl: route('search.index', { type, query }), // Ruta usada para solicitar más resultados.
         propKey: 'results', // Propiedad de la respuesta de Inertia que contiene los datos.
     });
 
