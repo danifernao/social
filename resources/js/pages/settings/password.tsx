@@ -73,7 +73,7 @@ export default function Password() {
 
                     {/* Formulario para cambiar la contraseña */}
                     <form onSubmit={updatePassword} className="space-y-6">
-                        {/* Campo de la contraseña actual */}
+                        {/* Campo de contraseña actual */}
                         <div className="grid gap-2">
                             <Label htmlFor="current_password">{t('common.currentPassword')}</Label>
 
@@ -91,10 +91,9 @@ export default function Password() {
                             <InputError message={errors.current_password} />
                         </div>
 
-                        {/* Campo de la contraseña nueva */}
+                        {/* Campo de contraseña nueva */}
                         <div className="grid gap-2">
                             <Label htmlFor="password">{t('common.newPassword')}</Label>
-
                             <Input
                                 id="password"
                                 ref={passwordInput}
@@ -105,11 +104,10 @@ export default function Password() {
                                 autoComplete="new-password"
                                 placeholder={t('common.newPassword')}
                             />
-
                             <InputError message={errors.password} />
                         </div>
 
-                        {/* Campo de la confirmación de la contraseña nueva */}
+                        {/* Campo de confirmación de contraseña nueva */}
                         <div className="grid gap-2">
                             <Label htmlFor="password_confirmation">{t('common.confirmPassword')}</Label>
 
