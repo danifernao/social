@@ -139,7 +139,7 @@ export default function Profile() {
                             </div>
                         </div>
 
-                        {/* Campo del nombre de usuario */}
+                        {/* Campo de nombre de usuario */}
                         <div className="grid gap-2">
                             <Label htmlFor="username">{t('common.username')}</Label>
 
@@ -156,7 +156,7 @@ export default function Profile() {
                             <InputError className="mt-2" message={errors.username} />
                         </div>
 
-                        {/* Campo del correo electrónico */}
+                        {/* Campo de correo electrónico */}
                         <div className="grid gap-2">
                             <Label htmlFor="email">{t('settings.profile.email.address')}</Label>
 
