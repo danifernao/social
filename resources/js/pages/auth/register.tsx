@@ -1,15 +1,13 @@
-import { Head, useForm, usePage } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
-
 import InputError from '@/components/kit/input-error';
 import TextLink from '@/components/kit/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/kit/auth-layout';
-
 import { SpecialPages } from '@/types/modules/page';
+import { Head, useForm, usePage } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
+import { FormEventHandler } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 type RegisterForm = {
@@ -20,11 +18,18 @@ type RegisterForm = {
     language: string;
 };
 
+/**
+ * Vista de registro que permite crear una nueva cuenta de usuario en la aplicación.
+ */
 export default function Register() {
+    // Funciones de traducción y acceso al idioma actual.
     const { t, i18n } = useTranslation();
 
+    // Obtiene las páginas estáticas especiales (términos y política)
+    // compartidas por Inertia.
     const { specialPages } = usePage<{ specialPages: SpecialPages }>().props;
 
+    // Inicializa el formulario de registro usando el helper de Inertia.
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
         username: '',
         email: '',
@@ -33,18 +38,24 @@ export default function Register() {
         language: i18n.currentLang,
     });
 
+    // Gestiona el envío del formulario de registro.
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         post(route('register'), {
+            // Limpia los campos sensibles una vez finalizada la petición.
             onFinish: () => reset('password', 'password_confirmation'),
         });
     };
 
     return (
         <AuthLayout title={t('auth.register.title')} description={t('auth.register.description')}>
+            {/* Título del documento */}
             <Head title={t('common.register')} />
+
+            {/* Formulario de registro */}
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6">
+                    {/* Campo de nombre de usuario */}
                     <div className="grid gap-2">
                         <Label htmlFor="username">{t('common.username')}</Label>
                         <Input
@@ -62,6 +73,7 @@ export default function Register() {
                         <InputError message={errors.username} className="mt-2" />
                     </div>
 
+                    {/* Campo de correo electrónico */}
                     <div className="grid gap-2">
                         <Label htmlFor="email">{t('common.email')}</Label>
                         <Input
@@ -78,6 +90,7 @@ export default function Register() {
                         <InputError message={errors.email} />
                     </div>
 
+                    {/* Campo de contraseña */}
                     <div className="grid gap-2">
                         <Label htmlFor="password">{t('common.password')}</Label>
                         <Input
@@ -94,6 +107,7 @@ export default function Register() {
                         <InputError message={errors.password} />
                     </div>
 
+                    {/* Campo de confirmación de contraseña */}
                     <div className="grid gap-2">
                         <Label htmlFor="password_confirmation">{t('common.confirmPassword')}</Label>
                         <Input
@@ -110,8 +124,10 @@ export default function Register() {
                         <InputError message={errors.password_confirmation} />
                     </div>
 
+                    {/* Aviso legal con enlaces a términos y/o política de privacidad */}
                     {(specialPages[i18n.currentLang].policy || specialPages[i18n.currentLang].terms) && (
                         <div className="text-muted-foreground text-center text-sm">
+                            {/* Solo términos */}
                             {!specialPages[i18n.currentLang].policy && (
                                 <Trans i18nKey="auth.register.disclaimer.terms">
                                     <TextLink
@@ -124,6 +140,7 @@ export default function Register() {
                                 </Trans>
                             )}
 
+                            {/* Solo política de privacidad */}
                             {!specialPages[i18n.currentLang].terms && (
                                 <Trans i18nKey="auth.register.disclaimer.policy">
                                     <TextLink
@@ -136,6 +153,7 @@ export default function Register() {
                                 </Trans>
                             )}
 
+                            {/* Términos y política disponibles */}
                             {specialPages[i18n.currentLang].policy && specialPages[i18n.currentLang].terms && (
                                 <Trans i18nKey="auth.register.disclaimer.termsAndPolicy">
                                     <TextLink
@@ -157,12 +175,14 @@ export default function Register() {
                         </div>
                     )}
 
+                    {/* Botón de envío del formulario */}
                     <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         {t('common.signUp')}
                     </Button>
                 </div>
 
+                {/* Enlace para usuarios que ya tienen cuenta */}
                 <div className="text-muted-foreground text-center text-sm">
                     <Trans i18nKey="auth.register.alreadyHaveAccount">
                         <TextLink href={route('login')} tabIndex={6}></TextLink>

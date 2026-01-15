@@ -1,13 +1,11 @@
-import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
-
 import InputError from '@/components/kit/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/kit/auth-layout';
-
+import { Head, useForm } from '@inertiajs/react';
+import { LoaderCircle } from 'lucide-react';
+import { FormEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ResetPasswordProps {
@@ -22,9 +20,15 @@ type ResetPasswordForm = {
     password_confirmation: string;
 };
 
+/**
+ * Vista que permite al usuario restablecer su contraseña
+ * utilizando un token de recuperación válido.
+ */
 export default function ResetPassword({ token, email }: ResetPasswordProps) {
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
+    // Inicializa el formulario de restablecimiento de contraseña.
     const { data, setData, post, processing, errors, reset } = useForm<Required<ResetPasswordForm>>({
         token: token,
         email: email,
@@ -32,19 +36,24 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
         password_confirmation: '',
     });
 
+    // Gestiona el envío del formulario de restablecimiento.
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         post(route('password.store'), {
+            // Limpia los campos sensibles una vez finalizada la petición.
             onFinish: () => reset('password', 'password_confirmation'),
         });
     };
 
     return (
         <AuthLayout title={t('auth.resetPassword.title')} description={t('auth.resetPassword.description')}>
+            {/* Título del documento */}
             <Head title={t('auth.resetPassword.title')} />
 
+            {/* Formulario de restablecimiento de contraseña */}
             <form onSubmit={submit}>
                 <div className="grid gap-6">
+                    {/* Campo del correo electrónico (solo lectura) */}
                     <div className="grid gap-2">
                         <Label htmlFor="email">{t('common.email')}</Label>
                         <Input
@@ -60,6 +69,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                         <InputError message={errors.email} className="mt-2" />
                     </div>
 
+                    {/* Campo de la nueva contraseña */}
                     <div className="grid gap-2">
                         <Label htmlFor="password">{t('common.password')}</Label>
                         <Input
@@ -76,6 +86,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                         <InputError message={errors.password} />
                     </div>
 
+                    {/* Campo de la confirmación de la contraseña */}
                     <div className="grid gap-2">
                         <Label htmlFor="password_confirmation">{t('common.confirmPassword')}</Label>
                         <Input
@@ -91,6 +102,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                         <InputError message={errors.password_confirmation} className="mt-2" />
                     </div>
 
+                    {/* Botón de envío del formulario */}
                     <Button type="submit" className="mt-4 w-full" disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         {t('common.reset')}
