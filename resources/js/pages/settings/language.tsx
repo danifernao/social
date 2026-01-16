@@ -18,7 +18,7 @@ export default function Appearance() {
     // Idioma actual proporcionado por Inertia.
     const { lang } = usePage<{ lang: string }>().props;
 
-    // Formulario para manejar el cambio de idioma.
+    // Inicializa el formulario para el cambio de idioma.
     const { data, setData, patch, processing } = useForm({
         lang,
     });
