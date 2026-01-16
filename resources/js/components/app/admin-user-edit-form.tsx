@@ -14,23 +14,23 @@ import ConfirmActionDialog from './admin-confirm-action-dialog';
 import FormErrors from './form-errors';
 
 interface AdminUserEditFormProps {
-    user: User;
+    user: User; // Usuario que se va a gestionar.
 }
 
 /**
- * Muestra el formulario para la gestión del usuario.
+ * Formulario para la gestión de un usuario.
  */
 export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;
 
-    // Estado que refleja si el usuario está habilitado o no.
+    // Estado que refleja si la cuenta del usuario está habilitada o no.
     const [isActive, setIsActive] = useState(user.is_active);
 
-    // Envía los datos del formulario.
+    // Inicializa y gestiona el formulario de acciones administrativas sobre el usuario.
     const { form, handleAction, confirmAction, isDialogOpen, closeDialog } = useAdminActionForm({
         initialData: {
             new_username: user.username,
@@ -45,6 +45,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                     setIsActive((prev) => !prev);
                     break;
                 case 'change_username':
+                    // Sincroniza el nombre de usuario actualizado desde la respuesta del servidor.
                     const typedPage = page as unknown as { props: { user: User } };
                     form.setData((prev) => ({ ...prev, new_username: typedPage.props.user.username }));
                     break;
@@ -54,15 +55,18 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
 
     return (
         <form className="space-y-8">
-            {/* Rol */}
+            {/* Gestión del rol de usuario */}
             {auth.user.is_admin && (
                 <Card>
                     <CardHeader>
                         <CardTitle>{t('admin.user.edit.role.title')}</CardTitle>
                     </CardHeader>
+
                     <CardContent className="space-y-4">
+                        {/* Errores de la acción */}
                         {form.data.action === 'change_role' && <FormErrors errors={form.errors} />}
 
+                        {/* Selector de rol de usuario */}
                         <Select
                             value={form.data.new_role}
                             onValueChange={(value: 'user' | 'mod' | 'admin') => form.setData('new_role', value)}
@@ -78,6 +82,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                             </SelectContent>
                         </Select>
 
+                        {/* Descripción de los roles disponibles */}
                         <dl className="text-muted-foreground grid grid-cols-[min-content_1fr] gap-2 text-sm">
                             {Object.entries(t('admin.user.edit.role.description', { returnObjects: true })).map(([role, description]) => (
                                 <Fragment key={role}>
@@ -87,6 +92,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                             ))}
                         </dl>
 
+                        {/* Botón para guardar el nuevo rol */}
                         <Button
                             type="button"
                             onClick={() => handleAction('change_role')}
@@ -99,16 +105,22 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                 </Card>
             )}
 
-            {/* Avatar */}
+            {/* Gestión del avatar del usuario */}
             {user.avatar_url && (
                 <Card>
                     <CardHeader>
                         <CardTitle>{t('admin.user.edit.avatar.title')}</CardTitle>
                     </CardHeader>
+
                     <CardContent className="space-y-4">
+                        {/* Errores de la acción */}
                         {form.data.action === 'delete_avatar' && <FormErrors errors={form.errors} />}
+
                         <div className="flex items-center gap-4">
+                            {/* Previsualización del avatar */}
                             <img src={user.avatar_url} alt={t('common.avatar')} className="h-24 w-24 rounded-sm bg-neutral-200 object-cover" />
+
+                            {/* Botón para eliminar el avatar */}
                             <Button
                                 type="button"
                                 onClick={() => handleAction('delete_avatar')}
@@ -127,15 +139,23 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                 <CardHeader>
                     <CardTitle>{t('admin.user.edit.username.title')}</CardTitle>
                 </CardHeader>
+
                 <CardContent className="space-y-4">
+                    {/* Errores de la acción */}
                     {form.data.action === 'change_username' && <FormErrors errors={form.errors} />}
+
+                    {/* Campo de nombre de usuario */}
                     <Input
                         placeholder={t('common.username')}
                         value={form.data.new_username}
                         onChange={(e) => form.setData('new_username', e.target.value)}
                         disabled={form.processing && form.data.action === 'change_username'}
                     />
+
+                    {/* Descripción del comportamiento esperado */}
                     <p className="text-muted-foreground text-sm italic">{t('admin.user.edit.username.notice')}</p>
+
+                    {/* Botón para cambiar el nombre de usuario */}
                     <Button
                         type="button"
                         onClick={() => handleAction('change_username')}
@@ -147,20 +167,28 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                 </CardContent>
             </Card>
 
-            {/* Correo */}
+            {/* Gestión del correo electrónico */}
             <Card>
                 <CardHeader>
                     <CardTitle>{t('admin.user.edit.email.title')}</CardTitle>
                 </CardHeader>
+
                 <CardContent className="space-y-4">
+                    {/* Errores de la acción */}
                     {form.data.action === 'change_email' && <FormErrors errors={form.errors} />}
+
+                    {/* Campo de correo electrónico */}
                     <Input
                         placeholder={t('common.newEmail')}
                         value={form.data.new_email}
                         onChange={(e) => form.setData('new_email', e.target.value)}
                         disabled={form.processing && form.data.action === 'change_email'}
                     />
+
+                    {/* Descripción del comportamiento esperado */}
                     <p className="text-muted-foreground text-sm italic">{t('admin.user.edit.email.notice')}</p>
+
+                    {/* Botón para cambiar el correo */}
                     <Button
                         type="button"
                         onClick={() => handleAction('change_email')}
@@ -172,14 +200,20 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                 </CardContent>
             </Card>
 
-            {/* Contraseña */}
+            {/* Gestión de la contraseña */}
             <Card>
                 <CardHeader>
                     <CardTitle>{t('admin.user.edit.resetPassword.title')}</CardTitle>
                 </CardHeader>
+
                 <CardContent className="space-y-4">
+                    {/* Errores de la acción */}
                     {form.data.action === 'reset_password' && <FormErrors errors={form.errors} />}
+
+                    {/* Descripción de la acción */}
                     <p>{t('admin.user.edit.resetPassword.description')}</p>
+
+                    {/* Campo de verificación para reemplazar la contraseña por una aleatoria */}
                     <div className="flex items-center gap-2">
                         <Checkbox
                             id="reset-password"
@@ -189,6 +223,8 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                         />
                         <label htmlFor="reset-password">{t('admin.user.edit.resetPassword.useRandomPass')}</label>
                     </div>
+
+                    {/* Botón para enviar enlace de restablecimiento de contraseña */}
                     <Button
                         type="button"
                         onClick={() => handleAction('reset_password')}
@@ -200,13 +236,17 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                 </CardContent>
             </Card>
 
-            {/* Habilitación / Inhabilitación de la cuenta */}
+            {/* Gestión del estado de la cuenta */}
             <Card>
                 <CardHeader>
                     <CardTitle>{t('admin.user.edit.status.title')}</CardTitle>
                 </CardHeader>
+
                 <CardContent className="space-y-4">
+                    {/* Errores de la acción */}
                     {form.data.action === 'toggle_account_status' && <FormErrors errors={form.errors} />}
+
+                    {/* Opción para alternar el estado de la cuenta */}
                     <div className="flex items-center gap-2">
                         <ToggleGroup
                             type="single"
@@ -222,21 +262,29 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                             <ToggleGroupItem value="true">{t('common.enabled')}</ToggleGroupItem>
                             <ToggleGroupItem value="false">{t('common.disabled')}</ToggleGroupItem>
                         </ToggleGroup>
+
+                        {/* Indicador de carga durante el procesamiento de la acción  */}
                         {form.processing && form.data.action === 'toggle_account_status' && <LoaderCircle className="h-4 w-4 animate-spin" />}
                     </div>
+
+                    {/* Descripción del comportamiento esperado */}
                     <p className="text-muted-foreground text-sm italic">{t('admin.user.edit.status.notice')}</p>
                 </CardContent>
             </Card>
 
-            {/* Eliminación de cuenta */}
+            {/* Eliminación del usuario */}
             {auth.user.is_admin && !user.is_admin && (
                 <Card>
                     <CardHeader>
                         <CardTitle>{t('admin.user.edit.deleteAccount.title')}</CardTitle>
                     </CardHeader>
+
                     <CardContent className="space-y-4">
+                        {/* Descripción de la acción */}
                         {form.data.action === 'delete_account' && <FormErrors errors={form.errors} />}
                         <p>{t('admin.user.edit.deleteAccount.description')}</p>
+
+                        {/* Botón para eliminar el usuario */}
                         <Button
                             type="button"
                             variant="destructive"

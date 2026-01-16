@@ -18,19 +18,19 @@ import {
 import AdminTablePagination from './admin-table-pagination';
 
 interface Props {
-    pages: Page[]; // Lista de páginas informativas.
+    pages: Page[]; // Listado de páginas estáticas.
     previous: string | null; // URL de la página anterior para la paginación.
     next: string | null; // URL de la página siguiente para la paginación.
 }
 
 /**
- * Lista todas las páginas informativas.
+ * Listado de todas las páginas estáticas registradas.
  */
 export default function AdminPageList({ pages, previous, next }: Props) {
-    // Obtiene las traducciones de la página.
+    // // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Gestiona la eliminación de una página informativa.
+    // Gestiona la eliminación de una página estática.
     const handleDelete = (id: number) => {
         router.delete(route('admin.page.destroy', id), {
             preserveScroll: true,
@@ -43,24 +43,36 @@ export default function AdminPageList({ pages, previous, next }: Props) {
                 <Table>
                     <TableHeader>
                         <TableRow className="[&_button]:px-0 [&_th]:px-4">
+                            {/* Título de la página */}
                             <TableHead>{t('common.title')}</TableHead>
+
+                            {/* Tipo de página */}
                             <TableHead>{t('common.type')}</TableHead>
+
+                            {/* Acciones */}
                             <TableHead className="w-0 text-center">{t('common.actions')}</TableHead>
                         </TableRow>
                     </TableHeader>
+
                     <TableBody>
                         {pages.length > 0 ? (
                             pages.map((page) => (
                                 <TableRow key={page.id} className="[&_td]:px-4">
+                                    {/* Título de la página */}
                                     <TableCell>
                                         <Link href={route('admin.page.edit', { page: page.id, lang: page.language })}>{page.title}</Link>
                                     </TableCell>
+
+                                    {/* Tipo de página */}
                                     <TableCell>
                                         <Link href={route('admin.page.edit', { page: page.id, lang: page.language })}>
                                             {t(`page.types.${page.type}`)}
                                         </Link>
                                     </TableCell>
+
+                                    {/* Acciones */}
                                     <TableCell className="flex gap-3">
+                                        {/* Botón ver */}
                                         <Button variant="outline" size="sm" asChild>
                                             <a
                                                 href={route('page.show', { lang: page.language, slug: page.slug })}
@@ -72,6 +84,7 @@ export default function AdminPageList({ pages, previous, next }: Props) {
                                             </a>
                                         </Button>
 
+                                        {/* Botón editar */}
                                         <Button variant="outline" size="sm" asChild>
                                             <Link
                                                 href={route('admin.page.edit', { page: page.id, lang: page.language })}
@@ -82,6 +95,7 @@ export default function AdminPageList({ pages, previous, next }: Props) {
                                             </Link>
                                         </Button>
 
+                                        {/* Botón eliminar con confirmación */}
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
                                                 <Button variant="destructive" size="sm" title={t('common.delete')} aria-label={t('common.delete')}>

@@ -12,22 +12,22 @@ import AdminTablePagination from './admin-table-pagination';
 import UserAvatar from './user-avatar';
 
 interface Props {
-    users: User[]; // Lista de usuarios a mostrar.
+    users: User[]; // Listado de usuario.
     previous: string | null; // URL de la página anterior para la paginación.
     next: string | null; // URL de la página siguiente para la paginación.
 }
 
 /**
- * Lista a todos los usuarios registrados en la red para su administración.
+ * Listado de usuarios registrados para su administración.
  */
 export default function AdminUserList({ users, previous, next }: Props) {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Captura la URL de la página proporcionado por Inertia.
+    // Captura la URL actual proporcionada por Inertia.
     const { url } = usePage();
 
-    // Obtiene los parámetros de la consulta actual (por ejemplo, ?query=user&orderBy=id).
+    // Obtiene los parámetros de la consulta actual (por ejemplo: ?query=user&orderBy=id)
     const queryParams = new URLSearchParams(url.split('?')[1]);
 
     // Nombre de la columna usada para el ordenamiento actual.
@@ -39,7 +39,7 @@ export default function AdminUserList({ users, previous, next }: Props) {
     // Estado local para el término de búsqueda.
     const [query, setQuery] = useState(queryParams.get('query') || '');
 
-    // Nombres para cada rol de usuario.
+    // Mapa de nombres legibles para cada rol de usuario.
     const roles = {
         admin: t('userRoles.admin.long'),
         mod: t('userRoles.mod.long'),
@@ -55,7 +55,7 @@ export default function AdminUserList({ users, previous, next }: Props) {
             params.set('query', query);
         }
 
-        // Se actualiza la URL y se realiza una nueva solicitud Inertia.
+        // Actualiza la URL y ejecuta una nueva visita con Inertia.
         router.visit(`?${params.toString()}`);
 
         e.preventDefault();
@@ -63,21 +63,21 @@ export default function AdminUserList({ users, previous, next }: Props) {
 
     // Gestiona el orden de la columna.
     const handleSort = (field: string) => {
-        // Se invierte la dirección actual si la columna no ha cambiado.
+        // Invierte la dirección si se hace clic en la misma columna.
         const newDirection = orderBy === field && orderDirection === 'asc' ? 'desc' : 'asc';
 
         const params = new URLSearchParams();
 
-        // Si hay término de búsqueda activo, se conserva.
+        // Conserva el término de búsqueda activo si existe.
         if (query) {
             params.set('query', query);
         }
 
-        // Se agrega el campo por el cual se ordena y la nueva dirección.
+        // Define la columna de ordenamiento y la dirección.
         params.set('orderBy', field);
         params.set('orderDirection', newDirection);
 
-        // Se actualiza la URL y se realiza una nueva solicitud Inertia.
+        // Actualiza la URL y realiza la nueva solicitud.
         router.visit(`?${params.toString()}`);
     };
 
@@ -94,69 +94,100 @@ export default function AdminUserList({ users, previous, next }: Props) {
 
     return (
         <div className="w-full space-y-4">
-            {/* Buscador */}
+            {/* Buscador de usuarios */}
             <form onSubmit={handleSearch}>
                 <Input placeholder={t('admin.user.index.searchPlaceholder')} value={query} onChange={(e) => setQuery(e.target.value)} />
             </form>
 
-            {/* Tabla */}
+            {/* Tabla de usuarios */}
             <div className="rounded-md border">
                 <Table>
+                    {/* Cabecera de la tabla */}
                     <TableHeader>
                         <TableRow className="[&_button]:px-0 [&_th]:px-4">
+                            {/* ID */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('id')}>
                                     {t('common.id')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
+
+                            {/* Avatar */}
                             <TableHead>{t('common.avatar')}</TableHead>
+
+                            {/* Nombre de usuario */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('username')}>
                                     {t('common.username')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
+
+                            {/* Estado de verificación del correo */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('email_verified_at')}>
                                     {t('common.verified')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
+
+                            {/* Estado de la cuenta */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('is_active')}>
                                     {t('common.enabled')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
+
+                            {/* Rol */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('role')}>
                                     {t('common.role')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
+
+                            {/* Fecha de registro */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('created_at')}>
                                     {t('common.registered')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
+                            {/* Acciones */}
                             <TableHead></TableHead>
                         </TableRow>
                     </TableHeader>
+
                     <TableBody>
                         {users.length > 0 ? (
                             users.map((user) => (
                                 <TableRow key={user.id} className="[&_td]:px-4">
+                                    {/* ID */}
                                     <TableCell>{user.id}</TableCell>
+
+                                    {/* Avatar */}
                                     <TableCell>
                                         <UserAvatar user={user} />
                                     </TableCell>
+
+                                    {/* Perfil del usuario */}
                                     <TableCell>
                                         <Link href={route('profile.show', user.id)}>{user.username}</Link>
                                     </TableCell>
+
+                                    {/* Estado de verificación del correo */}
                                     <TableCell className={addTextColor(user.email_verified_at)}>
                                         {user.email_verified_at ? t('common.yes') : t('common.no')}
                                     </TableCell>
+
+                                    {/* Estado de la cuenta */}
                                     <TableCell className={addTextColor(user.is_active)}>
                                         {user.is_active ? t('common.yes') : t('common.no')}
                                     </TableCell>
+
+                                    {/* Rol */}
                                     <TableCell>{roles[user.role]}</TableCell>
+
+                                    {/* Fecha de registro */}
                                     <TableCell>{formatDate(user.created_at)}</TableCell>
+
+                                    {/* Acciones */}
                                     <TableCell>
                                         {canActOnUser(user) && (
                                             <Button variant="outline" asChild>
