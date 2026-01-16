@@ -32,7 +32,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
     // Captura la configuración global del sitio proporcionada por Inertia.
     const { siteSettings } = usePage<{ siteSettings: SiteSettings }>().props;
 
-    // Inicializa el formulario de inicio de sesión usando el helper de Inertia.
+    // Inicializa el formulario de inicio de sesión.
     const { data, setData, post, processing, errors, reset } = useForm<Required<LoginForm>>({
         email: '',
         password: '',

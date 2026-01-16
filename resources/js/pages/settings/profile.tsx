@@ -42,7 +42,7 @@ export default function Profile() {
     // Referencia al campo de archivo para poder resetearlo manualmente.
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // Inicializa el formulario usando el helper de Inertia.
+    // Inicializa el formulario para la actualización de los datos del perfil.
     const { data, setData, post, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
         username: auth.user.username,
         email: auth.user.email,

@@ -29,7 +29,7 @@ export default function Register() {
     // compartidas por Inertia.
     const { specialPages } = usePage<{ specialPages: SpecialPages }>().props;
 
-    // Inicializa el formulario de registro usando el helper de Inertia.
+    // Inicializa el formulario de registro de usuario.
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
         username: '',
         email: '',

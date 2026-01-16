@@ -23,7 +23,7 @@ export default function Password() {
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
 
-    // Formulario para manejar la actualización de la contraseña.
+    // Inicializa el formulario para la actualización de la contraseña.
     const { data, setData, errors, put, reset, processing, recentlySuccessful } = useForm({
         current_password: '',
         password: '',
