@@ -19,27 +19,28 @@ interface Props {
 }
 
 /**
- * Formulario para crear o editar una página informativa.
+ * Formulario para crear o editar una página estática.
  * Si recibe una página, precarga los campos y ajusta la petición para actualizar.
  * Si no recibe una página, el formulario crea una nueva.
  */
 export default function AdminPageForm({ page }: Props) {
-    // Obtiene las traducciones de la aplicación.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Captura la lista de idiomas y el usuario autenticado proporcionados por Inertia.
+    // Captura la lista de idiomas, el usuario autenticado
+    // y las páginas especiales proporcionados por Inertia.
     const { locales, auth, specialPages } = usePage<{ locales: Locale[]; auth: Auth; specialPages: SpecialPages }>().props;
 
     // Obtiene el código de idioma pasado como consulta por URL.
     const queryLang = new URLSearchParams(window.location.search).get('lang') ?? undefined;
 
-    // Determina si el idioma pasado como parámetro por URL es válido.
+    // Determina si el idioma obtenido desde la URL es válido.
     const isValidLang = queryLang ? locales.some(({ lang }) => lang === queryLang) : false;
 
-    // Referencia al elemento textarea del formulario.
+    // Referencia al textarea del formulario.
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    // Estado para alternar vista previa.
+    // Estado para alternar entre edición y vista previa del contenido.
     const [previewMode, setPreviewMode] = useState(false);
 
     // Determina si el formulario está en modo edición.
@@ -54,7 +55,7 @@ export default function AdminPageForm({ page }: Props) {
         content: page?.content ?? '',
     });
 
-    // Gestiona el envío del formulario, enviando la petición adecuada según el modo.
+    // Gestiona el envío del formulario según el modo (creación o edición).
     const handleSubmit = (e: React.FormEvent) => {
         if (isEditing) {
             patch(route('admin.page.edit', page!.id), { preserveScroll: true });
@@ -64,7 +65,7 @@ export default function AdminPageForm({ page }: Props) {
         e.preventDefault();
     };
 
-    // Actualiza el idioma seleccionado y cambia el parámetro de la URL.
+    // Actualiza el idioma seleccionado y sincroniza el parámetro en la URL.
     const handleLanguageChange = (lang: string) => {
         setData('language', lang);
         router.replace({
@@ -78,11 +79,12 @@ export default function AdminPageForm({ page }: Props) {
         <form onSubmit={handleSubmit} className="space-y-8">
             <Card>
                 <CardHeader>
+                    {/* Título del formulario */}
                     <CardTitle>{isEditing ? t('admin.page.edit.title') : t('admin.page.create.title')}</CardTitle>
                 </CardHeader>
 
                 <CardContent>
-                    {/* Idioma */}
+                    {/* Selector de idioma */}
                     <div className="space-y-2 py-4">
                         <Label htmlFor="language" className="block text-sm font-medium">
                             {t('common.language')}
@@ -103,7 +105,7 @@ export default function AdminPageForm({ page }: Props) {
                         {errors.language && <p className="text-sm text-red-500">{errors.language}</p>}
                     </div>
 
-                    {/* Tipo de página */}
+                    {/* Selector de tipo de página */}
                     <div className="space-y-2 py-4">
                         <Label htmlFor="type" className="block text-sm font-medium">
                             {t('common.type')}
@@ -132,7 +134,7 @@ export default function AdminPageForm({ page }: Props) {
                         {errors.type && <p className="text-sm text-red-500">{errors.type}</p>}
                     </div>
 
-                    {/* Título de la página */}
+                    {/* Campo de título */}
                     <div className="space-y-2 py-4">
                         <Label htmlFor="title" className="block text-sm font-medium">
                             {t('common.title')}
@@ -149,7 +151,7 @@ export default function AdminPageForm({ page }: Props) {
                         {errors.title && <p className="text-sm text-red-500">{errors.title}</p>}
                     </div>
 
-                    {/* Slug de la URL de la página */}
+                    {/* Campo de slug de URL */}
                     <div className="space-y-2 py-4">
                         <Label htmlFor="slug" className="block text-sm font-medium">
                             {t('admin.page.form.slug.title')}
@@ -173,6 +175,7 @@ export default function AdminPageForm({ page }: Props) {
                         </Label>
 
                         {previewMode ? (
+                            // Modo previsualización
                             <div className="space-y-4">
                                 <div className="bg-card text-card-foreground gap-6 rounded-xl border px-6 py-6 shadow-sm">
                                     <FormattedText entryType="page" text={data.content} alwaysExpanded={true} disableLinks={true} />
@@ -182,9 +185,12 @@ export default function AdminPageForm({ page }: Props) {
                                 </Button>
                             </div>
                         ) : (
+                            // Modo creación o edición
                             <>
+                                {/* Barra de formato */}
                                 <FormattingToolbar text={data.content} onChange={(val) => setData('content', val)} textareaRef={textareaRef} />
 
+                                {/* Campo de contenido */}
                                 <TextareaAutosize
                                     ref={textareaRef}
                                     className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
@@ -197,18 +203,22 @@ export default function AdminPageForm({ page }: Props) {
 
                                 {errors.content && <p className="text-sm text-red-500">{errors.content}</p>}
 
+                                {/* Acciones del formulario */}
                                 <div className="flex items-center gap-4 py-4">
+                                    {/* Botón enviar */}
                                     <Button type="submit" disabled={processing}>
                                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                                         {isEditing ? t('common.save') : t('common.create')}
                                     </Button>
 
+                                    {/* Botón vista previa */}
                                     {data.content.trim().length > 0 && (
                                         <Button type="button" variant="outline" onClick={() => setPreviewMode(true)}>
                                             {t('common.preview')}
                                         </Button>
                                     )}
 
+                                    {/* Botón cancelar */}
                                     <Button variant="ghost" size="sm" className="ml-auto" asChild>
                                         <Link href={route('admin.page.index', { lang: data.language })}>{t('common.cancel')}</Link>
                                     </Button>

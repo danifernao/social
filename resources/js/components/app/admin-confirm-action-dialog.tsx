@@ -13,17 +13,18 @@ interface ConfirmActionDialogProps {
 }
 
 /**
- * Muestra el formulario para confirmar una acción administrativa.
- * Requiere la contraseña del usuario para continuar.
+ * Diálogo que muestra un formulario para confirmar una acción administrativa.
+ * Requiere que el usuario ingrese su contraseña para poder continuar.
  */
 export default function ConfirmActionDialog({ open, onOpenChange, password, onPasswordChange, onConfirm }: ConfirmActionDialogProps) {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Referencia al botón de confirmación del diálogo.
+    // Se utiliza para disparar programáticamente el envío del formulario.
     const buttonRef = useRef<HTMLButtonElement>(null);
 
-    // Envía la contraseña.
+    // Gestiona el envío del formulario de confirmación.
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         if (password.trim()) {
             onConfirm();
@@ -32,8 +33,11 @@ export default function ConfirmActionDialog({ open, onOpenChange, password, onPa
     };
 
     /**
-     * Evita que Enter cierre el diálogo si el campo de contraseña está vacío.
-     * De lo contrario, envía la contraseña.
+     * Gestiona la pulsación de teclas dentro del campo de contraseña.
+     *
+     * Evita que la tecla Enter cierre el diálogo cuando el campo está vacío.
+     * Si hay una contraseña válida, simula un clic en el botón de confirmación
+     * para ejecutar exactamente el mismo flujo que un clic manual.
      *
      * Observación: al presionar Enter dentro del campo de contraseña, Radix
      * interpreta la acción como "interacción fuera", lo que generará comportamientos
@@ -55,10 +59,14 @@ export default function ConfirmActionDialog({ open, onOpenChange, password, onPa
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
+                {/* Formulario de confirmación de la acción */}
                 <form onSubmit={handleSubmit}>
+                    {/* Cabecera del diálogo */}
                     <DialogHeader>
                         <DialogTitle>{t('admin.confirmAction.title')}</DialogTitle>
                     </DialogHeader>
+
+                    {/* Campo de contraseña */}
                     <div className="mt-4 space-y-4">
                         <p className="text-sm font-medium">{t('admin.confirmAction.description')}</p>
                         <Input
@@ -69,10 +77,15 @@ export default function ConfirmActionDialog({ open, onOpenChange, password, onPa
                             onKeyDown={handleKeyDown}
                         />
                     </div>
+
+                    {/* Acciones del diálogo */}
                     <DialogFooter className="mt-4">
+                        {/* Botón cancelar */}
                         <Button variant="outline" onClick={() => onOpenChange(false)}>
                             {t('common.cancel')}
                         </Button>
+
+                        {/* Botón confirmar */}
                         <Button type="submit" ref={buttonRef} disabled={!password.trim()}>
                             {t('common.confirm')}
                         </Button>

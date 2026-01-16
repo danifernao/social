@@ -8,14 +8,15 @@ interface Props {
 }
 
 /**
- * Muestra los controles de paginación de una tabla.
+ * Controles de paginación de una tabla.
  */
 export default function AdminTablePagination({ previous, next }: Props) {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     return (
         <div className="flex justify-end gap-2">
+            {/* Botón para ir a la página anterior */}
             {previous ? (
                 <Button variant="outline" size="sm" asChild>
                     <Link href={previous}>{t('common.previous')}</Link>
@@ -26,6 +27,7 @@ export default function AdminTablePagination({ previous, next }: Props) {
                 </Button>
             )}
 
+            {/* Botón para ir a la página siguiente */}
             {next ? (
                 <Button variant="outline" size="sm" asChild>
                     <Link href={next}>{t('common.next')}</Link>

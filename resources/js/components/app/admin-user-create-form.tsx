@@ -7,17 +7,19 @@ import { Input } from '../ui/input';
 import FormErrors from './form-errors';
 
 /**
- * Muestra el formulario para la creación de un nuevo usuario.
+ * Formulario para la creación de un nuevo usuario.
  */
 export default function AdminUserCreateForm() {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
+    // Inicializa el formulario de creación de usuario.
     const form = useForm({
         email: '',
         privileged_password: '',
     });
 
+    // Gestiona el envío del formulario.
     const handleSubmit = (e: React.FormEvent) => {
         form.post(route('admin.user.store'));
         e.preventDefault();
@@ -27,12 +29,16 @@ export default function AdminUserCreateForm() {
         <form className="space-y-8" onSubmit={handleSubmit}>
             <Card className="gap-4">
                 <CardHeader>
+                    {/* Título y descripción del formulario */}
                     <CardTitle>{t('admin.user.create.title')}</CardTitle>
                     <CardDescription>{t('admin.user.create.description')}</CardDescription>
                 </CardHeader>
+
                 <CardContent>
+                    {/* Errores del formulario */}
                     <FormErrors errors={form.errors} />
 
+                    {/* Campo de correo electrónico */}
                     <div className="space-y-2 py-4">
                         <label className="block text-sm font-medium">{t('common.email')}</label>
                         <Input
@@ -45,6 +51,7 @@ export default function AdminUserCreateForm() {
                         <p className="text-muted-foreground text-sm italic">{t('admin.user.create.passwordNotice')}</p>
                     </div>
 
+                    {/* Campo de contraseña para confirmar la acción */}
                     <div className="space-y-2 py-4">
                         <label className="block text-sm font-medium">{t('admin.user.create.confirm.title')}</label>
                         <p className="text-sm font-medium">{t('admin.user.create.confirm.description')}</p>
@@ -57,6 +64,7 @@ export default function AdminUserCreateForm() {
                         />
                     </div>
 
+                    {/* Botón de envío */}
                     <Button
                         type="submit"
                         disabled={form.processing || form.data.email.trim().length === 0 || form.data.privileged_password.trim().length === 0}

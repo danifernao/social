@@ -9,19 +9,20 @@ import ConfirmActionDialog from './admin-confirm-action-dialog';
 import FormErrors from './form-errors';
 
 interface AdminSiteEditFormProps {
-    settings: SiteSettings;
+    settings: SiteSettings; // Configuración del sitio.
 }
 
 /**
- * Muestra el formulario para la gestión de la configuración del sitio.
+ * Formulario para la gestión de la configuración del sitio.
  */
 export default function AdminSiteEditForm({ settings }: AdminSiteEditFormProps) {
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Estado que refleja si el registro de usuarios está habilitado o no.
     const [isRegistrationEnabled, setIsRegistrationEnabled] = useState(settings.is_user_registration_enabled);
 
-    // Envía los datos del formulario.
+    // Inicializa y gestiona el formulario de configuración del sitio.
     const { form, handleAction, confirmAction, isDialogOpen, closeDialog } = useAdminActionForm({
         initialData: {},
         route: () => route('admin.site.update'),
@@ -36,13 +37,17 @@ export default function AdminSiteEditForm({ settings }: AdminSiteEditFormProps) 
 
     return (
         <form className="space-y-8">
-            {/* Habilitación / Inhabilitación de la página de registro de usuario */}
+            {/* Habilitación / inhabilitación del registro de usuarios */}
             <Card>
                 <CardHeader>
                     <CardTitle>{t('admin.site.edit.title')}</CardTitle>
                 </CardHeader>
+
                 <CardContent className="space-y-4">
+                    {/* Errores de la acción */}
                     {form.data.action === 'toggle_user_registration' && <FormErrors errors={form.errors} />}
+
+                    {/* Selector de estado del registro de usuarios */}
                     <div className="flex items-center gap-2">
                         <ToggleGroup
                             type="single"
@@ -58,8 +63,11 @@ export default function AdminSiteEditForm({ settings }: AdminSiteEditFormProps) 
                             <ToggleGroupItem value="true">{t('common.enabled')}</ToggleGroupItem>
                             <ToggleGroupItem value="false">{t('common.disabled')}</ToggleGroupItem>
                         </ToggleGroup>
+
                         {form.processing && form.data.action === 'toggle_user_registration' && <LoaderCircle className="h-4 w-4 animate-spin" />}
                     </div>
+
+                    {/* Descripción de la acción */}
                     <p className="text-muted-foreground text-sm italic">{t('admin.site.edit.notice')}</p>
                 </CardContent>
             </Card>
