@@ -4,12 +4,11 @@ import UserList from '@/components/app/user-list';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
-import type { Auth, BreadcrumbItem, User, Users } from '@/types';
+import type { BreadcrumbItem, User, Users } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 interface PageProps {
-    auth: Auth; // Usuario autenticado.
     user: User; // Usuario del perfil visitado.
     following: Users; // Lista de usuarios seguidos.
     followers: Users; // Lista de usuarios seguidores.
@@ -25,7 +24,7 @@ export default function FollowIndex() {
     const { t } = useTranslation();
 
     // Captura las propiedades de la página proporcionadas por Inertia.
-    const { auth, user, following, followers, routeName } = usePage<PageProps>().props;
+    const { user, following, followers, routeName } = usePage<PageProps>().props;
 
     // Determina si la vista corresponde a "seguidos" o "seguidores".
     const pageName = routeName === 'follow.following' ? 'following' : 'followers';

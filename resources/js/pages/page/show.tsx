@@ -4,7 +4,6 @@ import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
 import type { BreadcrumbItem } from '@/types';
 import { Page } from '@/types/modules/page';
 import { Head, usePage } from '@inertiajs/react';
-import { useTranslation } from 'react-i18next';
 
 /**
  * Vista que muestra una página estática del sitio web,
@@ -12,9 +11,6 @@ import { useTranslation } from 'react-i18next';
  * páginas de contenido estático.
  */
 export default function PageShow() {
-    // Función para traducir los textos de la interfaz.
-    const { t } = useTranslation();
-
     // Captura los datos de la página estática proporcionados por Inertia.
     const { page } = usePage<{ page: Page }>().props;
 
