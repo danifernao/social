@@ -13,29 +13,31 @@ import FormattedText from './formatted-text';
 import FormattingToolbar from './formatting-toolbar';
 
 interface EntryFormProps {
-    entry?: Entry; // Una entrada existente, la cual puede ser una publicación o un comentario.
-    postId?: number; // ID de una publicación, necesario si se desea crear un comentario.
+    entry?: Entry; // Una entrada existente (publicación o comentario).
+    postId?: number; // ID de una publicación al crear un comentario.
     onSubmit?: () => void; // Función que se llama tras el envío exitoso del formulario.
+    // ID del usuario del perfil en el que se publica (solo permitido para moderadores).
     profileUserId?: null | number;
 }
 
 /**
- * Muestra un formulario para la creación o edición de una entrada.
+ * Formulario para crear o editar una entrada (publicación o comentario).
  */
 export default function EntryForm({ profileUserId, entry, postId, onSubmit }: EntryFormProps) {
-    // Obtiene las traducciones de la página.
+    // Funciones de traducción y acceso al idioma actual.
     const { t, i18n } = useTranslation();
 
-    // Captura los datos proporcionadas por Inertia.
+    // Captura el usuario autenticado y las páginas estáticas
+    // especiales proporcionados por Inertia.
     const { auth, specialPages } = usePage<{ auth: Auth; specialPages: SpecialPages }>().props;
 
     // Referencia al elemento textarea del formulario.
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    // Determina si el formulario es para una publicación o un comentario.
+    // Determina el tipo de formulario según el contexto.
     const formType = entry ? (entry.type === 'post' ? 'post' : 'comment') : postId ? 'comment' : 'post';
 
-    // Almacena temporalmente la entrada que retorna el envío del formulario.
+    // Almacena la entrada retornada tras el envío del formulario.
     const [entryFromResponse, setEntryFromResponse] = useState<Entry>();
 
     // Estado para alternar vista previa.
@@ -47,23 +49,15 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
         profile_user_id: profileUserId,
     });
 
-    // Permite que otros componentes reflejen la creación o actualización de una entrada en su lista.
+    // Contexto para notificar cambios en la lista de entradas.
     const updateEntryList = useContext(EntryListUpdateContext);
 
+    // Gestiona el envío del formulario.
     const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
-        // Decide si se debe hacer POST (crear) o PATCH (actualizar).
-        // Si el componente recibe una entrada, se interpreta como edición; de lo contrario, como creación.
+        // Determina la acción según si es edición o creación.
         const action = entry ? patch : post;
 
-        /* Genera la ruta adecuada.
-           Si se proporcionó una entrada:
-              Se accede a la propiedad "type" para determinar su naturaleza y se interpreta como edición.
-           De lo contrario:
-              Si se proporciona el ID de una publicación:
-                  Se interpreta como creación de un comentario.
-              De lo contrario:
-                  Se interpreta como creación de una publicación.
-        */
+        // Genera la ruta correspondiente según el tipo de entrada y acción.
         const url = entry
             ? route(entry.type === 'post' ? 'post.update' : 'comment.update', entry.type === 'post' ? { post: entry.id } : { comment: entry.id })
             : route(postId ? 'comment.store' : 'post.store', postId ? { post: postId } : undefined);
@@ -71,10 +65,10 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
         action(url, {
             preserveScroll: true,
             onSuccess: (page) => {
-                // Obtiene la entrada nueva o actualizada.
+                // Obtiene la entrada creada o actualizada desde la respuesta.
                 const pageProp = formType === 'post' ? (page.props.post as Post) : (page.props.comment as Comment);
 
-                // Actualiza el estado local con la entrada obtenida.
+                // Guarda la entrada para notificar al contexto.
                 setEntryFromResponse(pageProp);
 
                 // Limpia el contenido del formulario.
@@ -89,20 +83,20 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
         e.preventDefault();
     };
 
-    // Detecta si se recibió una nueva entrada tras el envío exitoso del formulario.
+    // Notifica al contexto cuando se recibe una nueva entrada.
     useEffect(() => {
         if (entryFromResponse) {
             const action = entry ? 'update' : 'create';
 
-            // Notifica al contexto que se ha creado o actualizado una entrada.
+            // Informa al contexto del cambio realizado.
             updateEntryList?.(action, entryFromResponse);
 
-            // Ejecuta el callback de confirmación, si existe.
+            // Ejecuta el callback externo si existe.
             onSubmit?.();
         }
     }, [entryFromResponse]);
 
-    // Si el componente recibe una entrada, carga su contenido.
+    // Precarga el contenido cuando se edita una entrada existente.
     useEffect(() => {
         if (entry) {
             setData('content', entry.content);
@@ -113,19 +107,25 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
         <>
             {previewMode ? (
                 <div className="flex flex-col gap-2">
+                    {/* Vista previa del contenido formateado */}
                     <div className="bg-card text-card-foreground rounded-xl border px-6 py-6 shadow-sm">
                         <FormattedText entryType={formType} text={data.content} alwaysExpanded={true} disableLinks={true} />
                     </div>
+
+                    {/* Botón para volver al modo edición */}
                     <Button variant="outline" className="ml-auto" onClick={() => setPreviewMode(false)}>
                         {t('common.backToEdit')}
                     </Button>
                 </div>
             ) : (
                 <form onSubmit={submitForm} className="space-y-3">
+                    {/* Errores de validación del formulario */}
                     <FormErrors errors={errors} />
 
+                    {/* Barra de herramientas de formato */}
                     <FormattingToolbar text={data.content} onChange={(val) => setData('content', val)} textareaRef={textareaRef} />
 
+                    {/* Campo de texto principal */}
                     <TextareaAutosize
                         ref={textareaRef}
                         className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
@@ -139,6 +139,7 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
                     />
 
                     <div className="flex items-center gap-4">
+                        {/* Enlace a las normas de la comunidad */}
                         <div className="text-muted-foreground flex-1 text-sm hover:underline">
                             {specialPages[auth.user.language].guidelines && (
                                 <a
@@ -152,12 +153,16 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
                                 </a>
                             )}
                         </div>
+
                         <div className="flex items-center gap-2">
+                            {/* Botón para activar la vista previa */}
                             {data.content.trim().length > 0 && (
                                 <Button type="button" variant="outline" onClick={() => setPreviewMode(true)}>
                                     {t('common.preview')}
                                 </Button>
                             )}
+
+                            {/* Botón de envío */}
                             <Button type="submit" disabled={processing || data.content.trim().length === 0}>
                                 {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                                 {formType === 'post' ? t('common.post') : t('common.comment')}

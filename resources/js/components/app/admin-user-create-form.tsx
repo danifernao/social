@@ -35,7 +35,7 @@ export default function AdminUserCreateForm() {
                 </CardHeader>
 
                 <CardContent>
-                    {/* Errores del formulario */}
+                    {/* Errores de validación del formulario */}
                     <FormErrors errors={form.errors} />
 
                     {/* Campo de correo electrónico */}

@@ -13,38 +13,40 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import EntryForm from './entry-form';
 
 interface EntryItemOptionsProps {
-    entry: Entry; // Entrada (publicación o comentario) que será modificada o eliminada mediante las opciones.
+    entry: Entry; // Entrada (publicación o comentario) sobre la que se ejecutarán las acciones.
 }
 
 /**
- * Muestra un menú de opciones para editar o eliminar una entrada.
+ * Menú de opciones para editar o eliminar una entrada.
  */
 export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Estado que controla la visibilidad del formulario de edición.
+    // Controla la visibilidad del formulario de edición.
     const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
 
-    // Estado que controla la visibilidad del diálogo de confirmación para eliminar.
+    // Controla la visibilidad del diálogo de confirmación de eliminación.
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
-    // Permite que otros componentes reflejen la creación, edición o eliminación de una entrada en su lista.
+    // Contexto para notificar cambios en la lista de entradas.
     const updateEntryList = useContext(EntryListUpdateContext);
 
-    // Cierra el formulario tras editar la entrada.
+    // Cierra el formulario tras una edición exitosa.
     const closeFormDialog = () => {
         setIsFormDialogOpen(false);
     };
 
-    // Determina el nombre de la ruta y la clave del parámetro según el tipo de entrada.
+    // Define la ruta de eliminación según el tipo de entrada.
     const routeName = entry.type === 'post' ? 'post.delete' : 'comment.delete';
+
+    // Define el nombre del parámetro requerido por la ruta.
     const routeParamKey = entry.type === 'post' ? 'post' : 'comment';
 
-    // Mensaje que se mostrará al usuario tras eliminar la entrada según su tipo.
+    // Mensaje mostrado tras eliminar la entrada.
     const deletedMessage = entry.type === 'post' ? t('post.delete.success') : t('comment.delete.success');
 
-    // Ejecuta la eliminación de la entrada tras confirmar.
+    // Ejecuta la eliminación de la entrada tras la confirmación del usuario.
     const onConfirm = () => {
         setIsConfirmDialogOpen(false);
         router.delete(route(routeName, { [routeParamKey]: entry.id }), {
@@ -70,18 +72,24 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                         <EllipsisVertical />
                     </Button>
                 </DropdownMenuTrigger>
+
                 <DropdownMenuContent>
                     <DropdownMenuGroup>
+                        {/* Opción para editar la entrada */}
                         <DropdownMenuItem>
                             <Button variant="link" className="hover:no-underline" onClick={() => setIsFormDialogOpen(true)}>
                                 {t('common.edit')}
                             </Button>
                         </DropdownMenuItem>
+
+                        {/* Opción para eliminar la entrada */}
                         <DropdownMenuItem>
                             <Button variant="link" className="hover:no-underline" onClick={() => setIsConfirmDialogOpen(true)}>
                                 {t('common.delete')}
                             </Button>
                         </DropdownMenuItem>
+
+                        {/* Opción administrativa para gestionar al autor de la entrada */}
                         {canActOnUser(entry.user) && (
                             <DropdownMenuItem>
                                 <Button asChild variant="link" className="hover:no-underline">
@@ -93,26 +101,36 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                 </DropdownMenuContent>
             </DropdownMenu>
 
+            {/* Diálogo de edición */}
             <Dialog open={isFormDialogOpen} onOpenChange={setIsFormDialogOpen}>
                 <DialogContent>
+                    {/* Título y descripción del diálogo */}
                     <DialogTitle>{entry.type === 'post' ? t('post.edit.title') : t('comment.edit.title')}</DialogTitle>
                     <DialogDescription>{entry.type === 'post' ? t('post.edit.description') : t('comment.edit.description')}</DialogDescription>
+
+                    {/* Formulario de edición de la entrada */}
                     <EntryForm entry={entry} onSubmit={closeFormDialog} />
                 </DialogContent>
             </Dialog>
 
+            {/* Diálogo de confirmación de eliminación */}
             <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
+                        {/* Título y descripción del diálogo */}
                         <DialogTitle>{entry.type === 'post' ? t('post.delete.title') : t('comment.delete.title')}</DialogTitle>
                         <DialogDescription>
                             {entry.type === 'post' ? t('post.delete.description') : t('comment.delete.description')}
                         </DialogDescription>
                     </DialogHeader>
+
                     <DialogFooter>
+                        {/* Botón cancelar */}
                         <DialogClose asChild>
                             <Button>{t('common.cancel')}</Button>
                         </DialogClose>
+
+                        {/* Botón aceptar */}
                         <Button variant="destructive" onClick={onConfirm}>
                             {t('common.accept')}
                         </Button>
