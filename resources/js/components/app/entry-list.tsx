@@ -3,11 +3,12 @@ import type { Entry } from '@/types';
 import EmptyMessage from './empty-message';
 
 interface EntryListProps {
-    entries: Entry[]; // Lista de entradas a mostrar, las cuales pueden ser publicaciones o comentarios.
+    // Lista de entradas a mostrar, pueden ser publicaciones o comentarios.
+    entries: Entry[];
 }
 
 /**
- * Muestra una lista de entradas.
+ * Listado de entradas.
  */
 export default function EntryList({ entries }: EntryListProps) {
     return (

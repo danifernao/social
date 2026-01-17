@@ -18,13 +18,13 @@ import {
 import AdminTablePagination from './admin-table-pagination';
 
 interface Props {
-    pages: Page[]; // Listado de páginas estáticas.
+    pages: Page[]; // Lista de páginas estáticas.
     previous: string | null; // URL de la página anterior para la paginación.
     next: string | null; // URL de la página siguiente para la paginación.
 }
 
 /**
- * Listado de todas las páginas estáticas registradas.
+ * Listado de las páginas estáticas registradas.
  */
 export default function AdminPageList({ pages, previous, next }: Props) {
     // // Función para traducir los textos de la interfaz.

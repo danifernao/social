@@ -9,26 +9,30 @@ import { toast } from 'sonner';
 import { Button } from '../ui/button';
 
 interface EntryListItemReactionsProps {
-    entry: Entry; // Entrada (publicación o comentario) a la que se le puede reaccionar.
+    // Entrada (publicación o comentario) sobre la que se pueden aplicar reacciones.
+    entry: Entry;
 }
 
+/**
+ * Gestiona y muestra las reacciones de una entrada.
+ */
 export default function EntryListItemReactions({ entry }: EntryListItemReactionsProps) {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;
 
-    // Estado que almacena la lista de reacciones asociadas a la entrada.
+    // Lista local de reacciones asociadas a la entrada.
     const [reactions, setReactions] = useState(entry.reactions || []);
 
-    // Estado que controla la visibilidad del selector de emojis.
+    // Controla la visibilidad del selector de emojis.
     const [showPicker, setShowPicker] = useState(false);
 
-    // Referencia al contenedor del selector de emojis para detectar clics fuera de él.
+    // Referencia al contenedor del selector para detectar clics externos.
     const pickerRef = useRef<HTMLDivElement>(null);
 
-    // Alterna una reacción del usuario autenticado: la crea o la elimina.
+    // Alterna una reacción del usuario autenticado.
     const toggleReaction = (emoji: string) => {
         router.put(
             route('reaction.toggle'),
@@ -36,25 +40,25 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
             {
                 preserveScroll: true,
 
-                // Al reaccionar exitosamente, se actualiza el estado local de reacciones.
+                // Actualiza el estado local tras una reacción exitosa.
                 onSuccess: () => {
                     setReactions((prev) => {
-                        // Reacción actual del usuario (si existe).
+                        // Reacción previa del usuario, si existe.
                         const previousReaction = prev.find((r) => r.reactedByUser);
 
                         // Determina si está repitiendo la misma reacción.
                         const isSame = previousReaction?.emoji === emoji;
 
-                        /* Si está repitiendo la misma reacción, se interpreta que la está quitando.
-                           Disminuye el conteo del emoji o lo elimina si llega a cero.
-                        */
+                        // Si se repite la misma reacción, se elimina.
+                        // Disminuye el conteo del emoji o lo elimina si llega a cero.
                         if (previousReaction && isSame) {
                             return prev
                                 .map((r) => (r.emoji === emoji ? { ...r, count: r.count - 1, reactedByUser: false } : r))
                                 .filter((r) => r.count > 0);
                         }
 
-                        // Como es una reacción nueva, se procede a retirar cualquier reacción previa que haya hecho, si existe.
+                        // Como es una reacción nueva, elimina cualquier
+                        // reacción previa del usuario.
                         let updated = prev
                             .map((r) => {
                                 if (previousReaction && r.emoji === previousReaction.emoji) {
@@ -67,12 +71,12 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                         // Determina si ya alguien ha reaccionado con el mismo emoji.
                         const existing = updated.find((r) => r.emoji === emoji);
 
-                        // Incrementa el conteo de la reacción existente.
+                        // Incrementa el conteo si la reacción ya existe.
                         if (existing) {
                             return updated.map((r) => (r.emoji === emoji ? { ...r, count: r.count + 1, reactedByUser: true } : r));
                         }
 
-                        // Si es una nueva reacción, la agrega al final.
+                        // Agrega una nueva reacción si no existe.
                         return [...updated, { emoji, count: 1, reactedByUser: true }];
                     });
                 },
@@ -91,7 +95,7 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
         setShowPicker(false);
     };
 
-    // Cierra el selector si se hace clic fuera de él.
+    // Cierra el selector cuando se hace clic fuera de él.
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (pickerRef.current && !pickerRef.current.contains(event.target as Node)) {
@@ -110,6 +114,7 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
 
     return (
         <div className="relative flex gap-2">
+            {/* Reacciones hechas en la entrada */}
             {reactions.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                     {reactions.map(({ emoji, count, reactedByUser }) => (
@@ -128,12 +133,14 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                 </div>
             )}
 
+            {/* Botón para abrir el selector de emojis */}
             {auth.user && (
                 <Button onClick={() => setShowPicker(!showPicker)} variant="outline" title={t('reaction.react')}>
                     <SmilePlus />
                 </Button>
             )}
 
+            {/* Selector de emojis */}
             {showPicker && (
                 <div className="absolute z-50 mt-2" ref={pickerRef}>
                     <Picker data={data} onEmojiSelect={handleSelect} />

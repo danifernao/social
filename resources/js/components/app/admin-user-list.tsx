@@ -12,7 +12,7 @@ import AdminTablePagination from './admin-table-pagination';
 import UserAvatar from './user-avatar';
 
 interface Props {
-    users: User[]; // Listado de usuario.
+    users: User[]; // Lista de usuarios.
     previous: string | null; // URL de la página anterior para la paginación.
     next: string | null; // URL de la página siguiente para la paginación.
 }

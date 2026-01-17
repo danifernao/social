@@ -28,8 +28,7 @@ export default function ProfileShow() {
     // Determina si el usuario autenticado tiene permisos de moderación.
     const isMod = auth.user && auth.user.can_moderate;
 
-    // ID del usuario del perfil usado para crear publicaciones en su nombre
-    // (solo permitido para moderadores).
+    // ID del usuario del perfil en el que se publica (solo permitido para moderadores).
     const profileUserId = !isOwner && isMod ? user.id : null;
 
     // Usa el hook de paginación para gestionar las publicaciones del perfil.
