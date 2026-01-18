@@ -27,20 +27,28 @@ import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 interface FormattingToolbarProps {
-    text: string; // Texto actual del editor.
-    onChange: (newText: string) => void; // Callback para actualizar el texto.
-    textareaRef: React.RefObject<HTMLTextAreaElement | null>; // Referencia al textarea externo.
+    text: string; // Contenido actual del editor de texto.
+
+    // Función callback para actualizar el texto.
+    onChange: (newText: string) => void;
+
+    // Referencia al textarea controlado externamente.
+    textareaRef: React.RefObject<HTMLTextAreaElement | null>;
 }
 
 /**
- * Muestra una barra de herramientas para dar formato al texto.
- * Depende de un textarea externo pasado por ref.
+ * Barra de herramientas que permite aplicar formato al texto
+ * utilizando sintaxis Markdown y directivas personalizadas.
+ *
+ * Opera directamente sobre un textarea externo mediante una referencia,
+ * manipulando la selección de texto y la posición del cursor.
  */
 export default function FormattingToolbar({ text, onChange, textareaRef }: FormattingToolbarProps) {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Obtiene la selección actual del textarea.
+    // Retorna las posiciones de inicio y fin junto con el texto seleccionado.
     function getSelection() {
         const textarea = textareaRef.current;
 
@@ -54,7 +62,8 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         return { start, end, value: textarea.value.substring(start, end) };
     }
 
-    // Reemplaza la selección con un texto nuevo.
+    // Reemplaza el texto seleccionado por el contenido indicado
+    // y reposiciona el cursor de forma controlada.
     function replaceSelection(replacement: string, moveCursorOffset = 0): void {
         const textarea = textareaRef.current;
 
@@ -68,6 +77,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
 
         onChange(newText);
 
+        // Reposiciona el cursor después de que React actualice el estado.
         requestAnimationFrame(() => {
             textarea.focus();
             const newPos = start + replacement.length + moveCursorOffset;
@@ -75,9 +85,11 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         });
     }
 
-    // Aplica una función si hay selección, o inserta un fallback.
+    // Aplica una transformación si existe selección,
+    // o inserta un texto de respaldo en caso contrario.
     function applyOrInsert({ fnWhenSelected, fallback }: { fnWhenSelected: (selected: string) => string; fallback: string }): void {
         const sel = getSelection();
+
         if (sel && sel.start !== sel.end) {
             replaceSelection(fnWhenSelected(sel.value));
         } else {
@@ -85,11 +97,11 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         }
     }
 
-    // Acciones básicas
+    // Acciones básicas de formato.
     const onBold = () => applyOrInsert({ fnWhenSelected: (s) => `**${s}**`, fallback: '** **' });
     const onItalic = () => applyOrInsert({ fnWhenSelected: (s) => `*${s}*`, fallback: '* *' });
 
-    // Encabezados
+    // Inserta encabezados Markdown según el nivel indicado.
     function onHeading(level: number): void {
         applyOrInsert({
             fnWhenSelected: (s) => `${'#'.repeat(level)} ${s}`,
@@ -97,7 +109,9 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         });
     }
 
-    // Mapas estáticos de estilo.
+    /**
+     * Mapas estáticos de estilos disponibles para directivas personalizadas.
+     */
     const colors = {
         yellow: 'bg-yellow-400',
         blue: 'bg-blue-500',
@@ -111,21 +125,23 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         large: 'text-lg',
     } as const;
 
-    // Color de fuente
+    // Aplica un color de fuente mediante directiva personalizada.
     function onColorSelected(key: keyof typeof colors): void {
         const sel = getSelection();
         const content = sel && sel.start !== sel.end ? sel.value : t(`toolbar.colors.${key}`);
         replaceSelection(`:style[${content}]{color=${key}}`);
     }
 
-    // Tamaño de fuente
+    // Aplica un tamaño de fuente mediante directiva personalizada.
     function onSizeSelected(key: keyof typeof sizes): void {
         const sel = getSelection();
         const content = sel && sel.start !== sel.end ? sel.value : key;
         replaceSelection(`:style[${content}]{size=${key}}`);
     }
 
-    // Enlaces
+    /**
+     * Manejo de inserción de enlaces.
+     */
     const [linkData, setLinkData] = React.useState({ text: '', url: '' });
 
     function applyLink(): void {
@@ -138,7 +154,9 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         setLinkData({ text: '', url: '' });
     }
 
-    // Imagen
+    /**
+     * Manejo de inserción de imágenes.
+     */
     const [imageData, setImageData] = React.useState({ alt: '', url: '' });
 
     function applyImage(): void {
@@ -151,28 +169,28 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         setImageData({ alt: '', url: '' });
     }
 
-    // Cita
+    // Cita en bloque.
     const onQuote = () =>
         applyOrInsert({
             fnWhenSelected: (s) => `> ${s}`,
             fallback: '> Cita',
         });
 
-    // Código en línea
+    // Código en línea.
     const onInlineCode = () =>
         applyOrInsert({
             fnWhenSelected: (s) => `\`${s}\``,
             fallback: '`while(1);`',
         });
 
-    // Bloque de código
+    // Bloque de código.
     const onCodeBlock = () => {
         const sel = getSelection();
         const content = sel && sel.start !== sel.end ? sel.value : 'while(1);';
         replaceSelection(`\n\`\`\`\n${content}\n\`\`\`\n`);
     };
 
-    // Lista ordenada
+    // Lista ordenada.
     const onOrderedList = () => {
         const sel = getSelection();
         if (sel && sel.start !== sel.end) {
@@ -186,7 +204,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         }
     };
 
-    // Lista sin orden
+    // Lista sin orden.
     const onUnorderedList = () => {
         const sel = getSelection();
         if (sel && sel.start !== sel.end) {
@@ -200,24 +218,26 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         }
     };
 
-    // Texto oculto
+    // Texto oculto en línea.
     const onHiddenInline = () =>
         applyOrInsert({
             fnWhenSelected: (s) => `:hidden[${s}]`,
             fallback: `:hidden[${t('formattingToolbar.spoiler')}]`,
         });
 
-    // Bloque oculto
+    // BBloque de texto oculto.
     const onHiddenBlock = () => {
         const sel = getSelection();
         const content = sel && sel.start !== sel.end ? sel.value : t('formattingToolbar.spoiler');
         replaceSelection(`\n:::hidden\n${content}\n:::\n`);
     };
 
-    // Separador
+    // Separador horizontal.
     const onSeparator = () => replaceSelection('\n---\n');
 
-    // Video
+    /**
+     * Inserción de video mediante directiva personalizada.
+     */
     const [videoUrl, setVideoUrl] = React.useState('');
 
     function applyVideo(): void {
@@ -230,10 +250,12 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
 
     return (
         <div className="flex flex-wrap items-center gap-1 p-1">
+            {/* Negrita */}
             <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.bold')} onClick={onBold}>
                 <Bold className="h-4 w-4" />
             </Button>
 
+            {/* Cursiva */}
             <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.italic')} onClick={onItalic}>
                 <Italic className="h-4 w-4" />
             </Button>
@@ -342,34 +364,42 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
                 </PopoverContent>
             </Popover>
 
+            {/* Separador horizontal */}
             <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.separator')} onClick={onSeparator}>
                 <Minus className="h-4 w-4" />
             </Button>
 
+            {/* Cita en bloque */}
             <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.quote')} onClick={onQuote}>
                 <Quote className="h-4 w-4" />
             </Button>
 
+            {/* Código en línea */}
             <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.inlineCode')} onClick={onInlineCode}>
                 <Code className="h-4 w-4" />
             </Button>
 
+            {/* Bloque de código */}
             <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.codeBlock')} onClick={onCodeBlock}>
                 <SquareCode className="h-4 w-4" />
             </Button>
 
+            {/* Lista ordenada */}
             <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.orderedList')} onClick={onOrderedList}>
                 <ListOrdered className="h-4 w-4" />
             </Button>
 
+            {/* Lista sin orden */}
             <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.unorderedList')} onClick={onUnorderedList}>
                 <List className="h-4 w-4" />
             </Button>
 
+            {/* Texto oculto en línea */}
             <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.hiddenInline')} onClick={onHiddenInline}>
                 <EyeOff className="h-4 w-4" />
             </Button>
 
+            {/* Bloque de texto oculto */}
             <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.hiddenBlock')} onClick={onHiddenBlock}>
                 <CaptionsOff className="h-4 w-4" />
             </Button>
