@@ -4,27 +4,30 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ListLoadMoreProps {
-    type: 'post' | 'comment' | 'user' | 'notification'; // Tipo de lista.
-    cursor: string | null; // Cursor para la siguiente página de elementos.
-    isProcessing: boolean; // Indica si están cargando nuevos elementos.
-    autoClick?: boolean; // Indica si el botón debe hacer clic automáticamente.
-    onClick: () => void; // Función que se llama al hacer clic en el botón para cargar más elementos.
+    type: 'post' | 'comment' | 'user' | 'notification'; // Tipo de lista a paginar.
+    cursor: string | null; // Cursor que indica si existen más elementos por cargar.
+    isProcessing: boolean; // Indica si se está ejecutando una carga en curso.
+    autoClick?: boolean; // Define si la carga debe activarse automáticamente al ser visible.
+    onClick: () => void; // Función ejecutada para solicitar más elementos.
 }
 
 /**
- * Muestra un botón para cargar más elementos de una lista.
+ * Botón para cargar más elementos dentro de una lista paginada.
+ * Puede funcionar de forma manual o automática al entrar en el viewport del navegador.
  */
 export default function ListLoadMore({ type, cursor, isProcessing, autoClick = true, onClick }: ListLoadMoreProps) {
-    // No se carga el botón si no hay cursor disponible, dado que no hay más elementos que cargar.
+    //  Si no existe un cursor disponible, significa que no hay más elementos
+    // que cargar, por lo que el botón no se renderiza.
     if (!cursor) return null;
 
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Referencia del botón para observar su visibilidad.
+    // Referencia al botón para poder observar cuándo entra
+    // en el área visible del navegador.
     const ref = useRef<HTMLButtonElement | null>(null);
 
-    // Objeto que asigna a cada tipo de lista su descripción en plural para mostrar en el texto del botón.
+    // Mapa que asocia cada tipo de lista con su traducción correspondiente en plural.
     const listType = {
         post: t('common.posts').toLowerCase(),
         comment: t('common.comments').toLowerCase(),
@@ -32,8 +35,12 @@ export default function ListLoadMore({ type, cursor, isProcessing, autoClick = t
         notification: t('common.notifications').toLowerCase(),
     };
 
-    // Hace clic en el botón apenas aparezca en la ventana de visualización del navegador.
+    // Observa la visibilidad del botón dentro del viewport.
+    // Cuando el botón es visible y no hay una carga en curso,
+    // se dispara automáticamente la acción para cargar más elementos.
     useEffect(() => {
+        // Evita la ejecución automática si está deshabilitada,
+        // no existe referencia al botón o ya hay una carga activa.
         if (!autoClick || !ref.current || isProcessing) return;
 
         const observer = new IntersectionObserver(
@@ -43,18 +50,20 @@ export default function ListLoadMore({ type, cursor, isProcessing, autoClick = t
                 }
             },
             {
-                threshold: 0.1,
+                threshold: 0.1, // Se activa cuando al menos el 10% del botón es visible.
             },
         );
 
         observer.observe(ref.current);
 
+        // Limpia el observador al desmontar el componente.
         return () => {
             observer.disconnect();
         };
     }, [isProcessing]);
 
     return (
+        // Botón para cargar más elementos.
         <Button ref={ref} variant="outline" disabled={isProcessing} onClick={onClick}>
             {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />}
             {isProcessing ? t('common.loading') : t('common.loadMore')} {listType[type]}
