@@ -1,5 +1,15 @@
 import { Auth, User } from '@/types';
 import { usePage } from '@inertiajs/react';
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+/** 
+ * Función utilitaria para combinar clases de Tailwind de forma segura.
+ * Usa clsx para manejar clases condicionales y twMerge para evitar duplicados.
+ */
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs));
+}
 
 /**
  * Determina si el usuario autenticado puede realizar acciones de moderación
