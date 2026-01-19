@@ -8,16 +8,20 @@ interface NotificationHeaderProps {
 }
 
 /**
- * Muestra el encabezado de la página de notificaciones y un botón para marcarlas como leídas.
+ * Encabezado de la vista de notificaciones. Incluye el título de la sección
+ * y un botón que permite marcar todas las notificaciones como leídas
  */
 export default function NotificationHeader({ markAsRead, isProcessing }: NotificationHeaderProps) {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     return (
         <div className="flex items-center gap-4">
+            {/* Título principal de la sección de notificaciones */}
             <h2 className="flex-1 text-2xl font-bold">{t('common.notifications')}</h2>
+
             <div>
+                {/* Botón para marcar todas las notificaciones como leídas */}
                 <Button onClick={markAsRead} disabled={isProcessing}>
                     {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />} {t('common.markAsRead')}
                 </Button>

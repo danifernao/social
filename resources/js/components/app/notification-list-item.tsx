@@ -6,17 +6,18 @@ import { useEffect, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 interface NotificationListItemProps {
-    notification: Notification;
+    notification: Notification; // Notificación a mostrar.
 }
 
 /**
- * Muestra una notificación y la marca como leída al hacer clic en ella.
+ * Elemento individual del listado de notificaciones.
+ * Se marca como leída automáticamente cuando entra en pantalla.
  */
 export default function NotificationListItem({ notification }: NotificationListItemProps) {
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz y acceder al idioma actual.
     const { i18n } = useTranslation();
 
-    // Captura el token CSRF y el usuario autenticado proporcionado por Inertia.
+    // Captura el token CSRF y el usuario autenticado proporcionados por Inertia.
     // Este token es necesario para que Laravel acepte la solicitud PATCH.
     const { auth, csrfToken } = usePage<{ auth: Auth; csrfToken: string }>().props;
 
@@ -27,7 +28,7 @@ export default function NotificationListItem({ notification }: NotificationListI
     // Evita que el IntersectionObserver dispare múltiples peticiones si se activa más de una vez.
     const hasTriggeredRequest = useRef(false);
 
-    // Estado que indica si la notificación debe mostrarse como leída en la interfaz.
+    // Controla el estado visual de la notificación una vez marcada como leída.
     const [shouldShowAsRead, setShouldShowAsRead] = useState(false);
 
     // Tipo de notificación.
@@ -36,31 +37,31 @@ export default function NotificationListItem({ notification }: NotificationListI
     // Usuario que generó la notificación (remitente).
     const sender = notification.data.data.sender;
 
-    // Fuente de la notificación. Puede ser una publicación o un comentario.
+    // Contexto asociado a la notificación (publicación o comentario).
     const context = notification.data.data.context;
 
-    // URL de destino de la notificación.
+    // URL de destino según el contexto de la notificación.
     const url = context ? `/${context.type}/${context.id}` : `/user/${sender.username}`;
 
-    // Relación entre idioma y formato de fecha.
+    // Relación entre idioma y configuración regional para fechas.
     const localeMap: Record<string, Locale> = {
         es,
         en: enUS,
     };
 
-    // Selecciona el idioma adecuado según el idioma actual de la aplicación.
+    // Idioma activo para el formateo de fechas.
     const locale = localeMap[i18n.currentLang] ?? enUS;
 
-    // Fecha de creación de la notificación en formato corto y legible.
+    // Fecha de creación de la notificación.
     const formattedDate = format(parseISO(notification.created_at), 'dd/MM/yyyy h:mm a');
 
-    // Tiempo relativo en español desde que se creó la notificación.
+    // Tiempo relativo desde la creación de la notificación.
     const distanceToNow = formatDistanceToNow(new Date(notification.created_at), {
         addSuffix: true,
         locale,
     });
 
-    // Marca la notificación como leída si no lo está.
+    // Marca la notificación como leída cuando es visible en pantalla.
     useEffect(() => {
         if (notification.read_at || !notificationRef.current) return;
 
@@ -69,7 +70,6 @@ export default function NotificationListItem({ notification }: NotificationListI
                 if (entry.isIntersecting && !hasTriggeredRequest.current) {
                     hasTriggeredRequest.current = true;
 
-                    // Se hace una petición PATCH para marcar la notificación como leída.
                     fetch(route('notification.markOneAsRead', notification.id), {
                         method: 'PATCH',
                         headers: {
@@ -94,7 +94,7 @@ export default function NotificationListItem({ notification }: NotificationListI
                 }
             },
             {
-                threshold: 0.5, // Se considera "visible" si al menos el 50% está en pantalla.
+                threshold: 0.5, // Se considera visible cuando al menos la mitad está en pantalla.
             },
         );
 
@@ -108,24 +108,30 @@ export default function NotificationListItem({ notification }: NotificationListI
             ref={notificationRef}
             className={`flex flex-col border-b px-4 py-4 last:border-b-0 ${notification.read_at || shouldShowAsRead ? 'text-gray-500' : ''}`}
         >
+            {/* Enlace de la notificación */}
             <Link href={url}>
+                {/* Notificación de seguimiento */}
                 {type === 'follow' && (
                     <Trans i18nKey="notification.hasFollowedYou" values={{ username: sender.username }} components={[<strong />, <strong />]} />
                 )}
 
+                {/* Notificación de publicación en el perfil */}
                 {type === 'post' && (
                     <Trans i18nKey="notification.hasPostOnYourProfile" values={{ username: sender.username }} components={[<strong />, <strong />]} />
                 )}
 
+                {/* Notificación de comentario */}
                 {type === 'comment' &&
                     context &&
                     (context.author_id === auth.user.id ? (
+                        /* Comentario en una publicación propia */
                         <Trans
                             i18nKey="notification.hasCommentedOnYourPost"
                             values={{ username: sender.username }}
                             components={[<strong />, <strong />]}
                         />
                     ) : (
+                        /* Comentario en una publicación ajena */
                         <Trans
                             i18nKey="notification.hasCommentedInPost"
                             values={{ username: sender.username }}
@@ -133,6 +139,7 @@ export default function NotificationListItem({ notification }: NotificationListI
                         />
                     ))}
 
+                {/* Mención en una publicación */}
                 {type === 'mention' && context && context.type === 'post' && (
                     <Trans
                         i18nKey="notification.hasMentionedYouInPost"
@@ -141,6 +148,7 @@ export default function NotificationListItem({ notification }: NotificationListI
                     />
                 )}
 
+                {/* Mención en un comentario */}
                 {type === 'mention' && context && context.type === 'comment' && (
                     <Trans
                         i18nKey="notification.hasMentionedYouInComment"
@@ -149,6 +157,8 @@ export default function NotificationListItem({ notification }: NotificationListI
                     />
                 )}
             </Link>
+
+            {/* Fecha relativa de la notificación */}
             <time className="text-sm" dateTime={notification.created_at} title={formattedDate}>
                 {distanceToNow}
             </time>

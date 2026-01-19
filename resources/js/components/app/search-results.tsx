@@ -4,15 +4,16 @@ import EntryList from './entry-list';
 import UserList from './user-list';
 
 interface SearchResultsProps {
-    results: Post[] | User[]; // Lista de publicaciones o usuarios.
+    results: Post[] | User[]; // Resultados de la búsqueda (publicaciones o usuarios).
 }
 
 /**
- * Muestra los resultados de una búsqueda.
+ * Resultados de una búsqueda según su tipo.
  */
 export default function SearchResults({ results }: SearchResultsProps) {
     return (
         <>
+            {/* Si hay resultados, determina qué tipo de lista renderizar */}
             {results.length > 0 ? (
                 results[0].type === 'post' ? (
                     <EntryList entries={results as Post[]} />
