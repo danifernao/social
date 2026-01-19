@@ -1,3 +1,4 @@
+import { canActOnUser } from '@/lib/utils';
 import type { Auth, User } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
@@ -58,7 +59,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                     {auth.user.role !== 'admin' && user.role !== 'admin' && !user.has_blocked && <UserBlockBtn user={user} />}
 
                     {/* Botón para administrar al usuario */}
-                    {auth.user.role === 'admin' && <UserAdminBtn user={user} />}
+                    {canActOnUser(user) && <UserAdminBtn user={user} />}
                 </div>
             )}
         </div>
