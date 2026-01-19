@@ -8,7 +8,7 @@ import { useState } from 'react';
  */
 export default function NotificationBadge() {
     // Captura el usuario autenticado y la cantidad inicial de notificaciones no leídas.
-    const { auth, unreadNotisCount, routeName } = usePage<{ auth: Auth; unreadNotisCount: number; routeName: string }>().props;
+    const { auth, unreadNotisCount } = usePage<{ auth: Auth; unreadNotisCount: number }>().props;
 
     // Estado local que almacena la cantidad actual de notificaciones no leídas.
     const [unreadCount, setUnreadCount] = useState<number>(unreadNotisCount);
