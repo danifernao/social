@@ -4,24 +4,26 @@ import { useEcho } from '@laravel/echo-react';
 import { useState } from 'react';
 
 /**
- * Muestra el contador de notificaciones no leídas.
+ * Badge con la cantidad de notificaciones no leídas del usuario autenticado.
  */
 export default function NotificationBadge() {
-    // Captura el usuario autenticado proporcionado por Inertia.
+    // Captura el usuario autenticado y la cantidad inicial de notificaciones no leídas.
     const { auth, unreadNotisCount, routeName } = usePage<{ auth: Auth; unreadNotisCount: number; routeName: string }>().props;
 
-    // Estado local para guardar la cantidad de notificaciones no leídas.
+    // Estado local que almacena la cantidad actual de notificaciones no leídas.
     const [unreadCount, setUnreadCount] = useState<number>(unreadNotisCount);
 
-    // Si el usuario no está autenticado, no muestra nada.
+    // Si no existe un usuario autenticado, el componente no renderiza nada.
     if (!auth.user) return null;
 
-    // Escucha cambios en el contador de notificaciones no leídas.
+    // Se suscribe al canal privado de notificaciones del usuario autenticado.
+    // Escucha el evento que informa cambios en el número de notificaciones no leídas
+    // y actualiza el estado local para reflejarlo en tiempo real en la interfaz.
     useEcho(`notifications.${auth.user.id}`, ['.UnreadNotificationsCountUpdated'], (event: { user_id: number; unread_count: number }) => {
         setUnreadCount(event.unread_count);
     });
 
-    // Si no hay notificaciones no leídas, no muestra nada.
+    // Si el usuario no tiene notificaciones pendientes, el badge no se muestra.
     if (unreadCount <= 0) return null;
 
     return <div className="ml-auto rounded-sm bg-red-600 p-px px-1 text-xs font-bold text-white">{unreadCount > 99 ? '99+' : unreadCount}</div>;

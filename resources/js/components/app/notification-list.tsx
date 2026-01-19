@@ -3,11 +3,11 @@ import type { Notification } from '@/types';
 import EmptyMessage from './empty-message';
 
 interface NotificationListProps {
-    notifications: Notification[]; // Lista de notificaciones.
+    notifications: Notification[]; // Lista de notificaciones a mostrar.
 }
 
 /**
- * Muestra una lista de notificaciones.
+ * Listado de notificaciones del usuario.
  */
 export default function NotificationList({ notifications }: NotificationListProps) {
     return (
