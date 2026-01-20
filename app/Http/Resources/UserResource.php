@@ -50,7 +50,7 @@ class UserResource extends JsonResource
             ? $auth->hasBlocked($this->resource)
             : null;
 
-        $has_blocked = $auth
+        $blocked_me = $auth
             ? $this->resource->hasBlocked($auth)
             : null;
 
@@ -70,7 +70,7 @@ class UserResource extends JsonResource
             'followers_count'   => $this->followers_count ?? null,
             'is_followed'       => $this->is_followed ?? null,
             'is_blocked'        => $is_blocked,
-            'has_blocked'       => $has_blocked,
+            'blocked_me'        => $blocked_me,
             'is_admin'          => $this->isAdmin(),
             'can_moderate'      => $this->canModerate(),
         ];
