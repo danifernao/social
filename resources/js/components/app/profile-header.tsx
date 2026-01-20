@@ -1,11 +1,8 @@
-import { canActOnUser } from '@/lib/utils';
 import type { Auth, User } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import UserAdminBtn from './user-admin-btn';
+import UserActions from './user-actions';
 import UserAvatar from './user-avatar';
-import UserBlockBtn from './user-block-btn';
-import UserFollowBtn from './user-follow-btn';
 import UserRoleBadge from './user-role-badge';
 
 interface ProfileHeaderProps {
@@ -52,14 +49,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
             {/* Acciones disponibles sobre el perfil */}
             {auth.user && auth.user.id !== user.id && (
                 <div className="flex flex-wrap justify-end gap-2">
-                    {/* Botón para seguir o dejar de seguir */}
-                    {!user.is_blocked && !user.has_blocked && <UserFollowBtn user={user} />}
-
-                    {/* Botón para bloquear al usuario */}
-                    {auth.user.role !== 'admin' && user.role !== 'admin' && !user.has_blocked && <UserBlockBtn user={user} />}
-
-                    {/* Botón para administrar al usuario */}
-                    {canActOnUser(user) && <UserAdminBtn user={user} />}
+                    <UserActions user={user} />
                 </div>
             )}
         </div>

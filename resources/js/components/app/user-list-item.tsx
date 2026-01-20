@@ -1,7 +1,7 @@
 import type { User } from '@/types';
 import { Link } from '@inertiajs/react';
+import UserActionsFollow from './user-actions-follow';
 import UserAvatar from './user-avatar';
-import UserFollowBtn from './user-follow-btn';
 import UserRoleBadge from './user-role-badge';
 
 interface UserListItemProps {
@@ -24,7 +24,7 @@ export default function UserListItem({ user }: UserListItemProps) {
             </div>
             {user.is_followed !== null && (
                 <div className="flex items-center justify-center gap-4">
-                    <UserFollowBtn user={user} />
+                    <UserActionsFollow user={user} />
                 </div>
             )}
         </div>
