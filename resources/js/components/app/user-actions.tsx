@@ -1,10 +1,10 @@
 import { canActOnUser } from '@/lib/utils';
 import type { Auth, User } from '@/types';
-import { usePage } from '@inertiajs/react';
-import { MoreVertical } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import { MoreVertical, UserCog } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import UserActionsAdmin from './user-actions-admin';
 import UserActionsBlock from './user-actions-block';
 import UserActionsFollow from './user-actions-follow';
 
@@ -20,6 +20,9 @@ interface UserActionsProps {
  * o administrar el usuario.
  */
 export default function UserActions({ user }: UserActionsProps) {
+    // Función para traducir los textos de la interfaz.
+    const { t } = useTranslation();
+
     // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;
 
@@ -76,7 +79,12 @@ export default function UserActions({ user }: UserActionsProps) {
                         {/* Acción administrar usuario */}
                         {canAdmin && (
                             <DropdownMenuItem asChild>
-                                <UserActionsAdmin user={user} />
+                                <Button variant="link" asChild className="w-full justify-start hover:no-underline">
+                                    <Link href={route('admin.user.edit', user.id)}>
+                                        <UserCog className="h-4 w-4" />
+                                        <span>{t('common.manage')}</span>
+                                    </Link>
+                                </Button>
                             </DropdownMenuItem>
                         )}
                     </DropdownMenuContent>
