@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import EntryForm from './entry-form';
 
 interface EntryItemOptionsProps {
@@ -74,30 +74,28 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent>
-                    <DropdownMenuGroup>
-                        {/* Opción para editar la entrada */}
-                        <DropdownMenuItem>
-                            <Button variant="link" className="hover:no-underline" onClick={() => setIsFormDialogOpen(true)}>
-                                {t('common.edit')}
+                    {/* Opción para editar la entrada */}
+                    <DropdownMenuItem asChild>
+                        <Button variant="ghost" className="w-full justify-start" onClick={() => setIsFormDialogOpen(true)}>
+                            {t('common.edit')}
+                        </Button>
+                    </DropdownMenuItem>
+
+                    {/* Opción para eliminar la entrada */}
+                    <DropdownMenuItem asChild>
+                        <Button variant="ghost" className="w-full justify-start" onClick={() => setIsConfirmDialogOpen(true)}>
+                            {t('common.delete')}
+                        </Button>
+                    </DropdownMenuItem>
+
+                    {/* Opción administrativa para gestionar al autor de la entrada */}
+                    {canActOnUser(entry.user) && (
+                        <DropdownMenuItem asChild>
+                            <Button asChild variant="link" className="w-full justify-start hover:no-underline">
+                                <Link href={route('admin.user.edit', entry.user.id)}>{t('common.manageUser')}</Link>
                             </Button>
                         </DropdownMenuItem>
-
-                        {/* Opción para eliminar la entrada */}
-                        <DropdownMenuItem>
-                            <Button variant="link" className="hover:no-underline" onClick={() => setIsConfirmDialogOpen(true)}>
-                                {t('common.delete')}
-                            </Button>
-                        </DropdownMenuItem>
-
-                        {/* Opción administrativa para gestionar al autor de la entrada */}
-                        {canActOnUser(entry.user) && (
-                            <DropdownMenuItem>
-                                <Button asChild variant="link" className="hover:no-underline">
-                                    <Link href={route('admin.user.edit', entry.user.id)}>{t('common.manageUser')}</Link>
-                                </Button>
-                            </DropdownMenuItem>
-                        )}
-                    </DropdownMenuGroup>
+                    )}
                 </DropdownMenuContent>
             </DropdownMenu>
 
