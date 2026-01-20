@@ -9,7 +9,7 @@ export interface User {
     follows_count?: number;
     followers_count?: number;
     is_blocked: boolean | null;
-    has_blocked: boolean | null;
+    blocked_me: boolean | null;
     role: 'user' | 'mod' | 'admin';
     is_admin: boolean;
     can_moderate: boolean;

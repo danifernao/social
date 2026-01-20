@@ -35,12 +35,12 @@ export default function UserActions({ user }: UserActionsProps) {
 
     // Determina si el botón de seguir debe mostrarse.
     // No se muestra si existe bloqueo mutuo.
-    const canFollow = !user.is_blocked && !user.has_blocked;
+    const canFollow = !user.is_blocked && !user.blocked_me;
 
     // Determina si el usuario autenticado puede bloquear al usuario del perfil.
     // Los moderadores no pueden bloquear ni ser bloqueados.
     // No se muestra si el perfil ya bloqueó al usuario autenticado.
-    const canBlock = !auth.user.can_moderate && !user.can_moderate && !user.has_blocked;
+    const canBlock = !auth.user.can_moderate && !user.can_moderate && !user.blocked_me;
 
     // Determina si el usuario autenticado puede administrar al usuario del perfil.
     const canAdmin = canActOnUser(user);
