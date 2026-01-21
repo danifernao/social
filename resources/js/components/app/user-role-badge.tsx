@@ -1,28 +1,29 @@
 import { useTranslation } from 'react-i18next';
 
 interface UserRoleBadgeProps {
-    role: string;
+    role: string; // Rol del usuario.
 }
 
 /**
- * Muestra una insignia de rol según el tipo de usuario.
+ * Insignia de rol del usuario.
  */
 export default function UserRoleBadge({ role }: UserRoleBadgeProps) {
-    // No muestra nada si no es administrador o moderador.
+    // Evita renderizar la insignia si el rol no es administrador ni moderador.
     if (!['admin', 'mod'].includes(role)) {
         return null;
     }
 
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Clase de la insignia según el rol.
+    // Define las clases de Tailwind según el rol del usuario.
     const styles = role === 'admin' ? 'bg-yellow-500 text-black' : 'bg-blue-500 text-white';
 
-    // Texto de la insignia según el rol.
+    // Define el texto corto que se muestra dentro de la insignia.
     const label = role === 'admin' ? t('userRoles.admin.short') : t('userRoles.mod.short');
 
-    // Texto accesible según el rol.
+    // Define el texto accesible que describe el rol de forma completa.
+    // Se utiliza como etiqueta ARIA para lectores de pantalla.
     const aria = role === 'admin' ? t('userRoles.admin.long') : t('userRoles.mod.long');
 
     return (

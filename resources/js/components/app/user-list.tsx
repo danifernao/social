@@ -3,11 +3,11 @@ import type { User } from '@/types';
 import EmptyMessage from './empty-message';
 
 interface UserListProps {
-    users: User[]; // Lista de usuarios.
+    users: User[]; // Lista de usuarios a mostrar.
 }
 
 /**
- * Muestra una lista de usuarios.
+ * Listado de usuarios.
  */
 export default function UserList({ users }: UserListProps) {
     return (
