@@ -3,19 +3,30 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 interface UsePostActionOptions {
-    onSuccess?: () => void; // Función que se ejecuta si la petición POST es exitosa.
-    onError?: (errors: any) => void; // Función que se ejecuta si la petición POST falla con errores.
+    // Callback opcional que se ejecuta cuando la petición se completa con éxito.
+    onSuccess?: () => void;
+
+    // Callback opcional que se ejecuta cuando la petición falla con errores.
+    onError?: (errors: any) => void;
 }
 
+/**
+ * Hook utilitario para ejecutar acciones POST simples mediante Inertia.
+ */
 export function usePostAction() {
-    // Estado que indica si la acción está en proceso.
+    // Estado que indica si actualmente se está ejecutando una petición POST.
     const [isProcessing, setIsProcessing] = useState(false);
 
     /**
-     * Función para ejecutar una petición POST a una ruta específica con parámetros y opciones personalizadas:
-     * - routeName: Nombre de la ruta.
-     * - routeParams: Parámetros que se pasan a la ruta para construir la URL.
-     * - options: callbacks onSuccess y onError para gestionar resultados.
+     * Ejecuta una petición POST hacia una ruta específica.
+     *
+     * Permite:
+     * - Construir dinámicamente la URL a partir del nombre de la ruta
+     * - Ejecutar callbacks personalizados en caso de éxito o error.
+     *
+     * @param routeName Nombre de la ruta definida en Laravel.
+     * @param routeParams Parámetros utilizados para generar la URL.
+     * @param options Callbacks opcionales para manejar el resultado de la petición.
      */
     const execute = (routeName: string, routeParams: Record<string, any> = {}, options: UsePostActionOptions = {}) => {
         setIsProcessing(true);
@@ -40,5 +51,9 @@ export function usePostAction() {
         );
     };
 
+    /**
+     * Expone el estado de procesamiento y la función
+     * para ejecutar acciones POST.
+     */
     return { isProcessing, execute };
 }
