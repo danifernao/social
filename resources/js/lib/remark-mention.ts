@@ -24,7 +24,7 @@ export default function remarkMention() {
       }
 
       // Define una expresión regular que detecta menciones de usuario.
-      const regex = /@[a-z0-9_]+/gi;
+      const regex = /@([a-z](?![a-z0-9._]*[._]{2})[a-z0-9._]*[a-z0-9])/gi;
 
       // Guarda el contenido textual original del nodo.
       const value = node.value;
