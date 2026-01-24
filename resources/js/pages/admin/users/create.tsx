@@ -1,5 +1,5 @@
 import AdminUserCreateForm from '@/components/app/admin-user-create-form';
-import AdminLayout from '@/layouts/app/admin/admin-layout';
+import AdminLayout from '@/layouts/app/admin/layout';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
 import type { BreadcrumbItem } from '@/types';
