@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -16,13 +16,8 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // When server-side rendering, we only render the layout on the client...
-    if (typeof window === 'undefined') {
-        return null;
-    }
-
-    // Ruta actual del navegador.
-    const currentPath = window.location.pathname;
+    // Captura el nombre de la ruta proporcionado por Inertia.
+    const { routeName } = usePage<{ routeName: string }>().props;
 
     // Definición de los elementos de navegación de la barra lateral.
     const sidebarNavItems: NavItem[] = [
@@ -30,21 +25,25 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
             title: t('common.profile'),
             href: '/settings/profile',
             icon: null,
+            isActive: ['profile.edit'].includes(routeName),
         },
         {
             title: t('common.password'),
             href: '/settings/password',
             icon: null,
+            isActive: ['password.edit'].includes(routeName),
         },
         {
             title: t('common.language'),
             href: '/settings/language',
             icon: null,
+            isActive: ['language.edit'].includes(routeName),
         },
         {
             title: t('common.appearance'),
             href: '/settings/appearance',
             icon: null,
+            isActive: ['appearance'].includes(routeName),
         },
     ];
 
@@ -69,7 +68,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                                 variant="ghost"
                                 asChild
                                 className={cn('w-full justify-start', {
-                                    'bg-muted': currentPath === item.href,
+                                    'bg-muted': item.isActive,
                                 })}
                             >
                                 <Link href={item.href}>{item.title}</Link>
