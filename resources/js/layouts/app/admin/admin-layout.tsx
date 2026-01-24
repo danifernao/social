@@ -18,11 +18,6 @@ interface AdminLayoutProps {
  * y un área de contenido principal.
  */
 export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
-    // When server-side rendering, we only render the layout on the client...
-    if (typeof window === 'undefined') {
-        return null;
-    }
-
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
@@ -33,9 +28,6 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
     const lang = {
         ...(route().params.lang ? { lang: route().params.lang } : {}),
     };
-
-    // Ruta actual del navegador.
-    const currentPath = window.location.pathname;
 
     // Definición de los elementos de navegación de la barra lateral.
     const sidebarNavItems: NavItem[] = [
@@ -84,7 +76,7 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
                                 variant="ghost"
                                 asChild
                                 className={cn('w-full justify-start', {
-                                    'bg-muted': currentPath === item.href || item.isActive,
+                                    'bg-muted': item.isActive,
                                 })}
                             >
                                 <Link href={item.href} prefetch>
