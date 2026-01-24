@@ -7,7 +7,13 @@ import { Link } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Layout base para las páginas de configuración del usuario.
+ * Proporciona una estructura común con encabezado, navegación lateral
+ * y un área de contenido principal.
+ */
 export default function SettingsLayout({ children }: PropsWithChildren) {
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // When server-side rendering, we only render the layout on the client...
@@ -15,8 +21,10 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
         return null;
     }
 
+    // Ruta actual del navegador.
     const currentPath = window.location.pathname;
 
+    // Definición de los elementos de navegación de la barra lateral.
     const sidebarNavItems: NavItem[] = [
         {
             title: t('common.profile'),
@@ -42,9 +50,16 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
 
     return (
         <div className="px-4 py-6">
+            {/* Encabezado descriptivo de la sección */}
             <Heading title={t('settings.layout.title')} description={t('settings.layout.description')} />
 
+            {/**
+             * Contenedor flexible que organiza la barra lateral y el contenido.
+             * En pantallas grandes se distribuye en columnas,
+             * mientras que en pantallas pequeñas se apila verticalmente.
+             */}
             <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12">
+                {/* Barra lateral de navegación. */}
                 <aside className="w-full max-w-xl lg:w-48">
                     <nav className="flex flex-col space-y-1 space-x-0">
                         {sidebarNavItems.map((item, index) => (
@@ -63,8 +78,13 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                     </nav>
                 </aside>
 
+                {/**
+                 * Separador visual entre el sidebar y el contenido.
+                 * Solo se muestra en pantallas pequeñas.
+                 */}
                 <Separator className="my-6 md:hidden" />
 
+                {/* Contenedor del contenido principal */}
                 <div className="flex-1 md:max-w-2xl">
                     <section className="max-w-xl space-y-12">{children}</section>
                 </div>

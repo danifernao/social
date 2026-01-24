@@ -12,16 +12,21 @@ interface AdminLayoutProps {
     fullWidth?: boolean;
 }
 
+/**
+ * Layout base para las secciones administrativas del sistema.
+ * Proporciona una estructura común con encabezado, navegación lateral
+ * y un área de contenido principal.
+ */
 export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
     // When server-side rendering, we only render the layout on the client...
     if (typeof window === 'undefined') {
         return null;
     }
 
-    // Obtiene las traducciones de la página.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Obtiene el usuario autenticado y el nombre de la ruta proporcionados por Inertia.
+    // Captura el usuario autenticado y el nombre de la ruta proporcionados por Inertia.
     const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
 
     // Obtiene el idioma pasado por parámetro URL.
@@ -29,8 +34,10 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
         ...(route().params.lang ? { lang: route().params.lang } : {}),
     };
 
+    // Ruta actual del navegador.
     const currentPath = window.location.pathname;
 
+    // Definición de los elementos de navegación de la barra lateral.
     const sidebarNavItems: NavItem[] = [
         ...(auth.user.is_admin
             ? [
@@ -58,9 +65,16 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
 
     return (
         <div className="px-4 py-6">
+            {/* Encabezado descriptivo de la sección */}
             <Heading title={t('admin.layout.title')} description={t('admin.layout.description')} />
 
+            {/**
+             * Contenedor flexible que organiza la barra lateral y el contenido.
+             * En pantallas grandes se distribuye en columnas,
+             * mientras que en pantallas pequeñas se apila verticalmente.
+             */}
             <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12">
+                {/* Barra lateral de navegación */}
                 <aside className="w-full max-w-xl lg:w-48">
                     <nav className="flex flex-col space-y-1 space-x-0">
                         {sidebarNavItems.map((item, index) => (
@@ -81,8 +95,13 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
                     </nav>
                 </aside>
 
+                {/**
+                 * Separador visual entre el sidebar y el contenido.
+                 * Solo se muestra en pantallas pequeñas.
+                 */}
                 <Separator className="my-6 md:hidden" />
 
+                {/* Contenedor del contenido principal */}
                 <div className={cn('flex-1', fullWidth ? 'md:w-xl' : 'md:max-w-2xl')}>
                     <section className={cn('space-y-12', !fullWidth && 'max-w-xl')}>{children}</section>
                 </div>
