@@ -30,7 +30,7 @@ export function FollowNav({ pageName, username }: FollowPageNavProps) {
                 aria-current={pageName === 'following' ? 'page' : undefined}
                 className={cn(baseClass, pageName === 'following' && activeClass)}
             >
-                {t('common.following')}
+                {t('following')}
             </Link>
 
             {/* Enlace a la sección de seguidores */}
@@ -39,7 +39,7 @@ export function FollowNav({ pageName, username }: FollowPageNavProps) {
                 aria-current={pageName === 'followers' ? 'page' : undefined}
                 className={cn(baseClass, pageName === 'followers' && activeClass)}
             >
-                {t('common.followers')}
+                {t('followers')}
             </Link>
         </nav>
     );

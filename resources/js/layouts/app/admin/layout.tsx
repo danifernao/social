@@ -34,13 +34,13 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
         ...(auth.user.is_admin
             ? [
                   {
-                      title: t('admin.site.layout.menu'),
+                      title: t('general'),
                       href: route('admin.site.edit'),
                       icon: null,
                       isActive: ['admin.site.edit'].includes(routeName),
                   },
                   {
-                      title: t('admin.page.layout.menu'),
+                      title: t('pages'),
                       href: route('admin.page.index', lang),
                       icon: null,
                       isActive: ['admin.page.index', 'admin.page.create', 'admin.page.edit'].includes(routeName),
@@ -48,7 +48,7 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
               ]
             : []),
         {
-            title: t('admin.user.layout.menu'),
+            title: t('users'),
             href: route('admin.user.index'),
             icon: null,
             isActive: ['admin.user.index', 'admin.user.create', 'admin.user.edit'].includes(routeName),
@@ -58,7 +58,7 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
     return (
         <div className="px-4 py-6">
             {/* Encabezado descriptivo de la sección */}
-            <Heading title={t('admin.layout.title')} description={t('admin.layout.description')} />
+            <Heading title={t('administration')} description={t('manage_social_network_settings')} />
 
             {/**
              * Contenedor flexible que organiza la barra lateral y el contenido.

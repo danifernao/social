@@ -46,16 +46,16 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
     };
 
     return (
-        <AuthLayout title={t('auth.resetPassword.title')} description={t('auth.resetPassword.description')}>
+        <AuthLayout title={t('reset_password')} description={t('enter_new_password_below')}>
             {/* Título del documento */}
-            <Head title={t('auth.resetPassword.title')} />
+            <Head title={t('reset_password')} />
 
             {/* Formulario de restablecimiento de contraseña */}
             <form onSubmit={submit}>
                 <div className="grid gap-6">
                     {/* Campo del correo electrónico (solo lectura) */}
                     <div className="grid gap-2">
-                        <Label htmlFor="email">{t('common.email')}</Label>
+                        <Label htmlFor="email">{t('email')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -71,7 +71,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
 
                     {/* Campo de la nueva contraseña */}
                     <div className="grid gap-2">
-                        <Label htmlFor="password">{t('common.password')}</Label>
+                        <Label htmlFor="password">{t('password')}</Label>
                         <Input
                             id="password"
                             type="password"
@@ -81,14 +81,14 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                             className="mt-1 block w-full"
                             autoFocus
                             onChange={(e) => setData('password', e.target.value)}
-                            placeholder={t('common.password')}
+                            placeholder={t('password')}
                         />
                         <InputError message={errors.password} />
                     </div>
 
                     {/* Campo de la confirmación de la contraseña */}
                     <div className="grid gap-2">
-                        <Label htmlFor="password_confirmation">{t('common.confirmPassword')}</Label>
+                        <Label htmlFor="password_confirmation">{t('confirm_password')}</Label>
                         <Input
                             id="password_confirmation"
                             type="password"
@@ -97,7 +97,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                             value={data.password_confirmation}
                             className="mt-1 block w-full"
                             onChange={(e) => setData('password_confirmation', e.target.value)}
-                            placeholder={t('common.confirmPassword')}
+                            placeholder={t('confirm_password')}
                         />
                         <InputError message={errors.password_confirmation} className="mt-2" />
                     </div>
@@ -105,7 +105,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                     {/* Botón de envío del formulario */}
                     <Button type="submit" className="mt-4 w-full" disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('common.reset')}
+                        {t('reset')}
                     </Button>
                 </div>
             </form>

@@ -19,22 +19,22 @@ export default function AdminTablePagination({ previous, next }: Props) {
             {/* Botón para ir a la página anterior */}
             {previous ? (
                 <Button variant="outline" size="sm" asChild>
-                    <Link href={previous}>{t('common.previous')}</Link>
+                    <Link href={previous}>{t('previous')}</Link>
                 </Button>
             ) : (
                 <Button variant="outline" size="sm" disabled>
-                    {t('common.previous')}
+                    {t('previous')}
                 </Button>
             )}
 
             {/* Botón para ir a la página siguiente */}
             {next ? (
                 <Button variant="outline" size="sm" asChild>
-                    <Link href={next}>{t('common.next')}</Link>
+                    <Link href={next}>{t('next')}</Link>
                 </Button>
             ) : (
                 <Button variant="outline" size="sm" disabled>
-                    {t('common.next')}
+                    {t('next')}
                 </Button>
             )}
         </div>

@@ -19,37 +19,37 @@ export function AppSidebar() {
     if (auth.user) {
         mainNavItems = [
             {
-                title: t('common.home'),
+                title: t('home'),
                 href: '/home',
                 icon: Home,
             },
             {
-                title: t('common.profile'),
+                title: t('profile'),
                 href: route('profile.show', auth.user.username),
                 icon: User,
                 isActive: routeName === 'profile.show' && params.user === auth.user.username,
             },
             {
-                title: t('common.explore'),
+                title: t('explore'),
                 href: `/search`,
                 icon: Search,
             },
             {
-                title: t('common.connections'),
+                title: t('connections'),
                 href: route('follow.following', auth.user.username),
                 icon: Users,
                 isActive: ['follow.following', 'follow.followers'].includes(routeName) && params.user === auth.user.username,
             },
             {
                 name: 'notifications',
-                title: t('common.notifications'),
+                title: t('notifications'),
                 href: route('notification.index'),
                 icon: Bell,
             },
             ...(auth.user.can_moderate
                 ? [
                       {
-                          title: t('common.management'),
+                          title: t('administration'),
                           href: route('admin.index'),
                           icon: UserCog,
                           isActive: ['admin.site.edit', 'admin.user.index', 'admin.user.create', 'admin.user.edit'].includes(routeName),
@@ -60,12 +60,12 @@ export function AppSidebar() {
     } else {
         mainNavItems = [
             {
-                title: t('common.login'),
+                title: t('log_in'),
                 href: route('login'),
                 icon: LogIn,
             },
             {
-                title: t('common.register'),
+                title: t('sign_up'),
                 href: route('register'),
                 icon: UserPlus,
             },

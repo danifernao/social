@@ -82,7 +82,7 @@ export default function UserActions({ user }: UserActionsProps) {
                                 <Button variant="link" asChild className="w-full justify-start hover:no-underline">
                                     <Link href={route('admin.user.edit', user.id)}>
                                         <UserCog className="h-4 w-4" />
-                                        <span>{t('common.manage')}</span>
+                                        <span>{t('manage')}</span>
                                     </Link>
                                 </Button>
                             </DropdownMenuItem>

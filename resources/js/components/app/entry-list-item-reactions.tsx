@@ -82,7 +82,7 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                 },
 
                 onError: (errors) => {
-                    toast(t('common.error'));
+                    toast(t('unexpected_error'));
                     console.error(errors);
                 },
             },
@@ -122,8 +122,8 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                             key={emoji}
                             onClick={() => (auth.user ? toggleReaction(emoji) : false)}
                             className={reactedByUser ? 'bg-accent text-accent-foreground' : ''}
-                            aria-label={reactedByUser ? t('reaction.remove') : t('reaction.reactWith', { emoji })}
-                            title={reactedByUser ? t('reaction.remove') : t('reaction.reactWith', { emoji })}
+                            aria-label={reactedByUser ? t('remove_reaction') : t('react_with_emoji', { emoji })}
+                            title={reactedByUser ? t('remove_reaction') : t('react_with_emoji', { emoji })}
                             variant="outline"
                         >
                             <span className="mr-1">{count}</span>
@@ -135,7 +135,7 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
 
             {/* Botón para abrir el selector de emojis */}
             {auth.user && (
-                <Button onClick={() => setShowPicker(!showPicker)} variant="outline" title={t('reaction.react')}>
+                <Button onClick={() => setShowPicker(!showPicker)} variant="outline" title={t('react')}>
                     <SmilePlus />
                 </Button>
             )}

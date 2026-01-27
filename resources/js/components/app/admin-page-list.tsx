@@ -27,8 +27,17 @@ interface Props {
  * Listado de las páginas estáticas registradas.
  */
 export default function AdminPageList({ pages, previous, next }: Props) {
-    // // Función para traducir los textos de la interfaz.
+    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
+
+    // Mapa de etiquetas traducidas para los tipos de páginas estáticas.
+    const pageTypeLabels = {
+        normal: t('normal_static_page'),
+        about: t('about_us'),
+        terms: t('terms_and_conditions'),
+        policy: t('privacy_policy'),
+        guidelines: t('community_guidelines'),
+    };
 
     // Gestiona la eliminación de una página estática.
     const handleDelete = (id: number) => {
@@ -44,13 +53,13 @@ export default function AdminPageList({ pages, previous, next }: Props) {
                     <TableHeader>
                         <TableRow className="[&_button]:px-0 [&_th]:px-4">
                             {/* Título de la página */}
-                            <TableHead>{t('common.title')}</TableHead>
+                            <TableHead>{t('title')}</TableHead>
 
                             {/* Tipo de página */}
-                            <TableHead>{t('common.type')}</TableHead>
+                            <TableHead>{t('type')}</TableHead>
 
                             {/* Acciones */}
-                            <TableHead className="w-0 text-center">{t('common.actions')}</TableHead>
+                            <TableHead className="w-0 text-center">{t('actions')}</TableHead>
                         </TableRow>
                     </TableHeader>
 
@@ -66,7 +75,7 @@ export default function AdminPageList({ pages, previous, next }: Props) {
                                     {/* Tipo de página */}
                                     <TableCell>
                                         <Link href={route('admin.page.edit', { page: page.id, lang: page.language })}>
-                                            {t(`page.types.${page.type}`)}
+                                            {pageTypeLabels[page.type]}
                                         </Link>
                                     </TableCell>
 
@@ -77,8 +86,8 @@ export default function AdminPageList({ pages, previous, next }: Props) {
                                             <a
                                                 href={route('page.show', { lang: page.language, slug: page.slug })}
                                                 target="_blank"
-                                                title={t('common.view')}
-                                                aria-label={t('common.view')}
+                                                title={t('view')}
+                                                aria-label={t('view')}
                                             >
                                                 <Eye className="h-4 w-4" />
                                             </a>
@@ -88,8 +97,8 @@ export default function AdminPageList({ pages, previous, next }: Props) {
                                         <Button variant="outline" size="sm" asChild>
                                             <Link
                                                 href={route('admin.page.edit', { page: page.id, lang: page.language })}
-                                                title={t('common.edit')}
-                                                aria-label={t('common.edit')}
+                                                title={t('edit')}
+                                                aria-label={t('edit')}
                                             >
                                                 <Edit className="h-4 w-4" />
                                             </Link>
@@ -98,22 +107,22 @@ export default function AdminPageList({ pages, previous, next }: Props) {
                                         {/* Botón eliminar con confirmación */}
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
-                                                <Button variant="destructive" size="sm" title={t('common.delete')} aria-label={t('common.delete')}>
+                                                <Button variant="destructive" size="sm" title={t('delete')} aria-label={t('delete')}>
                                                     <Trash className="h-4 w-4" />
                                                 </Button>
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader>
-                                                    <AlertDialogTitle>{t('admin.page.index.delete.title')}</AlertDialogTitle>
+                                                    <AlertDialogTitle>{t('delete_page')}</AlertDialogTitle>
                                                     <AlertDialogDescription>
-                                                        {t('admin.page.index.delete.description', {
+                                                        {t('confirm_page_deletion_irreversible', {
                                                             title: page.title,
                                                         })}
                                                     </AlertDialogDescription>
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
-                                                    <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDelete(page.id)}>{t('common.delete')}</AlertDialogAction>
+                                                    <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => handleDelete(page.id)}>{t('delete')}</AlertDialogAction>
                                                 </AlertDialogFooter>
                                             </AlertDialogContent>
                                         </AlertDialog>
@@ -123,7 +132,7 @@ export default function AdminPageList({ pages, previous, next }: Props) {
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={3} className="py-4 text-center">
-                                    {t('noResults.pages')}
+                                    {t('no_pages_created_yet')}
                                 </TableCell>
                             </TableRow>
                         )}

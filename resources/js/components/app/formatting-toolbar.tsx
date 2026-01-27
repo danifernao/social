@@ -198,9 +198,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
             const replaced = lines.map((ln, i) => `${i + 1}. ${ln}`).join('\n');
             replaceSelection(replaced);
         } else {
-            replaceSelection(
-                `1. ${t('formattingToolbar.firstItem')}\n2. ${t('formattingToolbar.secondItem')}\n3. ${t('formattingToolbar.thirdItem')}\n`,
-            );
+            replaceSelection(`1. ${t('first_item')}\n2. ${t('second_item')}\n3. ${t('third_item')}\n`);
         }
     };
 
@@ -212,9 +210,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
             const replaced = lines.map((ln) => `- ${ln}`).join('\n');
             replaceSelection(replaced);
         } else {
-            replaceSelection(
-                `- ${t('formattingToolbar.firstItem')}\n- ${t('formattingToolbar.secondItem')}\n- ${t('formattingToolbar.thirdItem')}\n`,
-            );
+            replaceSelection(`- ${t('first_item')}\n- ${t('second_item')}\n- ${t('third_item')}\n`);
         }
     };
 
@@ -222,13 +218,13 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     const onHiddenInline = () =>
         applyOrInsert({
             fnWhenSelected: (s) => `:hidden[${s}]`,
-            fallback: `:hidden[${t('formattingToolbar.spoiler')}]`,
+            fallback: `:hidden[${t('spoiler')}]`,
         });
 
     // BBloque de texto oculto.
     const onHiddenBlock = () => {
         const sel = getSelection();
-        const content = sel && sel.start !== sel.end ? sel.value : t('formattingToolbar.spoiler');
+        const content = sel && sel.start !== sel.end ? sel.value : t('spoiler');
         replaceSelection(`\n:::hidden\n${content}\n:::\n`);
     };
 
@@ -251,19 +247,19 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     return (
         <div className="flex flex-wrap items-center gap-1 p-1">
             {/* Negrita */}
-            <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.bold')} onClick={onBold}>
+            <Button type="button" variant="ghost" size="icon" title={t('bold')} onClick={onBold}>
                 <Bold className="h-4 w-4" />
             </Button>
 
             {/* Cursiva */}
-            <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.italic')} onClick={onItalic}>
+            <Button type="button" variant="ghost" size="icon" title={t('italic')} onClick={onItalic}>
                 <Italic className="h-4 w-4" />
             </Button>
 
             {/* Encabezados (H1 y H2) */}
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" title={t('formattingToolbar.heading')}>
+                    <Button variant="ghost" size="icon" title={t('heading')}>
                         <Heading className="h-4 w-4" />
                     </Button>
                 </PopoverTrigger>
@@ -271,11 +267,11 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
                 <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
                     <Button variant="ghost" className="flex items-center gap-2 text-sm" onClick={() => onHeading(1)}>
                         <Heading1 className="h-4 w-4" />
-                        {t('formattingToolbar.h1')}
+                        {t('title')}
                     </Button>
                     <Button variant="ghost" className="flex items-center gap-2 text-sm" onClick={() => onHeading(2)}>
                         <Heading2 className="h-4 w-4" />
-                        {t('formattingToolbar.h2')}
+                        {t('subtitle')}
                     </Button>
                 </PopoverContent>
             </Popover>
@@ -283,7 +279,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
             {/* Color de fuente */}
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" title={t('formattingToolbar.fontColor')}>
+                    <Button variant="ghost" size="icon" title={t('font_color')}>
                         <PaintBucket className="h-4 w-4" />
                     </Button>
                 </PopoverTrigger>
@@ -302,7 +298,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
             {/* Tamaño de fuente */}
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" title={t('formattingToolbar.fontSize')}>
+                    <Button variant="ghost" size="icon" title={t('font_size')}>
                         <Type className="h-4 w-4" />
                     </Button>
                 </PopoverTrigger>
@@ -310,7 +306,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
                     {(Object.keys(sizes) as (keyof typeof sizes)[]).map((key) => (
                         <Button key={key} variant="ghost" className="flex items-center gap-2 text-sm" onClick={() => onSizeSelected(key)}>
                             <Type className={`h-4 w-4 ${key === 'small' ? 'scale-90' : 'scale-125'}`} />
-                            {key === 'small' ? t('formattingToolbar.small') : t('formattingToolbar.big')}
+                            {key === 'small' ? t('small') : t('big')}
                         </Button>
                     ))}
                 </PopoverContent>
@@ -319,13 +315,13 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
             {/* Enlace */}
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" title="Insertar enlace">
+                    <Button variant="ghost" size="icon" title={t('insert_link')}>
                         <Link className="h-4 w-4" />
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="flex w-64 flex-col gap-2 p-4">
                     <Input
-                        placeholder={t('formattingToolbar.textPlaceholder')}
+                        placeholder={t('link_text')}
                         value={linkData.text}
                         onChange={(e) => setLinkData((p) => ({ ...p, text: e.target.value }))}
                     />
@@ -335,7 +331,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
                         onChange={(e) => setLinkData((p) => ({ ...p, url: e.target.value }))}
                     />
                     <Button size="sm" className="mt-2" onClick={applyLink}>
-                        <Link2 className="mr-2 h-4 w-4" /> {t('formattingToolbar.insertLink')}
+                        <Link2 className="mr-2 h-4 w-4" /> {t('insert_link')}
                     </Button>
                 </PopoverContent>
             </Popover>
@@ -343,13 +339,13 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
             {/* Imagen */}
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" title="Insertar imagen">
+                    <Button variant="ghost" size="icon" title={t('insert_image')}>
                         <Image className="h-4 w-4" />
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="flex w-64 flex-col gap-2 p-4">
                     <Input
-                        placeholder={t('formattingToolbar.alternativeText')}
+                        placeholder={t('alternative_text')}
                         value={imageData.alt}
                         onChange={(e) => setImageData((p) => ({ ...p, alt: e.target.value }))}
                     />
@@ -359,62 +355,62 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
                         onChange={(e) => setImageData((p) => ({ ...p, url: e.target.value }))}
                     />
                     <Button size="sm" className="mt-2" onClick={applyImage}>
-                        <ImagePlus className="mr-2 h-4 w-4" /> {t('formattingToolbar.insertImage')}
+                        <ImagePlus className="mr-2 h-4 w-4" /> {t('insert_image')}
                     </Button>
                 </PopoverContent>
             </Popover>
 
             {/* Separador horizontal */}
-            <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.separator')} onClick={onSeparator}>
+            <Button type="button" variant="ghost" size="icon" title={t('separator')} onClick={onSeparator}>
                 <Minus className="h-4 w-4" />
             </Button>
 
             {/* Cita en bloque */}
-            <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.quote')} onClick={onQuote}>
+            <Button type="button" variant="ghost" size="icon" title={t('quote')} onClick={onQuote}>
                 <Quote className="h-4 w-4" />
             </Button>
 
             {/* Código en línea */}
-            <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.inlineCode')} onClick={onInlineCode}>
+            <Button type="button" variant="ghost" size="icon" title={t('inline_code')} onClick={onInlineCode}>
                 <Code className="h-4 w-4" />
             </Button>
 
             {/* Bloque de código */}
-            <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.codeBlock')} onClick={onCodeBlock}>
+            <Button type="button" variant="ghost" size="icon" title={t('code_block')} onClick={onCodeBlock}>
                 <SquareCode className="h-4 w-4" />
             </Button>
 
             {/* Lista ordenada */}
-            <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.orderedList')} onClick={onOrderedList}>
+            <Button type="button" variant="ghost" size="icon" title={t('ordered_list')} onClick={onOrderedList}>
                 <ListOrdered className="h-4 w-4" />
             </Button>
 
             {/* Lista sin orden */}
-            <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.unorderedList')} onClick={onUnorderedList}>
+            <Button type="button" variant="ghost" size="icon" title={t('unordered_list')} onClick={onUnorderedList}>
                 <List className="h-4 w-4" />
             </Button>
 
             {/* Texto oculto en línea */}
-            <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.hiddenInline')} onClick={onHiddenInline}>
+            <Button type="button" variant="ghost" size="icon" title={t('hidden_text')} onClick={onHiddenInline}>
                 <EyeOff className="h-4 w-4" />
             </Button>
 
             {/* Bloque de texto oculto */}
-            <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.hiddenBlock')} onClick={onHiddenBlock}>
+            <Button type="button" variant="ghost" size="icon" title={t('hidden_block')} onClick={onHiddenBlock}>
                 <CaptionsOff className="h-4 w-4" />
             </Button>
 
             {/* Video */}
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button type="button" variant="ghost" size="icon" title={t('formattingToolbar.video')}>
+                    <Button type="button" variant="ghost" size="icon" title={t('video')}>
                         <SquarePlay className="h-4 w-4" />
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="flex w-64 flex-col gap-2 p-4">
                     <Input placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} />
                     <Button size="sm" className="mt-2" onClick={applyVideo}>
-                        <SquarePlay className="mr-2 h-4 w-4" /> {t('formattingToolbar.insertVideo')}
+                        <SquarePlay className="mr-2 h-4 w-4" /> {t('insert_video')}
                     </Button>
                 </PopoverContent>
             </Popover>

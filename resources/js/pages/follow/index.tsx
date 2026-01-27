@@ -46,11 +46,11 @@ export default function FollowIndex() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('profile.title', { username: user.username }),
+            title: t('user_profile', { username: user.username }),
             href: route('profile.show', { user: user.username }),
         },
         {
-            title: pageName === 'following' ? t('common.following') : t('common.followers'),
+            title: pageName === 'following' ? t('following') : t('followers'),
             href: route(routeName, { user: user.username }),
         },
     ];
@@ -59,7 +59,7 @@ export default function FollowIndex() {
         <AppLayout breadcrumbs={breadcrumbs}>
             {/* Título del documento */}
             <Head
-                title={`${pageName === 'following' ? t('profile.following', { username: user.username }) : t('profile.followers', { username: user.username })} ${user.username}`}
+                title={`${pageName === 'following' ? t('user_following', { username: user.username }) : t('user_followers', { username: user.username })} ${user.username}`}
             />
 
             <AppContentLayout>

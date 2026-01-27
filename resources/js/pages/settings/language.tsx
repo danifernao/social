@@ -30,10 +30,10 @@ export default function Appearance() {
             onSuccess: () => {
                 // Limpia el estado del router para recargar traducciones.
                 router.flushAll();
-                toast(t('common.saved'));
+                toast(t('changes_saved'));
             },
             onError: (errors) => {
-                toast(t('common.error'));
+                toast(t('unexpected_error'));
                 console.log(errors);
             },
         });
@@ -42,7 +42,7 @@ export default function Appearance() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('settings.language.title'),
+            title: t('language_settings'),
             href: '/settings/language',
         },
     ];
@@ -57,12 +57,12 @@ export default function Appearance() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             {/* Título del documento */}
-            <Head title={t('settings.language.title')} />
+            <Head title={t('language_settings')} />
 
             <SettingsLayout>
                 <div className="space-y-6">
                     {/* Encabezado descriptivo de la sección */}
-                    <HeadingSmall title={t('settings.language.title')} description={t('settings.language.description')} />
+                    <HeadingSmall title={t('language_settings')} description={t('update_language_settings')} />
 
                     {/* Selector de idioma */}
                     <Select value={data.lang} onValueChange={(value: 'en' | 'es') => setData('lang', value)} disabled={processing}>

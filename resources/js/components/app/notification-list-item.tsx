@@ -112,12 +112,12 @@ export default function NotificationListItem({ notification }: NotificationListI
             <Link href={url}>
                 {/* Notificación de seguimiento */}
                 {type === 'follow' && (
-                    <Trans i18nKey="notification.hasFollowedYou" values={{ username: sender.username }} components={[<strong />, <strong />]} />
+                    <Trans i18nKey="user_has_followed_you" values={{ username: sender.username }} components={[<strong />, <strong />]} />
                 )}
 
                 {/* Notificación de publicación en el perfil */}
                 {type === 'post' && (
-                    <Trans i18nKey="notification.hasPostOnYourProfile" values={{ username: sender.username }} components={[<strong />, <strong />]} />
+                    <Trans i18nKey="user_has_post_on_your_profile" values={{ username: sender.username }} components={[<strong />, <strong />]} />
                 )}
 
                 {/* Notificación de comentario */}
@@ -126,35 +126,23 @@ export default function NotificationListItem({ notification }: NotificationListI
                     (context.author_id === auth.user.id ? (
                         /* Comentario en una publicación propia */
                         <Trans
-                            i18nKey="notification.hasCommentedOnYourPost"
+                            i18nKey="user_has_commented_in_your_post"
                             values={{ username: sender.username }}
                             components={[<strong />, <strong />]}
                         />
                     ) : (
                         /* Comentario en una publicación ajena */
-                        <Trans
-                            i18nKey="notification.hasCommentedInPost"
-                            values={{ username: sender.username }}
-                            components={[<strong />, <strong />]}
-                        />
+                        <Trans i18nKey="user_has_commented_in_post" values={{ username: sender.username }} components={[<strong />, <strong />]} />
                     ))}
 
                 {/* Mención en una publicación */}
                 {type === 'mention' && context && context.type === 'post' && (
-                    <Trans
-                        i18nKey="notification.hasMentionedYouInPost"
-                        values={{ username: sender.username }}
-                        components={[<strong />, <strong />]}
-                    />
+                    <Trans i18nKey="user_has_mentioned_you_in_post" values={{ username: sender.username }} components={[<strong />, <strong />]} />
                 )}
 
                 {/* Mención en un comentario */}
                 {type === 'mention' && context && context.type === 'comment' && (
-                    <Trans
-                        i18nKey="notification.hasMentionedYouInComment"
-                        values={{ username: sender.username }}
-                        components={[<strong />, <strong />]}
-                    />
+                    <Trans i18nKey="user_has_mentioned_you_in_comment" values={{ username: sender.username }} components={[<strong />, <strong />]} />
                 )}
             </Link>
 

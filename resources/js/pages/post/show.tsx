@@ -47,11 +47,11 @@ export default function PostShow() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('profile.title', { username: post.user.username }),
+            title: t('user_profile', { username: post.user.username }),
             href: route('profile.show', post.user.username),
         },
         {
-            title: t('common.publication'),
+            title: t('single_post'),
             href: route('post.show', post.id),
         },
     ];
@@ -67,7 +67,7 @@ export default function PostShow() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             {/* Título del documento */}
-            <Head title={t('post.show.author', { username: post.user.username })} />
+            <Head title={t('post_by_user', { username: post.user.username })} />
 
             <AppContentLayout>
                 <article className="flex flex-col gap-8">
@@ -84,14 +84,14 @@ export default function PostShow() {
                                     {/* Encabezado del listado de comentarios */}
                                     <div className="flex items-center gap-2">
                                         {/* Número de comentarios */}
-                                        <h2>{t('post.show.comments', { total: post.comments_count })}</h2>
+                                        <h2>{t('total_comments', { total: post.comments_count })}</h2>
 
                                         {/* Indicador de hilo parcial */}
                                         {isPartialView && (
                                             <>
-                                                <span className="text-muted-foreground text-sm">({t('common.partial')})</span>
+                                                <span className="text-muted-foreground text-sm">({t('partial')})</span>
                                                 <Link href={route('post.show', post.id)} className="text-sm text-blue-600 hover:underline">
-                                                    {t('common.seeFullThread')}
+                                                    {t('see_full_thread')}
                                                 </Link>
                                             </>
                                         )}

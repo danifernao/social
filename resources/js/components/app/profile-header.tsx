@@ -36,11 +36,11 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                     {/* Contadores de seguimiento */}
                     <div className="flex gap-3">
                         <Link href={`/user/${user.username}/following`} className="lowercase">
-                            {user.follows_count} {t('common.following')}
+                            {user.follows_count} {t('following')}
                         </Link>
 
                         <Link href={`/user/${user.username}/followers`} className="lowercase">
-                            {user.followers_count} {t('common.followers')}
+                            {user.followers_count} {t('followers')}
                         </Link>
                     </div>
                 </div>

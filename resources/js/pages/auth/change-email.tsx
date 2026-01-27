@@ -32,16 +32,16 @@ export default function ChangeEmail({ status }: { status?: string }) {
     };
 
     return (
-        <AuthLayout title={t('auth.changeEmail.title')} description={t('auth.changeEmail.description')}>
+        <AuthLayout title={t('change_email_address')} description={t('enter_new_email_for_verification_link')}>
             {/* Título del documento */}
-            <Head title={t('auth.changeEmail.title')} />
+            <Head title={t('change_email_address')} />
 
             {/* Formulario de cambio de correo electrónico */}
             <form onSubmit={submit}>
                 <div className="space-y-6">
                     {/* Campo de correo electrónico */}
                     <div className="grid gap-2">
-                        <Label htmlFor="email">{t('common.email')}</Label>
+                        <Label htmlFor="email">{t('email')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -51,7 +51,7 @@ export default function ChangeEmail({ status }: { status?: string }) {
                             autoComplete="email"
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
-                            placeholder={t('common.dummyEmail')}
+                            placeholder={t('dummy_email')}
                             disabled={processing}
                         />
                         <InputError message={errors.email} />
@@ -61,7 +61,7 @@ export default function ChangeEmail({ status }: { status?: string }) {
                     <div className="flex items-center">
                         <Button className="w-full" disabled={processing}>
                             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            {t('common.change')}
+                            {t('change')}
                         </Button>
                     </div>
                 </div>

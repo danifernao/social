@@ -30,8 +30,8 @@ export default function AdminUserCreateForm() {
             <Card className="gap-4">
                 <CardHeader>
                     {/* Título y descripción del formulario */}
-                    <CardTitle>{t('admin.user.create.title')}</CardTitle>
-                    <CardDescription>{t('admin.user.create.description')}</CardDescription>
+                    <CardTitle>{t('create_user')}</CardTitle>
+                    <CardDescription>{t('fill_fields_to_register_user')}</CardDescription>
                 </CardHeader>
 
                 <CardContent>
@@ -40,24 +40,24 @@ export default function AdminUserCreateForm() {
 
                     {/* Campo de correo electrónico */}
                     <div className="space-y-2 py-4">
-                        <label className="block text-sm font-medium">{t('common.email')}</label>
+                        <label className="block text-sm font-medium">{t('email')}</label>
                         <Input
                             type="email"
-                            placeholder={t('common.email')}
+                            placeholder={t('email')}
                             value={form.data.email}
                             onChange={(e) => form.setData('email', e.target.value)}
                             disabled={form.processing}
                         />
-                        <p className="text-muted-foreground text-sm italic">{t('admin.user.create.passwordNotice')}</p>
+                        <p className="text-muted-foreground text-sm italic">{t('password_setup_link_will_be_sent')}</p>
                     </div>
 
                     {/* Campo de contraseña para confirmar la acción */}
                     <div className="space-y-2 py-4">
-                        <label className="block text-sm font-medium">{t('admin.user.create.confirm.title')}</label>
-                        <p className="text-sm font-medium">{t('admin.user.create.confirm.description')}</p>
+                        <label className="block text-sm font-medium">{t('confirm_action')}</label>
+                        <p className="text-sm font-medium">{t('enter_privileged_user_password')}</p>
                         <Input
                             type="password"
-                            placeholder={t('common.password')}
+                            placeholder={t('password')}
                             value={form.data.privileged_password}
                             onChange={(e) => form.setData('privileged_password', e.target.value)}
                             disabled={form.processing}
@@ -71,7 +71,7 @@ export default function AdminUserCreateForm() {
                         className="mt-4 flex items-center justify-center gap-2"
                     >
                         {form.processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('common.create')}
+                        {t('create')}
                     </Button>
                 </CardContent>
             </Card>

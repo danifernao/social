@@ -24,13 +24,13 @@ export default function VerifyEmail({ status }: { status?: string }) {
     };
 
     return (
-        <AuthLayout title={t('auth.verifyEmail.title')} description={t('auth.verifyEmail.description')}>
+        <AuthLayout title={t('verify_email')} description={t('verify_your_email_using_sent_link')}>
             {/* Título del documento */}
-            <Head title={t('auth.verifyEmail.title')} />
+            <Head title={t('verify_email')} />
 
             {/* Mensaje de confirmación cuando el enlace ha sido enviado */}
             {status === 'verification_link_sent' && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">{t('auth.verifyEmail.emailSent')}</div>
+                <div className="mb-4 text-center text-sm font-medium text-green-600">{t('new_verification_link_sent')}</div>
             )}
 
             {/* Formulario para reenviar el correo de verificación */}
@@ -38,17 +38,17 @@ export default function VerifyEmail({ status }: { status?: string }) {
                 {/* Botón para reenviar el correo */}
                 <Button disabled={processing} variant="secondary">
                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                    {t('auth.verifyEmail.resendEmail')}
+                    {t('resend_verification_email')}
                 </Button>
 
                 {/* Acciones secundarias: cambiar correo o cerrar sesión */}
                 <div className="mx-auto text-center">
                     <TextLink href={route('verification.email.edit')} className="text-sm">
-                        {t('auth.changeEmail.link')}
+                        {t('change_email_address')}
                     </TextLink>
                     <span className="mx-2">|</span>
                     <TextLink href={route('logout')} method="post" className="text-sm">
-                        {t('common.logout')}
+                        {t('logout')}
                     </TextLink>
                 </div>
             </form>

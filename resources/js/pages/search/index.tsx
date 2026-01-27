@@ -53,7 +53,7 @@ export default function SearchIndex() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('common.search'),
+            title: t('search'),
             href: route('search.index'),
         },
     ];

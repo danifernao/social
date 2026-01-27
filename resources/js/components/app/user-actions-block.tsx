@@ -39,7 +39,7 @@ export default function UserActionsBlock({ user }: UserActionsBlockProps) {
         <Button variant="ghost" className="w-full justify-start" onClick={toggleBlock} disabled={isProcessing}>
             {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />}
             {user.is_blocked ? <LockOpen className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
-            <span>{user.is_blocked ? t('common.unblock') : t('common.block')}</span>
+            <span>{user.is_blocked ? t('unblock') : t('block')}</span>
         </Button>
     );
 }

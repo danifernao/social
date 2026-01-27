@@ -23,7 +23,7 @@ export default function UsersIndex() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('admin.user.layout.title'),
+            title: t('users_administration'),
             href: route('admin.user.index'),
         },
     ];
@@ -38,7 +38,7 @@ export default function UsersIndex() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             {/* Título del documento */}
-            <Head title={t('admin.user.layout.title')} />
+            <Head title={t('users_administration')} />
 
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
@@ -46,7 +46,7 @@ export default function UsersIndex() {
                     {auth.user.is_admin && (
                         <div>
                             <Button variant="outline" asChild>
-                                <Link href={route('admin.user.create')}>{t('admin.user.index.create')}</Link>
+                                <Link href={route('admin.user.create')}>{t('create_user')}</Link>
                             </Button>
                         </div>
                     )}

@@ -32,21 +32,21 @@ export default function ConfirmPassword() {
     };
 
     return (
-        <AuthLayout title={t('auth.confirmPassword.title')} description={t('auth.confirmPassword.description')}>
+        <AuthLayout title={t('confirm_your_password')} description={t('secure_area_confirm_password')}>
             {/* Título del documento */}
-            <Head title={t('auth.confirmPassword.title')} />
+            <Head title={t('confirm_your_password')} />
 
             {/* Formulario de confirmación de contraseña */}
             <form onSubmit={submit}>
                 <div className="space-y-6">
                     {/* Campo de contraseña */}
                     <div className="grid gap-2">
-                        <Label htmlFor="password">{t('common.password')}</Label>
+                        <Label htmlFor="password">{t('password')}</Label>
                         <Input
                             id="password"
                             type="password"
                             name="password"
-                            placeholder={t('common.password')}
+                            placeholder={t('password')}
                             autoComplete="current-password"
                             value={data.password}
                             autoFocus
@@ -59,7 +59,7 @@ export default function ConfirmPassword() {
                     <div className="flex items-center">
                         <Button className="w-full" disabled={processing}>
                             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            {t('common.confirmPassword')}
+                            {t('confirm_password')}
                         </Button>
                     </div>
                 </div>

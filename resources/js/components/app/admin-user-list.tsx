@@ -41,9 +41,9 @@ export default function AdminUserList({ users, previous, next }: Props) {
 
     // Mapa de nombres legibles para cada rol de usuario.
     const roles = {
-        admin: t('userRoles.admin.long'),
-        mod: t('userRoles.mod.long'),
-        user: t('userRoles.user.long'),
+        admin: t('administrator'),
+        mod: t('moderator'),
+        user: t('user'),
     };
 
     // Gestiona el formulario de búsqueda.
@@ -96,7 +96,7 @@ export default function AdminUserList({ users, previous, next }: Props) {
         <div className="w-full space-y-4">
             {/* Buscador de usuarios */}
             <form onSubmit={handleSearch}>
-                <Input placeholder={t('admin.user.index.searchPlaceholder')} value={query} onChange={(e) => setQuery(e.target.value)} />
+                <Input placeholder={t('search_by_username_or_id')} value={query} onChange={(e) => setQuery(e.target.value)} />
             </form>
 
             {/* Tabla de usuarios */}
@@ -108,45 +108,45 @@ export default function AdminUserList({ users, previous, next }: Props) {
                             {/* ID */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('id')}>
-                                    {t('common.id')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('id')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
 
                             {/* Avatar */}
-                            <TableHead>{t('common.avatar')}</TableHead>
+                            <TableHead>{t('avatar')}</TableHead>
 
                             {/* Nombre de usuario */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('username')}>
-                                    {t('common.username')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('username')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
 
                             {/* Estado de verificación del correo */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('email_verified_at')}>
-                                    {t('common.verified')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('verified')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
 
                             {/* Estado de la cuenta */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('is_active')}>
-                                    {t('common.enabled')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('enabled')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
 
                             {/* Rol */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('role')}>
-                                    {t('common.role')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('role')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
 
                             {/* Fecha de registro */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('created_at')}>
-                                    {t('common.registered')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('registered')} <ArrowUpDown className="ml-1 h-4 w-4" />
                                 </Button>
                             </TableHead>
                             {/* Acciones */}
@@ -173,13 +173,11 @@ export default function AdminUserList({ users, previous, next }: Props) {
 
                                     {/* Estado de verificación del correo */}
                                     <TableCell className={addTextColor(user.email_verified_at)}>
-                                        {user.email_verified_at ? t('common.yes') : t('common.no')}
+                                        {user.email_verified_at ? t('yes') : t('no')}
                                     </TableCell>
 
                                     {/* Estado de la cuenta */}
-                                    <TableCell className={addTextColor(user.is_active)}>
-                                        {user.is_active ? t('common.yes') : t('common.no')}
-                                    </TableCell>
+                                    <TableCell className={addTextColor(user.is_active)}>{user.is_active ? t('yes') : t('no')}</TableCell>
 
                                     {/* Rol */}
                                     <TableCell>{roles[user.role]}</TableCell>
@@ -191,7 +189,7 @@ export default function AdminUserList({ users, previous, next }: Props) {
                                     <TableCell>
                                         {canActOnUser(user) && (
                                             <Button variant="outline" asChild>
-                                                <Link href={route('admin.user.edit', user.id)}>{t('common.manage')}</Link>
+                                                <Link href={route('admin.user.edit', user.id)}>{t('manage')}</Link>
                                             </Button>
                                         )}
                                     </TableCell>
@@ -200,7 +198,7 @@ export default function AdminUserList({ users, previous, next }: Props) {
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={8} className="py-4 text-center">
-                                    {t('noResults.search')}
+                                    {t('no_results_found')}
                                 </TableCell>
                             </TableRow>
                         )}

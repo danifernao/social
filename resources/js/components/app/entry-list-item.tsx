@@ -97,7 +97,7 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                 {/* Enlace a los comentarios cuando es una publicación */}
                 {entry.type === 'post' && routeName !== 'post.show' && (
                     <div className="ml-auto">
-                        <Link href={`/post/${entry.id}#comments`} className={buttonVariants({ variant: 'outline' })} title={t('common.comment')}>
+                        <Link href={`/post/${entry.id}#comments`} className={buttonVariants({ variant: 'outline' })} title={t('comment')}>
                             {(entry as Post).comments_count} <MessageSquare />
                         </Link>
                     </div>
