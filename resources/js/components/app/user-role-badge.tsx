@@ -20,11 +20,11 @@ export default function UserRoleBadge({ role }: UserRoleBadgeProps) {
     const styles = role === 'admin' ? 'bg-yellow-500 text-black' : 'bg-blue-500 text-white';
 
     // Define el texto corto que se muestra dentro de la insignia.
-    const label = role === 'admin' ? t('userRoles.admin.short') : t('userRoles.mod.short');
+    const label = role === 'admin' ? t('admin') : t('mod');
 
     // Define el texto accesible que describe el rol de forma completa.
     // Se utiliza como etiqueta ARIA para lectores de pantalla.
-    const aria = role === 'admin' ? t('userRoles.admin.long') : t('userRoles.mod.long');
+    const aria = role === 'admin' ? t('administrator') : t('moderator');
 
     return (
         <span className={`ml-2 rounded-md px-2 py-0.5 text-xs font-semibold ${styles}`} aria-label={aria} role="status">

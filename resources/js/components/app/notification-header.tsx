@@ -18,12 +18,12 @@ export default function NotificationHeader({ markAsRead, isProcessing }: Notific
     return (
         <div className="flex items-center gap-4">
             {/* Título principal de la sección de notificaciones */}
-            <h2 className="flex-1 text-2xl font-bold">{t('common.notifications')}</h2>
+            <h2 className="flex-1 text-2xl font-bold">{t('notifications')}</h2>
 
             <div>
                 {/* Botón para marcar todas las notificaciones como leídas */}
                 <Button onClick={markAsRead} disabled={isProcessing}>
-                    {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />} {t('common.markAsRead')}
+                    {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />} {t('mark_as_read')}
                 </Button>
             </div>
         </div>

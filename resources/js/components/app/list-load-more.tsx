@@ -29,10 +29,10 @@ export default function ListLoadMore({ type, cursor, isProcessing, autoClick = t
 
     // Mapa que asocia cada tipo de lista con su traducción correspondiente en plural.
     const listType = {
-        post: t('common.posts').toLowerCase(),
-        comment: t('common.comments').toLowerCase(),
-        user: t('common.users').toLowerCase(),
-        notification: t('common.notifications').toLowerCase(),
+        post: t('posts').toLowerCase(),
+        comment: t('comments').toLowerCase(),
+        user: t('users').toLowerCase(),
+        notification: t('notifications').toLowerCase(),
     };
 
     // Observa la visibilidad del botón dentro del viewport.
@@ -66,7 +66,7 @@ export default function ListLoadMore({ type, cursor, isProcessing, autoClick = t
         // Botón para cargar más elementos.
         <Button ref={ref} variant="outline" disabled={isProcessing} onClick={onClick}>
             {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-            {isProcessing ? t('common.loading') : t('common.loadMore')} {listType[type]}
+            {isProcessing ? t('loading') : t('load_more')} {listType[type]}
         </Button>
     );
 }

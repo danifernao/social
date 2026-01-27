@@ -35,24 +35,24 @@ export default function DeleteUser() {
 
     return (
         <div className="space-y-6">
-            <HeadingSmall title={t('settings.profile.delete.title')} description={t('settings.profile.delete.description')} />
+            <HeadingSmall title={t('delete_account')} description={t('delete_account_and_all_resources')} />
             <div className="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
                 <div className="relative space-y-0.5 text-red-600 dark:text-red-100">
-                    <p className="font-medium">{t('settings.profile.delete.warning.title')}</p>
-                    <p className="text-sm">{t('settings.profile.delete.warning.description')}</p>
+                    <p className="font-medium">{t('warning')}</p>
+                    <p className="text-sm">{t('action_irreversible_warning')}</p>
                 </div>
 
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button variant="destructive">{t('settings.profile.delete.title')}</Button>
+                        <Button variant="destructive">{t('delete_account')}</Button>
                     </DialogTrigger>
                     <DialogContent>
-                        <DialogTitle>{t('settings.profile.delete.title')}</DialogTitle>
-                        <DialogDescription>{t('settings.profile.delete.confirmation.description')}</DialogDescription>
+                        <DialogTitle>{t('delete_account')}</DialogTitle>
+                        <DialogDescription>{t('confirm_account_deletion')}</DialogDescription>
                         <form className="space-y-6" onSubmit={deleteUser}>
                             <div className="grid gap-2">
                                 <Label htmlFor="password" className="sr-only">
-                                    {t('common.password')}
+                                    {t('password')}
                                 </Label>
 
                                 <Input
@@ -62,7 +62,7 @@ export default function DeleteUser() {
                                     ref={passwordInput}
                                     value={data.password}
                                     onChange={(e) => setData('password', e.target.value)}
-                                    placeholder={t('common.password')}
+                                    placeholder={t('password')}
                                     autoComplete="current-password"
                                 />
 
@@ -72,12 +72,12 @@ export default function DeleteUser() {
                             <DialogFooter className="gap-2">
                                 <DialogClose asChild>
                                     <Button variant="secondary" onClick={closeModal}>
-                                        {t('common.cancel')}
+                                        {t('cancel')}
                                     </Button>
                                 </DialogClose>
 
                                 <Button variant="destructive" disabled={processing} asChild>
-                                    <button type="submit">{t('settings.profile.delete.title')}</button>
+                                    <button type="submit">{t('delete_account')}</button>
                                 </Button>
                             </DialogFooter>
                         </form>

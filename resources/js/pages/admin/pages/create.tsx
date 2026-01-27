@@ -21,11 +21,11 @@ export default function PagesCreate() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('admin.page.layout.title'),
+            title: t('pages_administration'),
             href: route('admin.page.index', lang),
         },
         {
-            title: t('admin.page.create.title'),
+            title: t('create_page'),
             href: route('admin.page.create'),
         },
     ];
@@ -33,7 +33,7 @@ export default function PagesCreate() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             {/* Título del documento */}
-            <Head title={t('admin.page.create.title')} />
+            <Head title={t('create_page')} />
 
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>

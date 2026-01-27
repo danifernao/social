@@ -47,7 +47,7 @@ export default function ProfileShow() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('profile.title', { username: user.username }),
+            title: t('user_profile', { username: user.username }),
             href: route('profile.show', user.username),
         },
     ];
@@ -55,7 +55,7 @@ export default function ProfileShow() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             {/* Título del documento */}
-            <Head title={t('profile.title', { username: user.username })} />
+            <Head title={t('user_profile', { username: user.username })} />
 
             <AppContentLayout>
                 {/* Encabezado del perfil del usuario */}

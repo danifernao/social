@@ -67,7 +67,7 @@ export default function NotificationIndex() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('common.notifications'),
+            title: t('notifications'),
             href: route('notification.index'),
         },
     ];
@@ -75,7 +75,7 @@ export default function NotificationIndex() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             {/* Título del documento */}
-            <Head title={t('common.notifications')} />
+            <Head title={t('notifications')} />
 
             <AppContentLayout>
                 {/* Encabezado con acciones de notificaciones */}

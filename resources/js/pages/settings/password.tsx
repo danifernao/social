@@ -56,7 +56,7 @@ export default function Password() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('settings.password.title'),
+            title: t('password_settings'),
             href: '/settings/password',
         },
     ];
@@ -64,18 +64,18 @@ export default function Password() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             {/* Título del documento */}
-            <Head title={t('settings.password.title')} />
+            <Head title={t('password_settings')} />
 
             <SettingsLayout>
                 <div className="space-y-6">
                     {/* Encabezado descriptivo de la sección */}
-                    <HeadingSmall title={t('settings.password.title')} description={t('settings.password.description')} />
+                    <HeadingSmall title={t('password_settings')} description={t('use_strong_random_password')} />
 
                     {/* Formulario para cambiar la contraseña */}
                     <form onSubmit={updatePassword} className="space-y-6">
                         {/* Campo de contraseña actual */}
                         <div className="grid gap-2">
-                            <Label htmlFor="current_password">{t('common.currentPassword')}</Label>
+                            <Label htmlFor="current_password">{t('current_password')}</Label>
 
                             <Input
                                 id="current_password"
@@ -85,7 +85,7 @@ export default function Password() {
                                 type="password"
                                 className="mt-1 block w-full"
                                 autoComplete="current-password"
-                                placeholder={t('common.currentPassword')}
+                                placeholder={t('current_password')}
                             />
 
                             <InputError message={errors.current_password} />
@@ -93,7 +93,7 @@ export default function Password() {
 
                         {/* Campo de contraseña nueva */}
                         <div className="grid gap-2">
-                            <Label htmlFor="password">{t('common.newPassword')}</Label>
+                            <Label htmlFor="password">{t('new_password')}</Label>
                             <Input
                                 id="password"
                                 ref={passwordInput}
@@ -102,14 +102,14 @@ export default function Password() {
                                 type="password"
                                 className="mt-1 block w-full"
                                 autoComplete="new-password"
-                                placeholder={t('common.newPassword')}
+                                placeholder={t('new_password')}
                             />
                             <InputError message={errors.password} />
                         </div>
 
                         {/* Campo de confirmación de contraseña nueva */}
                         <div className="grid gap-2">
-                            <Label htmlFor="password_confirmation">{t('common.confirmPassword')}</Label>
+                            <Label htmlFor="password_confirmation">{t('confirm_password')}</Label>
 
                             <Input
                                 id="password_confirmation"
@@ -118,7 +118,7 @@ export default function Password() {
                                 type="password"
                                 className="mt-1 block w-full"
                                 autoComplete="new-password"
-                                placeholder={t('common.confirmPassword')}
+                                placeholder={t('confirm_password')}
                             />
 
                             <InputError message={errors.password_confirmation} />
@@ -126,7 +126,7 @@ export default function Password() {
 
                         <div className="flex items-center gap-4">
                             {/* Botón para guardar los cambios */}
-                            <Button disabled={processing}>{t('common.save')}</Button>
+                            <Button disabled={processing}>{t('save')}</Button>
 
                             {/* Indicador visual de guardado exitoso */}
                             <Transition
@@ -136,7 +136,7 @@ export default function Password() {
                                 leave="transition ease-in-out"
                                 leaveTo="opacity-0"
                             >
-                                <p className="text-sm text-neutral-600">{t('common.saved')}</p>
+                                <p className="text-sm text-neutral-600">{t('changes_saved')}</p>
                             </Transition>
                         </div>
                     </form>

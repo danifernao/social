@@ -17,11 +17,11 @@ export default function UsersCreate() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('admin.user.layout.title'),
+            title: t('users_administration'),
             href: route('admin.user.index'),
         },
         {
-            title: t('admin.user.create.title'),
+            title: t('create_user'),
             href: route('admin.user.create'),
         },
     ];
@@ -29,7 +29,7 @@ export default function UsersCreate() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             {/* Título del documento */}
-            <Head title={t('admin.user.create.title')} />
+            <Head title={t('create_user')} />
 
             <AdminLayout>
                 <AppContentLayout noMargin={true} fullWidth={true}>

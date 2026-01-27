@@ -24,27 +24,27 @@ export default function EmptyMessage({ custom = '' }: EmptyMessageProps) {
         switch (routeName) {
             case 'home.index':
             case 'profile.show':
-                message = t('noResults.posts');
+                message = t('no_posts_yet');
                 break;
 
             case 'follow.following':
-                message = t('noResults.following');
+                message = t('user_follows_no_one');
                 break;
 
             case 'follow.followers':
-                message = t('noResults.followers');
+                message = t('user_has_no_followers');
                 break;
 
             case 'post.show':
-                message = t('noResults.comments');
+                message = t('no_comments_yet');
                 break;
 
             case 'search.index':
-                message = t('noResults.search');
+                message = t('no_results_found');
                 break;
 
             default:
-                message = t('noResults.general');
+                message = t('nothing_to_show_yet');
                 break;
         }
     }

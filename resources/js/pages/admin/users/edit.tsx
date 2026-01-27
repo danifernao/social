@@ -20,7 +20,7 @@ export default function UsersEdit() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('admin.user.layout.title'),
+            title: t('users_administration'),
             href: route('admin.user.index'),
         },
         {
@@ -32,7 +32,7 @@ export default function UsersEdit() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             {/* Título del documento */}
-            <Head title={t('admin.user.edit.title')} />
+            <Head title={t('edit_user')} />
 
             <AdminLayout>
                 <AppContentLayout noMargin={true} fullWidth={true}>

@@ -95,7 +95,7 @@ export default function Profile() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('settings.profile.title'),
+            title: t('profile_settings'),
             href: '/settings/profile',
         },
     ];
@@ -103,12 +103,12 @@ export default function Profile() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             {/* Título del documento */}
-            <Head title={t('settings.profile.title')} />
+            <Head title={t('profile_settings')} />
 
             <SettingsLayout>
                 <div className="space-y-6">
                     {/* Encabezado descriptivo de la sección */}
-                    <HeadingSmall title={t('settings.profile.info.title')} description={t('settings.profile.info.description')} />
+                    <HeadingSmall title={t('profile_information')} description={t('update_profile_info')} />
 
                     {/* Formulario de edición del perfil */}
                     <form onSubmit={submit} className="space-y-6">
@@ -125,7 +125,7 @@ export default function Profile() {
                                         type="button"
                                         onClick={handleRemoveAvatar}
                                         className="absolute top-0 right-0 flex h-6 w-6 items-center justify-center rounded-full bg-neutral-800 text-white hover:bg-red-600"
-                                        title={t('settings.profile.info.avatar.remove')}
+                                        title={t('remove_avatar')}
                                     >
                                         <Trash2 className="h-4 w-4" />
                                     </button>
@@ -134,14 +134,14 @@ export default function Profile() {
 
                             <div className="flex-1 space-y-2">
                                 <Input type="file" accept="image/png,image/jpeg,image/jpg" onChange={handleFileChange} ref={fileInputRef} />
-                                <p className="text-muted-foreground text-sm">{t('settings.profile.info.avatar.format')}</p>
+                                <p className="text-muted-foreground text-sm">{t('avatar_file_requirements')}</p>
                                 <InputError className="mt-2" message={errors.avatar} />
                             </div>
                         </div>
 
                         {/* Campo de nombre de usuario */}
                         <div className="grid gap-2">
-                            <Label htmlFor="username">{t('common.username')}</Label>
+                            <Label htmlFor="username">{t('username')}</Label>
 
                             <Input
                                 id="username"
@@ -150,7 +150,7 @@ export default function Profile() {
                                 onChange={(e) => setData('username', e.target.value)}
                                 required
                                 autoComplete="username"
-                                placeholder={t('common.username')}
+                                placeholder={t('username')}
                             />
 
                             <InputError className="mt-2" message={errors.username} />
@@ -158,7 +158,7 @@ export default function Profile() {
 
                         {/* Campo de correo electrónico */}
                         <div className="grid gap-2">
-                            <Label htmlFor="email">{t('settings.profile.email.address')}</Label>
+                            <Label htmlFor="email">{t('email_address')}</Label>
 
                             <Input
                                 id="email"
@@ -168,7 +168,7 @@ export default function Profile() {
                                 onChange={(e) => setData('email', e.target.value)}
                                 required
                                 autoComplete="email"
-                                placeholder={t('settings.profile.email.address')}
+                                placeholder={t('email_address')}
                             />
 
                             <InputError className="mt-2" message={errors.email} />
@@ -176,7 +176,7 @@ export default function Profile() {
 
                         <div className="flex items-center gap-4">
                             {/* Botón para guardar los cambios */}
-                            <Button disabled={processing}>{t('common.save')}</Button>
+                            <Button disabled={processing}>{t('save')}</Button>
 
                             {/* Indicador visual de guardado exitoso */}
                             <Transition
@@ -186,7 +186,7 @@ export default function Profile() {
                                 leave="transition ease-in-out"
                                 leaveTo="opacity-0"
                             >
-                                <p className="text-sm text-neutral-600">{t('common.saved')}</p>
+                                <p className="text-sm text-neutral-600">{t('changes_saved')}</p>
                             </Transition>
                         </div>
                     </form>

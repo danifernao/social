@@ -75,7 +75,7 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
                 setData('content', '');
             },
             onError: (errors) => {
-                toast(t('common.error'));
+                toast(t('unexpected_error'));
                 console.error(errors);
             },
         });
@@ -114,7 +114,7 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
 
                     {/* Botón para volver al modo edición */}
                     <Button variant="outline" className="ml-auto" onClick={() => setPreviewMode(false)}>
-                        {t('common.backToEdit')}
+                        {t('back_to_edit')}
                     </Button>
                 </div>
             ) : (
@@ -134,7 +134,7 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
                         value={data.content}
                         onChange={(e) => setData('content', e.target.value)}
                         disabled={processing}
-                        placeholder={t('common.whatsOnYourMind')}
+                        placeholder={t('whats_on_your_mind')}
                         maxLength={3000}
                     />
 
@@ -149,7 +149,7 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
                                     })}
                                     target="_black"
                                 >
-                                    {t('page.types.guidelines')}
+                                    {t('community_guidelines')}
                                 </a>
                             )}
                         </div>
@@ -158,14 +158,14 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
                             {/* Botón para activar la vista previa */}
                             {data.content.trim().length > 0 && (
                                 <Button type="button" variant="outline" onClick={() => setPreviewMode(true)}>
-                                    {t('common.preview')}
+                                    {t('preview')}
                                 </Button>
                             )}
 
                             {/* Botón de envío */}
                             <Button type="submit" disabled={processing || data.content.trim().length === 0}>
                                 {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                                {formType === 'post' ? t('common.post') : t('common.comment')}
+                                {formType === 'post' ? t('post') : t('comment')}
                             </Button>
                         </div>
                     </div>

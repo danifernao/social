@@ -49,16 +49,16 @@ export default function Login({ status, canResetPassword }: LoginProps) {
     };
 
     return (
-        <AuthLayout title={t('auth.login.title')} description={t('auth.login.description')}>
+        <AuthLayout title={t('log_in_to_your_account')} description={t('enter_email_and_password_to_login')}>
             {/* Título del documento */}
-            <Head title={t('common.login')} />
+            <Head title={t('log_in')} />
 
             {/* Formulario de inicio de sesión */}
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6">
                     {/* Campo de correo electrónico */}
                     <div className="grid gap-2">
-                        <Label htmlFor="email">{t('common.email')}</Label>
+                        <Label htmlFor="email">{t('email')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -68,7 +68,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             autoComplete="email"
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
-                            placeholder={t('common.dummyEmail')}
+                            placeholder={t('dummy_email')}
                         />
                         <InputError message={errors.email} />
                     </div>
@@ -76,10 +76,10 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                     {/* Campo de contraseña */}
                     <div className="grid gap-2">
                         <div className="flex items-center">
-                            <Label htmlFor="password">{t('common.password')}</Label>
+                            <Label htmlFor="password">{t('password')}</Label>
                             {canResetPassword && (
                                 <TextLink href={route('password.request')} className="ml-auto text-sm" tabIndex={5}>
-                                    {t('auth.login.forgotPassword')}
+                                    {t('forgot_your_password')}
                                 </TextLink>
                             )}
                         </div>
@@ -91,7 +91,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             autoComplete="current-password"
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
-                            placeholder={t('common.password')}
+                            placeholder={t('password')}
                         />
                         <InputError message={errors.password} />
                     </div>
@@ -105,20 +105,20 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             onClick={() => setData('remember', !data.remember)}
                             tabIndex={3}
                         />
-                        <Label htmlFor="remember">{t('common.rememberMe')}</Label>
+                        <Label htmlFor="remember">{t('remember_me')}</Label>
                     </div>
 
                     {/* Botón de envío del formulario */}
                     <Button type="submit" className="mt-4 w-full" tabIndex={4} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('common.login')}
+                        {t('log_in')}
                     </Button>
                 </div>
 
                 {/* Enlace para registro si la creación de usuarios está habilitada */}
                 {siteSettings.is_user_registration_enabled && (
                     <div className="text-muted-foreground text-center text-sm">
-                        <Trans i18nKey="auth.login.noAccountYet">
+                        <Trans i18nKey="no_account_create_one">
                             <TextLink href={route('register')} tabIndex={5}></TextLink>
                         </Trans>
                     </div>

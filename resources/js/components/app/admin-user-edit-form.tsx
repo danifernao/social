@@ -30,6 +30,13 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
     // Estado que refleja si la cuenta del usuario está habilitada o no.
     const [isActive, setIsActive] = useState(user.is_active);
 
+    // Mapa de roles con sus descripciones.
+    const role_descriptions = new Map([
+        [t('user'), t('user_role_description')],
+        [t('moderator'), t('moderator_role_description')],
+        [t('administrator'), t('administrator_role_description')],
+    ]);
+
     // Inicializa y gestiona el formulario de acciones administrativas sobre el usuario.
     const { form, handleAction, confirmAction, isDialogOpen, closeDialog } = useAdminActionForm({
         initialData: {
@@ -59,7 +66,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             {auth.user.is_admin && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>{t('admin.user.edit.role.title')}</CardTitle>
+                        <CardTitle>{t('change_role')}</CardTitle>
                     </CardHeader>
 
                     <CardContent className="space-y-4">
@@ -73,18 +80,18 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                             disabled={form.processing && form.data.action === 'change_role'}
                         >
                             <SelectTrigger className="w-[200px]">
-                                <SelectValue placeholder={t('admin.user.edit.role.placeholder')} />
+                                <SelectValue placeholder={t('select_role')} />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="admin">{t('userRoles.admin.long')}</SelectItem>
-                                <SelectItem value="mod">{t('userRoles.mod.long')}</SelectItem>
-                                <SelectItem value="user">{t('userRoles.user.long')}</SelectItem>
+                                <SelectItem value="admin">{t('administrator')}</SelectItem>
+                                <SelectItem value="mod">{t('moderator')}</SelectItem>
+                                <SelectItem value="user">{t('user')}</SelectItem>
                             </SelectContent>
                         </Select>
 
                         {/* Descripción de los roles disponibles */}
                         <dl className="text-muted-foreground grid grid-cols-[min-content_1fr] gap-2 text-sm">
-                            {Object.entries(t('admin.user.edit.role.description', { returnObjects: true })).map(([role, description]) => (
+                            {[...role_descriptions].map(([role, description]) => (
                                 <Fragment key={role}>
                                     <dt className="font-semibold">{role}:</dt>
                                     <dd>{description}</dd>
@@ -99,7 +106,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                             disabled={form.processing && form.data.action === 'change_role'}
                         >
                             {form.processing && form.data.action === 'change_role' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            {t('common.change')}
+                            {t('change')}
                         </Button>
                     </CardContent>
                 </Card>
@@ -109,7 +116,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             {user.avatar_url && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>{t('admin.user.edit.avatar.title')}</CardTitle>
+                        <CardTitle>{t('delete_avatar')}</CardTitle>
                     </CardHeader>
 
                     <CardContent className="space-y-4">
@@ -118,7 +125,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
 
                         <div className="flex items-center gap-4">
                             {/* Previsualización del avatar */}
-                            <img src={user.avatar_url} alt={t('common.avatar')} className="h-24 w-24 rounded-sm bg-neutral-200 object-cover" />
+                            <img src={user.avatar_url} alt={t('avatar')} className="h-24 w-24 rounded-sm bg-neutral-200 object-cover" />
 
                             {/* Botón para eliminar el avatar */}
                             <Button
@@ -127,7 +134,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                                 disabled={form.processing && form.data.action === 'delete_avatar'}
                             >
                                 {form.processing && form.data.action === 'delete_avatar' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                                {t('common.delete')}
+                                {t('delete')}
                             </Button>
                         </div>
                     </CardContent>
@@ -137,7 +144,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             {/* Nombre de usuario */}
             <Card>
                 <CardHeader>
-                    <CardTitle>{t('admin.user.edit.username.title')}</CardTitle>
+                    <CardTitle>{t('change_username')}</CardTitle>
                 </CardHeader>
 
                 <CardContent className="space-y-4">
@@ -146,14 +153,14 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
 
                     {/* Campo de nombre de usuario */}
                     <Input
-                        placeholder={t('common.username')}
+                        placeholder={t('username')}
                         value={form.data.new_username}
                         onChange={(e) => form.setData('new_username', e.target.value)}
                         disabled={form.processing && form.data.action === 'change_username'}
                     />
 
                     {/* Descripción del comportamiento esperado */}
-                    <p className="text-muted-foreground text-sm italic">{t('admin.user.edit.username.notice')}</p>
+                    <p className="text-muted-foreground text-sm italic">{t('random_username_if_empty')}</p>
 
                     {/* Botón para cambiar el nombre de usuario */}
                     <Button
@@ -162,7 +169,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                         disabled={form.processing && form.data.action === 'change_username'}
                     >
                         {form.processing && form.data.action === 'change_username' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('common.change')}
+                        {t('change')}
                     </Button>
                 </CardContent>
             </Card>
@@ -170,7 +177,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             {/* Gestión del correo electrónico */}
             <Card>
                 <CardHeader>
-                    <CardTitle>{t('admin.user.edit.email.title')}</CardTitle>
+                    <CardTitle>{t('change_email_address')}</CardTitle>
                 </CardHeader>
 
                 <CardContent className="space-y-4">
@@ -179,14 +186,14 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
 
                     {/* Campo de correo electrónico */}
                     <Input
-                        placeholder={t('common.newEmail')}
+                        placeholder={t('new_email')}
                         value={form.data.new_email}
                         onChange={(e) => form.setData('new_email', e.target.value)}
                         disabled={form.processing && form.data.action === 'change_email'}
                     />
 
                     {/* Descripción del comportamiento esperado */}
-                    <p className="text-muted-foreground text-sm italic">{t('admin.user.edit.email.notice')}</p>
+                    <p className="text-muted-foreground text-sm italic">{t('verification_email_will_be_sent')}</p>
 
                     {/* Botón para cambiar el correo */}
                     <Button
@@ -195,7 +202,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                         disabled={(form.processing && form.data.action === 'change_email') || form.data.new_email.trim().length === 0}
                     >
                         {form.processing && form.data.action === 'change_email' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('common.change')}
+                        {t('change')}
                     </Button>
                 </CardContent>
             </Card>
@@ -203,7 +210,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             {/* Gestión de la contraseña */}
             <Card>
                 <CardHeader>
-                    <CardTitle>{t('admin.user.edit.resetPassword.title')}</CardTitle>
+                    <CardTitle>{t('reset_password')}</CardTitle>
                 </CardHeader>
 
                 <CardContent className="space-y-4">
@@ -211,7 +218,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                     {form.data.action === 'reset_password' && <FormErrors errors={form.errors} />}
 
                     {/* Descripción de la acción */}
-                    <p>{t('admin.user.edit.resetPassword.description')}</p>
+                    <p>{t('send_password_reset_email')}</p>
 
                     {/* Campo de verificación para reemplazar la contraseña por una aleatoria */}
                     <div className="flex items-center gap-2">
@@ -221,7 +228,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                             onCheckedChange={(checked) => form.setData('random_password', !!checked)}
                             disabled={form.processing && form.data.action === 'reset_password'}
                         />
-                        <label htmlFor="reset-password">{t('admin.user.edit.resetPassword.useRandomPass')}</label>
+                        <label htmlFor="reset-password">{t('replace_password_with_random')}</label>
                     </div>
 
                     {/* Botón para enviar enlace de restablecimiento de contraseña */}
@@ -231,7 +238,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                         disabled={form.processing && form.data.action === 'reset_password'}
                     >
                         {form.processing && form.data.action === 'reset_password' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('common.reset')}
+                        {t('reset')}
                     </Button>
                 </CardContent>
             </Card>
@@ -239,7 +246,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             {/* Gestión del estado de la cuenta */}
             <Card>
                 <CardHeader>
-                    <CardTitle>{t('admin.user.edit.status.title')}</CardTitle>
+                    <CardTitle>{t('change_account_status')}</CardTitle>
                 </CardHeader>
 
                 <CardContent className="space-y-4">
@@ -259,8 +266,8 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                             variant="outline"
                             disabled={form.processing && form.data.action === 'toggle_account_status'}
                         >
-                            <ToggleGroupItem value="true">{t('common.enabled')}</ToggleGroupItem>
-                            <ToggleGroupItem value="false">{t('common.disabled')}</ToggleGroupItem>
+                            <ToggleGroupItem value="true">{t('enabled')}</ToggleGroupItem>
+                            <ToggleGroupItem value="false">{t('disabled')}</ToggleGroupItem>
                         </ToggleGroup>
 
                         {/* Indicador de carga durante el procesamiento de la acción  */}
@@ -268,7 +275,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                     </div>
 
                     {/* Descripción del comportamiento esperado */}
-                    <p className="text-muted-foreground text-sm italic">{t('admin.user.edit.status.notice')}</p>
+                    <p className="text-muted-foreground text-sm italic">{t('disable_account_ends_all_sessions')}</p>
                 </CardContent>
             </Card>
 
@@ -276,13 +283,13 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             {auth.user.is_admin && !user.is_admin && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>{t('admin.user.edit.deleteAccount.title')}</CardTitle>
+                        <CardTitle>{t('delete_user')}</CardTitle>
                     </CardHeader>
 
                     <CardContent className="space-y-4">
                         {/* Descripción de la acción */}
                         {form.data.action === 'delete_account' && <FormErrors errors={form.errors} />}
-                        <p>{t('admin.user.edit.deleteAccount.description')}</p>
+                        <p>{t('delete_user_account_and_data')}</p>
 
                         {/* Botón para eliminar el usuario */}
                         <Button
@@ -292,7 +299,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                             disabled={form.processing && form.data.action === 'delete_account'}
                         >
                             {form.processing && form.data.action === 'delete_account' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            {t('common.delete')}
+                            {t('delete')}
                         </Button>
                     </CardContent>
                 </Card>

@@ -35,7 +35,7 @@ export default function HomeIndex() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('common.home'),
+            title: t('home'),
             href: route('home.index'),
         },
     ];
@@ -43,7 +43,7 @@ export default function HomeIndex() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             {/* Título del documento */}
-            <Head title={t('common.home')} />
+            <Head title={t('home')} />
 
             <AppContentLayout>
                 {/* Contexto para sincronizar cambios en el feed de publicaciones */}

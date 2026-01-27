@@ -20,7 +20,7 @@ export default function PagesEdit() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('admin.page.layout.title'),
+            title: t('pages_administration'),
             href: route('admin.page.index', { lang: page.language }),
         },
         {
@@ -32,7 +32,7 @@ export default function PagesEdit() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             {/* Título del documento */}
-            <Head title={t('admin.page.edit.title')} />
+            <Head title={t('edit_page')} />
 
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>

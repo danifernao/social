@@ -28,9 +28,9 @@ export default function ForgotPassword({ status }: { status?: string }) {
     };
 
     return (
-        <AuthLayout title={t('auth.forgotPassword.title')} description={t('auth.forgotPassword.description')}>
+        <AuthLayout title={t('forgot_your_password')} description={t('enter_email_for_password_reset_link')}>
             {/* Título del documento */}
-            <Head title={t('auth.forgotPassword.title')} />
+            <Head title={t('forgot_your_password')} />
 
             {/* Mensaje de estado mostrado después de la acción */}
             {status && <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>}
@@ -40,7 +40,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                 <form onSubmit={submit}>
                     {/* Campo de correo electrónico */}
                     <div className="grid gap-2">
-                        <Label htmlFor="email">{t('common.email')}</Label>
+                        <Label htmlFor="email">{t('email')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -49,7 +49,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                             value={data.email}
                             autoFocus
                             onChange={(e) => setData('email', e.target.value)}
-                            placeholder={t('common.dummyEmail')}
+                            placeholder={t('dummy_email')}
                         />
                         <InputError message={errors.email} />
                     </div>
@@ -58,14 +58,14 @@ export default function ForgotPassword({ status }: { status?: string }) {
                     <div className="my-6 flex items-center justify-start">
                         <Button className="w-full" disabled={processing}>
                             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            {t('auth.forgotPassword.sendEmail')}
+                            {t('send_password_reset_link')}
                         </Button>
                     </div>
                 </form>
 
                 {/* Enlace para volver a la pantalla de inicio de sesión */}
                 <div className="text-muted-foreground space-x-1 text-center text-sm">
-                    <Trans i18nKey="auth.forgotPassword.returnToLogin">
+                    <Trans i18nKey="or_go_back_to_login">
                         <TextLink href={route('login')}></TextLink>
                     </Trans>
                 </div>

@@ -37,7 +37,7 @@ export default function PagesIndex() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('admin.page.layout.title'),
+            title: t('pages_administration'),
             href: route('admin.page.index', { lang: currentLanguage }),
         },
     ];
@@ -52,20 +52,20 @@ export default function PagesIndex() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             {/* Título del documento */}
-            <Head title={t('admin.page.layout.title')} />
+            <Head title={t('pages_administration')} />
 
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
                     <div className="flex items-center justify-between">
                         {/* Enlace para crear una nueva página estática */}
                         <Button variant="outline" asChild>
-                            <Link href={route('admin.page.create', { lang: currentLanguage })}>{t('admin.page.index.create.title')}</Link>
+                            <Link href={route('admin.page.create', { lang: currentLanguage })}>{t('create_page')}</Link>
                         </Button>
 
                         {/* Selector de idioma */}
                         <Select value={currentLanguage} onValueChange={handleLanguageChange}>
                             <SelectTrigger className="w-40">
-                                <SelectValue placeholder={t('common.selectLanguage')} />
+                                <SelectValue placeholder={t('select_language')} />
                             </SelectTrigger>
                             <SelectContent>
                                 {locales.map(({ lang, label }) => (

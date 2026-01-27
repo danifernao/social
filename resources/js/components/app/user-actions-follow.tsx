@@ -39,7 +39,7 @@ export default function UserActionsFollow({ user }: UserActionsFollowProps) {
         <Button onClick={toggleFollow} disabled={isProcessing}>
             {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />}
             {isFollowed ? <UserMinus className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}
-            <span>{isFollowed ? t('common.unfollow') : t('common.follow')}</span>
+            <span>{isFollowed ? t('unfollow') : t('follow')}</span>
         </Button>
     );
 }

@@ -18,7 +18,7 @@ export default function Appearance() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('settings.appearance.title'),
+            title: t('appearance_settings'),
             href: '/settings/appearance',
         },
     ];
@@ -26,12 +26,12 @@ export default function Appearance() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             {/* Título del documento */}
-            <Head title={t('settings.appearance.title')} />
+            <Head title={t('appearance_settings')} />
 
             <SettingsLayout>
                 <div className="space-y-6">
                     {/* Encabezado descriptivo de la sección */}
-                    <HeadingSmall title={t('settings.appearance.title')} description={t('settings.appearance.description')} />
+                    <HeadingSmall title={t('appearance_settings')} description={t('update_account_appearance_settings')} />
 
                     {/* Opción para cambiar el tema */}
                     <AppearanceTabs />

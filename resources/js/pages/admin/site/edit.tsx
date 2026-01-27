@@ -20,7 +20,7 @@ export default function SiteEdit() {
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: t('admin.site.layout.title'),
+            title: t('site_administration'),
             href: route('admin.site.edit'),
         },
     ];
@@ -28,7 +28,7 @@ export default function SiteEdit() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             {/* Título del documento */}
-            <Head title={t('admin.site.layout.title')} />
+            <Head title={t('site_administration')} />
 
             {/* Formulario para editar los datos globales del sitio */}
             <AdminLayout>

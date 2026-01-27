@@ -22,25 +22,25 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
     // Definición de los elementos de navegación de la barra lateral.
     const sidebarNavItems: NavItem[] = [
         {
-            title: t('common.profile'),
+            title: t('profile'),
             href: '/settings/profile',
             icon: null,
             isActive: ['profile.edit'].includes(routeName),
         },
         {
-            title: t('common.password'),
+            title: t('password'),
             href: '/settings/password',
             icon: null,
             isActive: ['password.edit'].includes(routeName),
         },
         {
-            title: t('common.language'),
+            title: t('language'),
             href: '/settings/language',
             icon: null,
             isActive: ['language.edit'].includes(routeName),
         },
         {
-            title: t('common.appearance'),
+            title: t('appearance'),
             href: '/settings/appearance',
             icon: null,
             isActive: ['appearance'].includes(routeName),
@@ -50,7 +50,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
     return (
         <div className="px-4 py-6">
             {/* Encabezado descriptivo de la sección */}
-            <Heading title={t('settings.layout.title')} description={t('settings.layout.description')} />
+            <Heading title={t('account_settings')} description={t('manage_profile_and_account_settings')} />
 
             {/**
              * Contenedor flexible que organiza la barra lateral y el contenido.

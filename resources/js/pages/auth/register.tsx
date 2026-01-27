@@ -48,16 +48,16 @@ export default function Register() {
     };
 
     return (
-        <AuthLayout title={t('auth.register.title')} description={t('auth.register.description')}>
+        <AuthLayout title={t('create_an_account')} description={t('enter_details_to_create_an_account')}>
             {/* Título del documento */}
-            <Head title={t('common.register')} />
+            <Head title={t('sign_up')} />
 
             {/* Formulario de registro */}
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6">
                     {/* Campo de nombre de usuario */}
                     <div className="grid gap-2">
-                        <Label htmlFor="username">{t('common.username')}</Label>
+                        <Label htmlFor="username">{t('username')}</Label>
                         <Input
                             id="username"
                             type="text"
@@ -68,14 +68,14 @@ export default function Register() {
                             value={data.username}
                             onChange={(e) => setData('username', e.target.value)}
                             disabled={processing}
-                            placeholder={t('common.username')}
+                            placeholder={t('username')}
                         />
                         <InputError message={errors.username} className="mt-2" />
                     </div>
 
                     {/* Campo de correo electrónico */}
                     <div className="grid gap-2">
-                        <Label htmlFor="email">{t('common.email')}</Label>
+                        <Label htmlFor="email">{t('email')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -85,14 +85,14 @@ export default function Register() {
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
                             disabled={processing}
-                            placeholder={t('common.dummyEmail')}
+                            placeholder={t('dummy_email')}
                         />
                         <InputError message={errors.email} />
                     </div>
 
                     {/* Campo de contraseña */}
                     <div className="grid gap-2">
-                        <Label htmlFor="password">{t('common.password')}</Label>
+                        <Label htmlFor="password">{t('password')}</Label>
                         <Input
                             id="password"
                             type="password"
@@ -102,14 +102,14 @@ export default function Register() {
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             disabled={processing}
-                            placeholder={t('common.password')}
+                            placeholder={t('password')}
                         />
                         <InputError message={errors.password} />
                     </div>
 
                     {/* Campo de confirmación de contraseña */}
                     <div className="grid gap-2">
-                        <Label htmlFor="password_confirmation">{t('common.confirmPassword')}</Label>
+                        <Label htmlFor="password_confirmation">{t('confirm_password')}</Label>
                         <Input
                             id="password_confirmation"
                             type="password"
@@ -119,7 +119,7 @@ export default function Register() {
                             value={data.password_confirmation}
                             onChange={(e) => setData('password_confirmation', e.target.value)}
                             disabled={processing}
-                            placeholder={t('common.confirmPassword')}
+                            placeholder={t('confirm_password')}
                         />
                         <InputError message={errors.password_confirmation} />
                     </div>
@@ -129,7 +129,7 @@ export default function Register() {
                         <div className="text-muted-foreground text-center text-sm">
                             {/* Solo términos */}
                             {!specialPages[i18n.currentLang].policy && (
-                                <Trans i18nKey="auth.register.disclaimer.terms">
+                                <Trans i18nKey="accept_terms_notice">
                                     <TextLink
                                         href={route('page.show', {
                                             lang: i18n.currentLang,
@@ -142,7 +142,7 @@ export default function Register() {
 
                             {/* Solo política de privacidad */}
                             {!specialPages[i18n.currentLang].terms && (
-                                <Trans i18nKey="auth.register.disclaimer.policy">
+                                <Trans i18nKey="accept_privacy_policy_notice">
                                     <TextLink
                                         href={route('page.show', {
                                             lang: i18n.currentLang,
@@ -155,7 +155,7 @@ export default function Register() {
 
                             {/* Términos y política disponibles */}
                             {specialPages[i18n.currentLang].policy && specialPages[i18n.currentLang].terms && (
-                                <Trans i18nKey="auth.register.disclaimer.termsAndPolicy">
+                                <Trans i18nKey="accept_terms_and_policy_notice">
                                     <TextLink
                                         href={route('page.show', {
                                             lang: i18n.currentLang,
@@ -178,13 +178,13 @@ export default function Register() {
                     {/* Botón de envío del formulario */}
                     <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        {t('common.signUp')}
+                        {t('create_account')}
                     </Button>
                 </div>
 
                 {/* Enlace para usuarios que ya tienen cuenta */}
                 <div className="text-muted-foreground text-center text-sm">
-                    <Trans i18nKey="auth.register.alreadyHaveAccount">
+                    <Trans i18nKey="already_have_account_log_in">
                         <TextLink href={route('login')} tabIndex={6}></TextLink>
                     </Trans>
                 </div>
