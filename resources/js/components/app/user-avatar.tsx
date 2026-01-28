@@ -25,7 +25,7 @@ export default function UserAvatar({ user, className = 'w-10 h-10' }: UserAvatar
                     <img src={user.avatar_url} alt={t('avatar')} className="size-full object-cover" />
                 ) : (
                     // Si el usuario no tiene avatar, se muestra la inicial de su nombre de usuario.
-                    <p className="flex size-full items-center justify-center">{user.username.charAt(0).toUpperCase()}</p>
+                    <span className="flex size-full items-center justify-center">{user.username.charAt(0).toUpperCase()}</span>
                 )}
             </Link>
         </div>
