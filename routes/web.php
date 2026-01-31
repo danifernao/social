@@ -31,6 +31,7 @@ use App\Http\Controllers\SettingsProfileController;
 |--------------------------------------------------------------------------
 */
 use App\Http\Controllers\AdminPageController;
+use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\AdminSiteController;
 use App\Http\Controllers\AdminUserController;
 
@@ -279,12 +280,28 @@ Route::middleware(['auth', 'verified'])->group(function () {
                     Route::patch('{user}', [AdminUserController::class, 'update'])
                         ->name('update');
                 });
+
+            // Administración de reportes
+            Route::prefix('reports')
+                ->name('report.')
+                ->group(function () {
+                    Route::get('/', [AdminReportController::class, 'index'])
+                        ->name('index');
+                    Route::get('/{report}', [AdminReportController::class, 'show'])
+                        ->name('show');
+                    Route::patch('/{report}', [AdminReportController::class, 'update'])
+                        ->name('update');
+                });
         });
 
     // Confirmación de contraseña
     Route::get('confirm-password', [AuthPasswordConfirmController::class, 'show'])
         ->name('password.confirm');
     Route::post('confirm-password', [AuthPasswordConfirmController::class, 'store']);
+
+    // Creación de reportes
+    Route::post('report', [AdminReportController::class, 'store'])
+        ->name('report.store');
 });
 
 /*
