@@ -89,10 +89,6 @@ class AdminPageController extends Controller
      */
     public function store(Request $request)
     {
-        // Deniega el acceso si el usuario autenticado
-        // no tiene permisos de administrador.
-        $this->authorize('access-admin-area');
-
         // Valida los datos enviados desde el formulario.
         $validated = $request->validate([
             'language' => ['required', 'string', Rule::in(Locales::codes())],

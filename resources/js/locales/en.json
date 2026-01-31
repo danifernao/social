@@ -164,6 +164,8 @@
   "remove_avatar": "Remove avatar",
   "remove_reaction": "Remove reaction",
   "replace_password_with_random": "Replace the current password with a random one.",
+  "report_no": "Report {{id}}",
+  "reports_administration": "Reports administration",
   "resend_verification_email": "Resend verification email",
   "reset": "Reset",
   "reset_password": "Reset password",
