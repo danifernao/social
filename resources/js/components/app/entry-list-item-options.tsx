@@ -11,6 +11,7 @@ import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import EntryForm from './entry-form';
+import ReportDialog from './report-dialog';
 
 interface EntryItemOptionsProps {
     entry: Entry; // Entrada (publicación o comentario) sobre la que se ejecutarán las acciones.
@@ -28,6 +29,9 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
 
     // Controla la visibilidad del diálogo de confirmación de eliminación.
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+
+    // Controla la visibilidad del diálogo para reportar la entrada.
+    const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
 
     // Contexto para notificar cambios en la lista de entradas.
     const updateEntryList = useContext(EntryListUpdateContext);
@@ -88,6 +92,13 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                         </Button>
                     </DropdownMenuItem>
 
+                    {/* Opción para reportar la entrada */}
+                    <DropdownMenuItem asChild>
+                        <Button variant="ghost" className="w-full justify-start" onClick={() => setIsReportDialogOpen(true)}>
+                            {t('report')}
+                        </Button>
+                    </DropdownMenuItem>
+
                     {/* Opción administrativa para gestionar al autor de la entrada */}
                     {canActOnUser(entry.user) && (
                         <DropdownMenuItem asChild>
@@ -135,6 +146,9 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {/* Diálogo para reportar la entrada */}
+            <ReportDialog open={isReportDialogOpen} onOpenChange={setIsReportDialogOpen} reportableType={entry.type} reportableId={entry.id} />
         </>
     );
 }
