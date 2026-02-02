@@ -28,6 +28,15 @@ class Report extends Model
     ];
 
     /**
+     * Conversiones automáticas de tipos para los atributos.
+     *
+     * @var list<string>
+     */
+    protected $casts = [
+        'reportable_snapshot' => 'array',
+    ];
+
+    /**
      * Relación: usuario que creó el reporte.
      * 
      * @return BelongsTo<User, Report>
