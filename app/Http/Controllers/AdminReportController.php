@@ -52,74 +52,62 @@ class AdminReportController extends Controller
     }
 
     /**
-     * Crea un nuevo reporte.
+     * Crea un nuevo reporte sobre un contenido específico.
      * 
      * @param Request $request Datos de la petición HTTP.
      */
     public function store(Request $request)
     {
-        // Deniega el acceso si el usuario autenticado
-        // no tiene permisos de moderación.
-        if (!$request->user()->canModerate()) {
-            abort(403);
-        }
+        // Obtiene el usuario autenticado.
+        $auth_user = $request->user();
 
-        // Valida la información recibida.
+        // Valida los datos enviados en la petición.
         $data = $request->validate([
             'reportable_type' => ['required', 'string', 'in:post,comment,user'],
             'reportable_id'   => ['required', 'integer'],
             'reporter_note'   => ['nullable', 'string', 'max:1000'],
         ]);
 
-        // Modelo reportado.
+        // Instancia del modelo que será reportado.
         $reportable = null;
 
-        // Copia inmutable del contenido reportado.
+        // Copia inmutable del contenido reportado en su estado actual.
         $snapshot = null;
 
-        // Se determina qué modelo se está intentando reportar
-        // y se valida que exista en la base de datos.
+        // Determina qué tipo de contenido se está intentando reportar
+        // y obtiene el modelo correspondiente.
         switch ($data['reportable_type']) {
             case 'post':
                 $reportable = Post::find($data['reportable_id']);
-                if ($reportable) {
-                    $snapshot = (new PostResource($reportable))->resolve();
-                }
                 break;
-
             case 'comment':
                 $reportable = Comment::find($data['reportable_id']);
-                if ($reportable) {
-                    $snapshot = (new CommentResource($reportable))->resolve();
-                }
                 break;
-
             case 'user':
                 $reportable = User::find($data['reportable_id']);
-                if ($reportable) {
-                    $snapshot = (new UserResource($reportable))->resolve();
-                }
                 break;
         }
 
-        // Si el contenido reportado no existe, se devuelve un 404.
+        // Si el contenido a reportar no existe, se aborta la operación.
         if (!$reportable) {
             abort(404);
         }
 
-        // Se crea el reporte almacenando una copia inmutable
-        // del contenido reportado.
+        // Genera una copia del contenido reportado para preservar
+        // su estado original, incluso si este se modifica o elimina.
+        $snapshot = $reportable->toArray();
+
+        // Crea el reporte almacenando la referencia al contenido
+        // y su copia inmutable para revisión posterior.
         Report::create([
-            'reporter_id'          => $request->user()->id,
+            'reporter_id'          => $auth_user->id,
             'reportable_type'      => get_class($reportable),
             'reportable_id'        => $reportable->id,
             'reportable_snapshot'  => $snapshot,
             'reporter_note'        => $data['reporter_note'] ?? null,
         ]);
-
-        return redirect()
-            ->route('admin.report.index')
-            ->with('message', __('Report successfully created.'));
+        
+        return back()->with('status', 'report_sent');
     }
 
 
