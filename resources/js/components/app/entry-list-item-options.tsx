@@ -1,5 +1,5 @@
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
-import { canActOnUser } from '@/lib/utils';
+import { canActOnUser, isAuthUser } from '@/lib/utils';
 import type { Entry } from '@/types';
 import { Link, router } from '@inertiajs/react';
 import { DialogClose } from '@radix-ui/react-dialog';
@@ -79,25 +79,31 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
 
                 <DropdownMenuContent>
                     {/* Opción para editar la entrada */}
-                    <DropdownMenuItem asChild>
-                        <Button variant="ghost" className="w-full justify-start" onClick={() => setIsFormDialogOpen(true)}>
-                            {t('edit')}
-                        </Button>
-                    </DropdownMenuItem>
+                    {(isAuthUser(entry.user) || canActOnUser(entry.user)) && (
+                        <DropdownMenuItem asChild>
+                            <Button variant="ghost" className="w-full justify-start" onClick={() => setIsFormDialogOpen(true)}>
+                                {t('edit')}
+                            </Button>
+                        </DropdownMenuItem>
+                    )}
 
                     {/* Opción para eliminar la entrada */}
-                    <DropdownMenuItem asChild>
-                        <Button variant="ghost" className="w-full justify-start" onClick={() => setIsConfirmDialogOpen(true)}>
-                            {t('delete')}
-                        </Button>
-                    </DropdownMenuItem>
+                    {(isAuthUser(entry.user) || canActOnUser(entry.user)) && (
+                        <DropdownMenuItem asChild>
+                            <Button variant="ghost" className="w-full justify-start" onClick={() => setIsConfirmDialogOpen(true)}>
+                                {t('delete')}
+                            </Button>
+                        </DropdownMenuItem>
+                    )}
 
                     {/* Opción para reportar la entrada */}
-                    <DropdownMenuItem asChild>
-                        <Button variant="ghost" className="w-full justify-start" onClick={() => setIsReportDialogOpen(true)}>
-                            {t('report')}
-                        </Button>
-                    </DropdownMenuItem>
+                    {!isAuthUser(entry.user) && (
+                        <DropdownMenuItem asChild>
+                            <Button variant="ghost" className="w-full justify-start" onClick={() => setIsReportDialogOpen(true)}>
+                                {t('report')}
+                            </Button>
+                        </DropdownMenuItem>
+                    )}
 
                     {/* Opción administrativa para gestionar al autor de la entrada */}
                     {canActOnUser(entry.user) && (
