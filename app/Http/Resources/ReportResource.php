@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\UserResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
