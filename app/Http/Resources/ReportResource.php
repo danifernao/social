@@ -20,42 +20,29 @@ class ReportResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        // Contendrá el recurso del contenido reportado.
-        $reportableResource = null;
-
-        // Si el contenido reportado existe físicamente en la base de datos,
-        // se determina qué resource utilizar según su tipo.
-        if ($this->reportable) {
-            if ($this->reportable instanceof Post) {
-                $reportableResource = (new PostResource($this->reportable))->resolve();
-            } elseif ($this->reportable instanceof Comment) {
-                $reportableResource = (new CommentResource($this->reportable))->resolve();
-            } elseif ($this->reportable instanceof User) {
-                $reportableResource = (new UserResource($this->reportable))->resolve();
-            }
-        }
-
         return [
             'id' => $this->id,
 
             'reporter' => $this->reporter
-                ? (new UserResource($this->reporter))->resolve()
+                ? [
+                    'id' => $this->reporter->id,
+                    'username' => $this->reporter->username,
+                ]
                 : null,
-
+            
             'resolver' => $this->resolver
-                ? (new UserResource($this->resolver))->resolve()
+                ? [
+                    'id' => $this->resolver->id,
+                    'username' => $this->resolver->username,
+                ]
                 : null,
 
             'reportable_type' => $this->reportable_type,
             'reportable_id' => $this->reportable_id,
-
-            'reportable' => $reportableResource,
-
+            'reportable_exists' => (bool) $this->reportable,
             'reportable_snapshot' => $this->reportable_snapshot,
-
             'reporter_note' => $this->reporter_note,
             'resolver_note' => $this->resolver_note,
-
             'closed_at' => $this->closed_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
