@@ -169,6 +169,7 @@
   "report_no": "Report {{id}}",
   "report_optional_note": "Optional comment.",
   "report_sent": "Report sent.",
+  "reports": "Reports",
   "reports_administration": "Reports administration",
   "resend_verification_email": "Resend verification email",
   "reset": "Reset",
