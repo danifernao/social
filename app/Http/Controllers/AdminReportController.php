@@ -93,19 +93,41 @@ class AdminReportController extends Controller
             abort(404);
         }
 
-        // Genera una copia del contenido reportado para preservar
-        // su estado original, incluso si este se modifica o elimina.
-        $snapshot = $reportable->toArray();
+        // Verifica si el usuario está intentando reportarse a sí mismo.
+        // En dicho caso, aborta la operación.
+        $is_self_report = match($data['reportable_type']) {
+            'post', 'comment' => $reportable->user_id === $auth_user->id,
+            'user'            => $reportable->id === $auth_user->id,
+        };
 
-        // Crea el reporte almacenando la referencia al contenido
-        // y su copia inmutable para revisión posterior.
-        Report::create([
-            'reporter_id'          => $auth_user->id,
-            'reportable_type'      => get_class($reportable),
-            'reportable_id'        => $reportable->id,
-            'reportable_snapshot'  => $snapshot,
-            'reporter_note'        => $data['reporter_note'] ?? null,
-        ]);
+        if ($is_self_report) {
+            abort(403);
+        }
+
+        // Verifica si el usuario ya tiene un reporte abierto
+        // sobre el mismo contenido.
+        $existing_report = Report::where('reporter_id', $auth_user->id)
+            ->where('reportable_type', get_class($reportable))
+            ->where('reportable_id', $reportable->id)
+            ->whereNull('closed_at')
+            ->exists();
+
+        // Si el usuario no tiene un reporte abierto, crea uno.
+        if (!$existing_report) {
+            // Genera una copia del contenido reportado para preservar
+            // su estado original, incluso si este se modifica o elimina.
+            $snapshot = $reportable->toArray();
+
+            // Crea el reporte almacenando la referencia al contenido
+            // y su copia inmutable para revisión posterior.
+            Report::create([
+                'reporter_id'          => $auth_user->id,
+                'reportable_type'      => get_class($reportable),
+                'reportable_id'        => $reportable->id,
+                'reportable_snapshot'  => $snapshot,
+                'reporter_note'        => $data['reporter_note'] ?? null,
+            ]);
+        }
         
         return back()->with('status', 'report_sent');
     }
