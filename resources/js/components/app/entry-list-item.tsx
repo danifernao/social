@@ -35,9 +35,6 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
     // Captura el usuario autenticado y nombre de la ruta actual proporcionados por Inertia.
     const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
 
-    // Determina si el usuario autenticado es el autor de la entrada.
-    const isOwner = auth.user && entry.user_id === auth.user.id;
-
     // Convierte una fecha ISO a un formato corto y legible.
     const formatDate = (date: string) => {
         return format(parseISO(date), 'dd/MM/yyyy h:mm a');
@@ -78,8 +75,8 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                         </Link>
                     </div>
 
-                    {/* Opciones disponibles para el autor o moderadores */}
-                    {(isOwner || auth.user?.can_moderate) && (
+                    {/* Opciones disponibles para los usuarios autenticados */}
+                    {auth.user && (
                         <div>
                             <EntryItemOptions entry={entry} />
                         </div>
