@@ -42,3 +42,19 @@ export function canActOnUser(user: User) {
     // Permite la acción en cualquier otro caso válido.
     return true;
 };
+
+/**
+ * Determina si el usuario consultado es el mismo que el usuario autenticado.
+ */
+export function isAuthUser(user: User) {
+    // Captura el usuario autenticado proporcionado por Inertia.
+    const { auth } = usePage<{ auth: Auth }>().props;
+
+    // Si no hay usuario autenticado, no puede ser el mismo.
+    if (!auth.user) {
+        return false;
+    }
+
+    // Verifica si ambos IDs coinciden.
+    return auth.user.id === user.id;
+}
