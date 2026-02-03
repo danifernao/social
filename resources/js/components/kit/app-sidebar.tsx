@@ -52,7 +52,15 @@ export function AppSidebar() {
                           title: t('administration'),
                           href: route('admin.index'),
                           icon: UserCog,
-                          isActive: ['admin.site.edit', 'admin.user.index', 'admin.user.create', 'admin.user.edit'].includes(routeName),
+                          isActive: [
+                              'admin.site.edit',
+                              'admin.page.index',
+                              'admin.page.create',
+                              'admin.page.edit',
+                              'admin.user.index',
+                              'admin.user.create',
+                              'admin.user.edit',
+                          ].includes(routeName),
                       },
                   ]
                 : []),
