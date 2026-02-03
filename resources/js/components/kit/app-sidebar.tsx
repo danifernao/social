@@ -60,6 +60,7 @@ export function AppSidebar() {
                               'admin.user.index',
                               'admin.user.create',
                               'admin.user.edit',
+                              'admin.report.index',
                           ].includes(routeName),
                       },
                   ]
