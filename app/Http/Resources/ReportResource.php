@@ -33,7 +33,7 @@ class ReportResource extends JsonResource
             'id'                  => $this->id,
             'reporter'            => $reporter,
             'resolver'            => $resolver,
-            'reportable_type'     => $this->reportable_type,
+            'reportable_type'     => $this->get_reportable_kind(),
             'reportable_id'       => $this->reportable_id,
             'reportable_exists'   => (bool) $this->reportable,
             'reportable_snapshot' => $this->reportable_snapshot,
@@ -43,5 +43,18 @@ class ReportResource extends JsonResource
             'created_at'          => $this->created_at,
             'updated_at'          => $this->updated_at,
         ];
+    }
+
+    /**
+     * Normaliza el tipo del contenido reportado.
+     */
+    protected function get_reportable_kind(): string
+    {
+        return match($this->reportable_type) {
+            'App\Models\Post'    => 'post',
+            'App\Models\Comment' => 'comment',
+            'App\Models\User'    => 'user',
+            default              => 'unknown',
+        };
     }
 }
