@@ -57,7 +57,7 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
             title: t('reports'),
             href: route('admin.report.index'),
             icon: null,
-            isActive: ['admin.report.index'].includes(routeName),
+            isActive: ['admin.report.index', 'admin.report.show'].includes(routeName),
         },
     ];
 

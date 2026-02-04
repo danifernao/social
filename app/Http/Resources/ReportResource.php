@@ -22,15 +22,17 @@ class ReportResource extends JsonResource
     public function toArray(Request $request): array
     {
         $reporter = $this->whenLoaded('reporter', function () {
-            return new UserResource($this->reporter);
+            return (new UserResource($this->reporter))->resolve();
         });
 
         $resolver = $this->whenLoaded('resolver', function () {
-            return new UserResource($this->resolver);
+            return (new UserResource($this->resolver))->resolve();
         });
 
         return [
             'id'                  => $this->id,
+            'reporter_id'         => $this->reporter_id,
+            'closed_by_id'        => $this->closed_by_id,
             'reporter'            => $reporter,
             'resolver'            => $resolver,
             'reportable_type'     => $this->get_reportable_kind(),
