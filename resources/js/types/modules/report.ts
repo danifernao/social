@@ -13,6 +13,7 @@ export interface Report {
     reportable_exists: boolean;
     reportable_snapshot: User | Post | Comment;
     reporter_note: string | null;
+    resolver_note: string | null;
     closed_at: string;
     created_at: string;
 
