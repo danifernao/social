@@ -12,6 +12,7 @@ use App\Models\Report;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Inertia\Inertia;
 
 class AdminReportController extends Controller
 {
@@ -46,7 +47,7 @@ class AdminReportController extends Controller
 
         $reports = $query->cursorPaginate(15);
 
-        return inertia('admin/reports/index', [
+        return Inertia::render('admin/reports/index', [
             'reports' => ReportResource::collection($reports),
         ]);
     }
@@ -78,10 +79,10 @@ class AdminReportController extends Controller
         // y obtiene el modelo correspondiente.
         switch ($data['reportable_type']) {
             case 'post':
-                $reportable = Post::find($data['reportable_id']);
+                $reportable = Post::with('user')->find($data['reportable_id']);
                 break;
             case 'comment':
-                $reportable = Comment::find($data['reportable_id']);
+                $reportable = Comment::with('user')->find($data['reportable_id']);
                 break;
             case 'user':
                 $reportable = User::find($data['reportable_id']);
@@ -136,37 +137,38 @@ class AdminReportController extends Controller
     /**
      * Muestra un reporte específico.
      * 
-     * @param Report $report Instancia del reporte.
+     * @param Request $request  Datos de la petición HTTP.
+     * @param Report  $report   Instancia del reporte.
      */
-    public function show(Report $report)
+    public function show(Request $request, Report $report)
     {
+        // Obtiene el usuario autenticado.
+        $auth_user = $request->user();
+
         // Deniega el acceso si el usuario autenticado
         // no tiene permisos de moderación.
-        if (!$request->user()->canModerate()) {
+        if (!$auth_user->canModerate()) {
             abort(403);
         }
 
-        // Carga los datos del usuario que hizo el reporte, del
-        // moderador y del contenido reportado.
+        // Carga relaciones necesarias: quien reportó, quien resolvió
+        // y el contenido reportado.
         $report->load(['reporter', 'resolver', 'reportable']);
 
-        // Si el reporte está cerrado, no se agrupa
-        if ($report->closed_at !== null) {
-            return Inertia::render('admin/reports/show', [
-                'report' => new ReportResource($report),
-                'related' => ReportResource::collection($related_reports),
-            ]);
-        }
+        // Inicializa colección vacía para reportes relacionados.
+        $related_reports = collect();
 
-        // Obtiene los reportes abiertos similares.
-        $related_reports = Report::query()
-            ->where('reportable_type', $report->reportable_type)
-            ->where('reportable_id', $report->reportable_id)
-            ->whereNull('closed_at')
-            ->where('id', '!=', $report->id)
-            ->with(['reporter', 'resolver', 'reportable'])
-            ->orderByDesc('created_at')
-            ->get();
+        // Si el reporte aún está abierto, obtiene reportes abiertos similares.
+        if ($report->closed_at === null) {
+          $related_reports = Report::query()
+              ->where('reportable_type', $report->reportable_type)
+              ->where('reportable_id', $report->reportable_id)
+              ->whereNull('closed_at')
+              ->where('id', '!=', $report->id)
+              ->with(['reporter', 'resolver', 'reportable'])
+              ->orderByDesc('created_at')
+              ->get(); 
+        }
 
         // Transforma el reporte utilizando ReportResource para el frontend.
         $report_data = (new ReportResource($report))->resolve();

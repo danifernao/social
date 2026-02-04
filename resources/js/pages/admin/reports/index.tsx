@@ -48,7 +48,7 @@ export default function ReportsIndex() {
                     </Tabs>
 
                     {/* Tabla */}
-                    <AdminReportList reports={reports.data} />
+                    <AdminReportList status={status} reports={reports.data} />
                 </AppContentLayout>
             </AdminLayout>
         </AppLayout>
