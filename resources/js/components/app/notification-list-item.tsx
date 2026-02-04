@@ -1,7 +1,7 @@
-import { isAuthUser } from '@/lib/utils';
+import { formatDate, isAuthUser } from '@/lib/utils';
 import type { Notification, User } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { format, formatDistanceToNow, Locale, parseISO } from 'date-fns';
+import { formatDistanceToNow, Locale } from 'date-fns';
 import { enUS, es } from 'date-fns/locale';
 import { useEffect, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -52,9 +52,6 @@ export default function NotificationListItem({ notification }: NotificationListI
 
     // Idioma activo para el formateo de fechas.
     const locale = localeMap[i18n.currentLang] ?? enUS;
-
-    // Fecha de creación de la notificación.
-    const formattedDate = format(parseISO(notification.created_at), 'dd/MM/yyyy h:mm a');
 
     // Tiempo relativo desde la creación de la notificación.
     const distanceToNow = formatDistanceToNow(new Date(notification.created_at), {
@@ -148,7 +145,7 @@ export default function NotificationListItem({ notification }: NotificationListI
             </Link>
 
             {/* Fecha relativa de la notificación */}
-            <time className="text-sm" dateTime={notification.created_at} title={formattedDate}>
+            <time className="text-sm" dateTime={notification.created_at} title={formatDate(notification.created_at)}>
                 {distanceToNow}
             </time>
         </li>
