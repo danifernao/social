@@ -41,7 +41,7 @@ export default function AdminReportList({ status, reports }: AdminReportListProp
                         {status === 'closed' && (
                             <>
                                 {/* Cerrado por */}
-                                <TableHead className="text-center">{t('closed_by')}</TableHead>
+                                <TableHead>{t('closed_by')}</TableHead>
 
                                 {/* Fecha de cierre */}
                                 <TableHead className="text-center">{t('closed_at')}</TableHead>
@@ -69,7 +69,7 @@ export default function AdminReportList({ status, reports }: AdminReportListProp
                                 {status === 'closed' && (
                                     <>
                                         {/* Cerrado por */}
-                                        <TableHead>{report.reporter.username || t('deleted_user_no', { id: report.reporter_id })}</TableHead>
+                                        <TableCell>{report.reporter.username || t('deleted_user_no', { id: report.reporter_id })}</TableCell>
 
                                         {/* Fecha de cierre */}
                                         <TableHead className="text-center">{formatDate(report.closed_at)}</TableHead>
