@@ -188,19 +188,24 @@ class AdminReportController extends Controller
      */
     public function update(Request $request, Report $report)
     {
+        // Obtiene el usuario autenticado.
+        $auth_user = $request->user();
+
         // Deniega el acceso si el usuario autenticado
         // no tiene permisos de moderación.
-        if (!$request->user()->canModerate()) {
+        if (!$auth_user->canModerate()) {
             abort(403);
         }
+
+        // Valida los datos enviados en la petición.
+        $data = $request->validate([
+            'resolver_note' => ['required', 'string', 'max:1000'],
+        ]);
 
         // Si el reporte ya está cerrado, se bloquea la operación.
         if ($report->closed_at !== null) {
             abort(403);
         }
-
-        // Obtiene la nota opcional del moderador.
-        $resolver_note = $request->input('resolver_note');
 
         // Obtiene la fecha y hora actual.
         $now = Carbon::now();
@@ -217,21 +222,19 @@ class AdminReportController extends Controller
                 ->whereNull('closed_at')
                 ->update([
                     'closed_at'    => $now,
-                    'closed_by_id' => $request->user()->id,
-                    'resolver_note'=> $resolver_note,
+                    'closed_by_id' => $auth_user->id,
+                    'resolver_note'=> $data['resolver_note'],
                     'updated_at'   => $now,
                 ]);
         } else {
             // Cierra únicamente el reporte actual.
             $report->update([
                 'closed_at'    => $now,
-                'closed_by_id' => $request->user()->id,
-                'resolver_note'=> $resolver_note,
+                'closed_by_id' => $auth_user->id,
+                'resolver_note'=> $data['resolver_note'],
             ]);
         }
 
-        return redirect()
-            ->route('admin.report.index')
-            ->with('message', __('Report successfully updated.'));
+        return back()->with('status', 'report_closed');
     }
 }
