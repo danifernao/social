@@ -2,11 +2,13 @@ import { canActOnUser } from '@/lib/utils';
 import type { Auth, User } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { MoreVertical, UserCog } from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import UserActionsBlock from './user-actions-block';
 import UserActionsFollow from './user-actions-follow';
+import UserActionsReport from './user-actions-report';
 
 interface UserActionsProps {
     user: User; // Usuario sobre el cual se ejecutarán las acciones.
@@ -52,6 +54,9 @@ export default function UserActions({ user }: UserActionsProps) {
     // Si no existen, no se muestra el menú contextual.
     const hasSecondaryActions = canBlock || canAdmin;
 
+    // Controla la visibilidad del menú desplegable.
+    const [open, setOpen] = useState(false);
+
     return (
         <div className="flex items-center gap-2">
             {/* Acción primaria: seguir / dejar de seguir */}
@@ -59,7 +64,7 @@ export default function UserActions({ user }: UserActionsProps) {
 
             {/* Menú contextual con acciones secundarias */}
             {hasSecondaryActions && (
-                <DropdownMenu>
+                <DropdownMenu open={open} onOpenChange={setOpen}>
                     {/* Botón de activación del menú */}
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" aria-label="More user actions">
@@ -75,6 +80,11 @@ export default function UserActions({ user }: UserActionsProps) {
                                 <UserActionsBlock user={user} />
                             </DropdownMenuItem>
                         )}
+
+                        {/* Acción reportar usuario */}
+                        <DropdownMenuItem asChild>
+                            <UserActionsReport user={user} onDialogClose={() => setOpen(false)} />
+                        </DropdownMenuItem>
 
                         {/* Acción administrar usuario */}
                         {canAdmin && (

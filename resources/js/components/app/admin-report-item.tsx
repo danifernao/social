@@ -51,7 +51,7 @@ export default function AdminReportItem({ report, related }: AdminReportItemProp
         switch (report.reportable_type) {
             case 'user':
                 const user_snapshot = report.reportable_snapshot as User;
-                return report.reportable_exists ? user_snapshot.username : t('deleted_user_no', { id: user_snapshot.id });
+                return report.reportable_exists ? t('user') : t('deleted_user_no', { id: user_snapshot.id });
             case 'post':
                 const post_snapshot = report.reportable_snapshot as Post;
                 return report.reportable_exists ? t('single_post') : t('deleted_post_no', { id: post_snapshot.id });
