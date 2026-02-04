@@ -1,10 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { canActOnUser } from '@/lib/utils';
+import { canActOnUser, formatDate } from '@/lib/utils';
 import { User } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
-import { format, parseISO } from 'date-fns';
 import { ArrowUpDown } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -79,11 +78,6 @@ export default function AdminUserList({ users, previous, next }: Props) {
 
         // Actualiza la URL y realiza la nueva solicitud.
         router.visit(`?${params.toString()}`);
-    };
-
-    // Convierte una fecha ISO en formato corto y legible.
-    const formatDate = (date: string) => {
-        return format(parseISO(date), 'dd/MM/yyyy h:mm a');
     };
 
     // Devuelve una clase de color si "value" tiene contenido.

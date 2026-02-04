@@ -1,6 +1,7 @@
+import { formatDate } from '@/lib/utils';
 import type { Auth, Entry, Post } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { format, formatDistanceToNow, Locale, parseISO } from 'date-fns';
+import { formatDistanceToNow, Locale } from 'date-fns';
 import { enUS, es } from 'date-fns/locale';
 import { MessageSquare } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -34,11 +35,6 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
 
     // Captura el usuario autenticado y nombre de la ruta actual proporcionados por Inertia.
     const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
-
-    // Convierte una fecha ISO a un formato corto y legible.
-    const formatDate = (date: string) => {
-        return format(parseISO(date), 'dd/MM/yyyy h:mm a');
-    };
 
     // Tiempo relativo desde la creación de la entrada.
     const distanceToNow = formatDistanceToNow(new Date(entry.created_at), {

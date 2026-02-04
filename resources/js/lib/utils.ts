@@ -2,6 +2,7 @@ import { Auth, User } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { format, parseISO } from 'date-fns';
 
 /** 
  * Función utilitaria para combinar clases de Tailwind de forma segura.
@@ -58,3 +59,10 @@ export function isAuthUser(user: User) {
     // Verifica si ambos IDs coinciden.
     return auth.user.id === user.id;
 }
+
+/**
+ * Convierte una fecha ISO en formato corto y legible.
+ */
+export function formatDate (date: string, dateFormat: string = 'dd/MM/yyyy h:mm a') {
+    return format(parseISO(date), dateFormat);
+};
