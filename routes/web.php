@@ -101,6 +101,17 @@ Route::middleware('guest')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
+| Rutas autenticadas
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth'])->group(function () {
+    Route::post('logout', [AuthSessionController::class, 'destroy'])
+        ->name('logout');
+});
+
+
+/*
+|--------------------------------------------------------------------------
 | Rutas autenticadas (sin verificación)
 |--------------------------------------------------------------------------
 */
@@ -121,9 +132,6 @@ Route::middleware(['auth', EnsureEmailNotVerified::class])->group(function () {
 
     Route::post('change-email', [AuthVerifyEmailController::class, 'update'])
         ->name('verification.email.update');
-
-    Route::post('logout', [AuthSessionController::class, 'destroy'])
-        ->name('logout');
 });
 
 
