@@ -1,4 +1,5 @@
-import { formatDate, isAuthUser } from '@/lib/utils';
+import { useIsAuthUser } from '@/hooks/app/use-auth';
+import { formatDate } from '@/lib/utils';
 import type { Notification, User } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { formatDistanceToNow, Locale } from 'date-fns';
@@ -121,7 +122,7 @@ export default function NotificationListItem({ notification }: NotificationListI
                 {/* Notificación de comentario */}
                 {type === 'comment' &&
                     context &&
-                    (isAuthUser({ id: context.author_id } as User) ? (
+                    (useIsAuthUser({ id: context.author_id } as User) ? (
                         /* Comentario en una publicación propia */
                         <Trans
                             i18nKey="user_has_commented_in_your_post"
