@@ -150,8 +150,8 @@ export default function AdminReportItem({ report, related }: AdminReportItemProp
                                 <div className="mt-2 text-sm font-semibold md:mt-0">{t('closed_by')}</div>
                                 <div className="text-sm">
                                     {report.resolver ? (
-                                        <Link href={route('profile.show', report.reporter.id)} className="text-blue-600 hover:underline">
-                                            {report.reporter.username}
+                                        <Link href={route('profile.show', report.resolver.id)} className="text-blue-600 hover:underline">
+                                            {report.resolver.username}
                                         </Link>
                                     ) : (
                                         <span className="text-muted-foreground">{t('deleted_user_no', { id: report.closed_by_id })}</span>
