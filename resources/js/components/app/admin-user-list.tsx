@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { canActOnUser, formatDate } from '@/lib/utils';
+import { useCanActOnUser } from '@/hooks/app/use-auth';
+import { formatDate } from '@/lib/utils';
 import { User } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
 import { ArrowUpDown } from 'lucide-react';
@@ -181,7 +182,7 @@ export default function AdminUserList({ users, previous, next }: Props) {
 
                                     {/* Acciones */}
                                     <TableCell>
-                                        {canActOnUser(user) && (
+                                        {useCanActOnUser(user) && (
                                             <Button variant="outline" asChild>
                                                 <Link href={route('admin.user.edit', user.id)}>{t('manage')}</Link>
                                             </Button>
