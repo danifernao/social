@@ -1,5 +1,5 @@
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
-import { canActOnUser, isAuthUser } from '@/lib/utils';
+import { useCanActOnUser, useIsAuthUser } from '@/hooks/app/use-auth';
 import type { Entry } from '@/types';
 import { Link, router } from '@inertiajs/react';
 import { DialogClose } from '@radix-ui/react-dialog';
@@ -79,7 +79,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
 
                 <DropdownMenuContent>
                     {/* Opción para editar la entrada */}
-                    {(isAuthUser(entry.user) || canActOnUser(entry.user)) && (
+                    {(useIsAuthUser(entry.user) || useCanActOnUser(entry.user)) && (
                         <DropdownMenuItem asChild>
                             <Button variant="ghost" className="w-full justify-start" onClick={() => setIsFormDialogOpen(true)}>
                                 {t('edit')}
@@ -88,7 +88,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                     )}
 
                     {/* Opción para eliminar la entrada */}
-                    {(isAuthUser(entry.user) || canActOnUser(entry.user)) && (
+                    {(useIsAuthUser(entry.user) || useCanActOnUser(entry.user)) && (
                         <DropdownMenuItem asChild>
                             <Button variant="ghost" className="w-full justify-start" onClick={() => setIsConfirmDialogOpen(true)}>
                                 {t('delete')}
@@ -97,7 +97,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                     )}
 
                     {/* Opción para reportar la entrada */}
-                    {!isAuthUser(entry.user) && (
+                    {!useIsAuthUser(entry.user) && (
                         <DropdownMenuItem asChild>
                             <Button variant="ghost" className="w-full justify-start" onClick={() => setIsReportDialogOpen(true)}>
                                 {t('report')}
@@ -106,7 +106,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                     )}
 
                     {/* Opción administrativa para gestionar al autor de la entrada */}
-                    {canActOnUser(entry.user) && (
+                    {useCanActOnUser(entry.user) && (
                         <DropdownMenuItem asChild>
                             <Button asChild variant="link" className="w-full justify-start hover:no-underline">
                                 <Link href={route('admin.user.edit', entry.user.id)}>{t('manage_user')}</Link>
