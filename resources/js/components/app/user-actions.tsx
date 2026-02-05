@@ -50,10 +50,6 @@ export default function UserActions({ user }: UserActionsProps) {
     // Determina si el usuario autenticado puede administrar al usuario del perfil.
     const canAdmin = canActOnUser(user);
 
-    // Determina si existen acciones secundarias.
-    // Si no existen, no se muestra el menú contextual.
-    const hasSecondaryActions = canBlock || canAdmin;
-
     // Controla la visibilidad del menú desplegable.
     const [open, setOpen] = useState(false);
 
@@ -63,43 +59,41 @@ export default function UserActions({ user }: UserActionsProps) {
             {canFollow && <UserActionsFollow user={user} />}
 
             {/* Menú contextual con acciones secundarias */}
-            {hasSecondaryActions && (
-                <DropdownMenu open={open} onOpenChange={setOpen}>
-                    {/* Botón de activación del menú */}
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" aria-label="More user actions">
-                            <MoreVertical className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
+            <DropdownMenu open={open} onOpenChange={setOpen}>
+                {/* Botón de activación del menú */}
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" aria-label="More user actions">
+                        <MoreVertical className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
 
-                    {/* Contenido del menú */}
-                    <DropdownMenuContent align="end" className="w-48">
-                        {/* Acción bloquear / desbloquear */}
-                        {canBlock && (
-                            <DropdownMenuItem asChild>
-                                <UserActionsBlock user={user} />
-                            </DropdownMenuItem>
-                        )}
-
-                        {/* Acción reportar usuario */}
+                {/* Contenido del menú */}
+                <DropdownMenuContent align="end" className="w-48">
+                    {/* Acción bloquear / desbloquear */}
+                    {canBlock && (
                         <DropdownMenuItem asChild>
-                            <UserActionsReport user={user} onDialogClose={() => setOpen(false)} />
+                            <UserActionsBlock user={user} />
                         </DropdownMenuItem>
+                    )}
 
-                        {/* Acción administrar usuario */}
-                        {canAdmin && (
-                            <DropdownMenuItem asChild>
-                                <Button variant="link" asChild className="w-full justify-start hover:no-underline">
-                                    <Link href={route('admin.user.edit', user.id)}>
-                                        <UserCog className="h-4 w-4" />
-                                        <span>{t('manage')}</span>
-                                    </Link>
-                                </Button>
-                            </DropdownMenuItem>
-                        )}
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )}
+                    {/* Acción reportar usuario */}
+                    <DropdownMenuItem asChild>
+                        <UserActionsReport user={user} onDialogClose={() => setOpen(false)} />
+                    </DropdownMenuItem>
+
+                    {/* Acción administrar usuario */}
+                    {canAdmin && (
+                        <DropdownMenuItem asChild>
+                            <Button variant="link" asChild className="w-full justify-start hover:no-underline">
+                                <Link href={route('admin.user.edit', user.id)}>
+                                    <UserCog className="h-4 w-4" />
+                                    <span>{t('manage')}</span>
+                                </Link>
+                            </Button>
+                        </DropdownMenuItem>
+                    )}
+                </DropdownMenuContent>
+            </DropdownMenu>
         </div>
     );
 }
