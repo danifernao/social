@@ -4,6 +4,7 @@ import { formatDate } from '@/lib/utils';
 import { Report } from '@/types/modules/report';
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
+import AdminReportNote from './admin-report-note';
 
 interface AdminReportListProps {
     status: 'open' | 'closed';
@@ -35,6 +36,9 @@ export default function AdminReportList({ status, reports }: AdminReportListProp
                         {/* Tipo */}
                         <TableHead>{t('type')}</TableHead>
 
+                        {/* Motivo del reporte */}
+                        <TableHead className="text-center">{t('report_reason')}</TableHead>
+
                         {/* Fecha de creaación */}
                         <TableHead className="text-center">{t('created_at')}</TableHead>
 
@@ -42,6 +46,9 @@ export default function AdminReportList({ status, reports }: AdminReportListProp
                             <>
                                 {/* Cerrado por */}
                                 <TableHead>{t('closed_by')}</TableHead>
+
+                                {/* Cerrado por */}
+                                <TableHead>{t('report_resolution')}</TableHead>
 
                                 {/* Fecha de cierre */}
                                 <TableHead className="text-center">{t('closed_at')}</TableHead>
@@ -63,13 +70,23 @@ export default function AdminReportList({ status, reports }: AdminReportListProp
                                 {/* Tipo del contenido reportado */}
                                 <TableCell>{typeLabels[report.reportable_type] ?? report.reportable_type}</TableCell>
 
-                                {/* Fecha de creaación */}
+                                {/* Motivo del reporte */}
+                                <TableCell className="text-center">
+                                    <AdminReportNote report={report} userType="reporter" />
+                                </TableCell>
+
+                                {/* Fecha de creación */}
                                 <TableCell className="text-center">{formatDate(report.created_at)}</TableCell>
 
                                 {status === 'closed' && (
                                     <>
                                         {/* Cerrado por */}
                                         <TableCell>{report.reporter.username || t('deleted_user_no', { id: report.reporter_id })}</TableCell>
+
+                                        {/* Nota de resolución */}
+                                        <TableCell className="text-center">
+                                            <AdminReportNote report={report} userType="resolver" />
+                                        </TableCell>
 
                                         {/* Fecha de cierre */}
                                         <TableHead className="text-center">{formatDate(report.closed_at)}</TableHead>
