@@ -47,8 +47,8 @@ export default function AdminReportList({ status, reports }: AdminReportListProp
                                 {/* Cerrado por */}
                                 <TableHead>{t('closed_by')}</TableHead>
 
-                                {/* Cerrado por */}
-                                <TableHead>{t('report_resolution')}</TableHead>
+                                {/* Nota de resolución */}
+                                <TableHead className="text-center">{t('report_resolution')}</TableHead>
 
                                 {/* Fecha de cierre */}
                                 <TableHead className="text-center">{t('closed_at')}</TableHead>
