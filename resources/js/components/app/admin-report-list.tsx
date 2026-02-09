@@ -34,7 +34,7 @@ export default function AdminReportList({ status, reports }: AdminReportListProp
                         <TableHead>ID</TableHead>
 
                         {/* Tipo */}
-                        <TableHead>{t('type')}</TableHead>
+                        <TableHead>{t('content_type')}</TableHead>
 
                         <TableHead>{t('reported_by')}</TableHead>
 
