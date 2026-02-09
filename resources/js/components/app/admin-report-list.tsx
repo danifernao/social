@@ -81,7 +81,15 @@ export default function AdminReportList({ status, reports }: AdminReportListProp
                                 {status === 'closed' && (
                                     <>
                                         {/* Cerrado por */}
-                                        <TableCell>{report.reporter.username || t('deleted_user_no', { id: report.reporter_id })}</TableCell>
+                                        <TableCell>
+                                            {report.resolver ? (
+                                                <Link href={route('profile.show', report.resolver.id)} className="hover:underline">
+                                                    {report.resolver.username}
+                                                </Link>
+                                            ) : (
+                                                t('deleted_user_no', { id: report.closed_by_id })
+                                            )}
+                                        </TableCell>
 
                                         {/* Nota de resolución */}
                                         <TableCell className="text-center">
