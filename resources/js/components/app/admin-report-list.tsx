@@ -36,6 +36,8 @@ export default function AdminReportList({ status, reports }: AdminReportListProp
                         {/* Tipo */}
                         <TableHead>{t('type')}</TableHead>
 
+                        <TableHead>{t('reported_by')}</TableHead>
+
                         {/* Motivo del reporte */}
                         <TableHead className="text-center">{t('report_reason')}</TableHead>
 
@@ -69,6 +71,17 @@ export default function AdminReportList({ status, reports }: AdminReportListProp
 
                                 {/* Tipo del contenido reportado */}
                                 <TableCell>{typeLabels[report.reportable_type] ?? report.reportable_type}</TableCell>
+
+                                {/* Cerrado por */}
+                                <TableCell>
+                                    {report.reporter ? (
+                                        <Link href={route('profile.show', report.reporter.id)} className="hover:underline">
+                                            {report.reporter.username}
+                                        </Link>
+                                    ) : (
+                                        t('deleted_user_no', { id: report.reporter_id })
+                                    )}
+                                </TableCell>
 
                                 {/* Motivo del reporte */}
                                 <TableCell className="text-center">
