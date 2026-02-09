@@ -25,6 +25,18 @@ export default function AdminReportList({ status, reports }: AdminReportListProp
         user: t('user'),
     };
 
+    // Obtiene el enlace del contenido reportado según tipo.
+    const getReportableLink = (report: Report) => {
+        switch (report.reportable_type) {
+            case 'user':
+                return route('profile.show', report.reportable_id);
+            case 'post':
+                return route('post.show', report.reportable_id);
+            case 'comment':
+                return route('comment.show', report.reportable_id);
+        }
+    };
+
     return (
         <div className="w-full rounded-md border">
             <Table>
@@ -36,6 +48,7 @@ export default function AdminReportList({ status, reports }: AdminReportListProp
                         {/* Tipo */}
                         <TableHead>{t('content_type')}</TableHead>
 
+                        {/* Reportado por */}
                         <TableHead>{t('reported_by')}</TableHead>
 
                         {/* Motivo del reporte */}
@@ -70,7 +83,15 @@ export default function AdminReportList({ status, reports }: AdminReportListProp
                                 <TableCell className="font-mono">#{report.id}</TableCell>
 
                                 {/* Tipo del contenido reportado */}
-                                <TableCell>{typeLabels[report.reportable_type] ?? report.reportable_type}</TableCell>
+                                <TableCell>
+                                    {report.reportable_exists ? (
+                                        <Link href={getReportableLink(report)} className="hover:underline">
+                                            {typeLabels[report.reportable_type]}
+                                        </Link>
+                                    ) : (
+                                        typeLabels[report.reportable_type]
+                                    )}
+                                </TableCell>
 
                                 {/* Cerrado por */}
                                 <TableCell>
