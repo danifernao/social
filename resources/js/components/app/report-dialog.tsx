@@ -6,6 +6,7 @@ import { LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import FormErrors from './form-errors';
 
 interface ReportDialogProps {
     // Controla si el diálogo está abierto.
@@ -28,6 +29,9 @@ export default function ReportDialog({ open, onOpenChange, reportableType, repor
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
+    // Errores de validación.
+    const [errors, setErrors] = useState<Record<string, string> | null>(null);
+
     // Nota opcional ingresada por el usuario.
     const [note, setNote] = useState('');
 
@@ -48,12 +52,13 @@ export default function ReportDialog({ open, onOpenChange, reportableType, repor
             {
                 preserveScroll: true,
                 onSuccess: () => {
-                    toast(t('report_sent'));
+                    toast.success(t('report_sent'));
                     setNote('');
+                    setErrors(null);
                     onOpenChange(false);
                 },
-                onError: () => {
-                    toast(t('unexpected_error'));
+                onError: (errors) => {
+                    setErrors(errors);
                 },
                 onFinish: () => {
                     setProcessing(false);
@@ -69,6 +74,9 @@ export default function ReportDialog({ open, onOpenChange, reportableType, repor
                     <DialogTitle>{t('report')}</DialogTitle>
                     <DialogDescription>{t('report_description')}</DialogDescription>
                 </DialogHeader>
+
+                {/* Errores de validación */}
+                <FormErrors errors={errors} />
 
                 {/* Campo para la nota opcional del reporte */}
                 <Textarea placeholder={t('report_optional_note')} value={note} onChange={(e) => setNote(e.target.value)} maxLength={1000} />

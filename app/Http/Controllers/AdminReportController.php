@@ -12,6 +12,7 @@ use App\Models\Report;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class AdminReportController extends Controller
@@ -100,7 +101,9 @@ class AdminReportController extends Controller
         };
 
         if ($is_self_report) {
-            abort(403);
+            throw ValidationException::withMessages([
+                'message' => __("You can't report yourself."),
+            ]);
         }
 
         // Verifica si el usuario ya tiene un reporte abierto
@@ -195,7 +198,9 @@ class AdminReportController extends Controller
 
         // Si el reporte ya está cerrado, se bloquea la operación.
         if ($report->closed_at !== null) {
-            abort(403);
+            throw ValidationException::withMessages([
+                'message' => __('This report has already been closed.'),
+            ]);
         }
 
         // Obtiene la fecha y hora actual.

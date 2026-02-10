@@ -7,6 +7,7 @@ import { LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import FormErrors from './form-errors';
 
 interface AdminReportItemCloseDialogProps {
     // Controla si el diálogo está abierto.
@@ -26,26 +27,20 @@ export default function AdminReportItemCloseDialog({ open, onOpenChange, reportI
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
+    // Errores de validación.
+    const [errors, setErrors] = useState<Record<string, string> | null>(null);
+
     // Nota obligatoria del moderador.
     const [note, setNote] = useState('');
 
     // Indica si se deben cerrar reportes relacionados.
     const [closeAll, setCloseAll] = useState(false);
 
-    // Mensaje de error para la nota del moderador.
-    const [noteError, setNoteError] = useState<string | null>(null);
-
     // Indica si el formulario se encuentra en proceso de envío.
     const [processing, setProcessing] = useState(false);
 
     // Cierra el reporte.
     const submit = () => {
-        if (!note.trim()) {
-            setNoteError(t('resolution_note_required'));
-            return;
-        }
-
-        setNoteError(null);
         setProcessing(true);
 
         router.patch(
@@ -57,13 +52,14 @@ export default function AdminReportItemCloseDialog({ open, onOpenChange, reportI
             {
                 preserveScroll: true,
                 onSuccess: () => {
-                    toast(t('report_closed'));
+                    toast.success(t('report_closed'));
                     setNote('');
                     setCloseAll(false);
+                    setErrors(null);
                     onOpenChange(false);
                 },
-                onError: () => {
-                    toast(t('unexpected_error'));
+                onError: (errors) => {
+                    setErrors(errors);
                 },
                 onFinish: () => {
                     setProcessing(false);
@@ -80,21 +76,19 @@ export default function AdminReportItemCloseDialog({ open, onOpenChange, reportI
                     <DialogDescription>{t('confirm_close_report_irreversible')}</DialogDescription>
                 </DialogHeader>
 
+                {/* Errores de validación */}
+                <FormErrors errors={errors} />
+
                 {/* Nota del moderador */}
                 <Textarea
                     placeholder={t('resolution_note_placeholder')}
                     value={note}
                     onChange={(e) => {
                         setNote(e.target.value);
-                        if (noteError) {
-                            setNoteError(null);
-                        }
                     }}
                     required
                     maxLength={1000}
                 />
-
-                {noteError && <p className="text-destructive-foreground text-sm">{noteError}</p>}
 
                 {/* Cerrar reportes relacionados */}
                 <label className="flex items-center gap-2 text-sm">
@@ -103,10 +97,12 @@ export default function AdminReportItemCloseDialog({ open, onOpenChange, reportI
                 </label>
 
                 <DialogFooter>
+                    {/* Botón cancelar */}
                     <Button variant="outline" onClick={() => onOpenChange(false)}>
                         {t('cancel')}
                     </Button>
 
+                    {/* Botón para cerrar el reporte */}
                     <Button variant="destructive" onClick={submit} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         {t('close_report')}

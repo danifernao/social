@@ -244,6 +244,8 @@
     "Password confirmation is incorrect.": "La contraseña de confirmación es incorrecta.",
     "Slug already in use in this language.": "El slug ya está en uso en este idioma.",
     "Slug contains invalid characters.": "El slug contiene caracteres no válidos.",
+    "This report has already been closed.": "El reporte ya se encuentra cerrado.",
     "User successfully created.": "Usuario creado exitosamente",
-    "User successfully deleted.": "Usuario eliminado exitosamente."
+    "User successfully deleted.": "Usuario eliminado exitosamente.",
+    "You can't report yourself.": "No puedes reportarte a ti mismo."
 }
