@@ -31,7 +31,7 @@ export default function AdminReportNote({ report, userType }: AdminReportNotePro
         : {
               note: report.resolver_note,
               user: report.resolver,
-              userId: report.closed_by_id,
+              userId: report.resolver_id,
           };
 
     // Descripción del diálogo.

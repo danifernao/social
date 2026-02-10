@@ -32,7 +32,7 @@ class ReportResource extends JsonResource
         return [
             'id'                  => $this->id,
             'reporter_id'         => $this->reporter_id,
-            'closed_by_id'        => $this->closed_by_id,
+            'resolver_id'        => $this->resolver_id,
             'reporter'            => $reporter,
             'resolver'            => $resolver,
             'reportable_type'     => $this->get_reportable_kind(),

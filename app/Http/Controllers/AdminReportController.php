@@ -222,7 +222,7 @@ class AdminReportController extends Controller
                 ->whereNull('closed_at')
                 ->update([
                     'closed_at'    => $now,
-                    'closed_by_id' => $auth_user->id,
+                    'resolver_id' => $auth_user->id,
                     'resolver_note'=> $data['resolver_note'],
                     'updated_at'   => $now,
                 ]);
@@ -230,7 +230,7 @@ class AdminReportController extends Controller
             // Cierra únicamente el reporte actual.
             $report->update([
                 'closed_at'    => $now,
-                'closed_by_id' => $auth_user->id,
+                'resolver_id' => $auth_user->id,
                 'resolver_note'=> $data['resolver_note'],
             ]);
         }

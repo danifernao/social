@@ -5,7 +5,7 @@ import { User } from "./user";
 export interface Report {
     id: number;
     reporter_id: number;
-    closed_by_id: number;
+    resolver_id: number;
     reporter: User;
     resolver: User | null;
     reportable_type: string;

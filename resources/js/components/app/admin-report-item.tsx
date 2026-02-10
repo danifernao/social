@@ -156,7 +156,7 @@ export default function AdminReportItem({ report, related }: AdminReportItemProp
                                             {report.resolver.username}
                                         </Link>
                                     ) : (
-                                        <span className="text-muted-foreground">{t('deleted_user_no', { id: report.closed_by_id })}</span>
+                                        <span className="text-muted-foreground">{t('deleted_user_no', { id: report.resolver_id })}</span>
                                     )}
                                 </div>
 

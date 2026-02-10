@@ -18,7 +18,7 @@ class Report extends Model
      */
     protected $fillable = [
         'reporter_id',
-        'closed_by_id',
+        'resolver_id',
         'reportable_type',
         'reportable_id',
         'reportable_snapshot',
@@ -53,7 +53,7 @@ class Report extends Model
      */
     public function resolver(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'closed_by_id');
+        return $this->belongsTo(User::class, 'resolver_id');
     }
 
     /**
