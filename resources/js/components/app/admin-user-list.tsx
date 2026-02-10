@@ -6,7 +6,7 @@ import { formatDate } from '@/lib/utils';
 import { User } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
 import { ArrowUpDown } from 'lucide-react';
-import { useState } from 'react';
+import { SubmitEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AdminTablePagination from './admin-table-pagination';
 import UserAvatar from './user-avatar';
@@ -47,7 +47,7 @@ export default function AdminUserList({ users, previous, next }: Props) {
     };
 
     // Gestiona el formulario de búsqueda.
-    const handleSearch = (e: React.FormEvent) => {
+    const handleSearch: SubmitEventHandler<HTMLFormElement> = (e) => {
         const params = new URLSearchParams();
 
         // Si hay texto de búsqueda, se incluye como parámetro.

@@ -7,7 +7,7 @@ import { Locale } from '@/types/modules/locale';
 import { Page, PageType, SpecialPages } from '@/types/modules/page';
 import { Link, router, useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { SubmitEventHandler, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TextareaAutosize from 'react-textarea-autosize';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
@@ -56,7 +56,7 @@ export default function AdminPageForm({ page }: Props) {
     });
 
     // Gestiona el envío del formulario según el modo (creación o edición).
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit: SubmitEventHandler<HTMLFormElement> = (e) => {
         if (isEditing) {
             patch(route('admin.page.edit', page!.id), { preserveScroll: true });
         } else {

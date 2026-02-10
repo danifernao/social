@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
+import { SubmitEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -20,7 +21,7 @@ export default function AdminUserCreateForm() {
     });
 
     // Gestiona el envío del formulario.
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit: SubmitEventHandler<HTMLFormElement> = (e) => {
         form.post(route('admin.user.store'));
         e.preventDefault();
     };

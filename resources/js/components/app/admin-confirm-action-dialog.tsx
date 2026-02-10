@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { useRef } from 'react';
+import { SubmitEventHandler, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ConfirmActionDialogProps {
@@ -25,7 +25,7 @@ export default function ConfirmActionDialog({ open, onOpenChange, password, onPa
     const buttonRef = useRef<HTMLButtonElement>(null);
 
     // Gestiona el envío del formulario de confirmación.
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit: SubmitEventHandler<HTMLFormElement> = (e) => {
         if (password.trim()) {
             onConfirm();
         }

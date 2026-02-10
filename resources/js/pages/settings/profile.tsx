@@ -1,7 +1,7 @@
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Head, useForm, usePage } from '@inertiajs/react';
-import { FormEventHandler, useRef, useState } from 'react';
+import { ChangeEventHandler, SubmitEventHandler, useRef, useState } from 'react';
 
 import DeleteUser from '@/components/kit/delete-user';
 import HeadingSmall from '@/components/kit/heading-small';
@@ -52,18 +52,16 @@ export default function Profile() {
     });
 
     // Gestiona el envío del formulario de edición de perfil.
-    const submit: FormEventHandler = (e) => {
+    const submit: SubmitEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
         post(route('profile.update'), {
             preserveScroll: true,
             forceFormData: true,
         });
-
-        console.log(errors);
     };
 
     // Gestiona la selección de un nuevo archivo de avatar.
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
         const file = e.target.files?.[0];
         if (file) {
             // Guarda el archivo en el estado del formulario.

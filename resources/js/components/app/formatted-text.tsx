@@ -4,7 +4,7 @@ import remarkMention from '@/lib/remark-mention';
 import { cn } from '@/lib/utils';
 import { EntryType } from '@/types';
 import { Link } from '@inertiajs/react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { MouseEventHandler, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Components } from 'react-markdown';
 import Markdown from 'react-markdown';
@@ -75,7 +75,7 @@ export default function FormattedText({ entryType, text, alwaysExpanded = false,
         a: ({ href, node, children }) => {
             if (!href) return <>{children}</>;
 
-            const handleClick = (e: React.MouseEvent) => {
+            const handleClick: MouseEventHandler<Element> = (e) => {
                 if (disableLinks) e.preventDefault();
             };
 

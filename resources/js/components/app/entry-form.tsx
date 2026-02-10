@@ -4,7 +4,7 @@ import type { Auth, Comment, Entry, Post } from '@/types';
 import { SpecialPages } from '@/types/modules/page';
 import { useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { SubmitEventHandler, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TextareaAutosize from 'react-textarea-autosize';
 import { toast } from 'sonner';
@@ -53,7 +53,7 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
     const updateEntryList = useContext(EntryListUpdateContext);
 
     // Gestiona el envío del formulario.
-    const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
+    const submitForm: SubmitEventHandler<HTMLFormElement> = (e) => {
         // Determina la acción según si es edición o creación.
         const action = entry ? patch : post;
 
