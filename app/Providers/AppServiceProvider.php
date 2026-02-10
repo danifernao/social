@@ -35,6 +35,12 @@ class AppServiceProvider extends ServiceProvider
             return $user->isAdmin();
         });
 
+        // Garantiza que solo los usuarios con permisos de moderación
+        // puedan ejecutar acciones de moderación dentro del sistema.
+        Gate::define('moderate', function (User $user) {
+            return $user->canModerate();
+        });
+
         // Permite que las rutas como /user/{user} acepten tanto IDs numéricos
         // como nombres de usuario.
         Route::bind('user', function ($value) {

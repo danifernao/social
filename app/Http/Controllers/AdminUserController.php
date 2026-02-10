@@ -38,9 +38,7 @@ class AdminUserController extends Controller
     {
         // Deniega el acceso si el usuario autenticado
         // no tiene permisos de moderación.
-        if (!$request->user()->canModerate()) {
-            abort(403);
-        }
+        $this->authorize('moderate');
 
         // Columnas permitidas para el ordenamiento.
         $allowed_order_by = [

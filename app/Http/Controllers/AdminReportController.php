@@ -25,9 +25,7 @@ class AdminReportController extends Controller
     {
         // Deniega el acceso si el usuario autenticado
         // no tiene permisos de moderación.
-        if (!$request->user()->canModerate()) {
-            abort(403);
-        }
+        $this->authorize('moderate');
 
         // Determina si se desean mostrar los reportes
         // abiertos o cerrados.
@@ -142,14 +140,9 @@ class AdminReportController extends Controller
      */
     public function show(Request $request, Report $report)
     {
-        // Obtiene el usuario autenticado.
-        $auth_user = $request->user();
-
         // Deniega el acceso si el usuario autenticado
         // no tiene permisos de moderación.
-        if (!$auth_user->canModerate()) {
-            abort(403);
-        }
+        $this->authorize('moderate');
 
         // Carga relaciones necesarias: quien reportó, quien resolvió
         // y el contenido reportado.
@@ -188,14 +181,12 @@ class AdminReportController extends Controller
      */
     public function update(Request $request, Report $report)
     {
-        // Obtiene el usuario autenticado.
-        $auth_user = $request->user();
-
         // Deniega el acceso si el usuario autenticado
         // no tiene permisos de moderación.
-        if (!$auth_user->canModerate()) {
-            abort(403);
-        }
+        $this->authorize('moderate');
+
+        // Obtiene el usuario autenticado.
+        $auth_user = $request->user();
 
         // Valida los datos enviados en la petición.
         $data = $request->validate([
