@@ -30,11 +30,14 @@ export default function Appearance() {
             onSuccess: () => {
                 // Limpia el estado del router para recargar traducciones.
                 router.flushAll();
-                toast(t('changes_saved'));
+                toast.success(t('changes_saved'));
             },
             onError: (errors) => {
-                toast(t('unexpected_error'));
-                console.log(errors);
+                toast.error(t('unexpected_error'));
+
+                if (import.meta.env.DEV) {
+                    console.error(errors);
+                }
             },
         });
     };

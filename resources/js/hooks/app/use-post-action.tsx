@@ -1,5 +1,6 @@
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 interface UsePostActionOptions {
@@ -14,6 +15,9 @@ interface UsePostActionOptions {
  * Hook utilitario para ejecutar acciones POST simples mediante Inertia.
  */
 export function usePostAction() {
+    // Función para traducir los textos de la interfaz.
+    const { t } = useTranslation();
+
     // Estado que indica si actualmente se está ejecutando una petición POST.
     const [isProcessing, setIsProcessing] = useState(false);
 
@@ -36,13 +40,17 @@ export function usePostAction() {
             {},
             {
                 preserveScroll: true,
-                onError: (errors) => {
-                    toast('¡Ups! Error inesperado.');
-                    console.error(errors);
-                    options.onError?.(errors);
-                },
                 onSuccess: () => {
                     options.onSuccess?.();
+                },
+                onError: (errors) => {
+                    toast.error(t('unexpected_error'));
+
+                    if (import.meta.env.DEV) {
+                        console.error(errors);
+                    }
+
+                    options.onError?.(errors);
                 },
                 onFinish: () => {
                     setIsProcessing(false);

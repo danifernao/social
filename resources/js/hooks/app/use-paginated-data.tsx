@@ -1,6 +1,7 @@
 import type { Entry, EntryAction } from '@/types';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 interface UsePaginatedProps<T> {
@@ -20,6 +21,9 @@ interface UsePaginatedProps<T> {
  * para listados como publicaciones, comentarios o usuarios.
  */
 export function usePaginatedData<T>({ initialItems, initialCursor, propKey }: UsePaginatedProps<T>) {
+    // Función para traducir los textos de la interfaz.
+    const { t } = useTranslation();
+
     // Estado que contiene la lista actual de elementos renderizados.
     const [items, setItems] = useState<T[]>(initialItems);
 
@@ -66,8 +70,11 @@ export function usePaginatedData<T>({ initialItems, initialCursor, propKey }: Us
                 setNextCursor(next);
             },
             onError: (errors) => {
-                toast('¡Ups! Error inesperado.');
-                console.error(errors);
+                toast.error(t('unexpected_error'));
+
+                if (import.meta.env.DEV) {
+                    console.error(errors);
+                }
             },
             onFinish: () => {
                 setProcessing(false);

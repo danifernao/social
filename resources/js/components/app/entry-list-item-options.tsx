@@ -59,11 +59,14 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                 // Notifica al contexto que la entrada fue eliminada.
                 updateEntryList?.('delete', entry);
 
-                toast(deletedMessage);
+                toast.success(deletedMessage);
             },
             onError: (errors) => {
-                toast(t('unexpected_error'));
-                console.error(errors);
+                toast.error(t('unexpected_error'));
+
+                if (import.meta.env.DEV) {
+                    console.error(errors);
+                }
             },
         });
     };

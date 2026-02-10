@@ -1,5 +1,6 @@
 import { useForm } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 interface UseAdminActionFormOptions<T> {
@@ -20,6 +21,9 @@ interface UseAdminActionFormOptions<T> {
  * antes de ejecutar una acción sensible.
  */
 export function useAdminActionForm<T extends Record<string, any>>({ initialData, route: formRoute, onSuccess }: UseAdminActionFormOptions<T>) {
+    // Función para traducir los textos de la interfaz.
+    const { t } = useTranslation();
+
     // Inicializa el formulario de Inertia.
     const form = useForm({ ...initialData, action: '', privileged_password: '' });
 
@@ -74,8 +78,15 @@ export function useAdminActionForm<T extends Record<string, any>>({ initialData,
         form.patch(typeof formRoute === 'function' ? formRoute() : formRoute, {
             preserveScroll: true,
             onSuccess: (page) => {
+                toast.success(t('changes_saved'));
                 onSuccess?.(form.data.action, page);
-                toast('¡Cambios guardados!');
+            },
+            onError: (errors) => {
+                toast.error(t('unexpected_error'));
+
+                if (import.meta.env.DEV) {
+                    console.error(errors);
+                }
             },
         });
     };

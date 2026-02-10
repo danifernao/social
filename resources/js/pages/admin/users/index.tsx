@@ -31,7 +31,7 @@ export default function UsersIndex() {
     useEffect(() => {
         // Si se ha proporcionado un mensaje, lo muestra.
         if (message) {
-            toast(message);
+            toast.message(message);
         }
     }, []);
 

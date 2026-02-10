@@ -54,8 +54,11 @@ export default function NotificationIndex() {
                     updateItems(newNotifications);
                 },
                 onError: (errors) => {
-                    toast('¡Ups! Error inesperado.');
-                    console.error(errors);
+                    toast.error(t('unexpected_error'));
+
+                    if (import.meta.env.DEV) {
+                        console.error(errors);
+                    }
                 },
                 onFinish: () => {
                     setIsMarkReadProcessing(false);
