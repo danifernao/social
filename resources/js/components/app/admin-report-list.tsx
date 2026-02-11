@@ -121,7 +121,7 @@ export default function AdminReportList({ status, reports }: AdminReportListProp
                                                     {report.resolver.username}
                                                 </Link>
                                             ) : (
-                                                t('deleted_user_no', { id: report.closed_by_id })
+                                                t('deleted_user_no', { id: report.resolver_id })
                                             )}
                                         </TableCell>
 
