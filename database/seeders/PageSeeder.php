@@ -76,7 +76,12 @@ class PageSeeder extends Seeder
                 'content' => $content,
             ],
         ];
-        
+
+        foreach ($pages as $index => $page) {
+            $pages[$index]['created_at'] = now()->subSeconds($index);
+            $pages[$index]['updated_at'] = now()->subSeconds($index);
+        }
+
         DB::table('pages')->insert($pages);
     }
 }
