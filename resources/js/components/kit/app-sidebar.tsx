@@ -49,6 +49,7 @@ export function AppSidebar() {
             ...(auth.user.can_moderate
                 ? [
                       {
+                          name: 'settings',
                           title: t('administration'),
                           href: route('admin.index'),
                           icon: UserCog,

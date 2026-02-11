@@ -66,4 +66,19 @@ class Report extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * Scope que filtra los reportes que aún no han sido cerrados.
+     *
+     * Un reporte se considera "pendiente" cuando el campo "closed_at"
+     * es nulo, lo que indica que todavía no ha sido atendido por
+     * un moderador.
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePending($query)
+    {
+        return $query->whereNull('closed_at');
+    }
 }

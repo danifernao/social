@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Http\Resources\UserResource;
+use App\Models\Report;
 use App\Models\SiteSetting;
 use App\Utils\Locales;
 use App\Utils\PageUtils;
@@ -113,6 +114,12 @@ class HandleInertiaRequests extends Middleware
                     ?->unreadNotifications()
                     ->count()
                 ?? 0,
+
+            // Cantidad de reportes pendientes de moderación.
+            'pendingReportsCount' => fn () =>
+                $request->user()?->canModerate()
+                    ? Report::pending()->count()
+                    : 0,
 
             // Idiomas disponibles en la aplicación.
             'locales' => Locales::all(),

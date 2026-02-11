@@ -2,6 +2,7 @@ import { Auth } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { useEcho } from '@laravel/echo-react';
 import { useState } from 'react';
+import CounterBadge from './counter-badge';
 
 /**
  * Badge con la cantidad de notificaciones no leídas del usuario autenticado.
@@ -26,5 +27,5 @@ export default function NotificationBadge() {
     // Si el usuario no tiene notificaciones pendientes, el badge no se muestra.
     if (unreadCount <= 0) return null;
 
-    return <div className="ml-auto rounded-sm bg-red-600 p-px px-1 text-xs font-bold text-white">{unreadCount > 99 ? '99+' : unreadCount}</div>;
+    return <CounterBadge count={unreadCount} />;
 }

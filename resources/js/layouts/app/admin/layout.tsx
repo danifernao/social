@@ -1,3 +1,4 @@
+import AdminReportBadge from '@/components/app/admin-report-badge';
 import Heading from '@/components/kit/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -54,6 +55,7 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
             isActive: ['admin.user.index', 'admin.user.create', 'admin.user.edit'].includes(routeName),
         },
         {
+            name: 'reports',
             title: t('reports'),
             href: route('admin.report.index'),
             icon: null,
@@ -87,6 +89,7 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
                             >
                                 <Link href={item.href} prefetch>
                                     {item.title}
+                                    {item.name === 'reports' && <AdminReportBadge />}
                                 </Link>
                             </Button>
                         ))}
