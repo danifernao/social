@@ -142,7 +142,7 @@ export default function AdminReportList({ status, reports, previous, next }: Adm
                                     {/* Acciones */}
                                     <TableCell className="text-center">
                                         <Button variant="outline" size="sm">
-                                            <Link href={route('admin.report.show', report.id)}>{t('view')}</Link>
+                                            <Link href={route('admin.report.show', report.id) + window.location.search}>{t('view')}</Link>
                                         </Button>
                                     </TableCell>
                                 </TableRow>

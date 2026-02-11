@@ -27,11 +27,11 @@ export default function AdminReportItem({ report, related }: AdminReportItemProp
 
     // Función para manejar el botón "Atrás".
     const handleBack = () => {
-        if (window.history.length > 1) {
-            window.history.back();
-        } else {
-            router.get(route('admin.report.index'));
-        }
+        const params = new URLSearchParams(window.location.search);
+        const status = params.get('status') ?? 'open';
+        const cursor = params.get('cursor') ?? '';
+
+        router.get(route('admin.report.index'), { status, cursor }, { preserveScroll: false, preserveState: false });
     };
 
     // Obtiene el enlace del contenido reportado según tipo.
