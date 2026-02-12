@@ -96,7 +96,7 @@ export default function AdminPageList({ pages, previous, next }: Props) {
                                         {/* Botón editar */}
                                         <Button variant="outline" size="sm" asChild>
                                             <Link
-                                                href={route('admin.page.edit', { page: page.id, lang: page.language })}
+                                                href={route('admin.page.edit', page.id) + window.location.search}
                                                 title={t('edit')}
                                                 aria-label={t('edit')}
                                             >

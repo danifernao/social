@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Auth } from '@/types';
 import { Locale } from '@/types/modules/locale';
 import { Page, PageType, SpecialPages } from '@/types/modules/page';
-import { Link, router, useForm, usePage } from '@inertiajs/react';
+import { router, useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { SubmitEventHandler, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -73,6 +73,14 @@ export default function AdminPageForm({ page }: Props) {
             preserveState: true,
             preserveScroll: true,
         });
+    };
+
+    // Navega al listado de páginas conservando el idioma y el cursor si existe.
+    const handleCancel = () => {
+        const params = new URLSearchParams(window.location.search);
+        const cursor = params.get('cursor');
+
+        router.get(route('admin.page.index'), { lang: data.language, ...(cursor && { cursor }) }, { preserveScroll: false, preserveState: false });
     };
 
     return (
@@ -222,8 +230,8 @@ export default function AdminPageForm({ page }: Props) {
                                     )}
 
                                     {/* Botón cancelar */}
-                                    <Button variant="ghost" size="sm" className="ml-auto" asChild>
-                                        <Link href={route('admin.page.index', { lang: data.language })}>{t('cancel')}</Link>
+                                    <Button type="button" variant="ghost" size="sm" className="ml-auto" onClick={handleCancel}>
+                                        {t('cancel')}
                                     </Button>
                                 </div>
                             </>

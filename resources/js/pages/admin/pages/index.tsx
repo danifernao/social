@@ -59,7 +59,7 @@ export default function PagesIndex() {
                     <div className="flex items-center justify-between">
                         {/* Enlace para crear una nueva página estática */}
                         <Button variant="outline" asChild>
-                            <Link href={route('admin.page.create', { lang: currentLanguage })}>{t('create_page')}</Link>
+                            <Link href={route('admin.page.create') + window.location.search}>{t('create_page')}</Link>
                         </Button>
 
                         {/* Selector de idioma */}
