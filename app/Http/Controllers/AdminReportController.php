@@ -44,7 +44,7 @@ class AdminReportController extends Controller
             $query->whereNull('closed_at');
         }
 
-        $reports = $query->cursorPaginate(50)->withQueryString();
+        $reports = $query->cursorPaginate(20)->withQueryString();
 
         return Inertia::render('admin/reports/index', [
             'reports' => ReportResource::collection($reports),

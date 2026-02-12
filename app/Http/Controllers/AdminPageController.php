@@ -41,7 +41,7 @@ class AdminPageController extends Controller
         // Obtiene las páginas informativas más recientes filtradas por idioma.
         $pages = Page::where('language', $language)
             ->latest()
-            ->cursorPaginate(50)
+            ->cursorPaginate(20)
             ->withQueryString();
 
         return inertia('admin/pages/index', [
