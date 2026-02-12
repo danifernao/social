@@ -52,7 +52,7 @@ class AdminUserController extends Controller
 
         // Obtiene y valida la columna de ordenamiento.
         // Por defecto se utiliza "username".
-        $order_by = $request->get('orderBy', 'username');
+        $order_by = $request->get('orderBy', 'id');
         $order_by = in_array(
             $order_by,
             $allowed_order_by,
@@ -60,7 +60,7 @@ class AdminUserController extends Controller
         ) ? $order_by : 'username';
 
         // Define la dirección del ordenamiento (ascendente o descendente).
-        $order_direction = strtolower($request->get('orderDirection', 'asc'));
+        $order_direction = strtolower($request->get('orderDirection', 'desc'));
         $order_direction = in_array(
             $order_direction,
             ['asc', 'desc'],

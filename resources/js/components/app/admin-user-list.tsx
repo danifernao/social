@@ -5,7 +5,7 @@ import { useCanActOnUser } from '@/hooks/app/use-auth';
 import { formatDate } from '@/lib/utils';
 import { User } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import { SubmitEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AdminTablePagination from './admin-table-pagination';
@@ -31,10 +31,10 @@ export default function AdminUserList({ users, previous, next }: Props) {
     const queryParams = new URLSearchParams(url.split('?')[1]);
 
     // Nombre de la columna usada para el ordenamiento actual.
-    const orderBy = queryParams.get('orderBy') || 'username';
+    const orderBy = queryParams.get('orderBy') || 'id';
 
     // Dirección actual de ordenamiento: ascendente o descendente.
-    const orderDirection = queryParams.get('orderDirection') || 'asc';
+    const orderDirection = queryParams.get('orderDirection') || 'desc';
 
     // Estado local para el término de búsqueda.
     const [query, setQuery] = useState(queryParams.get('query') || '');
@@ -81,6 +81,15 @@ export default function AdminUserList({ users, previous, next }: Props) {
         router.visit(`?${params.toString()}`);
     };
 
+    // Devuelve el icono de orden según la columna activa y la dirección actual.
+    const renderSortIcon = (field: string) => {
+        if (orderBy !== field) {
+            return <ArrowUpDown className="ml-1 h-4 w-4 opacity-20" />;
+        }
+
+        return orderDirection === 'asc' ? <ArrowUp className="ml-1 h-4 w-4" /> : <ArrowDown className="ml-1 h-4 w-4" />;
+    };
+
     // Devuelve una clase de color si "value" tiene contenido.
     // Verde si el valor tiene contenido, rojo si no lo tiene.
     const addTextColor = (value: any = null) => {
@@ -103,7 +112,7 @@ export default function AdminUserList({ users, previous, next }: Props) {
                             {/* ID */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('id')}>
-                                    {t('id')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('id')} {renderSortIcon('id')}
                                 </Button>
                             </TableHead>
 
@@ -113,35 +122,35 @@ export default function AdminUserList({ users, previous, next }: Props) {
                             {/* Nombre de usuario */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('username')}>
-                                    {t('username')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('username')} {renderSortIcon('username')}
                                 </Button>
                             </TableHead>
 
                             {/* Estado de verificación del correo */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('email_verified_at')}>
-                                    {t('verified')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('verified')} {renderSortIcon('email_verified_at')}
                                 </Button>
                             </TableHead>
 
                             {/* Estado de la cuenta */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('is_active')}>
-                                    {t('enabled')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('enabled')} {renderSortIcon('is_active')}
                                 </Button>
                             </TableHead>
 
                             {/* Rol */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('role')}>
-                                    {t('role')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('role')} {renderSortIcon('role')}
                                 </Button>
                             </TableHead>
 
                             {/* Fecha de registro */}
                             <TableHead>
                                 <Button variant="link" onClick={() => handleSort('created_at')}>
-                                    {t('registered')} <ArrowUpDown className="ml-1 h-4 w-4" />
+                                    {t('registered')} {renderSortIcon('created_at')}
                                 </Button>
                             </TableHead>
                             {/* Acciones */}
