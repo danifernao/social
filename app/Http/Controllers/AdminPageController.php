@@ -195,10 +195,12 @@ class AdminPageController extends Controller
         // Actualiza los datos de la página informativa.
         $page->update($validated);
 
-        return redirect()->route(
-            'admin.page.index',
-            ['lang' => $page->language]
-        )->with('message', __('Page successfully updated.'));
+        return redirect()
+            ->route('admin.page.index', [
+                'lang' => $page->language,                
+                'cursor' => $request->cursor,
+            ])
+            ->with('message', __('Page successfully updated.'));
     }
 
     /**

@@ -31,8 +31,14 @@ export default function AdminPageForm({ page }: Props) {
     // y las páginas especiales proporcionados por Inertia.
     const { locales, auth, specialPages } = usePage<{ locales: Locale[]; auth: Auth; specialPages: SpecialPages }>().props;
 
-    // Obtiene el código de idioma pasado como consulta por URL.
-    const queryLang = new URLSearchParams(window.location.search).get('lang') ?? undefined;
+    // Obtiene los parámetros de consulta desde la URL.
+    const params = new URLSearchParams(window.location.search);
+
+    // Obtiene el código de idioma desde la URL.
+    const queryLang = params.get('lang') ?? undefined;
+
+    // Obtiene el cursor actual desde la URL si existe.
+    const cursor = params.get('cursor');
 
     // Determina si el idioma obtenido desde la URL es válido.
     const isValidLang = queryLang ? locales.some(({ lang }) => lang === queryLang) : false;
@@ -53,6 +59,7 @@ export default function AdminPageForm({ page }: Props) {
         title: page?.title ?? '',
         slug: page?.slug ?? '',
         content: page?.content ?? '',
+        cursor: cursor ?? null,
     });
 
     // Gestiona el envío del formulario según el modo (creación o edición).
@@ -60,7 +67,7 @@ export default function AdminPageForm({ page }: Props) {
         if (isEditing) {
             patch(route('admin.page.edit', page!.id), { preserveScroll: true });
         } else {
-            post(route('admin.page.create'), { preserveScroll: true });
+            post(route('admin.page.create'));
         }
         e.preventDefault();
     };
@@ -77,9 +84,6 @@ export default function AdminPageForm({ page }: Props) {
 
     // Navega al listado de páginas conservando el idioma y el cursor si existe.
     const handleCancel = () => {
-        const params = new URLSearchParams(window.location.search);
-        const cursor = params.get('cursor');
-
         router.get(route('admin.page.index'), { lang: data.language, ...(cursor && { cursor }) }, { preserveScroll: false, preserveState: false });
     };
 
