@@ -67,9 +67,8 @@ class AdminUserController extends Controller
             true
         ) ? $order_direction : 'asc';
 
-        // Obtiene el término de búsqueda y el cursor para la paginación.
+        // Obtiene el término de búsqueda.
         $query = trim($request->get('query', ''));
-        $cursor = $request->header('X-Cursor');
 
         // Consulta base del modelo User.
         $users_query = User::query();
@@ -86,7 +85,7 @@ class AdminUserController extends Controller
         $users_query->orderBy($order_by, $order_direction);
 
         // Obtiene los usuarios paginados mediante cursor.
-        $users = $users_query->cursorPaginate(20, ['*'], 'cursor', $cursor);
+        $users = $users_query->cursorPaginate(20);
 
         return Inertia::render('admin/users/index', [
             'users' => UserResource::collection($users),
