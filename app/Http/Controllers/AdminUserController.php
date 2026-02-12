@@ -85,7 +85,7 @@ class AdminUserController extends Controller
         $users_query->orderBy($order_by, $order_direction);
 
         // Obtiene los usuarios paginados mediante cursor.
-        $users = $users_query->cursorPaginate(20);
+        $users = $users_query->cursorPaginate(20)->withQueryString();
 
         return Inertia::render('admin/users/index', [
             'users' => UserResource::collection($users),
