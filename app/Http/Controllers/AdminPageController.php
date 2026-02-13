@@ -44,6 +44,12 @@ class AdminPageController extends Controller
             ->cursorPaginate(20)
             ->withQueryString();
 
+        // Si la colección actual está vacía pero hay un cursor en la URL,
+        // redirige a la primera página.
+        if ($pages->isEmpty() && $request->has('cursor')) {
+            return redirect()->route('admin.page.index', ['lang' => $language]);
+        }
+
         return inertia('admin/pages/index', [
             'pages' => PageResource::collection($pages),
             'language' => $language,
@@ -218,9 +224,9 @@ class AdminPageController extends Controller
         // Elimina la página informativa de la base de datos.
         $page->delete();
 
-        return redirect()->route(
-            'admin.page.index',
-            ['lang' => $page->language]
-        )->with('message', __('Page successfully deleted.'));
+        return back()->with([
+            'status' => 'page_deleted',
+            'message' => __('Page successfully deleted.'),
+        ]);
     }
 }
