@@ -4,6 +4,7 @@ import { Page } from '@/types/modules/page';
 import { Link, router } from '@inertiajs/react';
 import { Edit, Eye, Trash } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -43,6 +44,20 @@ export default function AdminPageList({ pages, previous, next }: Props) {
     const handleDelete = (id: number) => {
         router.delete(route('admin.page.destroy', id), {
             preserveScroll: true,
+            onSuccess: (page) => {
+                const message = page.props.message;
+
+                if (typeof message === 'string') {
+                    toast.message(message);
+                }
+            },
+            onError: (errors) => {
+                toast.error(t('unexpected_error'));
+
+                if (import.meta.env.DEV) {
+                    console.error(errors);
+                }
+            },
         });
     };
 
