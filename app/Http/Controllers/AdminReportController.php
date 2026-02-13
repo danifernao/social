@@ -44,7 +44,7 @@ class AdminReportController extends Controller
             $query->whereNull('closed_at');
         }
 
-        $reports = $query->cursorPaginate(1)->withQueryString();
+        $reports = $query->cursorPaginate(20)->withQueryString();
 
         // Si la colección actual está vacía pero hay un cursor en la URL,
         // redirige a la primera página de la lista de reportes.

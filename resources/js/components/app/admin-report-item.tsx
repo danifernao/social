@@ -134,9 +134,13 @@ export default function AdminReportItem({ report, related }: AdminReportItemProp
                                 <ul>
                                     {related.data.map((r) => (
                                         <li key={r.id} className="mt-2 text-sm">
-                                            <Link href={route('admin.report.show', r.id)} className="font-medium text-blue-600 hover:underline">
+                                            <a
+                                                href={route('admin.report.show', r.id)}
+                                                className="font-medium text-blue-600 hover:underline"
+                                                target="_blank"
+                                            >
                                                 {t('report_no', { id: r.id })}
-                                            </Link>
+                                            </a>
 
                                             {r.reporter_note && <p className="text-muted-foreground text-xs">{r.reporter_note}</p>}
                                         </li>
