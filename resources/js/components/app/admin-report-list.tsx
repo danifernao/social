@@ -149,7 +149,7 @@ export default function AdminReportList({ status, reports, previous, next }: Adm
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={3} className="text-muted-foreground py-6 text-center">
+                                <TableCell colSpan={9} className="text-muted-foreground py-6 text-center">
                                     {t('no_reports_found')}
                                 </TableCell>
                             </TableRow>
