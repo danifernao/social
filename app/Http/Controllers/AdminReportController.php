@@ -44,7 +44,13 @@ class AdminReportController extends Controller
             $query->whereNull('closed_at');
         }
 
-        $reports = $query->cursorPaginate(20)->withQueryString();
+        $reports = $query->cursorPaginate(1)->withQueryString();
+
+        // Si la colección actual está vacía pero hay un cursor en la URL,
+        // redirige a la primera página de la lista de reportes.
+        if ($reports->isEmpty() && $request->has('cursor')) {
+            return redirect()->route('admin.report.index');
+        }
 
         return Inertia::render('admin/reports/index', [
             'reports' => ReportResource::collection($reports),
