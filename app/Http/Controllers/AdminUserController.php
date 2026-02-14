@@ -341,8 +341,7 @@ class AdminUserController extends Controller
     }
 
     /**
-     * Cambia el correo electrónico de un usuario y, si se solicita,
-     * envía el enlace de verificación.
+     * Cambia el correo electrónico de un usuario.
      * 
      * @param Request $request Datos de la petición HTTP.
      * @param User    $user    Instancia del usuario al que se le
@@ -350,6 +349,10 @@ class AdminUserController extends Controller
      */
     private function changeEmail(Request $request, User $user)
     {
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos de administrador.
+        $this->authorize('access-admin-area');
+
         // Valida los datos enviados desde el formulario.
         $request->validate([
             'new_email' => UserRules::email($user->id),
@@ -379,6 +382,10 @@ class AdminUserController extends Controller
      */
     private function resetPassword(Request $request, User $user)
     {
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos de administrador.
+        $this->authorize('access-admin-area');
+        
         // Genera y guarda una nueva contraseña aleatoria si se solicitó.
         if (filter_var($request->random_password, FILTER_VALIDATE_BOOLEAN)) {
             $new_password = Str::random(12);

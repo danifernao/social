@@ -32,8 +32,21 @@ class UserResource extends JsonResource
                 $auth->id === $this->id || $auth->canModerate()
             );
 
+        /**
+         * Determina si el usuario autenticado tiene permiso para
+         * ver el correo electrónico del recurso.
+         *
+         * Se permite si:
+         *    - es el mismo usuario representado por el recurso actual o
+         *    - es un administrador.
+         */
+        $can_view_email = 
+            $auth && (
+                $auth->id === $this->id || $auth->isAdmin()
+            );
+
         // Datos sensibles.
-        $email = $can_view_sensitive_data
+        $email = $can_view_email
             ? $this->getRawOriginal('email')
             : null;
 
