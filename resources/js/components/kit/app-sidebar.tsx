@@ -55,6 +55,7 @@ export function AppSidebar() {
                           icon: UserCog,
                           isActive: [
                               'admin.site.edit',
+                              'admin.invitation.index',
                               'admin.page.index',
                               'admin.page.create',
                               'admin.page.edit',

@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\HandleInvitationAccess;
 use App\Http\Middleware\HandleLanguage;
 use App\Http\Middleware\HandleRegistrationAccess;
 use Illuminate\Foundation\Application;
@@ -27,7 +28,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'registration.enabled' => HandleRegistrationAccess::class,
+            'registration.access' => HandleRegistrationAccess::class,
+            'invitation.access' => HandleInvitationAccess::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

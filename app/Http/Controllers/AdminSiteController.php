@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Invitation;
 use App\Models\SiteSetting;
 use App\Traits\HandlesPasswordConfirmation;
 use Illuminate\Http\Request;
@@ -83,17 +84,24 @@ class AdminSiteController extends Controller
     {
         // Obtiene el registro de configuración del sitio.
         // Se asume que existe un único registro con los valores globales.
-        $siteSettings = SiteSetting::firstOrFail();
+        $site_settings = SiteSetting::firstOrFail();
+
+        // Guarda el estado previo.
+        $was_enabled = $site_settings->is_user_registration_enabled;
 
         // Alterna el estado de habilitación del registro de usuarios.
-        $siteSettings->is_user_registration_enabled =
-            !$siteSettings->is_user_registration_enabled;
-
-        $siteSettings->save();
+        $site_settings->is_user_registration_enabled = !$was_enabled;
+        $site_settings->save();
+        
+        // Si el registro acaba de habilitarse,
+        // elimina todas las invitaciones no usadas.
+        if ($site_settings->is_user_registration_enabled && !$was_enabled) {
+            Invitation::whereNull('used_by_id')->delete();
+        }
 
         return back()->with(
             'status',
-            $siteSettings->is_user_registration_enabled 
+            $site_settings->is_user_registration_enabled 
                 ? 'user_registration_enabled' 
                 : 'user_registration_disabled'
         );

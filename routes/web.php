@@ -30,6 +30,7 @@ use App\Http\Controllers\SettingsProfileController;
 | Controladores de administración
 |--------------------------------------------------------------------------
 */
+use App\Http\Controllers\AdminInvitationController;
 use App\Http\Controllers\AdminPageController;
 use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\AdminSiteController;
@@ -74,8 +75,8 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware('guest')->group(function () {
-    Route::get('register', [AuthSignUpController::class, 'create'])
-        ->middleware('registration.enabled')
+    Route::get('register/{token?}', [AuthSignUpController::class, 'create'])
+        ->middleware('registration.access')
         ->name('register');
 
     Route::post('register', [AuthSignUpController::class, 'store']);
@@ -253,6 +254,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
                         ->name('edit');
                     Route::patch('/', [AdminSiteController::class, 'update'])
                         ->name('update');
+                });
+
+            // Administración de invitaciones
+            Route::prefix('site/invitations')
+                ->middleware('invitation.access')
+                ->name('invitation.')
+                ->group(function () {
+                    Route::get('/', [AdminInvitationController::class, 'index'])
+                        ->name('index');
+                    Route::post('/', [AdminInvitationController::class, 'store'])
+                        ->name('store');
+                    Route::delete('{invitation}', [AdminInvitationController::class, 'destroy'])
+                        ->name('destroy');
                 });
 
             // Administración de páginas informativas

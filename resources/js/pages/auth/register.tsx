@@ -16,6 +16,7 @@ type RegisterForm = {
     password: string;
     password_confirmation: string;
     language: string;
+    token: string | null;
 };
 
 /**
@@ -25,9 +26,9 @@ export default function Register() {
     // Funciones de traducción y acceso al idioma actual.
     const { t, i18n } = useTranslation();
 
-    // Obtiene las páginas estáticas especiales (términos y política)
-    // compartidas por Inertia.
-    const { specialPages } = usePage<{ specialPages: SpecialPages }>().props;
+    // Obtiene las páginas estáticas especiales (términos y política) y
+    // el token de una potencial invitación compartidos por Inertia.
+    const { specialPages, invitation_token } = usePage<{ specialPages: SpecialPages; invitation_token: string | null }>().props;
 
     // Inicializa el formulario de registro de usuario.
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
@@ -36,6 +37,7 @@ export default function Register() {
         password: '',
         password_confirmation: '',
         language: i18n.currentLang,
+        token: invitation_token,
     });
 
     // Gestiona el envío del formulario de registro.

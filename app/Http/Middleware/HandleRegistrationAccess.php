@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Invitation;
 use App\Models\SiteSetting;
 use Closure;
 use Illuminate\Http\Request;
@@ -11,7 +12,8 @@ class HandleRegistrationAccess
 {
     /**
      * Procesa la solicitud entrante y valida si el registro de usuarios
-     * está permitido según la configuración del sitio.
+     * está permitido según la configuración del sitio o mediante
+     * una invitación válida.
      *
      * @param Request $request Solicitud HTTP entrante.
      * @param Closure $next    Siguiente middleware.
@@ -19,15 +21,30 @@ class HandleRegistrationAccess
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Obtiene la configuración global del sitio.
-        $siteSettings = SiteSetting::first();
+        // Si el registro global está habilitado, se permite el acceso.
+        if (SiteSetting::value('is_user_registration_enabled')) {
+            return $next($request);
+        }
 
-        // Si el registro de usuarios está inhabilitado,
-        // se bloquea el acceso con un error 403.
-        if (!$siteSettings?->is_user_registration_enabled) {
+        // Obtiene el token desde el segmento de la ruta.
+        $token = $request->route('token');
+
+        // Si no se proporciona token, se bloquea el acceso.
+        if (!$token) {
             abort(403, __('User registration is disabled.'));
         }
 
+        // Busca una invitación válida y no utilizada.
+        $invitation_exists = Invitation::where('token', $token)
+            ->whereNull('used_by_id')
+            ->exists();
+
+        // Si la invitación no existe o ya fue utilizada, se bloquea el acceso.
+        if (!$invitation_exists) {
+            abort(403, __('User registration is disabled.'));
+        }
+
+        // La invitación es válida, se permite el acceso al registro.
         return $next($request);
     }
 }

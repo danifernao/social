@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAdminActionForm } from '@/hooks/app/use-admin-action-form';
 import { SiteSettings } from '@/types';
+import { Link } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -69,6 +70,13 @@ export default function AdminSiteEditForm({ settings }: AdminSiteEditFormProps) 
 
                     {/* Descripción de la acción */}
                     <p className="text-muted-foreground text-sm italic">{t('toggle_user_registration')}</p>
+
+                    {/* Enlace para crear o gestionar enlaces de invitación */}
+                    {!isRegistrationEnabled && (
+                        <Link href={route('admin.invitation.index')} className="text-sm text-blue-600 hover:underline">
+                            {t('click_here_to_create_and_manage_invite_links')}
+                        </Link>
+                    )}
                 </CardContent>
             </Card>
 
