@@ -73,31 +73,37 @@ DB_USERNAME=EL_USUARIO_DE_LA_BASE_DE_DATOS
 DB_PASSWORD=LA_CONTRASEÑA_DE_LA_BASE_DE_DATOS
 ```
 
-4. Ejecuta en la terminal lo siguiente para instalar las dependencias PHP:
+4. Ajusta `APP_URL` para que coincida con el puerto usado por la aplicación:
+
+```
+APP_URL=http://localhost:8000
+```
+
+5. Ejecuta en la terminal lo siguiente para instalar las dependencias PHP:
 
 ```
 composer install
 ```
 
-5. Ejecuta lo siguiente para generar la clave de la aplicación:
+6. Ejecuta lo siguiente para generar la clave de la aplicación:
 
 ```
 php artisan key:generate
 ```
 
-6. Ejecuta lo siguiente para crear el enlace simbólico para el acceso público a archivos:
+7. Ejecuta lo siguiente para crear el enlace simbólico para el acceso público a archivos:
 
 ```
 php artisan storage:link
 ```
 
-7. Ejecuta lo siguiente para realizar las migraciones:
+8. Ejecuta lo siguiente para realizar las migraciones:
 
 ```
 php artisan migrate --seed
 ```
 
-8. Ejecuta lo siguiente para instalar las dependencias JavaScript:
+9. Ejecuta lo siguiente para instalar las dependencias JavaScript:
 
 ```
 npm install
