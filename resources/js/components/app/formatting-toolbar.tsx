@@ -583,7 +583,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
                         </Button>
 
                         {/* Input oculto */}
-                        <input ref={videoFileInputRef} type="file" accept="video/mp4,video/webm,video/ogg" hidden onChange={onVideoFileSelected} />
+                        <input ref={videoFileInputRef} type="file" accept="video/mp4,video/webm" hidden onChange={onVideoFileSelected} />
                     </div>
 
                     <Button size="sm" className="mt-2" onClick={applyVideo}>

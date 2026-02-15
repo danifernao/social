@@ -21,7 +21,7 @@ class MediaController extends Controller
             'file' => [
                 'required',
                 'file',
-                'mimes:jpg,jpeg,png,webp,gif,mp4',
+                'mimes:jpg,jpeg,png,webp,gif,mp4,webm',
                 'max:5120',
             ],
         ]);
