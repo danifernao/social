@@ -40,7 +40,7 @@ export default function ReportsIndex() {
             <AdminLayout fullWidth>
                 <AppContentLayout noMargin fullWidth>
                     {/* Pestañas */}
-                    <Tabs value={status} onValueChange={handleStatusChange} className="mb-4">
+                    <Tabs value={status} onValueChange={handleStatusChange}>
                         <TabsList>
                             <TabsTrigger value="open">{t('open_reports')}</TabsTrigger>
                             <TabsTrigger value="closed">{t('closed_reports')}</TabsTrigger>

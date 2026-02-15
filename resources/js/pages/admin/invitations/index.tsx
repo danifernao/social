@@ -124,7 +124,7 @@ export default function PagesIndex() {
                     </div>
 
                     {/* Pestañas */}
-                    <Tabs value={status} onValueChange={handleStatusChange} className="mb-4">
+                    <Tabs value={status} onValueChange={handleStatusChange}>
                         <TabsList>
                             <TabsTrigger value="pending">{t('pending')}</TabsTrigger>
                             <TabsTrigger value="accepted">{t('accepted')}</TabsTrigger>
