@@ -1,10 +1,9 @@
 import AdminUserList from '@/components/app/admin-user-list';
-import { Button } from '@/components/ui/button';
 import AdminLayout from '@/layouts/app/admin/layout';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
-import type { Auth, BreadcrumbItem, Users } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
+import type { BreadcrumbItem, Users } from '@/types';
+import { Head, usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -16,9 +15,9 @@ export default function UsersIndex() {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Captura los datos de autenticación, la lista de usuarios
-    // y un posible mensaje proporcionados por Inertia.
-    const { auth, users, message } = usePage<{ auth: Auth; users: Users; message: string }>().props;
+    // Captura la lista de usuarios y un posible mensaje
+    // proporcionados por Inertia.
+    const { users, message } = usePage<{ users: Users; message: string }>().props;
 
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
@@ -42,15 +41,6 @@ export default function UsersIndex() {
 
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
-                    {/* Botón para crear un nuevo usuario */}
-                    {auth.user.is_admin && (
-                        <div>
-                            <Button variant="outline" asChild>
-                                <Link href={route('admin.user.create')}>{t('create_user')}</Link>
-                            </Button>
-                        </div>
-                    )}
-
                     {/* Listado paginado de usuarios */}
                     <AdminUserList users={users.data} previous={users.links.prev} next={users.links.next} />
                 </AppContentLayout>

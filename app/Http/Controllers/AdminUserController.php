@@ -91,67 +91,6 @@ class AdminUserController extends Controller
             'users' => UserResource::collection($users),
         ]);
     }
-
-    /**
-     * Muestra el formulario de creación de usuario.
-     *
-     * @param Request $request Datos de la petición HTTP.
-     */
-    public function create(Request $request)
-    {
-        // Deniega el acceso si el usuario autenticado
-        // no tiene permisos de administrador.
-        $this->authorize('access-admin-area');
-
-        return Inertia::render('admin/users/create');
-    }
-
-    /**
-     * Crea un nuevo usuario desde el panel de administración.
-     *
-     * Requiere que el administrador confirme
-     * su contraseña antes de ejecutar la acción.
-     *
-     * @param Request $request Datos de la petición HTTP.
-     */
-    public function store(Request $request)
-    {
-        // Deniega el acceso si el usuario autenticado
-        // no tiene permisos de administrador.
-        $this->authorize('access-admin-area');
-
-        // Valida los datos enviados desde el formulario.
-        $request->validate([
-            'email' => ['required', 'email', 'unique:users,email'],
-            'privileged_password' => ['required', 'string'],
-        ]);
-
-        // Verifica que la contraseña ingresada por
-        // el administrador sea correcta.
-        $this->confirmPassword($request->input('privileged_password'));
-
-        // Genera un nombre de usuario único.
-        $username = UsernameGenerator::generate();
-
-        // Genera una contraseña aleatoria.
-        $password = Str::random(12);
-
-        // Crea el usuario forzando la asignación
-        // y marcando el correo como verificado.
-        $user = User::forceCreate([
-            'username' => $username,
-            'email' => $request->email,
-            'password' => Hash::make($password),
-            'email_verified_at' => now(),
-        ]);
-
-        // Envía un enlace de restablecimiento de contraseña al usuario.
-        Password::sendResetLink(['email' => $user->email]);
-
-        return redirect()
-            ->route('admin.user.index')
-            ->with('message', __('User successfully created.'));
-    }
     
     /**
      * Muestra el formulario de edición de un usuario.

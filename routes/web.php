@@ -293,10 +293,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ->group(function () {
                     Route::get('/', [AdminUserController::class, 'index'])
                         ->name('index');
-                    Route::get('create', [AdminUserController::class, 'create'])
-                        ->name('create');
-                    Route::post('create', [AdminUserController::class, 'store'])
-                        ->name('store');
                     Route::get('{user}', [AdminUserController::class, 'edit'])
                         ->name('edit');
                     Route::patch('{user}', [AdminUserController::class, 'update'])
