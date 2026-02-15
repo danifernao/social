@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\PermissionResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -67,6 +68,13 @@ class UserResource extends JsonResource
             ? $this->resource->hasBlocked($auth)
             : null;
 
+        /**
+         * Permisos del usuario.
+         */
+        $permissions = $this->whenLoaded('permission', function () {
+            return (new PermissionResource($this->permission))->resolve();
+        });
+
         return [
             'id'                => $this->id,
             'username'          => $this->username,
@@ -84,8 +92,7 @@ class UserResource extends JsonResource
             'is_followed'       => $this->is_followed ?? null,
             'is_blocked'        => $is_blocked,
             'blocked_me'        => $blocked_me,
-            'is_admin'          => $this->canManageSystem(),
-            'can_moderate'      => $this->canModerate(),
+            'permissions'       => $permissions,
         ];
     }
 }

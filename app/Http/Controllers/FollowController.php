@@ -88,6 +88,7 @@ class FollowController extends Controller
 
         // Obtiene los usuarios que el usuario dado sigue, excluyendo bloqueos.
         $following = $user->follows()
+            ->with('permission')
             ->whereNotIn('users.id', $excluded_ids)
             ->cursorPaginate(15, ['*'], 'cursor', $cursor);
 
@@ -127,6 +128,7 @@ class FollowController extends Controller
 
         // Obtiene los usuarios que siguen al usuario dado, excluyendo bloqueos.
         $followers = $user->followers()
+            ->with('permission')
             ->whereNotIn('users.id', $excluded_ids)
             ->cursorPaginate(15, ['*'], 'cursor', $cursor);
 

@@ -34,7 +34,7 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
 
     // Definición de los elementos de navegación de la barra lateral.
     const sidebarNavItems: NavItem[] = [
-        ...(auth.user.is_admin
+        ...(auth.user.permissions.can_manage_system
             ? [
                   {
                       title: t('general'),

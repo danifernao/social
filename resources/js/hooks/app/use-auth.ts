@@ -15,7 +15,7 @@ export function useCanActOnUser(user: User) {
     }
 
     // Bloquea la acción si el usuario no tiene permisos de moderación.
-    if (!auth.user.can_moderate) {
+    if (!auth.user.permissions.can_moderate) {
         return false;
     }
 
@@ -25,7 +25,7 @@ export function useCanActOnUser(user: User) {
     }
 
     // Impide que un moderador actúe sobre un administrador.
-    if (!auth.user.is_admin && user.is_admin) {
+    if (!auth.user.permissions.can_manage_system && user.permissions.can_manage_system) {
         return false;
     }
 

@@ -71,7 +71,7 @@ class AdminUserController extends Controller
         $query = trim($request->get('query', ''));
 
         // Consulta base del modelo User.
-        $users_query = User::query();
+        $users_query = User::with('permission');
 
         // Aplica búsqueda por nombre de usuario parcial o por ID exacto.
         if ($query !== '') {
@@ -110,6 +110,9 @@ class AdminUserController extends Controller
         if (!$auth_user->canActOn($user)) {
             abort(403);
         }
+
+        // Carga los permisos del usuario.
+        $user->load('permission');
 
         // Transforma el usuario utilizando UserResource para el frontend.
         $user_data = (new UserResource($user))->resolve();

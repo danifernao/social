@@ -20,6 +20,20 @@ class Permission extends Model
         'can_moderate',
     ];
 
+    /**
+     * Define los casts automáticos de atributos.
+     *
+     * @var array<string,string>
+     */
+    protected $casts = [
+        'can_manage_system'   => 'boolean',
+        'can_moderate'        => 'boolean',
+        'can_post'            => 'boolean',
+        'can_comment'         => 'boolean',
+        'can_update_username' => 'boolean',
+        'can_update_avatar'   => 'boolean',
+    ];
+
      /**
      * Relación: usuario que tiene los permisos.
      *

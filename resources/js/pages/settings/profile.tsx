@@ -191,7 +191,7 @@ export default function Profile() {
                 </div>
 
                 {/* Sección para eliminar la cuenta */}
-                {!auth.user.is_admin && <DeleteUser />}
+                {!auth.user.permissions.can_manage_system && <DeleteUser />}
             </SettingsLayout>
         </AppLayout>
     );

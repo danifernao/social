@@ -76,7 +76,10 @@ class HandleInertiaRequests extends Middleware
             // Información de autenticación del usuario actual.
             'auth' => [
                 'user' => $request->user()
-                    ? (new UserResource($request->user()))->resolve()
+                    ? (new UserResource($request
+                        ->user()
+                        ->load('permission')
+                      ))->resolve()
                     : null,
             ],
 

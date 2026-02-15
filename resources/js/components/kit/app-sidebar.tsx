@@ -46,7 +46,7 @@ export function AppSidebar() {
                 href: route('notification.index'),
                 icon: Bell,
             },
-            ...(auth.user.can_moderate
+            ...(auth.user.permissions.can_moderate
                 ? [
                       {
                           name: 'settings',

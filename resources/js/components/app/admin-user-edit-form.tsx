@@ -63,7 +63,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
     return (
         <form className="space-y-8">
             {/* Gestión del rol de usuario */}
-            {auth.user.is_admin && (
+            {auth.user.permissions.can_manage_system && (
                 <Card>
                     <CardHeader>
                         <CardTitle>{t('change_role')}</CardTitle>
@@ -175,7 +175,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             </Card>
 
             {/* Gestión del correo electrónico */}
-            {auth.user.is_admin && (
+            {auth.user.permissions.can_manage_system && (
                 <Card>
                     <CardHeader>
                         <CardTitle>{t('change_email_address')}</CardTitle>
@@ -210,7 +210,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             )}
 
             {/* Gestión de la contraseña */}
-            {auth.user.is_admin && (
+            {auth.user.permissions.can_manage_system && (
                 <Card>
                     <CardHeader>
                         <CardTitle>{t('reset_password')}</CardTitle>
@@ -284,7 +284,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             </Card>
 
             {/* Eliminación del usuario */}
-            {auth.user.is_admin && !user.is_admin && (
+            {auth.user.permissions.can_manage_system && !user.permissions.can_manage_system && (
                 <Card>
                     <CardHeader>
                         <CardTitle>{t('delete_user')}</CardTitle>

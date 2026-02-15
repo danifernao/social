@@ -211,7 +211,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function canManageSystem(): bool
     {
-        return (bool) $this->permission->can_manage_system;
+        return $this->permission->can_manage_system;
     }
 
     /**
@@ -221,7 +221,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function canModerate(): bool
     {
-        return (bool) $this->permission->can_moderate;
+        return $this->permission->can_moderate;
     }
 
     /**

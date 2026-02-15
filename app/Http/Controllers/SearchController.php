@@ -48,7 +48,7 @@ class SearchController extends Controller
         if ($type === 'user') {
             // Construye la consulta de usuarios filtrando por nombre
             // de usuario y excluyendo perfiles bloqueados.
-            $users = User::query()
+            $users = User::with('permission')
                 ->when($query, fn ($q) =>
                     $q->where('username', 'like', "%{$query}%")
                 )
@@ -94,7 +94,7 @@ class SearchController extends Controller
 
         // Construye la consulta base de publicaciones,
         // excluyendo aquellas de usuarios bloqueados.
-        $posts_query = Post::with('user')
+        $posts_query = Post::with(['user', 'user.permission'])
             ->withCount('comments')
             ->whereNotIn('user_id', $excluded_ids)
             ->latest();

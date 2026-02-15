@@ -84,10 +84,12 @@ class AdminReportController extends Controller
         // y obtiene el modelo correspondiente.
         switch ($data['reportable_type']) {
             case 'post':
-                $reportable = Post::with('user')->find($data['reportable_id']);
+                $reportable = Post::with(['user', 'user.permission'])
+                    ->find($data['reportable_id']);
                 break;
             case 'comment':
-                $reportable = Comment::with('user')->find($data['reportable_id']);
+                $reportable = Comment::with(['user', 'user.permission'])
+                    ->find($data['reportable_id']);
                 break;
             case 'user':
                 $reportable = User::find($data['reportable_id']);
