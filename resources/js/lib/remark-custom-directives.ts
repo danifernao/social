@@ -140,23 +140,31 @@ export default function remarkCustomDirectives() {
           // Se detecta el servicio de video a partir de la URL.
           const service = detectVideoService(url);
 
-          // Si no se reconoce el servicio,
-          // se degrada el contenido a un <span>.
-          if (!service) {
-            videoNode.data = {
-              hName: 'span',
-            };
-            return;
+          // Se construyen las propiedades del nodo según el servicio.
+          switch(service) {
+            case 'youtube':
+              videoNode.data = {
+                hName: 'iframe',
+                hProperties: buildVideoIframeProps('youtube', url),
+              };
+              break;
+
+            case 'html5':
+              videoNode.data = {
+                hName: 'video',
+                hProperties: {
+                  src: url,
+                  controls: true,
+                  className: 'w-full max-w-3xl mx-auto rounded-lg',
+                },
+              };
+              break;
+              
+            default:
+              videoNode.data = {
+                hName: 'span',
+              };
           }
-
-          // Se construyen las propiedades del iframe según el servicio.
-          const props = buildVideoIframeProps(service, url);
-
-          // Se transforma la directiva en un iframe embebido.
-          videoNode.data = {
-            hName: 'iframe',
-            hProperties: props,
-          };
 
           // Se eliminan los hijos originales,
           // ya que el iframe no debe renderizar contenido interno.
@@ -170,10 +178,15 @@ export default function remarkCustomDirectives() {
 /**
  * Detecta el servicio de video según la URL proporcionada.
  */
-function detectVideoService(url: string): 'youtube' | null {
+function detectVideoService(url: string): 'youtube' | 'html5' | null {
   // YouTube
   if (/youtu(\.be|be\.com)/i.test(url)) {
     return 'youtube';
+  }
+
+  // Video HTML5 (mp4, webm, ogg)
+  if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(url)) {
+    return 'html5';
   }
 
   return null;

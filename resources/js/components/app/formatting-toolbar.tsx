@@ -22,6 +22,7 @@ import {
     SquareCode,
     SquarePlay,
     Type,
+    Upload,
 } from 'lucide-react';
 import React, { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -51,8 +52,10 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Obtiene la selección actual del textarea.
-    // Retorna las posiciones de inicio y fin junto con el texto seleccionado.
+    /**
+     * Obtiene la selección actual del textarea.
+     * Retorna las posiciones de inicio y fin junto con el texto seleccionado.
+     */
     function getSelection() {
         const textarea = textareaRef.current;
 
@@ -66,8 +69,10 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         return { start, end, value: textarea.value.substring(start, end) };
     }
 
-    // Reemplaza el texto seleccionado por el contenido indicado
-    // y reposiciona el cursor de forma controlada.
+    /**
+     * Reemplaza el texto seleccionado por el contenido indicado
+     * y reposiciona el cursor de forma controlada.
+     */
     function replaceSelection(replacement: string, moveCursorOffset = 0): void {
         const textarea = textareaRef.current;
 
@@ -89,8 +94,10 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         });
     }
 
-    // Aplica una transformación si existe selección,
-    // o inserta un texto de respaldo en caso contrario.
+    /**
+     * Aplica una transformación si existe selección,
+     * o inserta un texto de respaldo en caso contrario.
+     */
     function applyOrInsert({ fnWhenSelected, fallback }: { fnWhenSelected: (selected: string) => string; fallback: string }): void {
         const sel = getSelection();
 
@@ -101,50 +108,8 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         }
     }
 
-    // Acciones básicas de formato.
-    const onBold = () => applyOrInsert({ fnWhenSelected: (s) => `**${s}**`, fallback: '** **' });
-    const onItalic = () => applyOrInsert({ fnWhenSelected: (s) => `*${s}*`, fallback: '* *' });
-
-    // Inserta encabezados Markdown según el nivel indicado.
-    function onHeading(level: number): void {
-        applyOrInsert({
-            fnWhenSelected: (s) => `${'#'.repeat(level)} ${s}`,
-            fallback: `${'#'.repeat(level)} `,
-        });
-    }
-
     /**
-     * Mapas estáticos de estilos disponibles para directivas personalizadas.
-     */
-    const colors = {
-        yellow: 'bg-yellow-400',
-        blue: 'bg-blue-500',
-        red: 'bg-red-500',
-        green: 'bg-green-500',
-        pink: 'bg-pink-400',
-    } as const;
-
-    const sizes = {
-        small: 'text-sm',
-        large: 'text-lg',
-    } as const;
-
-    // Aplica un color de fuente mediante directiva personalizada.
-    function onColorSelected(key: keyof typeof colors): void {
-        const sel = getSelection();
-        const content = sel && sel.start !== sel.end ? sel.value : t(`toolbar.colors.${key}`);
-        replaceSelection(`:style[${content}]{color=${key}}`);
-    }
-
-    // Aplica un tamaño de fuente mediante directiva personalizada.
-    function onSizeSelected(key: keyof typeof sizes): void {
-        const sel = getSelection();
-        const content = sel && sel.start !== sel.end ? sel.value : key;
-        replaceSelection(`:style[${content}]{size=${key}}`);
-    }
-
-    /**
-     * Manejo de inserción de enlaces.
+     * Gestiona la inserción de enlaces.
      */
     const [linkData, setLinkData] = useState({ text: '', url: '' });
 
@@ -159,33 +124,25 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     }
 
     /**
-     * Manejo de inserción de imágenes.
+     * Sube un archivo multimedia.
      */
-    const [imageData, setImageData] = useState({ alt: '', url: '' });
-
-    function applyImage(): void {
-        const sel = getSelection();
-        const selectedIsUrl = sel && /^https?:\/\//i.test(sel.value);
-        const defaultAlt = sel && !selectedIsUrl ? sel.value : 'image';
-        const altToUse = imageData.alt.trim() || defaultAlt;
-        const urlToUse = imageData.url.trim() || 'https://example.com/image-placeholder.png';
-        replaceSelection(`![${altToUse}](${urlToUse})`);
-        setImageData({ alt: '', url: '' });
-    }
-
-    // Referencia del campo de archivo de imagen.
-    const imgFileInputRef = useRef<HTMLInputElement | null>(null);
-
-    // Indica si se está subiendo una imagen.
-    const [isImgUploading, setIsImgUploading] = useState(false);
-
-    // Sube un archivo de imagen.
-    function uploadImage(file: File): void {
+    function uploadMedia(
+        file: File,
+        {
+            onStart,
+            onSuccess,
+            onFinish,
+        }: {
+            onStart: () => void;
+            onSuccess: (url: string) => void;
+            onFinish: () => void;
+        },
+    ): void {
         const formData = new FormData();
 
         formData.append('file', file);
 
-        setIsImgUploading(true);
+        onStart();
 
         router.post(route('media.store'), formData, {
             forceFormData: true,
@@ -200,14 +157,10 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
                     return;
                 }
 
-                setImageData((p) => ({
-                    ...p,
-                    url: mediaUrl,
-                }));
+                onSuccess(mediaUrl);
             },
 
             onError: (errors) => {
-                // Errores de validación Laravel.
                 const firstError = Object.values(errors)[0];
 
                 toast.error(firstError ?? t('upload_failed'));
@@ -217,13 +170,35 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
                 }
             },
 
-            onFinish: () => {
-                setIsImgUploading(false);
-            },
+            onFinish,
         });
     }
 
-    // Sube la imagen al seleccionar un archivo.
+    /**
+     * Gestiona la inserción de imágenes.
+     */
+
+    // Atributos de la imagen.
+    const [imageData, setImageData] = useState({ alt: '', url: '' });
+
+    // Referencia del campo de archivo de imagen.
+    const imgFileInputRef = useRef<HTMLInputElement | null>(null);
+
+    // Indica si se está subiendo una imagen.
+    const [isImgUploading, setIsImgUploading] = useState(false);
+
+    // Inserta la imagen en el editor.
+    function applyImage(): void {
+        const sel = getSelection();
+        const selectedIsUrl = sel && /^https?:\/\//i.test(sel.value);
+        const defaultAlt = sel && !selectedIsUrl ? sel.value : 'image';
+        const altToUse = imageData.alt.trim() || defaultAlt;
+        const urlToUse = imageData.url.trim() || 'https://example.com/image-placeholder.png';
+        replaceSelection(`![${altToUse}](${urlToUse})`);
+        setImageData({ alt: '', url: '' });
+    }
+
+    // Sube una imagen al seleccionar un archivo.
     function onImgFileSelected(e: ChangeEvent<HTMLInputElement>): void {
         const file = e.target.files?.[0];
 
@@ -231,31 +206,94 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
             return;
         }
 
-        uploadImage(file);
+        uploadMedia(file, {
+            onStart: () => setIsImgUploading(true),
+            onSuccess: (url) =>
+                setImageData((p) => ({
+                    ...p,
+                    url,
+                })),
+            onFinish: () => setIsImgUploading(false),
+        });
     }
 
-    // Cita en bloque.
+    /**
+     * Gestiona la inserción de videos.
+     */
+
+    // Atributos del video.
+    const [videoData, setVideoData] = useState({ url: '' });
+
+    // Referencia del input de archivo de video.
+    const videoFileInputRef = useRef<HTMLInputElement | null>(null);
+
+    // Indica si se está subiendo un video.
+    const [isVideoUploading, setIsVideoUploading] = useState(false);
+
+    // Inserta el video en el editor.
+    function applyVideo(): void {
+        const sel = getSelection();
+        const url = videoData.url.trim() || (sel ? sel.value : '');
+        const finalUrl = url || 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+        replaceSelection(`\n::video[${finalUrl}]\n`);
+        setVideoData({ url: '' });
+    }
+
+    // Sube un video al seleccionar un archivo.
+    function onVideoFileSelected(e: ChangeEvent<HTMLInputElement>): void {
+        const file = e.target.files?.[0];
+
+        if (!file) {
+            return;
+        }
+
+        uploadMedia(file, {
+            onStart: () => setIsVideoUploading(true),
+            onSuccess: (url) => setVideoData({ url }),
+            onFinish: () => setIsVideoUploading(false),
+        });
+    }
+
+    /**
+     * Acciones básicas de formato.
+     */
+
+    // Inserta texto en negrita.
+    const onBold = () => applyOrInsert({ fnWhenSelected: (s) => `**${s}**`, fallback: '** **' });
+
+    // Inserta texto en cursiva.
+    const onItalic = () => applyOrInsert({ fnWhenSelected: (s) => `*${s}*`, fallback: '* *' });
+
+    // Inserta encabezados según el nivel indicado.
+    function onHeading(level: number): void {
+        applyOrInsert({
+            fnWhenSelected: (s) => `${'#'.repeat(level)} ${s}`,
+            fallback: `${'#'.repeat(level)} `,
+        });
+    }
+
+    // Inserta cita en bloque.
     const onQuote = () =>
         applyOrInsert({
             fnWhenSelected: (s) => `> ${s}`,
             fallback: '> Cita',
         });
 
-    // Código en línea.
+    // Inserta código en línea.
     const onInlineCode = () =>
         applyOrInsert({
             fnWhenSelected: (s) => `\`${s}\``,
             fallback: '`while(1);`',
         });
 
-    // Bloque de código.
+    // Inserta bloque de código.
     const onCodeBlock = () => {
         const sel = getSelection();
         const content = sel && sel.start !== sel.end ? sel.value : 'while(1);';
         replaceSelection(`\n\`\`\`\n${content}\n\`\`\`\n`);
     };
 
-    // Lista ordenada.
+    // Inserta lista ordenada.
     const onOrderedList = () => {
         const sel = getSelection();
         if (sel && sel.start !== sel.end) {
@@ -267,7 +305,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         }
     };
 
-    // Lista sin orden.
+    // Inserta lista sin orden.
     const onUnorderedList = () => {
         const sel = getSelection();
         if (sel && sel.start !== sel.end) {
@@ -279,34 +317,53 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         }
     };
 
-    // Texto oculto en línea.
+    // Inserta texto oculto en línea.
     const onHiddenInline = () =>
         applyOrInsert({
             fnWhenSelected: (s) => `:hidden[${s}]`,
             fallback: `:hidden[${t('spoiler')}]`,
         });
 
-    // BBloque de texto oculto.
+    // Inserta bloque de texto oculto.
     const onHiddenBlock = () => {
         const sel = getSelection();
         const content = sel && sel.start !== sel.end ? sel.value : t('spoiler');
         replaceSelection(`\n:::hidden\n${content}\n:::\n`);
     };
 
-    // Separador horizontal.
+    // Inserta separador horizontal.
     const onSeparator = () => replaceSelection('\n---\n');
 
     /**
-     * Inserción de video mediante directiva personalizada.
+     * Estilo de fuente.
      */
-    const [videoUrl, setVideoUrl] = useState('');
 
-    function applyVideo(): void {
+    // Mapas estáticos de estilos disponibles.
+    const colors = {
+        yellow: 'bg-yellow-400',
+        blue: 'bg-blue-500',
+        red: 'bg-red-500',
+        green: 'bg-green-500',
+        pink: 'bg-pink-400',
+    } as const;
+
+    const sizes = {
+        small: 'text-sm',
+        large: 'text-lg',
+    } as const;
+
+    // Aplica un color de fuente.
+    function onColorSelected(key: keyof typeof colors): void {
         const sel = getSelection();
-        const url = videoUrl.trim() || (sel ? sel.value : '');
-        const finalUrl = url || 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-        replaceSelection(`\n::video[${finalUrl}]\n`);
-        setVideoUrl('');
+        const content = sel && sel.start !== sel.end ? sel.value : t(`toolbar.colors.${key}`);
+        replaceSelection(`:style[${content}]{color=${key}}`);
+    }
+
+    // Aplica un tamaño de fuente.
+    function onSizeSelected(key: keyof typeof sizes): void {
+        const sel = getSelection();
+        const content = sel && sel.start !== sel.end ? sel.value : key;
+        replaceSelection(`:style[${content}]{size=${key}}`);
     }
 
     return (
@@ -504,7 +561,31 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="flex w-64 flex-col gap-2 p-4">
-                    <Input placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} />
+                    <div className="flex gap-2">
+                        {/* Campo URL */}
+                        <Input
+                            disabled={isVideoUploading}
+                            placeholder="https://example.com/video.mp4"
+                            value={videoData.url}
+                            onChange={(e) => setVideoData({ url: e.target.value })}
+                        />
+
+                        {/* Botón subir video */}
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            title={t('upload_video')}
+                            disabled={isVideoUploading}
+                            onClick={() => videoFileInputRef.current?.click()}
+                        >
+                            {isVideoUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                        </Button>
+
+                        {/* Input oculto */}
+                        <input ref={videoFileInputRef} type="file" accept="video/mp4,video/webm,video/ogg" hidden onChange={onVideoFileSelected} />
+                    </div>
+
                     <Button size="sm" className="mt-2" onClick={applyVideo}>
                         <SquarePlay className="mr-2 h-4 w-4" /> {t('insert_video')}
                     </Button>

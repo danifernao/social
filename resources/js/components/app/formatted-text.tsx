@@ -232,6 +232,7 @@ export default function FormattedText({ entryType, text, alwaysExpanded = false,
                         'li',
                         'hidden',
                         'iframe',
+                        'video',
                     ]}
                     components={components}
                 >

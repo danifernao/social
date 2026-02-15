@@ -21,7 +21,7 @@ class MediaController extends Controller
             'file' => [
                 'required',
                 'file',
-                'mimes:jpg,jpeg,png,webp,gif',
+                'mimes:jpg,jpeg,png,webp,gif,mp4',
                 'max:5120',
             ],
         ]);
@@ -44,8 +44,11 @@ class MediaController extends Controller
             'size'      => $file->getSize(),
         ]);
 
+        // URL pública del archivo.
+        $url = Storage::disk($media->disk)->url($media->path);
+
         return back()->with([
-            'media_url' => '/storage/' . $media->path,
+            'media_url' => $url,
         ]);
     }
 }
