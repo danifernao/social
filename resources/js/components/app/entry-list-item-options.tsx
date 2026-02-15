@@ -121,7 +121,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
 
             {/* Diálogo de edición */}
             <Dialog open={isFormDialogOpen} onOpenChange={setIsFormDialogOpen}>
-                <DialogContent>
+                <DialogContent className="sm:max-w-3xl">
                     {/* Título y descripción del diálogo */}
                     <DialogTitle>{entry.type === 'post' ? t('edit_post') : t('edit_comment')}</DialogTitle>
                     <DialogDescription>{entry.type === 'post' ? t('edit_post_content') : t('edit_comment_content')}</DialogDescription>
