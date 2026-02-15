@@ -28,13 +28,13 @@ interface AdminInvitationListProps {
 }
 
 /**
- * Listado de las páginas estáticas registradas.
+ * Listado de enlaces de invitaciones de registro.
  */
 export default function AdminInvitationList({ status, invitations, previous, next }: AdminInvitationListProps) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Gestiona la eliminación de una página estática.
+    // Gestiona la eliminación de una invitación.
     const handleDelete = (id: number) => {
         router.delete(route('admin.invitation.destroy', id), {
             preserveScroll: true,
@@ -89,7 +89,7 @@ export default function AdminInvitationList({ status, invitations, previous, nex
                         {invitations.length > 0 ? (
                             invitations.map((invitation) => (
                                 <TableRow key={invitation.id} className="[&_td]:px-4">
-                                    {/* Clave de la invitación */}
+                                    {/* Enlace de la invitación */}
                                     <TableCell className="font-mono">
                                         <Input
                                             type="text"

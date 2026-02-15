@@ -46,10 +46,10 @@ export default function AdminReportList({ status, reports, previous, next }: Adm
                 <Table>
                     <TableHeader>
                         <TableRow className="[&_th]:px-4">
-                            {/* ID */}
+                            {/* ID del reporte */}
                             <TableHead>ID</TableHead>
 
-                            {/* Tipo */}
+                            {/* Tipo del contenido reportado */}
                             <TableHead>{t('content_type')}</TableHead>
 
                             {/* Reportado por */}
@@ -58,7 +58,7 @@ export default function AdminReportList({ status, reports, previous, next }: Adm
                             {/* Motivo del reporte */}
                             <TableHead className="text-center">{t('report_reason')}</TableHead>
 
-                            {/* Fecha de creaación */}
+                            {/* Fecha de creación */}
                             <TableHead className="text-center">{t('created_at')}</TableHead>
 
                             {status === 'closed' && (
@@ -97,7 +97,7 @@ export default function AdminReportList({ status, reports, previous, next }: Adm
                                         )}
                                     </TableCell>
 
-                                    {/* Cerrado por */}
+                                    {/* Reportado por */}
                                     <TableCell>
                                         {report.reporter ? (
                                             <Link href={route('profile.show', report.reporter.id)} className="hover:underline">
