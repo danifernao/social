@@ -1,3 +1,4 @@
+import { router } from '@inertiajs/react';
 import {
     Bold,
     CaptionsOff,
@@ -8,11 +9,13 @@ import {
     Heading2,
     Image,
     ImagePlus,
+    ImageUp,
     Italic,
     Link,
     Link2,
     List,
     ListOrdered,
+    LoaderCircle,
     Minus,
     PaintBucket,
     Quote,
@@ -20,8 +23,9 @@ import {
     SquarePlay,
     Type,
 } from 'lucide-react';
-import React from 'react';
+import React, { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
@@ -142,7 +146,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     /**
      * Manejo de inserción de enlaces.
      */
-    const [linkData, setLinkData] = React.useState({ text: '', url: '' });
+    const [linkData, setLinkData] = useState({ text: '', url: '' });
 
     function applyLink(): void {
         const sel = getSelection();
@@ -157,7 +161,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     /**
      * Manejo de inserción de imágenes.
      */
-    const [imageData, setImageData] = React.useState({ alt: '', url: '' });
+    const [imageData, setImageData] = useState({ alt: '', url: '' });
 
     function applyImage(): void {
         const sel = getSelection();
@@ -167,6 +171,67 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         const urlToUse = imageData.url.trim() || 'https://example.com/image-placeholder.png';
         replaceSelection(`![${altToUse}](${urlToUse})`);
         setImageData({ alt: '', url: '' });
+    }
+
+    // Referencia del campo de archivo de imagen.
+    const imgFileInputRef = useRef<HTMLInputElement | null>(null);
+
+    // Indica si se está subiendo una imagen.
+    const [isImgUploading, setIsImgUploading] = useState(false);
+
+    // Sube un archivo de imagen.
+    function uploadImage(file: File): void {
+        const formData = new FormData();
+
+        formData.append('file', file);
+
+        setIsImgUploading(true);
+
+        router.post(route('media.store'), formData, {
+            forceFormData: true,
+            preserveScroll: true,
+            preserveState: true,
+
+            onSuccess: (page) => {
+                const mediaUrl = page.props.media_url as string;
+
+                if (!mediaUrl) {
+                    toast.error(t('upload_failed'));
+                    return;
+                }
+
+                setImageData((p) => ({
+                    ...p,
+                    url: mediaUrl,
+                }));
+            },
+
+            onError: (errors) => {
+                // Errores de validación Laravel.
+                const firstError = Object.values(errors)[0];
+
+                toast.error(firstError ?? t('upload_failed'));
+
+                if (import.meta.env.DEV) {
+                    console.error(errors);
+                }
+            },
+
+            onFinish: () => {
+                setIsImgUploading(false);
+            },
+        });
+    }
+
+    // Sube la imagen al seleccionar un archivo.
+    function onImgFileSelected(e: ChangeEvent<HTMLInputElement>): void {
+        const file = e.target.files?.[0];
+
+        if (!file) {
+            return;
+        }
+
+        uploadImage(file);
     }
 
     // Cita en bloque.
@@ -234,7 +299,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     /**
      * Inserción de video mediante directiva personalizada.
      */
-    const [videoUrl, setVideoUrl] = React.useState('');
+    const [videoUrl, setVideoUrl] = useState('');
 
     function applyVideo(): void {
         const sel = getSelection();
@@ -339,22 +404,53 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
             {/* Imagen */}
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" title={t('insert_image')}>
+                    <Button variant="ghost" size="icon" title={t('insert_image')} disabled={isImgUploading}>
                         <Image className="h-4 w-4" />
                     </Button>
                 </PopoverTrigger>
+
                 <PopoverContent className="flex w-64 flex-col gap-2 p-4">
+                    <div className="flex gap-2">
+                        {/* Campo URL */}
+                        <Input
+                            disabled={isImgUploading}
+                            placeholder="https://placehold.co/600x400.png"
+                            value={imageData.url}
+                            onChange={(e) => setImageData((p) => ({ ...p, url: e.target.value }))}
+                        />
+
+                        {/* Botón subir imagen */}
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            title={t('upload_image')}
+                            disabled={isImgUploading}
+                            onClick={() => imgFileInputRef.current?.click()}
+                        >
+                            {isImgUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <ImageUp className="h-4 w-4" />}
+                        </Button>
+
+                        {/* Input oculto */}
+                        <input
+                            ref={imgFileInputRef}
+                            type="file"
+                            accept="image/png,image/jpeg,image/webp,image/gif"
+                            hidden
+                            onChange={onImgFileSelected}
+                        />
+                    </div>
+
+                    {/* Campo texto alternativo */}
                     <Input
+                        disabled={isImgUploading}
                         placeholder={t('alternative_text')}
                         value={imageData.alt}
                         onChange={(e) => setImageData((p) => ({ ...p, alt: e.target.value }))}
                     />
-                    <Input
-                        placeholder="https://placehold.co/600x400.png"
-                        value={imageData.url}
-                        onChange={(e) => setImageData((p) => ({ ...p, url: e.target.value }))}
-                    />
-                    <Button size="sm" className="mt-2" onClick={applyImage}>
+
+                    {/* Botón insertar imagen */}
+                    <Button size="sm" className="mt-2" onClick={applyImage} disabled={isImgUploading}>
                         <ImagePlus className="mr-2 h-4 w-4" /> {t('insert_image')}
                     </Button>
                 </PopoverContent>

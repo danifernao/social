@@ -253,6 +253,8 @@
     "update_account_appearance_settings": "Update your account appearance settings.",
     "update_language_settings": "Change interface language.",
     "update_profile_info": "Update your username, avatar, and email address.",
+    "upload_failed": "Upload failed. Try again.",
+    "upload_image": "Upload image",
     "use_strong_random_password": "Make sure your account uses a strong random password for security.",
     "used_at": "Used at",
     "used_by": "Used by",

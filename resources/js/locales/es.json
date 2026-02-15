@@ -253,6 +253,8 @@
     "update_account_appearance_settings": "Actualiza la configuración de apariencia de tu cuenta.",
     "update_language_settings": "Cambia el idioma de la interfaz.",
     "update_profile_info": "Actualiza tu nombre de usuario, avatar y dirección de correo electrónico.",
+    "upload_failed": "No se pudo subir el archivo. Inténtalo de nuevo.",
+    "upload_image": "Subir imagen",
     "use_strong_random_password": "Asegúrate de que tu cuenta utilice una contraseña larga y aleatoria para mantener la seguridad.",
     "used_at": "Fecha de uso",
     "used_by": "Usado por",

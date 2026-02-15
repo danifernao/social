@@ -12,6 +12,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReactionController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\SearchController;
 
 
@@ -182,6 +183,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Reacciones
     Route::put('/reaction', [ReactionController::class, 'toggle'])
         ->name('reaction.toggle');
+
+    Route::post('/media', [MediaController::class, 'store'])
+        ->middleware('auth')
+        ->name('media.store');
 
     // Búsqueda
     Route::get('/search', [SearchController::class, 'index'])

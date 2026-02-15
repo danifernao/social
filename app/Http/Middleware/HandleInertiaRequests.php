@@ -103,11 +103,12 @@ class HandleInertiaRequests extends Middleware
 
             // Datos flash provenientes de redirecciones Inertia
             // relacionados con la creación o actualización de una
-            // publicación, comentario o invitación para que que el frontend
-            // reaccione a los cambios como en una SPA.
+            // publicación, comentario, invitación o URL de una imagen
+            // para que que el frontend reaccione a los cambios como en una SPA.
             'post' => fn () => $request->session()->get('post'),
             'comment' => fn () => $request->session()->get('comment'),
             'invitation' => fn () => $request->session()->get('invitation'),
+            'media_url' => fn () => $request->session()->get('media_url'),
 
             // Cantidad de notificaciones no leídas del usuario autenticado.
             'unreadNotisCount' => fn () =>
