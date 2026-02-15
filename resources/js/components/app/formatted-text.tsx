@@ -193,7 +193,7 @@ export default function FormattedText({ entryType, text, alwaysExpanded = false,
         // Crea un observador para detectar cambios en el tamaño del contenedor.
         const observer = new ResizeObserver(() => {
             if (!forceExpanded.current) {
-                if (el.scrollHeight > 300) {
+                if (el.scrollHeight > 600) {
                     setShowExpandButton(true);
                 } else {
                     setShowExpandButton(false);
@@ -210,7 +210,7 @@ export default function FormattedText({ entryType, text, alwaysExpanded = false,
     return (
         <div className="relative">
             {/* Contenedor del contenido con altura controlada */}
-            <div ref={contentRef} className={cn(baseClass, expanded || forceExpanded.current ? 'max-h-full' : 'max-h-[300px]')}>
+            <div ref={contentRef} className={cn(baseClass, expanded || forceExpanded.current ? 'max-h-full' : 'max-h-[600px]')}>
                 <Markdown
                     remarkPlugins={[remarkBreaks, remarkDirective, remarkCustomDirectives, remarkMention, [remarkHashtag, { entryType }]]}
                     allowedElements={[
