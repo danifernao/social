@@ -19,9 +19,9 @@ class PostResource extends JsonResource
     public function toArray(Request $request): array
     {
         // Autor de la publicación, solo si la relación fue cargada.
-        $author = (new UserResource(
-            $this->whenLoaded('user')
-        ))->resolve();
+        $author = $this->whenLoaded('user', function () {
+            return (new UserResource($this->user))->resolve();
+        });
 
         return [
             'id'              => $this->id,
