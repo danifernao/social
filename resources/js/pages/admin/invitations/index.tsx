@@ -94,7 +94,7 @@ export default function PagesIndex() {
                 <AppContentLayout noMargin={true} fullWidth={true}>
                     <div className="flex items-center justify-between">
                         {/* Botón de creación */}
-                        <Button onClick={handleCreate} disabled={isProcessing}>
+                        <Button variant="outline" onClick={handleCreate} disabled={isProcessing}>
                             {t('create_invitation')}
                             {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         </Button>
