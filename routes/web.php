@@ -239,11 +239,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', function () {
                 $user = auth()->user();
 
-                if ($user->isAdmin()) {
+                if ($user->canManageSystem()) {
                     return redirect()->route('admin.site.edit');
                 }
 
-                if ($user->isMod()) {
+                if ($user->canModerate()) {
                     return redirect()->route('admin.user.index');
                 }
 

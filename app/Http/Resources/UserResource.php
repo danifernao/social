@@ -42,7 +42,7 @@ class UserResource extends JsonResource
          */
         $can_view_email = 
             $auth && (
-                $auth->id === $this->id || $auth->isAdmin()
+                $auth->id === $this->id || $auth->canManageSystem()
             );
 
         // Datos sensibles.
@@ -84,7 +84,7 @@ class UserResource extends JsonResource
             'is_followed'       => $this->is_followed ?? null,
             'is_blocked'        => $is_blocked,
             'blocked_me'        => $blocked_me,
-            'is_admin'          => $this->isAdmin(),
+            'is_admin'          => $this->canManageSystem(),
             'can_moderate'      => $this->canModerate(),
         ];
     }

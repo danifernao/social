@@ -61,13 +61,23 @@ class AuthSignUpController extends Controller
         ]);
 
         $user = DB::transaction(function () use ($request) {
+            // Determina si este será el primer usuario del sistema.
+            $is_first_user = !User::exists();
+
             // Crea el nuevo usuario.
             $user = User::create([
                 'username' => $request->username,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'role' => User::exists() ? 'user' : 'admin',
                 'language' => $request->language ?? head(Locales::codes()),
+            ]);
+
+            // Crea el registro de permisos asociado al usuario.
+            // Todo usuario debe tener permisos desde su creación.
+            // El primer usuario registrado tiene permisos administrativos.
+            $user->permission()->create([
+                'can_manage_system' => $is_first_user,
+                'can_moderate'      => $is_first_user,
             ]);
 
             // Si se proporcionó un token, se consume la invitación.

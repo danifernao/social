@@ -85,6 +85,34 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Atributo computado: rol lógico del usuario.
+     *
+     * @return string
+     */
+    public function getRoleAttribute(): string
+    {
+        if ($this->canManageSystem()) {
+            return 'admin';
+        }
+
+        if ($this->canModerate()) {
+            return 'mod';
+        }
+
+        return 'user';
+    }
+
+    /**
+     * Relación: permisos del usuario.
+     * 
+     * @return HasOne<Permission, User>
+     */
+    public function permission()
+    {
+        return $this->hasOne(Permission::class);
+    }
+
+    /**
      * Relación: usuarios a los que este usuario sigue.
      * 
      * @return BelongsToMany<User, User>
@@ -177,23 +205,13 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Determina si el usuario tiene rol de administrador.
+     * Determina si el usuario puede administrar.
      *
      * @return bool
      */
-    public function isAdmin(): bool
+    public function canManageSystem(): bool
     {
-        return $this->role === 'admin';
-    }
-
-    /**
-     * Determina si el usuario tiene rol de moderador.
-     *
-     * @return bool
-     */
-    public function isMod(): bool
-    {
-        return $this->role === 'mod';
+        return (bool) $this->permission->can_manage_system;
     }
 
     /**
@@ -203,7 +221,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function canModerate(): bool
     {
-        return $this->role === 'admin' || $this->role === 'mod';
+        return (bool) $this->permission->can_moderate;
     }
 
     /**
@@ -220,12 +238,12 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         // Un administrador puede actuar sobre cualquiera.
-        if ($this->isAdmin()) {
+        if ($this->canManageSystem()) {
             return true;
         }
 
         // Un moderador puede actuar sobre otros, excepto administradores.
-        if ($this->isMod() && !$user->isAdmin()) {
+        if ($this->canModerate() && !$user->canManageSystem()) {
             return true;
         }
 

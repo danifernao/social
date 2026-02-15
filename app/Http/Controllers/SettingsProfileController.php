@@ -119,8 +119,9 @@ class SettingsProfileController extends Controller
         // Obtiene el usuario autenticado.
         $user = $request->user();
 
-        // Si el usuario es administrador, se prohíbe la eliminación.
-        if ($user->isAdmin()) {
+        // Si el usuario tiene permisos administrativos,
+        // se prohíbe la eliminación.
+        if ($user->canManageSystem()) {
             return back()->withErrors([
                 'password' => 'Esta cuenta es administrativa, no se puede eliminar.',
             ]);

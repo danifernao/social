@@ -197,7 +197,7 @@ class AdminUserController extends Controller
     private function changeRole(Request $request, User $user)
     {
         // Deniega el acceso si el usuario autenticado
-        // no tiene permisos de administrador.
+        // no tiene permisos administrativos.
         $this->authorize('access-admin-area');
 
         // Valida los datos enviados desde el formulario.
@@ -205,20 +205,41 @@ class AdminUserController extends Controller
             'new_role' => 'required|in:admin,mod,user',
         ]);
 
-        // Aplica el cambio solo si el rol es distinto al rol actual.
-        if ($request->new_role !== $user->role) {
-            $user->role = $request->new_role;
-            $user->save();
+        // Obtiene los permisos existentes del usuario.
+        $permission = $user->permission;
 
-            // Si el nuevo rol no es "user", elimina los bloqueos asociados.
-            // Los moderadores y administradores no pueden estar bloqueados.
-            if ($request->new_role !== 'user') {
-                // Elimina bloqueos realizados por el usuario.
-                UserBlock::where('blocker_id', $user->id)->delete();
+        // Mapea el rol lógico recibido desde el frontend a permisos reales.
+        switch ($request->new_role) {
+            case 'admin':
+                $permission->update([
+                    'can_manage_system' => true,
+                    'can_moderate'      => true,
+                ]);
+                break;
 
-                // Elimina bloqueos aplicados al usuario.
-                UserBlock::where('blocked_id', $user->id)->delete();
-            }
+            case 'mod':
+                $permission->update([
+                    'can_manage_system' => false,
+                    'can_moderate'      => true,
+                ]);
+                break;
+
+            case 'user':
+                $permission->update([
+                    'can_manage_system' => false,
+                    'can_moderate'      => false,
+                ]);
+                break;
+        }
+
+        // Si el nuevo rol no es "user", elimina los bloqueos asociados.
+        // Los moderadores y administradores no pueden estar bloqueados.
+        if ($request->new_role !== 'user') {
+            // Elimina bloqueos realizados por el usuario.
+            UserBlock::where('blocker_id', $user->id)->delete();
+
+            // Elimina bloqueos aplicados al usuario.
+            UserBlock::where('blocked_id', $user->id)->delete();
         }
 
         return back()->with('status', 'role_updated');
@@ -373,9 +394,9 @@ class AdminUserController extends Controller
      */
     public function deleteAccount(Request $request, User $user)
     {
-        // Deniega acceso si el usuario autenticado no es administrador
-        // o si se intenta eliminar a otro administrador.
-        if (!$request->user()->isAdmin() || $user->isAdmin()) {
+        // Deniega acceso si el usuario autenticado no tiene permisos
+        // administrativos o si se intenta eliminar a otro administrador.
+        if (!$request->user()->canManageSystem() || $user->canManageSystem()) {
             abort(403);
         }
         

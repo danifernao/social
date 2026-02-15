@@ -30,6 +30,8 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
         ...(route().params.lang ? { lang: route().params.lang } : {}),
     };
 
+    console.log(auth.user);
+
     // Definición de los elementos de navegación de la barra lateral.
     const sidebarNavItems: NavItem[] = [
         ...(auth.user.is_admin
