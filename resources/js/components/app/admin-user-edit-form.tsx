@@ -65,6 +65,42 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
 
     return (
         <form className="space-y-8">
+            {/* Gestión del estado de la cuenta */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>{t('change_account_status')}</CardTitle>
+                </CardHeader>
+
+                <CardContent className="space-y-4">
+                    {/* Errores de la acción */}
+                    {form.data.action === 'toggle_account_status' && <FormErrors errors={form.errors} />}
+
+                    {/* Opción para alternar el estado de la cuenta */}
+                    <div className="flex items-center gap-2">
+                        <ToggleGroup
+                            type="single"
+                            value={String(user.is_active)}
+                            onValueChange={(value) => {
+                                if (value) {
+                                    handleAction('toggle_account_status');
+                                }
+                            }}
+                            variant="outline"
+                            disabled={form.processing && form.data.action === 'toggle_account_status'}
+                        >
+                            <ToggleGroupItem value="true">{t('enabled')}</ToggleGroupItem>
+                            <ToggleGroupItem value="false">{t('disabled')}</ToggleGroupItem>
+                        </ToggleGroup>
+
+                        {/* Indicador de carga durante el procesamiento de la acción  */}
+                        {form.processing && form.data.action === 'toggle_account_status' && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                    </div>
+
+                    {/* Descripción del comportamiento esperado */}
+                    <p className="text-muted-foreground text-sm italic">{t('disable_account_ends_all_sessions')}</p>
+                </CardContent>
+            </Card>
+
             {/* Gestión del rol de usuario */}
             {auth.user.role === 'admin' && (
                 <Card>
@@ -114,42 +150,6 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                     </CardContent>
                 </Card>
             )}
-
-            {/* Gestión del estado de la cuenta */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>{t('change_account_status')}</CardTitle>
-                </CardHeader>
-
-                <CardContent className="space-y-4">
-                    {/* Errores de la acción */}
-                    {form.data.action === 'toggle_account_status' && <FormErrors errors={form.errors} />}
-
-                    {/* Opción para alternar el estado de la cuenta */}
-                    <div className="flex items-center gap-2">
-                        <ToggleGroup
-                            type="single"
-                            value={String(user.is_active)}
-                            onValueChange={(value) => {
-                                if (value) {
-                                    handleAction('toggle_account_status');
-                                }
-                            }}
-                            variant="outline"
-                            disabled={form.processing && form.data.action === 'toggle_account_status'}
-                        >
-                            <ToggleGroupItem value="true">{t('enabled')}</ToggleGroupItem>
-                            <ToggleGroupItem value="false">{t('disabled')}</ToggleGroupItem>
-                        </ToggleGroup>
-
-                        {/* Indicador de carga durante el procesamiento de la acción  */}
-                        {form.processing && form.data.action === 'toggle_account_status' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                    </div>
-
-                    {/* Descripción del comportamiento esperado */}
-                    <p className="text-muted-foreground text-sm italic">{t('disable_account_ends_all_sessions')}</p>
-                </CardContent>
-            </Card>
 
             {/* Gestión de permisos del usuario */}
             <Card>
