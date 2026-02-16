@@ -1,4 +1,5 @@
 import InputError from '@/components/kit/input-error';
+import TextLink from '@/components/kit/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,7 +8,7 @@ import { Auth } from '@/types';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 /**
  * Vista que permite al usuario cambiar su dirección
@@ -63,6 +64,13 @@ export default function ChangeEmail({ status }: { status?: string }) {
                             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                             {t('change')}
                         </Button>
+                    </div>
+
+                    {/* Enlace para volver a la vista de verificación de correo */}
+                    <div className="text-muted-foreground space-x-1 text-center text-sm">
+                        <Trans i18nKey="or_go_back_to_verification">
+                            <TextLink href={route('verification.notice')}></TextLink>
+                        </Trans>
                     </div>
                 </div>
             </form>
