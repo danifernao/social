@@ -7,7 +7,7 @@ export function UserInfo({ user, showEmail = false }: { user: User; showEmail?: 
     const { t } = useTranslation();
     return (
         <>
-            <UserAvatar className="h-8 w-8" user={user} />
+            <UserAvatar className="h-8 w-8 flex-shrink-0" user={user} />
             <Link
                 href={route('profile.show', user.username)}
                 className="flex items-center gap-2"
