@@ -45,7 +45,7 @@ export default function UserActions({ user }: UserActionsProps) {
     // Determina si el usuario autenticado puede bloquear al usuario del perfil.
     // Los moderadores no pueden bloquear ni ser bloqueados.
     // No se muestra si el perfil ya bloqueó al usuario autenticado.
-    const canBlock = !auth.user.permissions.can_moderate && !user.permissions.can_moderate && !user.blocked_me;
+    const canBlock = !['admin', 'mod'].includes(auth.user.role) && !['admin', 'mod'].includes(user.role) && !user.blocked_me;
 
     // Determina si el usuario autenticado puede administrar al usuario del perfil.
     const canAdmin = useCanActOnUser(user);

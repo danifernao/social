@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAdminActionForm } from '@/hooks/app/use-admin-action-form';
-import { Auth, User } from '@/types';
+import { Auth, User, UserPermission } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { Fragment, useState } from 'react';
@@ -36,10 +36,10 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
 
     // Lista de permisos que se pueden gestionar para el usuario.
     const [permissions, setPermissions] = useState([
-        { key: 'can_post', label: t('can_post') },
-        { key: 'can_comment', label: t('can_comment') },
-        { key: 'can_update_avatar', label: t('can_update_avatar') },
-        { key: 'can_update_username', label: t('can_update_username') },
+        { key: 'post', label: t('can_post') },
+        { key: 'comment', label: t('can_comment') },
+        { key: 'update_avatar', label: t('can_update_avatar') },
+        { key: 'update_username', label: t('can_update_username') },
     ]);
 
     // Inicializa y gestiona el formulario de acciones administrativas sobre el usuario.
@@ -66,7 +66,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
     return (
         <form className="space-y-8">
             {/* Gestión del rol de usuario */}
-            {auth.user.permissions.can_manage_system && (
+            {auth.user.role === 'admin' && (
                 <Card>
                     <CardHeader>
                         <CardTitle>{t('change_role')}</CardTitle>
@@ -175,7 +175,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                 </CardContent>
             </Card>
             {/* Gestión del correo electrónico */}
-            {auth.user.permissions.can_manage_system && (
+            {auth.user.role === 'admin' && (
                 <Card>
                     <CardHeader>
                         <CardTitle>{t('change_email_address')}</CardTitle>
@@ -209,7 +209,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                 </Card>
             )}
             {/* Gestión de la contraseña */}
-            {auth.user.permissions.can_manage_system && (
+            {auth.user.role === 'admin' && (
                 <Card>
                     <CardHeader>
                         <CardTitle>{t('reset_password')}</CardTitle>
@@ -294,7 +294,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                         <div key={permission.key} className="flex items-center gap-2">
                             <ToggleGroup
                                 type="single"
-                                value={String(user.permissions[permission.key as keyof typeof user.permissions])}
+                                value={String(user.permissions.includes(permission.key as UserPermission))}
                                 onValueChange={(value) => {
                                     if (value) {
                                         form.setData('permission_key', permission.key);
@@ -321,7 +321,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             </Card>
 
             {/* Eliminación del usuario */}
-            {auth.user.permissions.can_manage_system && !user.permissions.can_manage_system && (
+            {auth.user.role === 'admin' && user.role !== 'admin' && (
                 <Card>
                     <CardHeader>
                         <CardTitle>{t('delete_user')}</CardTitle>

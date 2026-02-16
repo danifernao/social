@@ -112,7 +112,7 @@ export default function Profile() {
                     {/* Formulario de edición del perfil */}
                     <form onSubmit={submit} className="space-y-6">
                         {/* Sección del avatar */}
-                        {useCheckPermission('can_update_avatar') && (
+                        {useCheckPermission('update_avatar') && (
                             <div className="flex items-center gap-6">
                                 <div className="relative h-20 w-20">
                                     <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-neutral-200 text-4xl font-bold text-black dark:bg-neutral-700 dark:text-white">
@@ -141,7 +141,7 @@ export default function Profile() {
                         )}
 
                         {/* Campo de nombre de usuario */}
-                        {useCheckPermission('can_update_username') && (
+                        {useCheckPermission('update_username') && (
                             <div className="grid gap-2">
                                 <Label htmlFor="username">{t('username')}</Label>
 
@@ -196,7 +196,7 @@ export default function Profile() {
                 </div>
 
                 {/* Sección para eliminar la cuenta */}
-                {!auth.user.permissions.can_manage_system && <DeleteUser />}
+                {auth.user.role !== 'admin' && <DeleteUser />}
             </SettingsLayout>
         </AppLayout>
     );

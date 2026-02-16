@@ -49,9 +49,6 @@ class CommentController extends Controller
         // Obtiene el usuario autenticado.
         $auth_user = $request->user();
 
-        // Carga los permisos del usuario autenticado.
-        $auth_user->load('permission');
-
         // Si el autor de la publicación ha bloqueado al usuario autenticado,
         // se deniega la acción.
         if ($post->user->hasBlocked($auth_user)) {
@@ -155,7 +152,7 @@ class CommentController extends Controller
         $comment->save();
 
         // Carga la relación del autor del comentario y sus permisos.
-        $comment->load(['user', 'user.permission']);
+        $comment->load('user');
 
         // Sincroniza las menciones presentes en el comentario.
         $this->mentionService->sync($comment, $request->user());

@@ -1,3 +1,9 @@
+export type UserPermission = 
+    | 'post' 
+    | 'comment' 
+    | 'update_username' 
+    | 'update_avatar';
+
 export interface User {
     type: 'user';
     id: number;
@@ -13,14 +19,7 @@ export interface User {
     role: 'user' | 'mod' | 'admin';
     is_active: boolean;
     language: 'es' | 'en';
-    permissions: {
-      can_manage_system: boolean;
-      can_moderate: boolean;
-      can_post: boolean;
-      can_comment: boolean;
-      can_update_username: boolean;
-      can_update_avatar: boolean;
-    };
+    permissions: UserPermission[];
     created_at: string;
     updated_at: string;
 }

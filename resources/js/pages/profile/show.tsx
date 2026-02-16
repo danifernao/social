@@ -26,7 +26,7 @@ export default function ProfileShow() {
     const isOwner = auth.user && user.id === auth.user.id && auth.user.permissions.can_post;
 
     // Determina si el usuario autenticado tiene permisos de moderación.
-    const isMod = auth.user && auth.user.permissions.can_moderate;
+    const isMod = auth.user && ['admin', 'mod'].includes(auth.user.role);
 
     // ID del usuario del perfil en el que se publica (solo permitido para moderadores).
     const profileUserId = !isOwner && isMod ? user.id : null;

@@ -53,9 +53,6 @@ class PostController extends Controller
         // Obtiene el usuario autenticado.
         $auth_user = $request->user();
 
-        // Carga los permisos del usuario autenticado.
-        $auth_user->load('permission');
-
         // Valida los datos enviados desde el formulario.
         $data = $request->validate([
             'content' => 'required|string|max:3000',
@@ -74,7 +71,7 @@ class PostController extends Controller
         // - El usuario autenticado tiene permisos de moderación.
         if (!empty($data['profile_user_id']) &&
             $data['profile_user_id'] !== $auth_user->id &&
-            $auth_user->canModerate()) {
+            $auth_user->hasAnyRole(['admin', 'mod'])) {
                 $profile_user_id = $data['profile_user_id'];
         }
 
@@ -143,7 +140,7 @@ class PostController extends Controller
         }
 
         // Carga el autor y la cantidad total de comentarios.
-        $post->load(['user', 'user.permission'])->loadCount('comments');
+        $post->load('user')->loadCount('comments');
 
         // Obtiene las reacciones de la publicación.
         $post->reactions = $post->reactionsSummary($user?->id);
@@ -157,7 +154,7 @@ class PostController extends Controller
         // Consulta base de comentarios, ordenados de forma ascendente.
         $comments_query = $post
             ->comments()
-            ->with(['user', 'user.permission'])
+            ->with('user')
             ->oldest();
 
         // Excluye comentarios de usuarios con bloqueos mutuos.
@@ -169,7 +166,7 @@ class PostController extends Controller
         // Si se solicita un comentario específico,
         // se crea una paginación manual.
         if ($comment) {
-            $comment->load(['user', 'user.permission']);
+            $comment->load('user');
             $comments = new CursorPaginator([$comment], $per_page, null, [
                 'path' => $request->url(),
                 'cursorName' => 'cursor',
@@ -220,7 +217,7 @@ class PostController extends Controller
         $post->save();
 
         // Carga la relación con el usuario autor.
-        $post->load(['user', 'user.permission']);
+        $post->load('user');
 
         // Actualiza las etiquetasy menciones presentes en la publicación.
         $this->hashtagService->sync($post);

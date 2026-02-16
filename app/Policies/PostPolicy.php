@@ -20,9 +20,7 @@ class PostPolicy
      */
     public function create(User $user): bool
     {
-        $user->loadMissing('permission');
-
-        return $user->permission->can_post;
+        return $user->can('post');
     }
 
     /**
@@ -35,13 +33,8 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
-        $user->loadMissing('permission');
-
-        return (
-            $user->id === $post->user_id 
-            && $user->permission->can_post
-        ) 
-        || $user->canModerate();
+        return ($user->id === $post->user_id && $user->can('post')) 
+            || $user->hasAnyRole(['admin', 'mod']);
     }
 
     /**
@@ -54,6 +47,7 @@ class PostPolicy
      */
     public function delete(User $user, Post $post): bool
     {
-        return $user->id === $post->user_id || $user->canModerate();
+        return $user->id === $post->user_id
+            || $user->hasAnyRole(['admin', 'mod']);
     }
 }

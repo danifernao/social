@@ -30,7 +30,7 @@ class UserResource extends JsonResource
          */
         $can_view_sensitive_data =
             $auth && (
-                $auth->id === $this->id || $auth->canModerate()
+                $auth->id === $this->id || $auth->hasAnyRole(['admin', 'mod'])
             );
 
         /**
@@ -43,7 +43,7 @@ class UserResource extends JsonResource
          */
         $can_view_email = 
             $auth && (
-                $auth->id === $this->id || $auth->canManageSystem()
+                $auth->id === $this->id || $auth->hasRole('admin')
             );
 
         // Datos sensibles.
@@ -68,13 +68,6 @@ class UserResource extends JsonResource
             ? $this->resource->hasBlocked($auth)
             : null;
 
-        /**
-         * Permisos del usuario.
-         */
-        $permissions = $this->whenLoaded('permission', function () {
-            return (new PermissionResource($this->permission))->resolve();
-        });
-
         return [
             'id'                => $this->id,
             'username'          => $this->username,
@@ -82,6 +75,7 @@ class UserResource extends JsonResource
             'email'             => $email,
             'email_verified_at' => $email_verified_at,
             'role'              => $this->role,
+            'permissions'       => $this->getAllPermissions()->pluck('name'),
             'is_active'         => $this->is_active,
             'language'          => $this->language,
             'created_at'        => $this->created_at,
@@ -92,7 +86,6 @@ class UserResource extends JsonResource
             'is_followed'       => $this->is_followed ?? null,
             'is_blocked'        => $is_blocked,
             'blocked_me'        => $blocked_me,
-            'permissions'       => $permissions,
         ];
     }
 }

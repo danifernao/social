@@ -20,9 +20,7 @@ class CommentPolicy
      */
     public function create(User $user): bool
     {
-        $user->loadMissing('permission');
-
-        return $user->permission->can_comment;
+        return $user->can('comment');
     }
 
     /**
@@ -35,13 +33,8 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment): bool
     {
-        $user->loadMissing('permission');
-
-        return (
-            $user->id === $comment->user_id 
-            && $user->permission->can_comment
-        ) 
-        || $user->canModerate();
+        return ($user->id === $comment->user_id && $user->can('comment')) 
+            || $user->hasAnyRole(['admin', 'mod']);
     }
 
     /**
@@ -54,6 +47,7 @@ class CommentPolicy
      */
     public function delete(User $user, Comment $comment): bool
     {
-        return $user->id === $comment->user_id || $user->canModerate();
+        return $user->id === $comment->user_id
+            || $user->hasAnyRole(['admin', 'mod']);
     }
 }

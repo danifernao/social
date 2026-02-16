@@ -40,9 +40,6 @@ class ProfileController extends Controller
         // Carga el conteo de seguidores y seguidos del usuario del perfil.
         $user->loadCount(['followers', 'follows']);
 
-        // Carga los permisos del usuario.
-        $user->load('permission');
-
         // Determina si el usuario autenticado sigue al perfil visitado.
         if ($auth_user && $auth_user->id !== $user->id) {
             $user->is_followed = $auth_user->follows()
@@ -81,7 +78,7 @@ class ProfileController extends Controller
         } else {
             // Obtiene las publicaciones asociadas al perfil del usuario.
             // Incluye las publicaciones hechas en el perfil y las propias.
-            $posts = Post::with(['user', 'user.permission'])
+            $posts = Post::with('user')
                 ->withCount('comments')
                 ->where(function ($query) use ($user) {
                     $query->where('profile_user_id', $user->id)

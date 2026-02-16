@@ -1,4 +1,4 @@
-import { Auth, User } from "@/types";
+import { Auth, User, UserPermission } from "@/types";
 import { usePage } from "@inertiajs/react";
 
 /**
@@ -15,7 +15,7 @@ export function useCanActOnUser(user: User) {
     }
 
     // Bloquea la acción si el usuario no tiene permisos de moderación.
-    if (!auth.user.permissions.can_moderate) {
+    if (!['admin', 'mod'].includes(auth.user.role)) {
         return false;
     }
 
@@ -25,7 +25,7 @@ export function useCanActOnUser(user: User) {
     }
 
     // Impide que un moderador actúe sobre un administrador.
-    if (!auth.user.permissions.can_manage_system && user.permissions.can_manage_system) {
+    if (auth.user.role !== 'admin' && user.role === 'admin') {
         return false;
     }
 
@@ -62,7 +62,7 @@ export function useCheckPermission(permission: string) {
     }
 
     // Determina si tiene el permiso.
-    const can = auth.user.permissions[permission as keyof typeof auth.user.permissions] === true;
+    const can = auth.user.permissions.includes(permission as UserPermission);
 
     return can;
 }

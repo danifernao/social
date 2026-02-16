@@ -19,7 +19,7 @@ export default function AdminReportBadge() {
 
     // Si no existe un usuario autenticado o el usuario
     // no tiene permisos de moderación, no se muestra el badge.
-    if (!auth.user || !auth.user.permissions.can_moderate) {
+    if (!auth.user || !['admin', 'mod'].includes(auth.user.role)) {
         return null;
     }
 

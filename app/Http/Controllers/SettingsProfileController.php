@@ -47,9 +47,6 @@ class SettingsProfileController extends Controller
         // Obtiene el usuario autenticado.
         $user = $request->user();
 
-        // Carga los permisos del usuario.
-        $user->load('permission');
-
         // Valida los datos enviados desde el formulario.
         $data = $request->validate([
             'username' => UserRules::username($user->id),
@@ -60,11 +57,11 @@ class SettingsProfileController extends Controller
 
         // Retira el campo de username si el usuario no tiene permiso
         // para actualizarlo.
-        if (!$user->permission->can_update_username) {
-            unset($data['username']); 
+        if (!$user->can('update_username')) {
+            unset($data['username']);
         }
 
-        if ($user->permission->can_update_avatar) {
+        if ($user->can('update_avatar')) {
             // Función anónima para eliminar el avatar existente.
             $deleteAvatar = fn() => 
                 $user->avatar_path &&
@@ -137,7 +134,7 @@ class SettingsProfileController extends Controller
 
         // Si el usuario tiene permisos administrativos,
         // se prohíbe la eliminación.
-        if ($user->canManageSystem()) {
+        if ($user->hasRole('admin')) {
             return back()->withErrors([
                 'password' => 'Esta cuenta es administrativa, no se puede eliminar.',
             ]);

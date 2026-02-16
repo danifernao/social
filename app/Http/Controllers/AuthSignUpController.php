@@ -72,12 +72,15 @@ class AuthSignUpController extends Controller
                 'language' => $request->language ?? head(Locales::codes()),
             ]);
 
-            // Crea el registro de permisos asociado al usuario.
-            // Todo usuario debe tener permisos desde su creación.
-            // El primer usuario registrado tiene permisos administrativos.
-            $user->permission()->create([
-                'can_manage_system' => $is_first_user,
-                'can_moderate'      => $is_first_user,
+            // Asigna el rol según si es el primer usuario o no.
+            $user->assignRole($is_first_user ? 'admin' : 'user');
+
+            // Asigna los permisos por defecto.
+            $user->givePermissionTo([
+                'post',
+                'comment',
+                'update_username',
+                'update_avatar',
             ]);
 
             // Si se proporcionó un token, se consume la invitación.

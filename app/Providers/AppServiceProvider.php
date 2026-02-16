@@ -32,13 +32,13 @@ class AppServiceProvider extends ServiceProvider
         // Garantiza que solo los usuarios con rol de administrador
         // puedan acceder a la zona administrativa.
         Gate::define('access-admin-area', function (User $user) {
-            return $user->canManageSystem();
+            return $user->hasRole('admin');
         });
 
         // Garantiza que solo los usuarios con permisos de moderación
         // puedan ejecutar acciones de moderación dentro del sistema.
         Gate::define('moderate', function (User $user) {
-            return $user->canModerate();
+            return $user->hasAnyRole(['admin', 'mod']);
         });
 
         // Permite que las rutas como /user/{user} acepten tanto IDs numéricos

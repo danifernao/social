@@ -51,7 +51,7 @@ export default function HomeIndex() {
                 {/* Contexto para sincronizar cambios en el feed de publicaciones */}
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>
                     {/* Formulario para crear una nueva publicación */}
-                    {useCheckPermission('can_post') && <EntryForm />}
+                    {useCheckPermission('post') && <EntryForm />}
 
                     {/* Listado de publicaciones del feed */}
                     <EntryList entries={entries} />

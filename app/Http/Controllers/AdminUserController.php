@@ -71,7 +71,7 @@ class AdminUserController extends Controller
         $query = trim($request->get('query', ''));
 
         // Consulta base del modelo User.
-        $users_query = User::with('permission');
+        $users_query = User::query();
 
         // Aplica búsqueda por nombre de usuario parcial o por ID exacto.
         if ($query !== '') {
@@ -110,9 +110,6 @@ class AdminUserController extends Controller
         if (!$auth_user->canActOn($user)) {
             abort(403);
         }
-
-        // Carga los permisos del usuario.
-        $user->load('permission');
 
         // Transforma el usuario utilizando UserResource para el frontend.
         $user_data = (new UserResource($user))->resolve();
@@ -212,32 +209,8 @@ class AdminUserController extends Controller
             'new_role' => 'required|in:admin,mod,user',
         ]);
 
-        // Obtiene los permisos existentes del usuario.
-        $permission = $user->permission;
-
-        // Mapea el rol lógico recibido desde el frontend a permisos reales.
-        switch ($request->new_role) {
-            case 'admin':
-                $permission->update([
-                    'can_manage_system' => true,
-                    'can_moderate'      => true,
-                ]);
-                break;
-
-            case 'mod':
-                $permission->update([
-                    'can_manage_system' => false,
-                    'can_moderate'      => true,
-                ]);
-                break;
-
-            case 'user':
-                $permission->update([
-                    'can_manage_system' => false,
-                    'can_moderate'      => false,
-                ]);
-                break;
-        }
+        // Sincroniza el rol del usuario.
+        $user->syncRoles([$request->new_role]);
 
         // Si el nuevo rol no es "user", elimina los bloqueos asociados.
         // Los moderadores y administradores no pueden estar bloqueados.
@@ -394,7 +367,7 @@ class AdminUserController extends Controller
     }
 
     /**
-     * Habilita o inhabilita una cuenta de usuario.
+     * Asigna o revoca un permiso de un usuario.
      *
      * @param Request $request Datos de la petición HTTP.
      * @param User    $user    Instancia del usuario que se va a cambiar
@@ -402,13 +375,28 @@ class AdminUserController extends Controller
      */
     private function togglePermission(Request $request, User $user)
     {
+        // Valida los datos enviados desde el formulario.
         $request->validate([
-            'permission_key' => ['required', Rule::in(['can_post','can_comment','can_update_avatar','can_update_username'])],
+            'permission_key' => [
+                'required',
+                Rule::in([
+                    'post',
+                    'comment',
+                    'update_avatar',
+                    'update_username',
+                ]),
+            ],
         ]);
 
-        $permission = $user->permission;
-        $permission->{$request->permission_key} = !$permission->{$request->permission_key};
-        $permission->save();
+        $permission = $request->permission_key;
+
+        // Si el usuario ya tiene el permiso, se revoca.
+        // Si no lo tiene, se asigna.
+        if ($user->hasPermissionTo($permission)) {
+            $user->revokePermissionTo($permission);
+        } else {
+            $user->givePermissionTo($permission);
+        }
 
         return back()->with('status', 'permission_updated');
     }
@@ -423,7 +411,7 @@ class AdminUserController extends Controller
     {
         // Deniega acceso si el usuario autenticado no tiene permisos
         // administrativos o si se intenta eliminar a otro administrador.
-        if (!$request->user()->canManageSystem() || $user->canManageSystem()) {
+        if (!$request->user()->hasRole('admin') || $user->hasRole('admin')) {
             abort(403);
         }
         

@@ -104,7 +104,7 @@ export default function PostShow() {
                             )}
 
                             {/* Formulario para añadir un nuevo comentario */}
-                            {useCheckPermission('can_comment') && <EntryForm postId={post.id} />}
+                            {useCheckPermission('comment') && <EntryForm postId={post.id} />}
                         </EntryListUpdateContext.Provider>
                     </section>
                 </article>

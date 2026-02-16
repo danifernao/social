@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * Modelo que representa a un usuario registrado.
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, HasRoles, Notifiable;
 
     /**
      * Atributos asignables masivamente.
@@ -27,7 +28,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'avatar_path',
-        'role',
         'language',
     ];
 
@@ -89,27 +89,10 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return string
      */
+    
     public function getRoleAttribute(): string
     {
-        if ($this->canManageSystem()) {
-            return 'admin';
-        }
-
-        if ($this->canModerate()) {
-            return 'mod';
-        }
-
-        return 'user';
-    }
-
-    /**
-     * Relación: permisos del usuario.
-     * 
-     * @return HasOne<Permission, User>
-     */
-    public function permission()
-    {
-        return $this->hasOne(Permission::class);
+        return $this->roles->first()?->name ?? 'user';
     }
 
     /**
@@ -205,26 +188,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Determina si el usuario puede administrar.
-     *
-     * @return bool
-     */
-    public function canManageSystem(): bool
-    {
-        return $this->permission->can_manage_system;
-    }
-
-    /**
-     * Determina si el usuario puede moderar.
-     *
-     * @return bool
-     */
-    public function canModerate(): bool
-    {
-        return $this->permission->can_moderate;
-    }
-
-    /**
      * Determina si el usuario puede gestionar a otro usuario.
      *
      * @param User $user Usuario objetivo.
@@ -238,12 +201,12 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         // Un administrador puede actuar sobre cualquiera.
-        if ($this->canManageSystem()) {
+        if ($this->hasRole('admin')) {
             return true;
         }
 
         // Un moderador puede actuar sobre otros, excepto administradores.
-        if ($this->canModerate() && !$user->canManageSystem()) {
+        if ($this->hasAnyRole(['admin', 'mod']) && !$user->hasRole('admin')) {
             return true;
         }
 

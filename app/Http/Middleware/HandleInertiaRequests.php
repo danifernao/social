@@ -78,7 +78,6 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user()
                     ? (new UserResource($request
                         ->user()
-                        ->load('permission')
                       ))->resolve()
                     : null,
             ],
@@ -122,7 +121,7 @@ class HandleInertiaRequests extends Middleware
 
             // Cantidad de reportes pendientes de moderación.
             'pendingReportsCount' => fn () =>
-                $request->user()?->canModerate()
+                $request->user()?->hasAnyRole(['admin', 'mod'])
                     ? Report::pending()->count()
                     : 0,
 

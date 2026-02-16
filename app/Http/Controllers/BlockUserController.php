@@ -30,7 +30,7 @@ class BlockUserController extends Controller
         $auth_user = $request->user();
 
         // Los moderadores no pueden bloquear a otros usuarios.
-        if ($auth_user->canModerate()) {
+        if ($auth_user->hasAnyRole(['admin', 'mod'])) {
             return back()->withErrors([
                 'message' => __('Option disabled for moderators.'),
             ]);
@@ -44,7 +44,7 @@ class BlockUserController extends Controller
         }
 
         // Los usuarios que son moderadores no pueden ser bloqueados.
-        if ($user->canModerate()) {
+        if ($user->hasAnyRole(['admin', 'mod'])) {
             return back()->withErrors([
                 'message' => __('Blocking a moderator is not allowed.'),
             ]);
