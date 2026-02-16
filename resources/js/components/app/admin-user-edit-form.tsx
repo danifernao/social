@@ -6,7 +6,7 @@ import { useAdminActionForm } from '@/hooks/app/use-admin-action-form';
 import { Auth, User, UserPermission } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Checkbox } from '../ui/checkbox';
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
@@ -35,12 +35,12 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
     ]);
 
     // Lista de permisos que se pueden gestionar para el usuario.
-    const [permissions, setPermissions] = useState([
+    const permissions = [
         { key: 'post', label: t('can_post') },
         { key: 'comment', label: t('can_comment') },
         { key: 'update_avatar', label: t('can_update_avatar') },
         { key: 'update_username', label: t('can_update_username') },
-    ]);
+    ];
 
     // Inicializa y gestiona el formulario de acciones administrativas sobre el usuario.
     const { form, handleAction, confirmAction, isDialogOpen, closeDialog } = useAdminActionForm({
@@ -171,17 +171,17 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                                     }
                                 }}
                                 variant="outline"
-                                disabled={form.processing && form.data.action === 'toggle_permission'}
+                                disabled={form.processing && form.data.action === 'toggle_permission' && form.data.permission_key === permission.key}
                             >
                                 <ToggleGroupItem value="true">{t('enabled')}</ToggleGroupItem>
                                 <ToggleGroupItem value="false">{t('disabled')}</ToggleGroupItem>
                             </ToggleGroup>
 
                             {/* Etiqueta del permiso */}
-                            <span>{t(permission.label)}</span>
+                            <span>{permission.label}</span>
 
                             {/* Indicador de carga durante el procesamiento de la acción */}
-                            {form.processing && form.data.action === `toggle_permission_${permission.key}` && (
+                            {form.processing && form.data.action === 'toggle_permission' && form.data.permission_key === permission.key && (
                                 <LoaderCircle className="h-4 w-4 animate-spin" />
                             )}
                         </div>
