@@ -46,6 +46,10 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos para crear una publicación.
+        $this->authorize('create', Post::class);
+
         // Obtiene el usuario autenticado.
         $auth_user = $request->user();
 

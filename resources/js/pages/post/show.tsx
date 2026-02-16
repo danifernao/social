@@ -3,6 +3,7 @@ import EntryList from '@/components/app/entry-list';
 import EntryListItem from '@/components/app/entry-list-item';
 import ListLoadMore from '@/components/app/list-load-more';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
+import { useCheckPermission } from '@/hooks/app/use-auth';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
@@ -21,9 +22,6 @@ export default function PostShow() {
     // Captura el usuario autenticado, la publicación
     // y los comentarios proporcionados por Inertia.
     const { routeName, auth, post, comments } = usePage<{ auth: Auth; post: Post; comments: Comments }>().props;
-
-    // Determina si existe un usuario autenticado.
-    const isAuth = !!auth.user;
 
     // Referencia a la sección de comentarios.
     const commentsRef = useRef<HTMLElement>(null);
@@ -106,7 +104,7 @@ export default function PostShow() {
                             )}
 
                             {/* Formulario para añadir un nuevo comentario */}
-                            {isAuth && <EntryForm postId={post.id} />}
+                            {useCheckPermission('can_comment') && <EntryForm postId={post.id} />}
                         </EntryListUpdateContext.Provider>
                     </section>
                 </article>

@@ -23,7 +23,7 @@ export default function ProfileShow() {
     const { auth, user, posts } = usePage<{ auth: Auth; user: User; posts: Posts }>().props;
 
     // Determina si el usuario autenticado está visitando su propio perfil.
-    const isOwner = auth.user && user.id === auth.user.id;
+    const isOwner = auth.user && user.id === auth.user.id && auth.user.permissions.can_post;
 
     // Determina si el usuario autenticado tiene permisos de moderación.
     const isMod = auth.user && auth.user.permissions.can_moderate;

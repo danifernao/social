@@ -153,7 +153,8 @@ class AdminUserController extends Controller
                     'change_email',
                     'reset_password',
                     'toggle_account_status',
-                    'delete_account'
+                    'toggle_permission',
+                    'delete_account',
                 ])
             ],
             'privileged_password' => ['required', 'string'],
@@ -181,6 +182,9 @@ class AdminUserController extends Controller
 
             case 'toggle_account_status':
                 return $this->toggleAccountStatus($user);
+
+            case 'toggle_permission':
+                return $this->togglePermission($request, $user);
 
             case 'delete_account':
                 return $this->deleteAccount($request, $user);
@@ -387,6 +391,26 @@ class AdminUserController extends Controller
                 ? 'account_activated'
                 : 'account_deactivated'
         );
+    }
+
+    /**
+     * Habilita o inhabilita una cuenta de usuario.
+     *
+     * @param Request $request Datos de la petición HTTP.
+     * @param User    $user    Instancia del usuario que se va a cambiar
+     *                         el permiso.
+     */
+    private function togglePermission(Request $request, User $user)
+    {
+        $request->validate([
+            'permission_key' => ['required', Rule::in(['can_post','can_comment','can_update_avatar','can_update_username'])],
+        ]);
+
+        $permission = $user->permission;
+        $permission->{$request->permission_key} = !$permission->{$request->permission_key};
+        $permission->save();
+
+        return back()->with('status', 'permission_updated');
     }
 
     /**

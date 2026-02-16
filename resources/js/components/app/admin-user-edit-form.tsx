@@ -27,14 +27,19 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
     // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;
 
-    // Estado que refleja si la cuenta del usuario está habilitada o no.
-    const [isActive, setIsActive] = useState(user.is_active);
-
     // Mapa de roles con sus descripciones.
     const role_descriptions = new Map([
         [t('user'), t('user_role_description')],
         [t('moderator'), t('moderator_role_description')],
         [t('administrator'), t('administrator_role_description')],
+    ]);
+
+    // Lista de permisos que se pueden gestionar para el usuario.
+    const [permissions, setPermissions] = useState([
+        { key: 'can_post', label: t('can_post') },
+        { key: 'can_comment', label: t('can_comment') },
+        { key: 'can_update_avatar', label: t('can_update_avatar') },
+        { key: 'can_update_username', label: t('can_update_username') },
     ]);
 
     // Inicializa y gestiona el formulario de acciones administrativas sobre el usuario.
@@ -44,13 +49,11 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             new_email: user.email,
             new_role: user.role,
             random_password: false,
+            permission_key: '',
         },
         route: () => route('admin.user.update', user.id),
         onSuccess: (action, page) => {
             switch (action) {
-                case 'toggle_account_status':
-                    setIsActive((prev) => !prev);
-                    break;
                 case 'change_username':
                     // Sincroniza el nombre de usuario actualizado desde la respuesta del servidor.
                     const typedPage = page as unknown as { props: { user: User } };
@@ -111,7 +114,6 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                     </CardContent>
                 </Card>
             )}
-
             {/* Gestión del avatar del usuario */}
             {user.avatar_url && (
                 <Card>
@@ -140,7 +142,6 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                     </CardContent>
                 </Card>
             )}
-
             {/* Nombre de usuario */}
             <Card>
                 <CardHeader>
@@ -173,7 +174,6 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                     </Button>
                 </CardContent>
             </Card>
-
             {/* Gestión del correo electrónico */}
             {auth.user.permissions.can_manage_system && (
                 <Card>
@@ -208,7 +208,6 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                     </CardContent>
                 </Card>
             )}
-
             {/* Gestión de la contraseña */}
             {auth.user.permissions.can_manage_system && (
                 <Card>
@@ -246,7 +245,6 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                     </CardContent>
                 </Card>
             )}
-
             {/* Gestión del estado de la cuenta */}
             <Card>
                 <CardHeader>
@@ -261,7 +259,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                     <div className="flex items-center gap-2">
                         <ToggleGroup
                             type="single"
-                            value={String(isActive)}
+                            value={String(user.is_active)}
                             onValueChange={(value) => {
                                 if (value) {
                                     handleAction('toggle_account_status');
@@ -280,6 +278,45 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
 
                     {/* Descripción del comportamiento esperado */}
                     <p className="text-muted-foreground text-sm italic">{t('disable_account_ends_all_sessions')}</p>
+                </CardContent>
+            </Card>
+
+            {/* Gestión de permisos del usuario */}
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>{t('manage_permissions')}</CardTitle>
+                </CardHeader>
+
+                <CardContent className="space-y-4">
+                    {/* Lista de permisos a gestionar */}
+                    {permissions.map((permission) => (
+                        <div key={permission.key} className="flex items-center gap-2">
+                            <ToggleGroup
+                                type="single"
+                                value={String(user.permissions[permission.key as keyof typeof user.permissions])}
+                                onValueChange={(value) => {
+                                    if (value) {
+                                        form.setData('permission_key', permission.key);
+                                        handleAction('toggle_permission');
+                                    }
+                                }}
+                                variant="outline"
+                                disabled={form.processing && form.data.action === 'toggle_permission'}
+                            >
+                                <ToggleGroupItem value="true">{t('enabled')}</ToggleGroupItem>
+                                <ToggleGroupItem value="false">{t('disabled')}</ToggleGroupItem>
+                            </ToggleGroup>
+
+                            {/* Etiqueta del permiso */}
+                            <span>{t(permission.label)}</span>
+
+                            {/* Indicador de carga durante el procesamiento de la acción */}
+                            {form.processing && form.data.action === `toggle_permission_${permission.key}` && (
+                                <LoaderCircle className="h-4 w-4 animate-spin" />
+                            )}
+                        </div>
+                    ))}
                 </CardContent>
             </Card>
 
@@ -308,7 +345,6 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                     </CardContent>
                 </Card>
             )}
-
             {/* Confirmación de la acción */}
             <ConfirmActionDialog
                 open={isDialogOpen}

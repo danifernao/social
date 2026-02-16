@@ -13,6 +13,19 @@ use Illuminate\Auth\Access\Response;
 class CommentPolicy
 {
     /**
+     * Determina si un usuario puede crear un comentario.
+     *
+     * @param User $user Usuario que intenta hacer la acción.
+     * @return bool
+     */
+    public function create(User $user): bool
+    {
+        $user->loadMissing('permission');
+
+        return $user->permission->can_comment;
+    }
+
+    /**
      * Determina si un usuario puede actualizar un comentario.
      * Solo el autor del comentario o un moderador pueden actualizarlo.
      *
@@ -22,7 +35,13 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment): bool
     {
-        return $user->id === $comment->user_id || $user->canModerate();
+        $user->loadMissing('permission');
+
+        return (
+            $user->id === $comment->user_id 
+            && $user->permission->can_comment
+        ) 
+        || $user->canModerate();
     }
 
     /**

@@ -13,6 +13,19 @@ use Illuminate\Auth\Access\Response;
 class PostPolicy
 {
     /**
+     * Determina si un usuario puede crear una publicación.
+     *
+     * @param User $user Usuario que intenta realizar la acción.
+     * @return bool
+     */
+    public function create(User $user): bool
+    {
+        $user->loadMissing('permission');
+
+        return $user->permission->can_post;
+    }
+
+    /**
      * Determina si un usuario puede actualizar una publicación.
      * Solo el autor de la publicación o un moderador pueden actualizarla.
      *
@@ -22,7 +35,13 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
-        return $user->id === $post->user_id || $user->canModerate();
+        $user->loadMissing('permission');
+
+        return (
+            $user->id === $post->user_id 
+            && $user->permission->can_post
+        ) 
+        || $user->canModerate();
     }
 
     /**

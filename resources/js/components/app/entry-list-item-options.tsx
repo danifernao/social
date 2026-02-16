@@ -1,5 +1,5 @@
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
-import { useCanActOnUser, useIsAuthUser } from '@/hooks/app/use-auth';
+import { useCanActOnUser, useCheckPermission, useIsAuthUser } from '@/hooks/app/use-auth';
 import type { Entry } from '@/types';
 import { Link, router } from '@inertiajs/react';
 import { DialogClose } from '@radix-ui/react-dialog';
@@ -50,6 +50,9 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
     // Mensaje mostrado tras eliminar la entrada.
     const deletedMessage = entry.type === 'post' ? t('post_deleted') : t('comment_deleted');
 
+    // Clave del permiso necesario para editar la entrada.
+    const editPermission = entry.type === 'post' ? 'can_post' : 'can_comment';
+
     // Ejecuta la eliminación de la entrada tras la confirmación del usuario.
     const onConfirm = () => {
         setIsConfirmDialogOpen(false);
@@ -82,7 +85,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
 
                 <DropdownMenuContent>
                     {/* Opción para editar la entrada */}
-                    {(useIsAuthUser(entry.user) || useCanActOnUser(entry.user)) && (
+                    {((useIsAuthUser(entry.user) && useCheckPermission(editPermission)) || useCanActOnUser(entry.user)) && (
                         <DropdownMenuItem asChild>
                             <Button variant="ghost" className="w-full justify-start" onClick={() => setIsFormDialogOpen(true)}>
                                 {t('edit')}

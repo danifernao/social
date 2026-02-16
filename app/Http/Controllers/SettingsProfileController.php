@@ -47,6 +47,9 @@ class SettingsProfileController extends Controller
         // Obtiene el usuario autenticado.
         $user = $request->user();
 
+        // Carga los permisos del usuario.
+        $user->load('permission');
+
         // Valida los datos enviados desde el formulario.
         $data = $request->validate([
             'username' => UserRules::username($user->id),
@@ -55,25 +58,38 @@ class SettingsProfileController extends Controller
             'remove_avatar' => ['boolean'],
         ]);
 
-        // Función anónima para eliminar el avatar existente.
-        $deleteAvatar = fn() => 
-            $user->avatar_path &&
-            Storage::disk('public')->exists($user->avatar_path)
-                ? Storage::disk('public')->delete($user->avatar_path)
-                : null;
-
-        // Elimina el avatar actual si el usuario lo solicitó.
-        if ($data['remove_avatar']) {
-            $deleteAvatar();
-            $data['avatar_path'] = null;
+        // Retira el campo de username si el usuario no tiene permiso
+        // para actualizarlo.
+        if (!$user->permission->can_update_username) {
+            unset($data['username']); 
         }
 
-        // Procesa la carga de un nuevo avatar si fue enviado.
-        if ($request->hasFile('avatar')) {
-            $deleteAvatar();
-            $data['avatar_path'] = $request
-                ->file('avatar')
-                ->store('avatars', 'public');
+        if ($user->permission->can_update_avatar) {
+            // Función anónima para eliminar el avatar existente.
+            $deleteAvatar = fn() => 
+                $user->avatar_path &&
+                Storage::disk('public')->exists($user->avatar_path)
+                    ? Storage::disk('public')->delete($user->avatar_path)
+                    : null;
+
+            // Elimina el avatar actual si el usuario lo solicitó.
+            if ($data['remove_avatar']) {
+                $deleteAvatar();
+                $data['avatar_path'] = null;
+            }
+
+          // Procesa la carga de un nuevo avatar si fue enviado.
+          if ($request->hasFile('avatar')) {
+              $deleteAvatar();
+              $data['avatar_path'] = $request
+                  ->file('avatar')
+                  ->store('avatars', 'public');
+          }
+        }
+        else {
+            // Si el usuario no tiene permiso para actualizar el avatar,
+            // se eliminan los campos relacionados para evitar modificaciones.
+            unset($data['avatar'], $data['remove_avatar']);
         }
 
         // Asigna los nuevos datos al modelo de usuario.

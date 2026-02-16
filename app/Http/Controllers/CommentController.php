@@ -42,6 +42,10 @@ class CommentController extends Controller
      */
     public function store(Request $request, Post $post)
     {
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos para crear un comentario.
+        $this->authorize('create', Comment::class);
+
         // Obtiene el usuario autenticado.
         $auth_user = $request->user();
 

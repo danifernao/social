@@ -48,3 +48,21 @@ export function useIsAuthUser(user: User) {
     // Verifica si ambos IDs coinciden.
     return auth.user.id === user.id;
 }
+
+/**
+ * Determina si el usuario autenticado tiene permiso.
+ */
+export function useCheckPermission(permission: string) {
+    // Captura el usuario autenticado proporcionado por Inertia.
+    const { auth } = usePage<{ auth: Auth }>().props;
+
+    // Si no hay usuario autenticado, no tiene permiso.
+    if (!auth.user) {
+        return false;
+    }
+
+    // Determina si tiene el permiso.
+    const can = auth.user.permissions[permission as keyof typeof auth.user.permissions] === true;
+
+    return can;
+}
