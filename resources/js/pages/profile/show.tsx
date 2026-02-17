@@ -22,14 +22,15 @@ export default function ProfileShow() {
     // y la lista de publicaciones proporcionados por Inertia.
     const { auth, user, posts } = usePage<{ auth: Auth; user: User; posts: Posts }>().props;
 
-    // Determina si el usuario autenticado está visitando su propio perfil.
-    const isOwner = auth.user && user.id === auth.user.id && auth.user.permissions.can_post;
+    // Determina si el usuario autenticado tiene permiso para publicar.
+    const canPost = auth.user && auth.user.permissions.includes('post');
 
-    // Determina si el usuario autenticado tiene permisos de moderación.
-    const isMod = auth.user && ['admin', 'mod'].includes(auth.user.role);
+    // Determina si el usuario autenticado está visitando su propio perfil y
+    // tiene permiso para publicar.
+    const isOwner = auth.user && auth.user.id === user.id && canPost;
 
-    // ID del usuario del perfil en el que se publica (solo permitido para moderadores).
-    const profileUserId = !isOwner && isMod ? user.id : null;
+    // ID del usuario del perfil en el que se publica si no es el propietario.
+    const profileUserId = !isOwner && canPost ? user.id : null;
 
     // Usa el hook de paginación para gestionar las publicaciones del perfil.
     const {
@@ -64,7 +65,7 @@ export default function ProfileShow() {
                 {/* Contexto para sincronizar cambios en el listado de publicaciones */}
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>
                     {/* Formulario para crear publicaciones */}
-                    {(isOwner || isMod) && <EntryForm profileUserId={profileUserId} />}
+                    {(isOwner || canPost) && <EntryForm profileUserId={profileUserId} />}
 
                     {/* Listado de publicaciones del perfil */}
                     <EntryList entries={entries} />

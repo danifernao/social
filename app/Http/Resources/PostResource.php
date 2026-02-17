@@ -31,6 +31,7 @@ class PostResource extends JsonResource
             'updated_at'      => $this->updated_at,
             'type'            => $this->type,
             'user'            => $author,
+            'profile_user_id' => $this->profile_user_id,
             'reactions'       => $this->reactions ?? [],
             'comments_count'  => $this->comments_count ?? 0,
         ];

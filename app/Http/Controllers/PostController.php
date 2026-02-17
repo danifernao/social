@@ -65,13 +65,10 @@ class PostController extends Controller
         // publica en el perfil de otra persona.
         $profile_user_id = null;
 
-        // Permite publicar en el perfil de otro usuario solo si:
-        // - Se envió un profile_user_id válido.
-        // - No es el mismo usuario autenticado.
-        // - El usuario autenticado tiene permisos de moderación.
+        // Permite publicar en el perfil de otro usuario solo si
+        // no es el mismo usuario autenticado.
         if (!empty($data['profile_user_id']) &&
-            $data['profile_user_id'] !== $auth_user->id &&
-            $auth_user->hasAnyRole(['admin', 'mod'])) {
+            $data['profile_user_id'] !== $auth_user->id) {
                 $profile_user_id = $data['profile_user_id'];
         }
 
@@ -84,9 +81,9 @@ class PostController extends Controller
 
         // Notifica al propietario del perfil si se publicó en un perfil ajeno.
         if ($profile_user_id) {
-            $profileUser = User::find($profile_user_id);
-            if ($profileUser) {
-                $profileUser->notify(
+            $profile_user = User::find($profile_user_id);
+            if ($profile_user) {
+                $profile_user->notify(
                     new NewPostOnProfile($auth_user, $post->id)
                 );
             }
@@ -99,10 +96,12 @@ class PostController extends Controller
         // Registra las etiquetas presentes en la publicación.
         $this->hashtagService->sync($post);
 
-        // Detecta, registra y notifica las menciones presentes
-        // en la publicación.
-        $this->mentionService
-            ->createWithNotifications($post, $auth_user, 'post');
+        // Si no se publicó en un perfil ajeno, detecta, registra
+        // y notifica las menciones presentes en la publicación.
+        if (!$profile_user_id) {
+            $this->mentionService
+                ->createWithNotifications($post, $auth_user, 'post');
+        }
 
         // Transforma la publicación utilizando UserResource para el frontend.
         $post_data = (new PostResource($post))->resolve();
@@ -123,6 +122,20 @@ class PostController extends Controller
     {
         // Obtiene el usuario autenticado.
         $user = $request->user();
+
+        // Las publicaciones hechas en perfiles ajenos solo pueden ser
+        // vistas por el autor, el dueño del perfil o un moderador.
+        if ($post->profile_user_id !== null) {
+            if (!$user ||
+                (
+                    !$user->hasAnyRole(['admin', 'mod']) &&
+                    $user->id !== $post->user_id &&
+                    $user->id !== $post->profile_user_id
+                )
+            ) {
+                abort(403);
+            }
+        }
 
         // Verifica que no exista bloqueo mutuo entre el usuario autenticado
         // y el autor de la publicación.

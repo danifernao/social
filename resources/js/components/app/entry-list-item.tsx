@@ -3,7 +3,7 @@ import type { Auth, Entry, Post } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { formatDistanceToNow, Locale } from 'date-fns';
 import { enUS, es } from 'date-fns/locale';
-import { MessageSquare } from 'lucide-react';
+import { Lock, MessageSquare } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { buttonVariants } from '../ui/button';
 import EntryItemOptions from './entry-list-item-options';
@@ -36,6 +36,9 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
     // Captura el usuario autenticado y nombre de la ruta actual proporcionados por Inertia.
     const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
 
+    // Una publicación es privada si pertenece al perfil de otro usuario.
+    const isPrivate = entry.type === 'post' && entry.profile_user_id !== null;
+
     // Tiempo relativo desde la creación de la entrada.
     const distanceToNow = formatDistanceToNow(new Date(entry.created_at), {
         addSuffix: true,
@@ -57,6 +60,12 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                 </div>
 
                 <div className="flex items-center justify-center gap-4">
+                    {isPrivate && (
+                        <span className="text-muted-foreground" title={t('private_post')}>
+                            <Lock className="h-4 w-4" />
+                        </span>
+                    )}
+
                     {/* Fecha de creación con enlace a la entrada */}
                     <div className="flex gap-4 text-sm">
                         <Link

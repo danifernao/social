@@ -39,8 +39,23 @@ class HomeController extends Controller
         if (!$auth_user->hasAnyRole(['admin', 'mod'])) {
             $following_ids = $auth_user->followedUserIds();
             $following_ids[] = $auth_user->id;
-            
-            $query->whereIn('user_id', $following_ids);
+
+            $query->where(function ($q) use ($following_ids, $auth_user) {
+                // Publicaciones de los seguidos.
+                $q->whereIn('user_id', $following_ids)
+                  ->whereNull('profile_user_id');
+
+                // Publicaciones de otros en el perfil
+                // del usuario autenticado.
+                $q->orWhere('profile_user_id', $auth_user->id);
+
+                // Publicaciones del usuario autenticado hechas
+                // en otros perfiles.
+                $q->orWhere(function ($sub) use ($auth_user) {
+                    $sub->where('user_id', $auth_user->id)
+                        ->whereNotNull('profile_user_id');
+                });
+            });
         }
 
         // Obtiene las publicaciones ordenadas por fecha de creación

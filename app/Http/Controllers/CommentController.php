@@ -49,6 +49,18 @@ class CommentController extends Controller
         // Obtiene el usuario autenticado.
         $auth_user = $request->user();
 
+        // Las publicaciones hechas en perfiles ajenos solo pueden ser
+        // comentadas por el autor, el dueño del perfil o un moderador.
+        if ($post->profile_user_id !== null) {
+            if (
+                !$auth_user->hasAnyRole(['admin', 'mod']) &&
+                $auth_user->id !== $post->user_id &&
+                $auth_user->id !== $post->profile_user_id
+            ) {
+                abort(403);
+            }
+        }
+
         // Si el autor de la publicación ha bloqueado al usuario autenticado,
         // se deniega la acción.
         if ($post->user->hasBlocked($auth_user)) {
@@ -70,10 +82,12 @@ class CommentController extends Controller
         // Relaciona el usuario autenticado con el comentario (solo en memoria).
         $comment->setRelation('user', $auth_user);
 
-        // Detecta, registra y notifica las menciones
-        // presentes en el comentario.
-        $this->mentionService
-            ->createWithNotifications($comment, $auth_user, 'comment');
+        // Si la publicación no está en un perfil ajeno, detecta,
+        // registra y notifica las menciones presentes en el comentario.
+        if ($post->profile_user_id === null) {
+            $this->mentionService
+                ->createWithNotifications($comment, $auth_user, 'comment');
+        }
 
         // Recupera los usuarios mencionados en el comentario.
         $mentioned_users = User::whereIn(

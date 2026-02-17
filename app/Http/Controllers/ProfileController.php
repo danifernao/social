@@ -80,12 +80,43 @@ class ProfileController extends Controller
             // Incluye las publicaciones hechas en el perfil y las propias.
             $posts = Post::with('user')
                 ->withCount('comments')
-                ->where(function ($query) use ($user) {
-                    $query->where('profile_user_id', $user->id)
-                          ->orWhere(function ($q2) use ($user) {
-                              $q2->whereNull('profile_user_id')
-                                ->where('user_id', $user->id);
-                          });
+                ->where(function ($query) use ($user, $auth_user) {
+                    // Si el usuario autenticado tiene permisos de moderación, o
+                    // es el dueño del perfil, se muestran todas las publicaciones.
+                    if ($auth_user
+                        && ($auth_user->hasAnyRole(['admin', 'mod'])
+                        || $auth_user->id === $user->id)
+                    ) {
+                        $query->where('user_id', $user->id)
+                              ->orWhere('profile_user_id', $user->id);
+                        return; 
+                    }
+              
+                    // Publicaciones del dueño del perfil.
+                    $query->where(function ($q) use ($user) {
+                        $q->where('user_id', $user->id)
+                          ->whereNull('profile_user_id');
+                    });
+
+                    // Publicaciones hechas en el perfil.
+                    $query->orWhere(function ($q) use ($user, $auth_user) {
+                        $q->where('profile_user_id', $user->id);
+
+                        // Filtro de visibilidad.
+                        $q->where(function ($sub) use ($user, $auth_user) {
+                            // El dueño del perfil ve todo lo que le publiquen.
+                            if ($auth_user && $auth_user->id === $user->id) {
+                                return;
+                            }
+
+                            // Un visitante solo ve lo que él mismo publicó
+                            // o lo que el dueño publicó.
+                            $sub->where('user_id', $user->id);
+                            if ($auth_user) {
+                                $sub->orWhere('user_id', $auth_user->id);
+                            }
+                        });
+                    });
                 })
                 ->latest()
                 ->cursorPaginate(7, ['*'], 'cursor', $cursor);
