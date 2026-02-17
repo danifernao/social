@@ -2,12 +2,13 @@ import EntryForm from '@/components/app/entry-form';
 import EntryList from '@/components/app/entry-list';
 import ListLoadMore from '@/components/app/list-load-more';
 import ProfileHeader from '@/components/app/profile-header';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
 import type { Auth, BreadcrumbItem, Post, Posts, User } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -21,6 +22,9 @@ export default function ProfileShow() {
     // Captura el usuario autenticado, el usuario del perfil
     // y la lista de publicaciones proporcionados por Inertia.
     const { auth, user, posts } = usePage<{ auth: Auth; user: User; posts: Posts }>().props;
+
+    // Determina el filtro de las publicaciones según el parámetro de la ruta.
+    const filter = route().params.posts === 'others' ? 'others' : 'own';
 
     // Determina si el usuario autenticado tiene permiso para publicar.
     const canPost = auth.user && auth.user.permissions.includes('post');
@@ -45,6 +49,12 @@ export default function ProfileShow() {
         propKey: 'posts', // Propiedad de la respuesta de Inertia que contiene los datos.
     });
 
+    // Maneja el cambio de estado del filtro y recarga la vista
+    // pasando el nuevo estado por la URL.
+    const handleFilterChange = (value: string) => {
+        router.get(route('profile.show', user.username), { posts: value }, { preserveScroll: true });
+    };
+
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
         {
@@ -66,6 +76,16 @@ export default function ProfileShow() {
                 <EntryListUpdateContext.Provider value={handleEntryChanges}>
                     {/* Formulario para crear publicaciones */}
                     {(isOwner || canPost) && <EntryForm profileUserId={profileUserId} />}
+
+                    {/* Filtro de publicaciones del perfil */}
+                    {auth.user && (
+                        <Tabs value={filter} onValueChange={handleFilterChange}>
+                            <TabsList>
+                                <TabsTrigger value="own">{t('own_posts', { username: user.username })}</TabsTrigger>
+                                <TabsTrigger value="others">{t('others_posts')}</TabsTrigger>
+                            </TabsList>
+                        </Tabs>
+                    )}
 
                     {/* Listado de publicaciones del perfil */}
                     <EntryList entries={entries} />

@@ -61,6 +61,15 @@ class ProfileController extends Controller
         // Captura el cursor de paginación.
         $cursor = $request->header('X-Cursor');
 
+        // Determina qué tipo de publicaciones se desean mostrar.
+        $posts_type = $request->query('posts', 'own');
+
+        // Si no se está autenticado y se piden publicaciones ajenas,
+        // se fuerza a mostrar solo las del dueño del perfil.
+        if (!$auth_user && $posts_type === 'others') {
+            $posts_type = 'own';
+        }
+
         if ($is_blocked) {
             // Si existe un bloqueo, no se deben mostrar publicaciones.
             // Se genera un paginador vacío para mantener
@@ -76,51 +85,39 @@ class ProfileController extends Controller
                 ]
             );
         } else {
-            // Obtiene las publicaciones asociadas al perfil del usuario.
-            // Incluye las publicaciones hechas en el perfil y las propias.
             $posts = Post::with('user')
                 ->withCount('comments')
-                ->where(function ($query) use ($user, $auth_user) {
-                    // Si el usuario autenticado tiene permisos de moderación, o
-                    // es el dueño del perfil, se muestran todas las publicaciones.
-                    if ($auth_user
-                        && ($auth_user->hasAnyRole(['admin', 'mod'])
-                        || $auth_user->id === $user->id)
-                    ) {
+                ->where(function ($query) use ($posts_type, $user, $auth_user) {
+                    // Publicaciones creadas por el dueño del perfil.
+                    if ($posts_type === 'own') {
                         $query->where('user_id', $user->id)
-                              ->orWhere('profile_user_id', $user->id);
-                        return; 
+                              ->whereNull('profile_user_id');
+                        return;
                     }
-              
-                    // Publicaciones del dueño del perfil.
-                    $query->where(function ($q) use ($user) {
-                        $q->where('user_id', $user->id)
-                          ->whereNull('profile_user_id');
-                    });
 
-                    // Publicaciones hechas en el perfil.
-                    $query->orWhere(function ($q) use ($user, $auth_user) {
-                        $q->where('profile_user_id', $user->id);
+                    // Publicaciones ajenas.
+                    $query->where('profile_user_id', $user->id);
 
-                        // Filtro de visibilidad.
-                        $q->where(function ($sub) use ($user, $auth_user) {
-                            // El dueño del perfil ve todo lo que le publiquen.
-                            if ($auth_user && $auth_user->id === $user->id) {
-                                return;
-                            }
+                    // El dueño del perfil ve todas las publicaciones ajenas.
+                    if ($auth_user && $auth_user->id === $user->id) {
+                        return;
+                    }
 
-                            // Un visitante solo ve lo que él mismo publicó
-                            // o lo que el dueño publicó.
-                            $sub->where('user_id', $user->id);
-                            if ($auth_user) {
-                                $sub->orWhere('user_id', $auth_user->id);
-                            }
-                        });
-                    });
+                    // Los moderadores ven todas las publicaciones ajenas.
+                    if ($auth_user && $auth_user->hasAnyRole(['admin', 'mod'])) {
+                        return;
+                    }
+
+                    // Un usuario autenticado solo ve
+                    // las publicaciones que él mismo hizo.
+                    if ($auth_user) {
+                        $query->where('user_id', $auth_user->id);
+                        return;
+                    }
                 })
                 ->latest()
                 ->cursorPaginate(7, ['*'], 'cursor', $cursor);
-
+                
             // Agrega las reacciones a cada publicación.
             $posts->setCollection(
                 $posts->getCollection()->map(function ($post) use ($auth_user) {

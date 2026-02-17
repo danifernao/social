@@ -43,29 +43,11 @@ class CommentController extends Controller
     public function store(Request $request, Post $post)
     {
         // Deniega el acceso si el usuario autenticado
-        // no tiene permisos para crear un comentario.
-        $this->authorize('create', Comment::class);
+        // no tiene permisos para comentar en la publicación.
+        $this->authorize('comment', $post);
 
         // Obtiene el usuario autenticado.
         $auth_user = $request->user();
-
-        // Las publicaciones hechas en perfiles ajenos solo pueden ser
-        // comentadas por el autor, el dueño del perfil o un moderador.
-        if ($post->profile_user_id !== null) {
-            if (
-                !$auth_user->hasAnyRole(['admin', 'mod']) &&
-                $auth_user->id !== $post->user_id &&
-                $auth_user->id !== $post->profile_user_id
-            ) {
-                abort(403);
-            }
-        }
-
-        // Si el autor de la publicación ha bloqueado al usuario autenticado,
-        // se deniega la acción.
-        if ($post->user->hasBlocked($auth_user)) {
-            abort(403);
-        }
 
         // Valida los datos enviados desde el formulario.
         $data = $request->validate([

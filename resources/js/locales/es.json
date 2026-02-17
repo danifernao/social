@@ -168,6 +168,8 @@
     "or_go_back_to_login": "O bien, vuelve a <0>iniciar sesión</0>",
     "or_go_back_to_verification": "O bien, vuelve a <0>verificación de correo</0>",
     "ordered_list": "Lista ordenada",
+    "others_posts": "Publicaciones de otros",
+    "own_posts": "Publicaciones de {{username}}",
     "page_content": "Contenido de la página",
     "page_title": "Título de la pagina",
     "page_url_slug": "Parte final de la URL de la página",

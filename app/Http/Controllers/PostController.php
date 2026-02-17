@@ -59,34 +59,33 @@ class PostController extends Controller
             'profile_user_id' => 'nullable|integer|exists:users,id',
         ]);
         
-        // ID del perfil donde se hará la publicación (si aplica).
-        // Por defecto, se asocia al perfil del usuario autenticado (user_id).
-        // profile_user_id solo cambia cuando el usuario autenticado
-        // publica en el perfil de otra persona.
-        $profile_user_id = null;
+        // Dueño del perfil en el que se publica.
+        // Será nulo si el usuario autenticado publica en su propio perfil.
+        $profile_owner = null;
 
-        // Permite publicar en el perfil de otro usuario solo si
-        // no es el mismo usuario autenticado.
         if (!empty($data['profile_user_id']) &&
             $data['profile_user_id'] !== $auth_user->id) {
-                $profile_user_id = $data['profile_user_id'];
+                $profile_owner = User::find($data['profile_user_id']);
+        }
+
+        // Si existe un bloqueo mutuo entre el usuario autenticado y
+        // el dueño del perfil, no se permite la publicación.
+        if ($profile_owner && $auth_user->hasBlockedOrBeenBlockedBy($profile_owner)) {           
+            abort(403);
         }
 
         // Crea la publicación en la base de datos.
         $post = Post::create([
             'user_id' => $auth_user->id,
             'content' => $data['content'],
-            'profile_user_id' => $profile_user_id,
+            'profile_user_id' => $profile_owner?->id,
         ]);
 
         // Notifica al propietario del perfil si se publicó en un perfil ajeno.
-        if ($profile_user_id) {
-            $profile_user = User::find($profile_user_id);
-            if ($profile_user) {
-                $profile_user->notify(
-                    new NewPostOnProfile($auth_user, $post->id)
-                );
-            }
+        if ($profile_owner) {
+            $profile_owner->notify(
+                new NewPostOnProfile($auth_user, $post->id)
+            );
         }
 
         // Relaciona el usuario autenticado con la publicación
@@ -98,7 +97,7 @@ class PostController extends Controller
 
         // Si no se publicó en un perfil ajeno, detecta, registra
         // y notifica las menciones presentes en la publicación.
-        if (!$profile_user_id) {
+        if (!$profile_owner) {
             $this->mentionService
                 ->createWithNotifications($post, $auth_user, 'post');
         }
@@ -120,31 +119,9 @@ class PostController extends Controller
      */
     public function show(Request $request, Post $post, Comment $comment = null)
     {
-        // Obtiene el usuario autenticado.
-        $user = $request->user();
-
-        // Las publicaciones hechas en perfiles ajenos solo pueden ser
-        // vistas por el autor, el dueño del perfil o un moderador.
-        if ($post->profile_user_id !== null) {
-            if (!$user ||
-                (
-                    !$user->hasAnyRole(['admin', 'mod']) &&
-                    $user->id !== $post->user_id &&
-                    $user->id !== $post->profile_user_id
-                )
-            ) {
-                abort(403);
-            }
-        }
-
-        // Verifica que no exista bloqueo mutuo entre el usuario autenticado
-        // y el autor de la publicación.
-        if ($user) {
-            $author = $post->user()->first();
-            if ($user->hasBlockedOrBeenBlockedBy($author)) {
-                abort(403);
-            }
-        }
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos para ver la publicación.
+        $this->authorize('view', $post);
 
         // Si se indicó un comentario específico,
         // valida que pertenezca a la publicación.
@@ -152,11 +129,14 @@ class PostController extends Controller
             abort(404);
         }
 
+        // Obtiene el usuario autenticado.
+        $auth_user = $request->user();
+
         // Carga el autor y la cantidad total de comentarios.
         $post->load('user')->loadCount('comments');
 
         // Obtiene las reacciones de la publicación.
-        $post->reactions = $post->reactionsSummary($user?->id);
+        $post->reactions = $post->reactionsSummary($auth_user?->id);
 
         // Captura el cursor para la paginación de comentarios.
         $cursor = $request->header('X-Cursor');
@@ -171,8 +151,8 @@ class PostController extends Controller
             ->oldest();
 
         // Excluye comentarios de usuarios con bloqueos mutuos.
-        if ($user) {
-            $excluded_ids = $user->excludedUserIds();
+        if ($auth_user) {
+            $excluded_ids = $auth_user->excludedUserIds();
             $comments_query->whereNotIn('user_id', $excluded_ids);
         }
 
@@ -192,8 +172,8 @@ class PostController extends Controller
 
         // Agrega el resumen de reacciones a cada comentario.
         $comments->setCollection(
-            $comments->getCollection()->map(function ($comment) use ($user) {
-                $comment->reactions = $comment->reactionsSummary($user?->id);
+            $comments->getCollection()->map(function ($comment) use ($auth_user) {
+                $comment->reactions = $comment->reactionsSummary($auth_user?->id);
                 return $comment;
             })
         );

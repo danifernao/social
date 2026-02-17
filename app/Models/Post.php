@@ -71,6 +71,16 @@ class Post extends Model
     }
 
     /**
+     * Relación: dueño del perfil.
+     * 
+     * @return BelongsTo<User, User>
+     */
+    public function profileOwner()
+    {
+        return $this->belongsTo(User::class, 'profile_user_id');
+    }
+
+    /**
      * Relación: etiquetas agregadas en esta publicación.
      *
      * @return BelongsToMany<Hashtag, Post>
