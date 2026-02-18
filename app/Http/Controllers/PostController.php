@@ -70,7 +70,10 @@ class PostController extends Controller
 
         // Si existe un bloqueo mutuo entre el usuario autenticado y
         // el dueño del perfil, no se permite la publicación.
-        if ($profile_owner && $auth_user->hasBlockedOrBeenBlockedBy($profile_owner)) {           
+        if (
+          $profile_owner &&
+          $auth_user->hasBlockedOrBeenBlockedBy($profile_owner)
+        ) {
             abort(403);
         }
 
