@@ -154,7 +154,7 @@ export default function AdminUserList({ users, previous, next }: Props) {
                                 </Button>
                             </TableHead>
                             {/* Acciones */}
-                            <TableHead></TableHead>
+                            <TableHead className="text-center">{t('actions')}</TableHead>
                         </TableRow>
                     </TableHeader>
 
@@ -190,11 +190,13 @@ export default function AdminUserList({ users, previous, next }: Props) {
                                     <TableCell>{formatDate(user.created_at)}</TableCell>
 
                                     {/* Acciones */}
-                                    <TableCell>
-                                        {useCanActOnUser(user) && (
+                                    <TableCell className="text-center">
+                                        {useCanActOnUser(user) ? (
                                             <Button variant="outline" asChild>
                                                 <Link href={route('admin.user.edit', user.id)}>{t('manage')}</Link>
                                             </Button>
+                                        ) : (
+                                            <span className="text-muted-foreground">{t('no_permissions')}</span>
                                         )}
                                     </TableCell>
                                 </TableRow>
