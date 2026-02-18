@@ -32,7 +32,7 @@ class HomeController extends Controller
 
         // Construye la consulta base, incluyendo el autor de cada publicación
         // y el conteo de comentarios.
-        $query = Post::with('user')->withCount('comments');
+        $query = Post::with(['user', 'profileOwner'])->withCount('comments');
 
         // Si el usuario no es moderador, limita el feed a sus publicaciones
         // y a las de los usuarios que sigue.

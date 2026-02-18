@@ -136,7 +136,7 @@ class PostController extends Controller
         $auth_user = $request->user();
 
         // Carga el autor y la cantidad total de comentarios.
-        $post->load('user')->loadCount('comments');
+        $post->load(['user', 'profileOwner'])->loadCount('comments');
 
         // Obtiene las reacciones de la publicación.
         $post->reactions = $post->reactionsSummary($auth_user?->id);

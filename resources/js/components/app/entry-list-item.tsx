@@ -4,11 +4,13 @@ import { Link, usePage } from '@inertiajs/react';
 import { formatDistanceToNow, Locale } from 'date-fns';
 import { enUS, es } from 'date-fns/locale';
 import { Lock, MessageSquare } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
+import TextLink from '../kit/text-link';
 import { buttonVariants } from '../ui/button';
 import EntryItemOptions from './entry-list-item-options';
 import EntryListItemReactions from './entry-list-item-reactions';
 import FormattedText from './formatted-text';
+import { Tooltip } from './tooltip';
 import UserAvatar from './user-avatar';
 import UserRoleBadge from './user-role-badge';
 
@@ -39,6 +41,34 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
     // Una publicación es privada si pertenece al perfil de otro usuario.
     const isPrivate = entry.type === 'post' && entry.profile_user_id !== null;
 
+    // Mensaje de visibilidad para publicaciones privadas.
+    const visibilityMessage = () => {
+        if (!auth.user || !isPrivate) {
+            return null;
+        }
+
+        const isAdminOrMod = ['admin', 'mod'].includes(auth.user.role);
+        const isProfileOwner = entry.type === 'post' && entry.profile_user_id === auth.user.id;
+        const isAuthor = entry.user_id === auth.user.id;
+
+        if (isAdminOrMod && !isAuthor && !isProfileOwner) {
+            return t('visible_to_profile_owner_author_and_mods', {
+                author_username: entry.user.username,
+                profile_owner_username: entry.profile_owner.username,
+            });
+        }
+
+        if (isProfileOwner) {
+            return t('visible_to_you_author_and_mods', {
+                author_username: entry.user.username,
+            });
+        }
+
+        return t('visible_to_you_profile_owner_and_mods', {
+            profile_owner_username: entry.profile_owner.username,
+        });
+    };
+
     // Tiempo relativo desde la creación de la entrada.
     const distanceToNow = formatDistanceToNow(new Date(entry.created_at), {
         addSuffix: true,
@@ -52,18 +82,35 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                     {/* Avatar del autor */}
                     <UserAvatar user={entry.user} />
 
-                    {/* Nombre de usuario y rol del autor */}
-                    <div className="felx flex-1 items-center font-semibold">
-                        <Link href={route('profile.show', entry.user.username)}>{entry.user.username}</Link>
-                        <UserRoleBadge role={entry.user.role} />
+                    <div className="flex flex-1 flex-col">
+                        {/* Nombre de usuario y rol del autor */}
+                        <div className="flex items-center font-semibold">
+                            <Link href={route('profile.show', entry.user.username)}>{entry.user.username}</Link>
+                            <UserRoleBadge role={entry.user.role} />
+                        </div>
+
+                        {/* Perfil en el que se publicó */}
+                        {entry.type === 'post' && ['home.index', 'post.show'].includes(routeName) && entry.profile_owner && (
+                            <div className="text-sm">
+                                <Trans i18nKey="posted_on_profile" values={{ username: entry.profile_owner.username }}>
+                                    <TextLink
+                                        href={route('profile.show', entry.profile_owner.username)}
+                                        tabIndex={5}
+                                        className="font-semibold no-underline"
+                                    ></TextLink>
+                                </Trans>
+                            </div>
+                        )}
                     </div>
                 </div>
 
                 <div className="flex items-center justify-center gap-4">
-                    {isPrivate && (
-                        <span className="text-muted-foreground" title={t('private_post')}>
-                            <Lock className="h-4 w-4" />
-                        </span>
+                    {auth.user && isPrivate && (
+                        <Tooltip content={visibilityMessage()}>
+                            <span className="text-muted-foreground">
+                                <Lock className="h-4 w-4" />
+                            </span>
+                        </Tooltip>
                     )}
 
                     {/* Fecha de creación con enlace a la entrada */}

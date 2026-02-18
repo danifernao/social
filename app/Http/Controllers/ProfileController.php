@@ -85,7 +85,7 @@ class ProfileController extends Controller
                 ]
             );
         } else {
-            $posts = Post::with('user')
+            $posts = Post::with(['user', 'profileOwner'])
                 ->withCount('comments')
                 ->where(function ($query) use ($posts_type, $user, $auth_user) {
                     // Publicaciones creadas por el dueño del perfil.

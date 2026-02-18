@@ -2,6 +2,7 @@ import EntryForm from '@/components/app/entry-form';
 import EntryList from '@/components/app/entry-list';
 import ListLoadMore from '@/components/app/list-load-more';
 import ProfileHeader from '@/components/app/profile-header';
+import { Tooltip } from '@/components/app/tooltip';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
@@ -9,6 +10,7 @@ import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
 import type { Auth, BreadcrumbItem, Post, Posts, User } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
+import { Lock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -82,7 +84,14 @@ export default function ProfileShow() {
                         <Tabs value={filter} onValueChange={handleFilterChange}>
                             <TabsList>
                                 <TabsTrigger value="own">{t('own_posts', { username: user.username })}</TabsTrigger>
-                                <TabsTrigger value="others">{t('others_posts')}</TabsTrigger>
+                                <TabsTrigger value="others">
+                                    {t('others_posts')}
+                                    <Tooltip content={t('private_posts')}>
+                                        <span className="text-muted-foreground">
+                                            <Lock className="h-4 w-4" />
+                                        </span>
+                                    </Tooltip>
+                                </TabsTrigger>
                             </TabsList>
                         </Tabs>
                     )}

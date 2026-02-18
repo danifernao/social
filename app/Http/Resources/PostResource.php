@@ -23,6 +23,11 @@ class PostResource extends JsonResource
             return (new UserResource($this->user))->resolve();
         });
 
+        // Propietario del perfil donde se publicó.
+        $profile_owner = $this->whenLoaded('profileOwner', function () {
+            return (new UserResource($this->profileOwner))->resolve();
+        });
+
         return [
             'id'              => $this->id,
             'user_id'         => $this->user_id,
@@ -32,6 +37,7 @@ class PostResource extends JsonResource
             'type'            => $this->type,
             'user'            => $author,
             'profile_user_id' => $this->profile_user_id,
+            'profile_owner'   => $profile_owner,
             'reactions'       => $this->reactions ?? [],
             'comments_count'  => $this->comments_count ?? 0,
         ];
