@@ -64,18 +64,22 @@ class CommentController extends Controller
         // Relaciona el usuario autenticado con el comentario (solo en memoria).
         $comment->setRelation('user', $auth_user);
 
-        // Si la publicación no está en un perfil ajeno, detecta,
-        // registra y notifica las menciones presentes en el comentario.
+        // Inicializa la colección de usuarios mencionados.
+        $mentioned_users = collect();
+
+        // Verifica si la publicación no está en un perfil ajeno.
         if ($post->profile_user_id === null) {
+            // Detecta, registra y notifica las menciones presentes
+            // en el comentario.
             $this->mentionService
                 ->createWithNotifications($comment, $auth_user, 'comment');
-        }
 
-        // Recupera los usuarios mencionados en el comentario.
-        $mentioned_users = User::whereIn(
-            'id',
-            $comment->mentions()->pluck('user_id')
-        )->get();
+            // Recupera los usuarios mencionados en el comentario.
+            $mentioned_users = User::whereIn(
+                'id',
+                $comment->mentions()->pluck('user_id')
+            )->get();
+        }
 
         // Lista de IDs de usuarios que ya han sido notificados.
         $notified_user_ids = $mentioned_users->pluck('id')->toArray();
@@ -108,8 +112,7 @@ class CommentController extends Controller
         // o que hayan sido bloqueados por él.
         $users_to_notify = $users_to_notify->reject(
             function ($user) use ($auth_user) {
-                return $auth_user->hasBlocked($user)
-                    || $user->hasBlocked($auth_user);
+                return $auth_user->hasBlockedOrBeenBlockedBy($user);
             }
         );
 
