@@ -11,6 +11,7 @@ use App\Notifications\NewCommentOnPost;
 use App\Services\MentionService;
 use App\Utils\MentionParser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 /**
  * Controlador responsable de gestionar los comentarios en publicaciones.
@@ -108,11 +109,10 @@ class CommentController extends Controller
         // Recupera los usuarios que deben ser notificados.
         $users_to_notify = User::whereIn('id', $other_commenters)->get();
 
-        // Excluye usuarios que hayan bloqueado al autor del comentario
-        // o que hayan sido bloqueados por él.
+        // Excluye usuarios que no pueden ver la publicación.
         $users_to_notify = $users_to_notify->reject(
-            function ($user) use ($auth_user) {
-                return $auth_user->hasBlockedOrBeenBlockedBy($user);
+            function ($user) use ($post) {
+                return Gate::forUser($user)->denies('view', $post);
             }
         );
 
