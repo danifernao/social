@@ -67,8 +67,8 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
     // Hook de Inertia para gestionar datos del formulario, errores y estados.
     const { data, setData, post, patch, processing, errors, reset } = useForm({
         content: '',
+        visibility: formType === 'post' ? (entry ? (entry as Post).visibility : profileUserId ? null : 'public') : null,
         profile_user_id: profileUserId,
-        visibility: formType === 'post' ? (entry ? (entry as Post).visibility : 'public') : null,
     });
 
     // Contexto para notificar cambios en la lista de entradas.

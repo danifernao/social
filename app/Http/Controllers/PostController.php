@@ -59,6 +59,7 @@ class PostController extends Controller
             'content' => 'required|string|max:3000',
             
             'visibility' => [
+                'nullable',
                 'required_if:profile_user_id,null',
                 'prohibited_unless:profile_user_id,null',
                 'in:public,following,private',
