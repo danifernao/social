@@ -96,7 +96,7 @@ class SearchController extends Controller
         // excluyendo aquellas de usuarios bloqueados.
         $posts_query = Post::with('user')
             ->withCount('comments')
-            ->visibleTo($auth_user)
+            ->where('visibility', 'public')
             ->whereNull('profile_user_id')
             ->whereNotIn('user_id', $excluded_ids)
             ->latest();
