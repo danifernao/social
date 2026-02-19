@@ -3,18 +3,17 @@ import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import type { Auth, Comment, Entry, Post } from '@/types';
 import { SpecialPages } from '@/types/modules/page';
 import { useForm, usePage } from '@inertiajs/react';
-import { Globe, LoaderCircle, Lock, Users } from 'lucide-react';
+import { Globe, LoaderCircle, Lock, Settings2, Users } from 'lucide-react';
 import { SubmitEventHandler, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TextareaAutosize from 'react-textarea-autosize';
 import { toast } from 'sonner';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import { Label } from '../ui/label';
+import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldTitle } from '../ui/field';
 import { Switch } from '../ui/switch';
 import FormErrors from './form-errors';
 import FormattedText from './formatted-text';
 import FormattingToolbar from './formatting-toolbar';
-import { Tooltip } from './tooltip';
 
 interface EntryFormProps {
     entry?: Entry; // Una entrada existente (publicación o comentario).
@@ -186,24 +185,19 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
                         </div>
 
                         <div className="flex items-center gap-2">
+                            {/* Opciones de configuración */}
                             {formType === 'post' && profileUserId === null && (!entry || (entry as Post).profile_user_id === null) && (
                                 <>
-                                    {/* Estado de la publicación */}
-                                    <div className="mr-2 flex items-center gap-2 text-sm">
-                                        <Switch
-                                            id="is-closed"
-                                            checked={!Boolean(data.is_closed)}
-                                            onCheckedChange={(checked) => setData('is_closed', !checked)}
-                                        />
-                                        <Tooltip content={t(data.is_closed ? 'comments_disabled' : 'comments_enabled')}>
-                                            <Label htmlFor="is-closed">{t('comments')}</Label>
-                                        </Tooltip>
-                                    </div>
-
                                     {/* Visibilidad de la publicación */}
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
-                                            <Button type="button" variant="outline" size="icon" className="data-[state=open]:bg-muted">
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                size="icon"
+                                                className="data-[state=open]:bg-muted"
+                                                title={t('post_visibility')}
+                                            >
                                                 {(() => {
                                                     const Icon = visibilityOptions[(data as Post).visibility].icon;
                                                     return <Icon className="h-4 w-4" />;
@@ -237,6 +231,41 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
                                                     );
                                                 })}
                                             </DropdownMenuRadioGroup>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+
+                                    {/* Configuración de la publicación */}
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                size="icon"
+                                                className="data-[state=open]:bg-muted"
+                                                title={t('post_settings')}
+                                            >
+                                                <Settings2 className="h-4 w-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+
+                                        <DropdownMenuContent align="end" className="w-72">
+                                            <FieldGroup className="w-full max-w-sm">
+                                                <FieldLabel htmlFor="is-closed" className="border-none">
+                                                    <Field orientation="horizontal">
+                                                        <FieldContent>
+                                                            <FieldTitle>{t('comments')}</FieldTitle>
+                                                            <FieldDescription>
+                                                                {t(data.is_closed ? 'comments_disabled' : 'comments_enabled')}
+                                                            </FieldDescription>
+                                                        </FieldContent>
+                                                        <Switch
+                                                            id="is-closed"
+                                                            checked={!Boolean(data.is_closed)}
+                                                            onCheckedChange={(checked) => setData('is_closed', !checked)}
+                                                        />
+                                                    </Field>
+                                                </FieldLabel>
+                                            </FieldGroup>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </>
