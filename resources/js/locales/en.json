@@ -14,6 +14,7 @@
     "administrator_role_description": "All of the above plus site management, role assignment, and account removal.",
     "already_have_account_log_in": "Already have an account? <0>Log in</0>",
     "alternative_text": "Alternative text",
+    "anyone_can_see_your_post": "Anyone can see your post.",
     "appearance": "Appearance",
     "appearance_settings": "Appearance settings",
     "avatar": "Avatar",
@@ -300,17 +301,14 @@
     "view": "View",
     "view_note": "View note",
     "view_report": "View report",
-    "visible_to_profile_owner_author_and_mods": "Visible only to {{profile_owner_username}}, {{author_username}} and moderators",
-    "visible_to_user_followers_and_visitors": "Visible to {{username}}'s followers and visitors",
+    "visible_to_all": "Visible to all users",
+    "visible_to_profile_owner_and_author": "Visible only to {{profile_owner_username}} and {{author_username}}",
     "visible_to_user_following": "Visible to users {{username}} follows",
     "visible_to_user_only": "Visible only to {{username}}",
-    "visible_to_you_author_and_mods": "Visible only to you, {{author_username}} and moderators",
-    "visible_to_you_profile_owner_and_mods": "Visible only to you, {{profile_owner_username}} and moderators",
     "warning": "Warning",
     "welcome": "Welcome",
     "welcome_message": "Connect, share, and see what others think.",
     "welcome_to_site": "Welcome to {{siteName}}",
     "whats_on_your_mind": "What's on your mind?",
-    "yes": "Yes",
-    "your_followers_and_visitors_can_see_your_post": "Your followers and visitors can see your post."
+    "yes": "Yes"
 }

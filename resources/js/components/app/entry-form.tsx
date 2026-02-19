@@ -50,7 +50,7 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
         public: {
             icon: Globe,
             label: 'public',
-            description: 'your_followers_and_visitors_can_see_your_post',
+            description: 'anyone_can_see_your_post',
         },
         following: {
             icon: Users,

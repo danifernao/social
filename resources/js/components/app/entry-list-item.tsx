@@ -3,7 +3,7 @@ import type { Auth, Entry, Post } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { formatDistanceToNow, Locale } from 'date-fns';
 import { enUS, es } from 'date-fns/locale';
-import { Globe, HatGlasses, Lock, MessageSquare, Users } from 'lucide-react';
+import { Globe, Lock, MessageSquare, MessageSquareLock, Users } from 'lucide-react';
 import { Trans, useTranslation } from 'react-i18next';
 import TextLink from '../kit/text-link';
 import { buttonVariants } from '../ui/button';
@@ -43,14 +43,11 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
     // Captura el usuario autenticado y nombre de la ruta actual proporcionados por Inertia.
     const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
 
-    // Una publicación es privada si pertenece al perfil de otro usuario.
-    const isPrivate = entry.type === 'post' && entry.profile_user_id !== null;
-
     // Icono y mensaje de visibilidad según la configuración de la publicación.
     const visibilityConfig = {
         public: {
             icon: Globe,
-            message: t('visible_to_user_followers_and_visitors', { username: entry.user.username }),
+            message: t('visible_to_all', { username: entry.user.username }),
         },
         following: {
             icon: Users,
@@ -62,46 +59,19 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
         },
     };
 
-    // Icono y mensaje para mensajes privados entre el autor y propietario
-    // del perfil.
-    const privateMessage = {
-        mod: {
-            icon: HatGlasses,
-            message: t('visible_to_profile_owner_author_and_mods', {
-                author_username: entry.user.username,
-                profile_owner_username: (entry as Post).profile_owner?.username,
-            }),
-        },
-        owner: {
-            icon: HatGlasses,
-            message: t('visible_to_you_author_and_mods', { author_username: entry.user.username }),
-        },
-        author: {
-            icon: HatGlasses,
-            message: t('visible_to_you_profile_owner_and_mods', { profile_owner_username: (entry as Post).profile_owner?.username }),
-        },
-    };
-
     // Obtiene el contexto de visibilidad para mostrar el icono
     // y mensaje correcto.
     const getVisibilityContext = () => {
         const isPrivateMessage = entry.type === 'post' && entry.profile_user_id !== null;
-        const isAdminOrMod = auth.user && ['admin', 'mod'].includes(auth.user.role);
-        const isProfileOwner = entry.type === 'post' && auth.user && entry.profile_user_id === auth.user.id;
-        const isAuthor = auth.user && auth.user.id === entry.user_id;
 
         if (isPrivateMessage) {
-            if (isAdminOrMod && !isAuthor && !isProfileOwner) {
-                return privateMessage.mod;
-            }
-
-            if (isProfileOwner) {
-                return privateMessage.owner;
-            }
-
-            if (isAuthor) {
-                return privateMessage.author;
-            }
+            return {
+                icon: MessageSquareLock,
+                message: t('visible_to_profile_owner_and_author', {
+                    author_username: entry.user.username,
+                    profile_owner_username: (entry as Post).profile_owner?.username,
+                }),
+            };
         }
 
         if (entry.type === 'post') {

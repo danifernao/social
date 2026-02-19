@@ -14,6 +14,7 @@
     "administrator_role_description": "Todo lo anterior más administrar el sitio, asignar roles y eliminar cuentas.",
     "already_have_account_log_in": "¿Ya tienes una cuenta? <0>Inicia sesión</0>",
     "alternative_text": "Texto alternativo",
+    "anyone_can_see_your_post": "Cualquiera puede ver tu publicación.",
     "appearance": "Apariencia",
     "appearance_settings": "Configuración de apariencia",
     "avatar": "Avatar",
@@ -300,17 +301,14 @@
     "view": "Ver",
     "view_note": "Ver nota",
     "view_report": "Ver reporte",
-    "visible_to_profile_owner_author_and_mods": "Visible solo para {{profile_owner_username}}, {{author_username}} y los moderadores",
-    "visible_to_user_followers_and_visitors": "Visible para los seguidores de {{username}} y visitantes",
+    "visible_to_all": "Visible para todos los usuarios",
+    "visible_to_profile_owner_and_author": "Visible solo para {{profile_owner_username}} y {{author_username}}",
     "visible_to_user_following": "Visible para los usuarios que {{username}} sigue",
     "visible_to_user_only": "Visible solo para {{username}}",
-    "visible_to_you_author_and_mods": "Visible solo para ti, {{author_username}} y los moderadores",
-    "visible_to_you_profile_owner_and_mods": "Visible solo para ti, {{profile_owner_username}} y los moderadores",
     "warning": "Advertencia",
     "welcome": "Bienvenido",
     "welcome_message": "Conecta, comparte y descubre lo que otros piensan.",
     "welcome_to_site": "Bienvenido a {{siteName}}",
     "whats_on_your_mind": "¿En qué estás pensando?",
-    "yes": "Sí",
-    "your_followers_and_visitors_can_see_your_post": "Tus seguidores y visitantes pueden ver tu publicación."
+    "yes": "Sí"   
 }
