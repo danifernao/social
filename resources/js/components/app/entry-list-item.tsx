@@ -67,7 +67,7 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
         if (isPrivateMessage) {
             return {
                 icon: MessageSquareLock,
-                message: t('visible_to_profile_owner_and_author', {
+                message: t('visible_to_author_and_profile_owner', {
                     author_username: entry.user.username,
                     profile_owner_username: (entry as Post).profile_owner?.username,
                 }),

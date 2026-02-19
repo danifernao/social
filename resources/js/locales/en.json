@@ -302,7 +302,7 @@
     "view_note": "View note",
     "view_report": "View report",
     "visible_to_all": "Visible to all users",
-    "visible_to_profile_owner_and_author": "Visible only to {{profile_owner_username}} and {{author_username}}",
+    "visible_to_author_and_profile_owner": "Visible only to {{author_username}} and {{profile_owner_username}}",
     "visible_to_user_following": "Visible to users {{username}} follows",
     "visible_to_user_only": "Visible only to {{username}}",
     "warning": "Warning",
