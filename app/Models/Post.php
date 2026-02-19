@@ -23,6 +23,16 @@ class Post extends Model
         'content',
         'visibility',
         'profile_user_id',
+        'is_closed',
+    ];
+
+    /**
+     * Define los casts automáticos de atributos.
+     *
+     * @var array<string,string>
+     */
+    protected $casts = [
+        'is_closed' => 'boolean',
     ];
 
     /**

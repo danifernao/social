@@ -71,6 +71,8 @@ class PostController extends Controller
                 'exists:users,id',
                 Rule::notIn([$auth_user->id]),
             ],
+
+            'is_closed' => 'required|boolean',
         ]);
         
         // Dueño del perfil en el que se publica.
@@ -96,6 +98,7 @@ class PostController extends Controller
             'content' => $data['content'],
             'visibility' => $profile_owner ? null : $data['visibility'],
             'profile_user_id' => $profile_owner?->id,
+            'is_closed' => $profile_owner ? false : $data['is_closed'],
         ]);
 
         // Notifica al propietario del perfil si se publicó en un perfil ajeno.
@@ -221,6 +224,7 @@ class PostController extends Controller
         $request->validate([
             'content' => 'required|string|max:3000',
             'visibility' => 'nullable|in:public,following,private',
+            'is_closed' => 'boolean',
         ]);
 
         // Actualiza el contenido de la publicación.
@@ -230,6 +234,11 @@ class PostController extends Controller
         // no pertenece a un perfil ajeno.
         if (!$post->profile_user_id && $request->filled('visibility')) {
             $post->visibility = $request->visibility;
+        }
+
+        // Actualiza la visibilidad del formulario de comentarios.
+        if (!$post->profile_user_id && $request->filled('is_closed')) {
+            $post->is_closed = $request->is_closed;
         }
 
         $post->save();

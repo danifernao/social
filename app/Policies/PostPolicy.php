@@ -52,28 +52,6 @@ class PostPolicy
     }
 
     /**
-     * Determina si un usuario puede comentar una publicación.
-     *
-     * @param User $user Usuario autenticado.
-     * @param Post $post Publicación a comentar.
-     * @return bool
-     */
-    public function comment(User $user, Post $post): bool
-    {
-        // Debe tener permiso para poder comentar.
-        if (!$user->can('comment')) {
-            return false;
-        }
-
-        // Si no puede ver la publicación, no puede comentarla.
-        if (!$this->view($user, $post)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Determina si un usuario puede crear una publicación.
      *
      * @param User $user Usuario que intenta realizar la acción.

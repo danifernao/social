@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('content');
             $table->enum('visibility', ['public', 'following', 'private'])
                 ->nullable();
+            $table->boolean('is_closed')->default(false);
             $table->timestamps();
         });
     }

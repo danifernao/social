@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Comment;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
@@ -12,6 +13,38 @@ use Illuminate\Auth\Access\Response;
  */
 class CommentPolicy
 {
+    /**
+     * Determina si un usuario puede comentar una publicación.
+     *
+     * @param User $user Usuario autenticado.
+     * @param Post $post Publicación a comentar.
+     * @return bool
+     */
+    public function create(User $user, Post $post): bool
+    {
+        // Debe tener permiso para poder comentar.
+        if (!$user->can('comment')) {
+            return false;
+        }
+
+        // Si no puede ver la publicación, no puede comentarla.
+        if ($user->cannot('view', $post)) {
+            return false;
+        }
+
+        // Si la publicación no permite comentarios, solo el autor y
+        // los moderadores pueden comentarla.
+        if (
+            $post->is_closed === true &&
+            $post->user_id !== $user->id &&
+            !$user->hasAnyRole(['admin', 'mod'])
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Determina si un usuario puede actualizar un comentario.
      *

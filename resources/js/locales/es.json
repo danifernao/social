@@ -45,6 +45,9 @@
     "comment": "Comentar",
     "comment_deleted": "Comentario eliminado",
     "comments": "Comentarios",
+    "comments_closed": "Comentarios cerrados. Solo el autor puede comentar en esta publicación.",
+    "comments_disabled": "Los comentarios están deshabilitados para esta publicación",
+    "comments_enabled": "Los comentarios están habilitados para esta publicación",
     "community_guidelines": "Normas de la comunidad",
     "confirm": "Confirmar",
     "confirm_account_deletion": "¿Estás seguro de que deseas eliminar tu cuenta?",
@@ -310,5 +313,5 @@
     "welcome_message": "Conecta, comparte y descubre lo que otros piensan.",
     "welcome_to_site": "Bienvenido a {{siteName}}",
     "whats_on_your_mind": "¿En qué estás pensando?",
-    "yes": "Sí"   
+    "yes": "Sí"
 }

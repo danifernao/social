@@ -45,7 +45,7 @@ class CommentController extends Controller
     {
         // Deniega el acceso si el usuario autenticado
         // no tiene permisos para comentar en la publicación.
-        $this->authorize('comment', $post);
+        $this->authorize('create', [Comment::class, $post]);
 
         // Obtiene el usuario autenticado.
         $auth_user = $request->user();

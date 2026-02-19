@@ -9,6 +9,7 @@ import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
 import type { Auth, BreadcrumbItem, Comment, Comments, Post } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
+import { Lock } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -41,6 +42,15 @@ export default function PostShow() {
 
     // Determina si la vista corresponde a un hilo parcial (acceso directo a un comentario).
     const isPartialView = routeName === 'post.comment.show';
+
+    // Autor de la publicación.
+    const isAuthor = auth.user && auth.user.id === post.user.id;
+
+    // Verifica si el usuario autenticado tiene permisos de moderación.
+    const canModerate = auth.user && ['admin', 'mod'].includes(auth.user.role);
+
+    // Determina si el usuario autenticado puede comentar.
+    const canComment = (auth.user && (isAuthor || (useCheckPermission('comment') && !post.is_closed) || canModerate)) || false;
 
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
@@ -104,7 +114,13 @@ export default function PostShow() {
                             )}
 
                             {/* Formulario para añadir un nuevo comentario */}
-                            {useCheckPermission('comment') && <EntryForm postId={post.id} />}
+                            {post.is_closed && (
+                                <div className="bg-muted text-muted-foreground border-border flex items-center gap-2 rounded-md border px-3 py-2 text-sm">
+                                    <Lock className="h-4 w-4" />
+                                    <span>{t('comments_closed')}</span>
+                                </div>
+                            )}
+                            {canComment && <EntryForm postId={post.id} />}
                         </EntryListUpdateContext.Provider>
                     </section>
                 </article>
