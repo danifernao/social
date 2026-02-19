@@ -21,22 +21,7 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment): bool
     {
-        // Si el usuario autenticado no es el autor o moderador, no
-        // puede actualizar el comentario.
-        if (
-            !($user->id === $comment->user_id && $user->can('comment'))
-            && !$user->hasAnyRole(['admin', 'mod'])
-        ) {
-            return false;
-        }
-
-        // Si hay un bloqueo mutuo entre el usuario autenticado y el autor
-        // de la publicación, no puede interactuar con el comentario.
-        if ($user->hasBlockedOrBeenBlockedBy($comment->post->user)) {
-            return false;
-        }
-
-        return true;
+        return $this->canModify($user, $comment);
     }
 
     /**
@@ -48,21 +33,30 @@ class CommentPolicy
      */
     public function delete(User $user, Comment $comment): bool
     {
-        // Si el usuario autenticado no es el autor o moderador, no
-        // puede eliminar el comentario.
-        if (
-            !($user->id === $comment->user_id && $user->can('comment'))
-            && !$user->hasAnyRole(['admin', 'mod'])
-        ) {
+        return $this->canModify($user, $comment);
+    }
+
+    /**
+     * Verifica si un usuario puede modificar (actualizar o eliminar)
+     * un comentario.
+     *
+     * @param User $user Usuario que intenta realizar la acción.
+     * @param Comment $comment Comentario sobre el que se realiza la acción.
+     * @return bool
+     */
+    protected function canModify(User $user, Comment $comment): bool
+    {
+        // Los moderadores siempre pueden modificar comentarios.
+        if ($user->hasAnyRole(['admin', 'mod'])) {
+            return true;
+        }
+        
+        // Si no puede ver la publicación, no puede modificar el comentario.
+        if (!$user->can('view', $comment->post)) {
             return false;
         }
 
-        // Si hay un bloqueo mutuo entre el usuario autenticado y el autor
-        // de la publicación, no puede interactuar con el comentario.
-        if ($user->hasBlockedOrBeenBlockedBy($comment->post->user)) {
-            return false;
-        }
-
-        return true;
+        // Solo el autor con permiso puede modificarlo.
+        return $user->id === $comment->user_id && $user->can('comment');
     }
 }

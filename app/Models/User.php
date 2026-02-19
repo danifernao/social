@@ -128,6 +128,19 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Verifica si el usuario sigue a otro usuario.
+     *
+     * @param User $user Usuario a comprobar.
+     * @return bool
+     */
+    public function followsUser(User $user): bool
+    {
+        return $this->follows()
+            ->where('followed_id', $user->id)
+            ->exists();
+    }
+
+    /**
      * Relación: publicaciones creadas por el usuario.
      * 
      * @return HasMany<Post, User>

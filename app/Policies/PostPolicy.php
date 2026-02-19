@@ -46,8 +46,7 @@ class PostPolicy
         return match ($post->visibility) {
             'public' => true,
             'private' => $user && $user->id === $post->user_id,
-            'following' => $user &&
-                in_array($post->user_id, $user->followedUserIds()),
+            'following' => $user && $post->user->followsUser($user),
             default => false,
         };
     }
@@ -66,23 +65,12 @@ class PostPolicy
             return false;
         }
 
-        // Si hay un bloqueo mutuo entre el autor de la publicación y
-        // el usuario autenticado, no hay interacción alguna.
-        if ($post->user->hasBlockedOrBeenBlockedBy($user)) {
+        // Si no puede ver la publicación, no puede comentarla.
+        if (!$this->view($user, $post)) {
             return false;
         }
 
-        // Si no es publicación en perfil ajeno, puede comentar.
-        if ($post->profile_user_id === null) {
-            return true;
-        }
-
-        // Reglas especiales para publicaciones ajenas. Solo el autor, el
-        // dueño del perfil o el moderador pueden verla.
-        return
-            $user->hasAnyRole(['admin', 'mod']) ||
-            $user->id === $post->user_id ||
-            $user->id === $post->profile_user_id;
+        return true;
     }
 
     /**
@@ -105,28 +93,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
-        // Los moderadores siempre pueden actualizar publicaciones.
-        if ($user->hasAnyRole(['admin', 'mod'])) {
-            return true;
-        }
-
-        // Si no es el autor de la publicación o no tiene permiso para publicar,
-        // no puede actualizar la publicación.
-        if ($user->id !== $post->user_id || !$user->can('post')) {
-            return false;
-        }
-
-        // Si está publicado en perfil ajeno, verifica que no haya un bloqueo
-        // mutuo con el dueño del perfil.
-        if ($post->profile_user_id !== null) {
-            $profile_owner = $post->profileOwner;
-
-            if ($profile_owner && $profile_owner->hasBlockedOrBeenBlockedBy($user)) {
-                return false;
-            }
-        }
-
-        return true;
+        return $this->canModify($user, $post);
     }
 
     /**
@@ -138,13 +105,27 @@ class PostPolicy
      */
     public function delete(User $user, Post $post): bool
     {
-        // Los moderadores siempre pueden actualizar publicaciones.
+        return $this->canModify($user, $post);
+    }
+
+
+    /**
+     * Verifica si un usuario puede modificar (actualizar o eliminar)
+     * una publicación.
+     *
+     * @param User $user Usuario que intenta realizar la acción.
+     * @param Post $post Publicación sobre la que se realiza la acción.
+     * @return bool
+     */
+    protected function canModify(User $user, Post $post): bool
+    {
+        // Los moderadores siempre pueden modificar publicaciones.
         if ($user->hasAnyRole(['admin', 'mod'])) {
             return true;
         }
 
         // Si no es el autor de la publicación o no tiene permiso para publicar,
-        // no puede actualizar la publicación.
+        // no puede modificar la publicación.
         if ($user->id !== $post->user_id || !$user->can('post')) {
             return false;
         }
