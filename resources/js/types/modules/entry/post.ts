@@ -8,6 +8,7 @@ export interface Post {
     user: User;
     profile_user_id: null | number;
     profile_owner: User;
+    visibility: 'public' | 'private' | 'following';
     content: string;
     comments_count: number;
     reactions: Reaction[];

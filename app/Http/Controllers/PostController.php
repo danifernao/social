@@ -15,6 +15,7 @@ use App\Utils\MentionParser;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Pagination\CursorPaginator;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 /**
@@ -56,16 +57,27 @@ class PostController extends Controller
         // Valida los datos enviados desde el formulario.
         $data = $request->validate([
             'content' => 'required|string|max:3000',
-            'profile_user_id' => 'nullable|integer|exists:users,id',
+            
+            'visibility' => [
+                'required_if:profile_user_id,null',
+                'prohibited_unless:profile_user_id,null',
+                'in:public,following,private',
+            ],
+
+            'profile_user_id' => [
+                'nullable',
+                'integer',
+                'exists:users,id',
+                Rule::notIn([$auth_user->id]),
+            ],
         ]);
         
         // Dueño del perfil en el que se publica.
         // Será nulo si el usuario autenticado publica en su propio perfil.
         $profile_owner = null;
 
-        if (!empty($data['profile_user_id']) &&
-            $data['profile_user_id'] !== $auth_user->id) {
-                $profile_owner = User::find($data['profile_user_id']);
+        if ($request->filled('profile_user_id')) {
+            $profile_owner = User::find($data['profile_user_id']);
         }
 
         // Si existe un bloqueo mutuo entre el usuario autenticado y
@@ -81,6 +93,7 @@ class PostController extends Controller
         $post = Post::create([
             'user_id' => $auth_user->id,
             'content' => $data['content'],
+            'visibility' => $profile_owner ? null : $data['visibility'],
             'profile_user_id' => $profile_owner?->id,
         ]);
 
@@ -206,10 +219,18 @@ class PostController extends Controller
         // Valida los datos enviados desde el formulario.
         $request->validate([
             'content' => 'required|string|max:3000',
+            'visibility' => 'nullable|in:public,following,private',
         ]);
 
         // Actualiza el contenido de la publicación.
         $post->content = $request->content;
+
+        // Solo se permite actualizar la visibilidad si la publicación
+        // no pertenece a un perfil ajeno.
+        if (!$post->profile_user_id && $request->filled('visibility')) {
+            $post->visibility = $request->visibility;
+        }
+
         $post->save();
 
         // Carga la relación con el usuario autor.

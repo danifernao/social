@@ -3,11 +3,12 @@ import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import type { Auth, Comment, Entry, Post } from '@/types';
 import { SpecialPages } from '@/types/modules/page';
 import { useForm, usePage } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
+import { Globe, LoaderCircle, Lock, Users } from 'lucide-react';
 import { SubmitEventHandler, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TextareaAutosize from 'react-textarea-autosize';
 import { toast } from 'sonner';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import FormErrors from './form-errors';
 import FormattedText from './formatted-text';
 import FormattingToolbar from './formatting-toolbar';
@@ -16,20 +17,19 @@ interface EntryFormProps {
     entry?: Entry; // Una entrada existente (publicación o comentario).
     postId?: number; // ID de una publicación al crear un comentario.
     onSubmit?: () => void; // Función que se llama tras el envío exitoso del formulario.
-    // ID del usuario del perfil en el que se publica (solo permitido para moderadores).
-    profileUserId?: null | number;
+    profileUserId?: null | number; // ID del usuario del perfil en el que se publica.
 }
 
 /**
  * Formulario para crear o editar una entrada (publicación o comentario).
  */
-export default function EntryForm({ profileUserId, entry, postId, onSubmit }: EntryFormProps) {
+export default function EntryForm({ profileUserId = null, entry, postId, onSubmit }: EntryFormProps) {
     // Funciones de traducción y acceso al idioma actual.
     const { t, i18n } = useTranslation();
 
     // Captura el usuario autenticado y las páginas estáticas
     // especiales proporcionados por Inertia.
-    const { auth, specialPages } = usePage<{ auth: Auth; specialPages: SpecialPages }>().props;
+    const { auth, specialPages, routeName } = usePage<{ auth: Auth; specialPages: SpecialPages; routeName: string }>().props;
 
     // Referencia al elemento textarea del formulario.
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -43,10 +43,32 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
     // Estado para alternar vista previa.
     const [previewMode, setPreviewMode] = useState(false);
 
+    console.log(entry);
+
+    // Opciones de visibilidad para las publicaciones.
+    const visibilityOptions = {
+        public: {
+            icon: Globe,
+            label: 'public',
+            description: 'your_followers_and_visitors_can_see_your_post',
+        },
+        following: {
+            icon: Users,
+            label: 'following',
+            description: 'only_users_you_follow_can_see_your_post',
+        },
+        private: {
+            icon: Lock,
+            label: 'private',
+            description: 'only_you_can_see_your_post',
+        },
+    };
+
     // Hook de Inertia para gestionar datos del formulario, errores y estados.
     const { data, setData, post, patch, processing, errors, reset } = useForm({
         content: '',
         profile_user_id: profileUserId,
+        visibility: formType === 'post' ? (entry ? (entry as Post).visibility : 'public') : null,
     });
 
     // Contexto para notificar cambios en la lista de entradas.
@@ -103,6 +125,10 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
     useEffect(() => {
         if (entry) {
             setData('content', entry.content);
+
+            if (formType === 'post') {
+                setData('visibility', (entry as Post).visibility ?? 'public');
+            }
         }
     }, [entry]);
 
@@ -158,6 +184,48 @@ export default function EntryForm({ profileUserId, entry, postId, onSubmit }: En
                         </div>
 
                         <div className="flex items-center gap-2">
+                            {/* Visibilidad de la publicación */}
+                            {formType === 'post' && profileUserId === null && (!entry || (entry as Post).profile_user_id === null) && (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button type="button" variant="outline" size="icon" className="data-[state=open]:bg-muted">
+                                            {(() => {
+                                                const Icon = visibilityOptions[(data as Post).visibility].icon;
+                                                return <Icon className="h-4 w-4" />;
+                                            })()}
+                                        </Button>
+                                    </DropdownMenuTrigger>
+
+                                    <DropdownMenuContent align="end" className="w-72">
+                                        <DropdownMenuRadioGroup
+                                            value={data.visibility as Post['visibility']}
+                                            onValueChange={(value) => setData('visibility', value as Post['visibility'])}
+                                            className="flex flex-col gap-1"
+                                        >
+                                            {Object.entries(visibilityOptions).map(([key, option]) => {
+                                                const Icon = option.icon;
+
+                                                return (
+                                                    <DropdownMenuRadioItem
+                                                        key={key}
+                                                        value={key}
+                                                        className="data-[state=checked]:bg-muted flex items-start gap-3 py-3 pl-3 [&>span:first-child]:hidden"
+                                                    >
+                                                        <Icon className="text-muted-foreground mt-1 h-4 w-4" />
+
+                                                        <div className="flex flex-col">
+                                                            <span className="font-semibold">{t(option.label)}</span>
+
+                                                            <span className="text-muted-foreground text-xs">{t(option.description)}</span>
+                                                        </div>
+                                                    </DropdownMenuRadioItem>
+                                                );
+                                            })}
+                                        </DropdownMenuRadioGroup>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            )}
+
                             {/* Botón para activar la vista previa */}
                             {data.content.trim().length > 0 && (
                                 <Button type="button" variant="outline" onClick={() => setPreviewMode(true)}>

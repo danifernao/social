@@ -19,6 +19,7 @@ return new class extends Migration
                 ->constrained('users')
                 ->cascadeOnDelete();
             $table->text('content');
+            //$table->enum('visibility', ['public', 'following', 'private'])->default('public');
             $table->timestamps();
         });
     }

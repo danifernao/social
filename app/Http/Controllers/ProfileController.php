@@ -87,6 +87,7 @@ class ProfileController extends Controller
         } else {
             $posts = Post::with(['user', 'profileOwner'])
                 ->withCount('comments')
+                ->visibleTo($auth_user)
                 ->where(function ($query) use ($posts_type, $user, $auth_user) {
                     // Publicaciones creadas por el dueño del perfil.
                     if ($posts_type === 'own') {
@@ -95,25 +96,8 @@ class ProfileController extends Controller
                         return;
                     }
 
-                    // Publicaciones ajenas.
+                    // Publicaciones creadas por otros en el perfil del usuario.
                     $query->where('profile_user_id', $user->id);
-
-                    // El dueño del perfil ve todas las publicaciones ajenas.
-                    if ($auth_user && $auth_user->id === $user->id) {
-                        return;
-                    }
-
-                    // Los moderadores ven todas las publicaciones ajenas.
-                    if ($auth_user && $auth_user->hasAnyRole(['admin', 'mod'])) {
-                        return;
-                    }
-
-                    // Un usuario autenticado solo ve
-                    // las publicaciones que él mismo hizo.
-                    if ($auth_user) {
-                        $query->where('user_id', $auth_user->id);
-                        return;
-                    }
                 })
                 ->latest()
                 ->cursorPaginate(7, ['*'], 'cursor', $cursor);

@@ -30,38 +30,30 @@ class HomeController extends Controller
         // Obtiene el cursor para la paginación.
         $cursor = $request->header('X-Cursor');
 
-        // Construye la consulta base, incluyendo el autor de cada publicación
-        // y el conteo de comentarios.
-        $query = Post::with(['user', 'profileOwner'])->withCount('comments');
+        // Consulta base de las publicaciones.
+        $query = Post::with(['user', 'profileOwner'])
+            ->withCount('comments')
+            ->visibleTo($auth_user);
 
-        // Si el usuario no es moderador, limita el feed a sus publicaciones
-        // y a las de los usuarios que sigue.
+        // Si el usuario no es moderador, se aplican filtros adicionales.
         if (!$auth_user->hasAnyRole(['admin', 'mod'])) {
-            $following_ids = $auth_user->followedUserIds();
-            $following_ids[] = $auth_user->id;
+            $query->where(function ($q) use ($auth_user) {
+                // Publicaciones propias del usuario autenticado.
+                $q->where('user_id', $auth_user->id);
 
-            $query->where(function ($q) use ($following_ids, $auth_user) {
-                // Publicaciones de los seguidos.
-                $q->whereIn('user_id', $following_ids)
-                  ->whereNull('profile_user_id');
-
-                // Publicaciones de otros en el perfil
-                // del usuario autenticado.
-                $q->orWhere('profile_user_id', $auth_user->id);
-
-                // Publicaciones del usuario autenticado hechas
-                // en otros perfiles.
-                $q->orWhere(function ($sub) use ($auth_user) {
-                    $sub->where('user_id', $auth_user->id)
-                        ->whereNotNull('profile_user_id');
+                // Publicaciones de usuarios que el autenticado sigue.
+                $q->orWhere(function ($f) use ($auth_user) {
+                    $f->whereIn('user_id', $auth_user->followedUserIds())
+                      ->whereNull('profile_user_id');
                 });
+
+                // Publicaciones de otros en el perfil del usuario autenticado.
+                $q->orWhere('profile_user_id', $auth_user->id);
             });
         }
 
-        // Obtiene las publicaciones ordenadas por fecha de creación
-        // y paginadas mediante cursor.
-        $posts = $query->latest()
-            ->cursorPaginate(7, ['*'], 'cursor', $cursor);
+        // Aplica la paginación basada en cursor.
+        $posts = $query->latest()->cursorPaginate(7, ['*'], 'cursor', $cursor);
 
         // Agrega el resumen de reacciones a cada publicación,
         // indicando las reacciones del usuario autenticado.

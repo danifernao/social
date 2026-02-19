@@ -21,28 +21,35 @@ class PostPolicy
      */
     public function view(?User $user, Post $post): bool
     {
-        // Publicaciones normales siempre son visibles
-        // para usuarios no autenticados.
-        if (!$user) {
-            return $post->profile_user_id === null;
+        // Los moderadores siempre pueden ver las publicaciones.
+        if ($user && $user->hasAnyRole(['admin', 'mod'])) {
+            return true;
         }
 
         // Si hay un bloqueo mutuo entre el usuario autenticado y
         // el autor de la publicación, no puede verla.
-        if ($user->hasBlockedOrBeenBlockedBy($post->user)) {
+        if ($user && $user->hasBlockedOrBeenBlockedBy($post->user)) {
             return false;
         }
 
-        // Si es una publicación en perfil ajeno, solo el autor, el
-        // dueño del perfil o el moderador pueden verla.
+        // Si es una publicación en perfil ajeno, solo el autor y el
+        // dueño del perfil pueden verla.
         if ($post->profile_user_id !== null) {
-            return
-                $user->hasAnyRole(['admin', 'mod']) ||
-                $user->id === $post->user_id ||
-                $user->id === $post->profile_user_id;
+            return $user &&
+                (
+                    $user->id === $post->user_id ||
+                    $user->id === $post->profile_user_id
+                );
         }
 
-        return true;
+        // En las demás publicaciones las reglas dependen de su visibilidad.
+        return match ($post->visibility) {
+            'public' => true,
+            'private' => $user && $user->id === $post->user_id,
+            'following' => $user &&
+                in_array($post->user_id, $user->followedUserIds()),
+            default => false,
+        };
     }
 
     /**

@@ -3,7 +3,7 @@ import type { Auth, Entry, Post } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { formatDistanceToNow, Locale } from 'date-fns';
 import { enUS, es } from 'date-fns/locale';
-import { Lock, MessageSquare } from 'lucide-react';
+import { Globe, HatGlasses, Lock, MessageSquare, Users } from 'lucide-react';
 import { Trans, useTranslation } from 'react-i18next';
 import TextLink from '../kit/text-link';
 import { buttonVariants } from '../ui/button';
@@ -17,6 +17,11 @@ import UserRoleBadge from './user-role-badge';
 interface EntryListItemProps {
     // Entrada a mostrar, puede ser una publicación o un comentario.
     entry: Entry;
+}
+
+interface VisibilityData {
+    icon: React.ElementType;
+    message: string;
 }
 
 /**
@@ -41,32 +46,69 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
     // Una publicación es privada si pertenece al perfil de otro usuario.
     const isPrivate = entry.type === 'post' && entry.profile_user_id !== null;
 
-    // Mensaje de visibilidad para publicaciones privadas.
-    const visibilityMessage = () => {
-        if (!auth.user || !isPrivate) {
-            return null;
-        }
+    // Icono y mensaje de visibilidad según la configuración de la publicación.
+    const visibilityConfig = {
+        public: {
+            icon: Globe,
+            message: t('visible_to_user_followers_and_visitors', { username: entry.user.username }),
+        },
+        following: {
+            icon: Users,
+            message: t('visible_to_user_following', { username: entry.user.username }),
+        },
+        private: {
+            icon: Lock,
+            message: t('visible_to_user_only', { username: entry.user.username }),
+        },
+    };
 
-        const isAdminOrMod = ['admin', 'mod'].includes(auth.user.role);
-        const isProfileOwner = entry.type === 'post' && entry.profile_user_id === auth.user.id;
-        const isAuthor = entry.user_id === auth.user.id;
-
-        if (isAdminOrMod && !isAuthor && !isProfileOwner) {
-            return t('visible_to_profile_owner_author_and_mods', {
+    // Icono y mensaje para mensajes privados entre el autor y propietario
+    // del perfil.
+    const privateMessage = {
+        mod: {
+            icon: HatGlasses,
+            message: t('visible_to_profile_owner_author_and_mods', {
                 author_username: entry.user.username,
-                profile_owner_username: entry.profile_owner.username,
-            });
+                profile_owner_username: (entry as Post).profile_owner?.username,
+            }),
+        },
+        owner: {
+            icon: HatGlasses,
+            message: t('visible_to_you_author_and_mods', { author_username: entry.user.username }),
+        },
+        author: {
+            icon: HatGlasses,
+            message: t('visible_to_you_profile_owner_and_mods', { profile_owner_username: (entry as Post).profile_owner?.username }),
+        },
+    };
+
+    // Obtiene el contexto de visibilidad para mostrar el icono
+    // y mensaje correcto.
+    const getVisibilityContext = () => {
+        const isPrivateMessage = entry.type === 'post' && entry.profile_user_id !== null;
+        const isAdminOrMod = auth.user && ['admin', 'mod'].includes(auth.user.role);
+        const isProfileOwner = entry.type === 'post' && auth.user && entry.profile_user_id === auth.user.id;
+        const isAuthor = auth.user && auth.user.id === entry.user_id;
+
+        if (isPrivateMessage) {
+            if (isAdminOrMod && !isAuthor && !isProfileOwner) {
+                return privateMessage.mod;
+            }
+
+            if (isProfileOwner) {
+                return privateMessage.owner;
+            }
+
+            if (isAuthor) {
+                return privateMessage.author;
+            }
         }
 
-        if (isProfileOwner) {
-            return t('visible_to_you_author_and_mods', {
-                author_username: entry.user.username,
-            });
+        if (entry.type === 'post') {
+            return visibilityConfig[entry.visibility];
         }
 
-        return t('visible_to_you_profile_owner_and_mods', {
-            profile_owner_username: entry.profile_owner.username,
-        });
+        return null;
     };
 
     // Tiempo relativo desde la creación de la entrada.
@@ -105,13 +147,23 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                 </div>
 
                 <div className="flex items-center justify-center gap-4">
-                    {auth.user && isPrivate && (
-                        <Tooltip content={visibilityMessage()}>
-                            <span className="text-muted-foreground">
-                                <Lock className="h-4 w-4" />
-                            </span>
-                        </Tooltip>
-                    )}
+                    {/* Visibilidad de la publicación */}
+                    {entry.type === 'post' &&
+                        (() => {
+                            const context = getVisibilityContext();
+
+                            if (!context) return null;
+
+                            const { icon: Icon, message: visibilityMessage } = context;
+
+                            return (
+                                <Tooltip content={visibilityMessage}>
+                                    <span className="text-muted-foreground">
+                                        <Icon className="h-4 w-4" />
+                                    </span>
+                                </Tooltip>
+                            );
+                        })()}
 
                     {/* Fecha de creación con enlace a la entrada */}
                     <div className="flex gap-4 text-sm">
