@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import TextareaAutosize from 'react-textarea-autosize';
 import { toast } from 'sonner';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldTitle } from '../ui/field';
+import { Field, FieldContent, FieldDescription, FieldLabel, FieldTitle } from '../ui/field';
 import { Switch } from '../ui/switch';
 import FormErrors from './form-errors';
 import RichTextRenderer from './rich-text-renderer';
@@ -262,23 +262,21 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
                                         </DropdownMenuTrigger>
 
                                         <DropdownMenuContent align="end" className="w-72">
-                                            <FieldGroup className="w-full max-w-sm">
-                                                <FieldLabel htmlFor="is-closed" className="border-none">
-                                                    <Field orientation="horizontal">
-                                                        <FieldContent>
-                                                            <FieldTitle>{t('comments')}</FieldTitle>
-                                                            <FieldDescription>
-                                                                {t(data.is_closed ? 'comments_disabled' : 'comments_enabled')}
-                                                            </FieldDescription>
-                                                        </FieldContent>
-                                                        <Switch
-                                                            id="is-closed"
-                                                            checked={!Boolean(data.is_closed)}
-                                                            onCheckedChange={(checked) => setData('is_closed', !checked)}
-                                                        />
-                                                    </Field>
-                                                </FieldLabel>
-                                            </FieldGroup>
+                                            <FieldLabel htmlFor="is-closed" className="border-none">
+                                                <Field orientation="horizontal">
+                                                    <FieldContent>
+                                                        <FieldTitle>{t('comments')}</FieldTitle>
+                                                        <FieldDescription>
+                                                            {t(data.is_closed ? 'comments_disabled' : 'comments_enabled')}
+                                                        </FieldDescription>
+                                                    </FieldContent>
+                                                    <Switch
+                                                        id="is-closed"
+                                                        checked={!Boolean(data.is_closed)}
+                                                        onCheckedChange={(checked) => setData('is_closed', !checked)}
+                                                    />
+                                                </Field>
+                                            </FieldLabel>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </>
