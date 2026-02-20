@@ -30,6 +30,7 @@ import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Tooltip } from './tooltip';
 
 interface FormattingToolbarProps {
     text: string; // Contenido actual del editor de texto.
@@ -369,22 +370,28 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     return (
         <div className="flex flex-wrap items-center gap-1 p-1">
             {/* Negrita */}
-            <Button type="button" variant="ghost" size="icon" title={t('bold')} onClick={onBold}>
-                <Bold className="h-4 w-4" />
-            </Button>
+            <Tooltip content={t('bold')}>
+                <Button type="button" variant="ghost" size="icon" onClick={onBold}>
+                    <Bold className="h-4 w-4" />
+                </Button>
+            </Tooltip>
 
             {/* Cursiva */}
-            <Button type="button" variant="ghost" size="icon" title={t('italic')} onClick={onItalic}>
-                <Italic className="h-4 w-4" />
-            </Button>
+            <Tooltip content={t('italic')}>
+                <Button type="button" variant="ghost" size="icon" onClick={onItalic}>
+                    <Italic className="h-4 w-4" />
+                </Button>
+            </Tooltip>
 
             {/* Encabezados (H1 y H2) */}
             <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" title={t('heading')}>
-                        <Heading className="h-4 w-4" />
-                    </Button>
-                </PopoverTrigger>
+                <Tooltip content={t('heading')}>
+                    <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <Heading className="h-4 w-4" />
+                        </Button>
+                    </PopoverTrigger>
+                </Tooltip>
 
                 <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
                     <Button variant="ghost" className="flex items-center gap-2 text-sm" onClick={() => onHeading(1)}>
@@ -400,11 +407,13 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
 
             {/* Color de fuente */}
             <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" title={t('font_color')}>
-                        <PaintBucket className="h-4 w-4" />
-                    </Button>
-                </PopoverTrigger>
+                <Tooltip content={t('font_color')}>
+                    <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <PaintBucket className="h-4 w-4" />
+                        </Button>
+                    </PopoverTrigger>
+                </Tooltip>
                 <PopoverContent className="flex w-auto gap-2">
                     {(Object.keys(colors) as (keyof typeof colors)[]).map((key) => (
                         <button
@@ -419,11 +428,13 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
 
             {/* Tamaño de fuente */}
             <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" title={t('font_size')}>
-                        <Type className="h-4 w-4" />
-                    </Button>
-                </PopoverTrigger>
+                <Tooltip content={t('font_size')}>
+                    <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <Type className="h-4 w-4" />
+                        </Button>
+                    </PopoverTrigger>
+                </Tooltip>
                 <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
                     {(Object.keys(sizes) as (keyof typeof sizes)[]).map((key) => (
                         <Button key={key} variant="ghost" className="flex items-center gap-2 text-sm" onClick={() => onSizeSelected(key)}>
@@ -436,11 +447,13 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
 
             {/* Enlace */}
             <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" title={t('insert_link')}>
-                        <Link className="h-4 w-4" />
-                    </Button>
-                </PopoverTrigger>
+                <Tooltip content={t('insert_link')}>
+                    <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <Link className="h-4 w-4" />
+                        </Button>
+                    </PopoverTrigger>
+                </Tooltip>
                 <PopoverContent className="flex w-64 flex-col gap-2 p-4">
                     <Input
                         placeholder={t('link_text')}
@@ -460,12 +473,13 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
 
             {/* Imagen */}
             <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" title={t('insert_image')} disabled={isImgUploading}>
-                        <Image className="h-4 w-4" />
-                    </Button>
-                </PopoverTrigger>
-
+                <Tooltip content={t('insert_image')}>
+                    <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon" disabled={isImgUploading}>
+                            <Image className="h-4 w-4" />
+                        </Button>
+                    </PopoverTrigger>
+                </Tooltip>
                 <PopoverContent className="flex w-64 flex-col gap-2 p-4">
                     <div className="flex gap-2">
                         {/* Campo URL */}
@@ -514,52 +528,70 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
             </Popover>
 
             {/* Separador horizontal */}
-            <Button type="button" variant="ghost" size="icon" title={t('separator')} onClick={onSeparator}>
-                <Minus className="h-4 w-4" />
-            </Button>
+            <Tooltip content={t('separator')}>
+                <Button type="button" variant="ghost" size="icon" onClick={onSeparator}>
+                    <Minus className="h-4 w-4" />
+                </Button>
+            </Tooltip>
 
             {/* Cita en bloque */}
-            <Button type="button" variant="ghost" size="icon" title={t('quote')} onClick={onQuote}>
-                <Quote className="h-4 w-4" />
-            </Button>
+            <Tooltip content={t('quote')}>
+                <Button type="button" variant="ghost" size="icon" onClick={onQuote}>
+                    <Quote className="h-4 w-4" />
+                </Button>
+            </Tooltip>
 
             {/* Código en línea */}
-            <Button type="button" variant="ghost" size="icon" title={t('inline_code')} onClick={onInlineCode}>
-                <Code className="h-4 w-4" />
-            </Button>
+            <Tooltip content={t('inline_code')}>
+                <Button type="button" variant="ghost" size="icon" onClick={onInlineCode}>
+                    <Code className="h-4 w-4" />
+                </Button>
+            </Tooltip>
 
             {/* Bloque de código */}
-            <Button type="button" variant="ghost" size="icon" title={t('code_block')} onClick={onCodeBlock}>
-                <SquareCode className="h-4 w-4" />
-            </Button>
+            <Tooltip content={t('code_block')}>
+                <Button type="button" variant="ghost" size="icon" onClick={onCodeBlock}>
+                    <SquareCode className="h-4 w-4" />
+                </Button>
+            </Tooltip>
 
             {/* Lista ordenada */}
-            <Button type="button" variant="ghost" size="icon" title={t('ordered_list')} onClick={onOrderedList}>
-                <ListOrdered className="h-4 w-4" />
-            </Button>
+            <Tooltip content={t('ordered_list')}>
+                <Button type="button" variant="ghost" size="icon" onClick={onOrderedList}>
+                    <ListOrdered className="h-4 w-4" />
+                </Button>
+            </Tooltip>
 
             {/* Lista sin orden */}
-            <Button type="button" variant="ghost" size="icon" title={t('unordered_list')} onClick={onUnorderedList}>
-                <List className="h-4 w-4" />
-            </Button>
+            <Tooltip content={t('unordered_list')}>
+                <Button type="button" variant="ghost" size="icon" onClick={onUnorderedList}>
+                    <List className="h-4 w-4" />
+                </Button>
+            </Tooltip>
 
             {/* Texto oculto en línea */}
-            <Button type="button" variant="ghost" size="icon" title={t('hidden_text')} onClick={onHiddenInline}>
-                <EyeOff className="h-4 w-4" />
-            </Button>
+            <Tooltip content={t('hidden_text')}>
+                <Button type="button" variant="ghost" size="icon" onClick={onHiddenInline}>
+                    <EyeOff className="h-4 w-4" />
+                </Button>
+            </Tooltip>
 
             {/* Bloque de texto oculto */}
-            <Button type="button" variant="ghost" size="icon" title={t('hidden_block')} onClick={onHiddenBlock}>
-                <CaptionsOff className="h-4 w-4" />
-            </Button>
+            <Tooltip content={t('hidden_block')}>
+                <Button type="button" variant="ghost" size="icon" onClick={onHiddenBlock}>
+                    <CaptionsOff className="h-4 w-4" />
+                </Button>
+            </Tooltip>
 
             {/* Video */}
             <Popover>
-                <PopoverTrigger asChild>
-                    <Button type="button" variant="ghost" size="icon" title={t('video')}>
-                        <SquarePlay className="h-4 w-4" />
-                    </Button>
-                </PopoverTrigger>
+                <Tooltip content={t('video')}>
+                    <PopoverTrigger asChild>
+                        <Button type="button" variant="ghost" size="icon">
+                            <SquarePlay className="h-4 w-4" />
+                        </Button>
+                    </PopoverTrigger>
+                </Tooltip>
                 <PopoverContent className="flex w-64 flex-col gap-2 p-4">
                     <div className="flex gap-2">
                         {/* Campo URL */}
