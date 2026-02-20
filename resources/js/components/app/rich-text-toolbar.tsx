@@ -194,7 +194,7 @@ export default function RichTextToolbar({ text, onChange, textareaRef }: RichTex
         const selectedIsUrl = sel && /^https?:\/\//i.test(sel.value);
         const defaultAlt = sel && sel.start !== sel.end && !selectedIsUrl ? sel.value : `${t('text')}`;
         const altToUse = imageData.alt.trim() || defaultAlt;
-        const urlToUse = sel && selectedIsUrl ? sel.value : imageData.url.trim() || 'https://example.com/image-placeholder.png';
+        const urlToUse = sel && selectedIsUrl ? sel.value : imageData.url.trim() || `${window.location.origin}/samples/cat.jpg`;
         replaceSelection(`\n![${altToUse}](${urlToUse})\n`);
         setImageData({ alt: '', url: '' });
     }
@@ -235,7 +235,7 @@ export default function RichTextToolbar({ text, onChange, textareaRef }: RichTex
     function applyVideo(): void {
         const sel = getSelection();
         const url = videoData.url.trim() || (sel ? sel.value : '');
-        const finalUrl = url || 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+        const finalUrl = url || `${window.location.origin}/samples/cat.mp4`;
         replaceSelection(`\n::video[${finalUrl}]\n`);
         setVideoData({ url: '' });
     }
@@ -485,7 +485,7 @@ export default function RichTextToolbar({ text, onChange, textareaRef }: RichTex
                         {/* Campo URL */}
                         <Input
                             disabled={isImgUploading}
-                            placeholder="https://placehold.co/600x400.png"
+                            placeholder={`${window.location.origin}/samples/cat.jpg`}
                             value={imageData.url}
                             onChange={(e) => setImageData((p) => ({ ...p, url: e.target.value }))}
                         />
@@ -597,7 +597,7 @@ export default function RichTextToolbar({ text, onChange, textareaRef }: RichTex
                         {/* Campo URL */}
                         <Input
                             disabled={isVideoUploading}
-                            placeholder="https://example.com/video.mp4"
+                            placeholder={`${window.location.origin}/samples/cat.mp4`}
                             value={videoData.url}
                             onChange={(e) => setVideoData({ url: e.target.value })}
                         />

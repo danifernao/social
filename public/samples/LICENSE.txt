@@ -1,0 +1,7 @@
+Asset: cat.jpg
+Source: Pixabay (https://pixabay.com/photos/cat-feline-european-cat-alley-cat-8451431/)
+License: Pixabay Content License (https://pixabay.com/service/license-summary/)
+
+Asset: cat.mp4
+Source: Pexels (https://www.pexels.com/video/video-of-cat-sleeping-5062318/)
+License: Pexels License (https://www.pexels.com/license/)
