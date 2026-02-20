@@ -192,7 +192,7 @@ export default function RichTextToolbar({ text, onChange, textareaRef }: RichTex
     function applyImage(): void {
         const sel = getSelection();
         const selectedIsUrl = sel && /^https?:\/\//i.test(sel.value);
-        const defaultAlt = sel && sel.value && !selectedIsUrl ? sel.value : `${t('text')}`;
+        const defaultAlt = sel && sel.start !== sel.end && !selectedIsUrl ? sel.value : `${t('text')}`;
         const altToUse = imageData.alt.trim() || defaultAlt;
         const urlToUse = sel && selectedIsUrl ? sel.value : imageData.url.trim() || 'https://example.com/image-placeholder.png';
         replaceSelection(`\n![${altToUse}](${urlToUse})\n`);
@@ -356,7 +356,7 @@ export default function RichTextToolbar({ text, onChange, textareaRef }: RichTex
     // Aplica un color de fuente.
     function onColorSelected(key: keyof typeof colors): void {
         const sel = getSelection();
-        const content = sel && sel.start !== sel.end ? sel.value : t(`toolbar.colors.${key}`);
+        const content = sel && sel.start !== sel.end ? sel.value : t('text');
         replaceSelection(`:style[${content}]{color=${key}}`);
     }
 
