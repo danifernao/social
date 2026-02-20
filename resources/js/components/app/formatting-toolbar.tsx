@@ -260,16 +260,16 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
      */
 
     // Inserta texto en negrita.
-    const onBold = () => applyOrInsert({ fnWhenSelected: (s) => `**${s}**`, fallback: '** **' });
+    const onBold = () => applyOrInsert({ fnWhenSelected: (s) => `**${s}**`, fallback: `**${t('text')}**` });
 
     // Inserta texto en cursiva.
-    const onItalic = () => applyOrInsert({ fnWhenSelected: (s) => `*${s}*`, fallback: '* *' });
+    const onItalic = () => applyOrInsert({ fnWhenSelected: (s) => `*${s}*`, fallback: `*${t('text')}*` });
 
     // Inserta encabezados según el nivel indicado.
     function onHeading(level: number): void {
         applyOrInsert({
             fnWhenSelected: (s) => `${'#'.repeat(level)} ${s}`,
-            fallback: `${'#'.repeat(level)} `,
+            fallback: `${'#'.repeat(level)} ${t('text')}`,
         });
     }
 
@@ -277,20 +277,20 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     const onQuote = () =>
         applyOrInsert({
             fnWhenSelected: (s) => `> ${s}`,
-            fallback: '> Cita',
+            fallback: `> ${t('text')}`,
         });
 
     // Inserta código en línea.
     const onInlineCode = () =>
         applyOrInsert({
             fnWhenSelected: (s) => `\`${s}\``,
-            fallback: '`while(1);`',
+            fallback: `\`${t('text')}\``,
         });
 
     // Inserta bloque de código.
     const onCodeBlock = () => {
         const sel = getSelection();
-        const content = sel && sel.start !== sel.end ? sel.value : 'while(1);';
+        const content = sel && sel.start !== sel.end ? sel.value : t('text');
         replaceSelection(`\n\`\`\`\n${content}\n\`\`\`\n`);
     };
 
@@ -322,13 +322,13 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     const onHiddenInline = () =>
         applyOrInsert({
             fnWhenSelected: (s) => `:hidden[${s}]`,
-            fallback: `:hidden[${t('spoiler')}]`,
+            fallback: `:hidden[${t('text')}]`,
         });
 
     // Inserta bloque de texto oculto.
     const onHiddenBlock = () => {
         const sel = getSelection();
-        const content = sel && sel.start !== sel.end ? sel.value : t('spoiler');
+        const content = sel && sel.start !== sel.end ? sel.value : t('text');
         replaceSelection(`\n:::hidden\n${content}\n:::\n`);
     };
 
