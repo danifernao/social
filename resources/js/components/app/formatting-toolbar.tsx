@@ -192,10 +192,10 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     function applyImage(): void {
         const sel = getSelection();
         const selectedIsUrl = sel && /^https?:\/\//i.test(sel.value);
-        const defaultAlt = sel && !selectedIsUrl ? sel.value : 'image';
+        const defaultAlt = sel && sel.value && !selectedIsUrl ? sel.value : `${t('text')}`;
         const altToUse = imageData.alt.trim() || defaultAlt;
-        const urlToUse = imageData.url.trim() || 'https://example.com/image-placeholder.png';
-        replaceSelection(`![${altToUse}](${urlToUse})`);
+        const urlToUse = sel && selectedIsUrl ? sel.value : imageData.url.trim() || 'https://example.com/image-placeholder.png';
+        replaceSelection(`\n![${altToUse}](${urlToUse})\n`);
         setImageData({ alt: '', url: '' });
     }
 
