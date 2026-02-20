@@ -45,6 +45,9 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
     // Estado para alternar vista previa.
     const [previewMode, setPreviewMode] = useState(false);
 
+    // Referencia para almacenar la posición del cursor en el textarea.
+    const selectionRef = useRef<{ start: number; end: number } | null>(null);
+
     // Opciones de visibilidad para las publicaciones.
     const visibilityOptions = {
         public: {
@@ -132,6 +135,16 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
             }
         }
     }, [entry]);
+
+    // Restaura la posición del cursor al cambiar entre vista previa y edición.
+    useEffect(() => {
+        if (!previewMode && textareaRef.current && selectionRef.current) {
+            const { start, end } = selectionRef.current;
+
+            textareaRef.current.focus();
+            textareaRef.current.setSelectionRange(start, end);
+        }
+    }, [previewMode]);
 
     return (
         <>
@@ -273,7 +286,19 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
 
                             {/* Botón para activar la vista previa */}
                             {data.content.trim().length > 0 && (
-                                <Button type="button" variant="outline" onClick={() => setPreviewMode(true)}>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => {
+                                        if (textareaRef.current) {
+                                            selectionRef.current = {
+                                                start: textareaRef.current.selectionStart,
+                                                end: textareaRef.current.selectionEnd,
+                                            };
+                                        }
+                                        setPreviewMode(true);
+                                    }}
+                                >
                                     {t('preview')}
                                 </Button>
                             )}
