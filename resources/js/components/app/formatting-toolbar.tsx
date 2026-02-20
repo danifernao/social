@@ -268,16 +268,16 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
     // Inserta encabezados según el nivel indicado.
     function onHeading(level: number): void {
         applyOrInsert({
-            fnWhenSelected: (s) => `${'#'.repeat(level)} ${s}`,
-            fallback: `${'#'.repeat(level)} ${t('text')}`,
+            fnWhenSelected: (s) => `\n${'#'.repeat(level)} ${s}\n`,
+            fallback: `\n${'#'.repeat(level)} ${t('text')}\n`,
         });
     }
 
     // Inserta cita en bloque.
     const onQuote = () =>
         applyOrInsert({
-            fnWhenSelected: (s) => `> ${s}`,
-            fallback: `> ${t('text')}`,
+            fnWhenSelected: (s) => `\n> ${s}\n\n`,
+            fallback: `\n> ${t('text')}\n\n`,
         });
 
     // Inserta código en línea.
@@ -300,9 +300,9 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         if (sel && sel.start !== sel.end) {
             const lines = sel.value.split(/\r?\n/);
             const replaced = lines.map((ln, i) => `${i + 1}. ${ln}`).join('\n');
-            replaceSelection(replaced);
+            replaceSelection(`\n${replaced}\n\n`);
         } else {
-            replaceSelection(`1. ${t('first_item')}\n2. ${t('second_item')}\n3. ${t('third_item')}\n`);
+            replaceSelection(`\n1. ${t('first_item')}\n2. ${t('second_item')}\n3. ${t('third_item')}\n\n`);
         }
     };
 
@@ -312,9 +312,9 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
         if (sel && sel.start !== sel.end) {
             const lines = sel.value.split(/\r?\n/);
             const replaced = lines.map((ln) => `- ${ln}`).join('\n');
-            replaceSelection(replaced);
+            replaceSelection(`\n${replaced}\n\n`);
         } else {
-            replaceSelection(`- ${t('first_item')}\n- ${t('second_item')}\n- ${t('third_item')}\n`);
+            replaceSelection(`\n- ${t('first_item')}\n- ${t('second_item')}\n- ${t('third_item')}\n\n`);
         }
     };
 
