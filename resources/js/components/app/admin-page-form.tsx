@@ -11,8 +11,8 @@ import { SubmitEventHandler, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TextareaAutosize from 'react-textarea-autosize';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import FormattedText from './formatted-text';
-import FormattingToolbar from './formatting-toolbar';
+import RichTextRenderer from './rich-text-renderer';
+import RichTextToolbar from './rich-text-toolbar';
 
 interface Props {
     page?: Page; // Página opcional, si existe el formulario se usa en modo edición.
@@ -191,7 +191,7 @@ export default function AdminPageForm({ page }: Props) {
                             <div className="space-y-4">
                                 {/* Vista previa del contenido formateado */}
                                 <div className="bg-card text-card-foreground gap-6 rounded-xl border px-6 py-6 shadow-sm">
-                                    <FormattedText entryType="page" text={data.content} alwaysExpanded={true} disableLinks={true} />
+                                    <RichTextRenderer entryType="page" text={data.content} alwaysExpanded={true} disableLinks={true} />
                                 </div>
 
                                 {/* Botón para volver al modo edición */}
@@ -203,7 +203,7 @@ export default function AdminPageForm({ page }: Props) {
                             // Modo creación o edición
                             <>
                                 {/* Barra de herramientas de formato */}
-                                <FormattingToolbar text={data.content} onChange={(val) => setData('content', val)} textareaRef={textareaRef} />
+                                <RichTextToolbar text={data.content} onChange={(val) => setData('content', val)} textareaRef={textareaRef} />
 
                                 {/* Campo de texto principal */}
                                 <TextareaAutosize

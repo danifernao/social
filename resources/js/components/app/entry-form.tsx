@@ -12,8 +12,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenu
 import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldTitle } from '../ui/field';
 import { Switch } from '../ui/switch';
 import FormErrors from './form-errors';
-import FormattedText from './formatted-text';
-import FormattingToolbar from './formatting-toolbar';
+import RichTextRenderer from './rich-text-renderer';
+import RichTextToolbar from './rich-text-toolbar';
 
 interface EntryFormProps {
     entry?: Entry; // Una entrada existente (publicación o comentario).
@@ -139,7 +139,7 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
                 <div className="flex flex-col gap-2">
                     {/* Vista previa del contenido formateado */}
                     <div className="bg-card text-card-foreground rounded-xl border px-6 py-6 shadow-sm">
-                        <FormattedText entryType={formType} text={data.content} alwaysExpanded={true} disableLinks={true} />
+                        <RichTextRenderer entryType={formType} text={data.content} alwaysExpanded={true} disableLinks={true} />
                     </div>
 
                     {/* Botón para volver al modo edición */}
@@ -153,7 +153,7 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
                     <FormErrors errors={errors} />
 
                     {/* Barra de herramientas de formato */}
-                    <FormattingToolbar text={data.content} onChange={(val) => setData('content', val)} textareaRef={textareaRef} />
+                    <RichTextToolbar text={data.content} onChange={(val) => setData('content', val)} textareaRef={textareaRef} />
 
                     {/* Campo de texto principal */}
                     <TextareaAutosize

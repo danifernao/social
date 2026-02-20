@@ -12,7 +12,7 @@ import remarkBreaks from 'remark-breaks';
 import remarkDirective from 'remark-directive';
 import { Button } from '../ui/button';
 
-interface Props {
+interface RichTextRendererProps {
     // Tipo de entrada que define el contexto de menciones y hashtags.
     // Puede ser "post", "comment" o "page".
     entryType: EntryType | 'page';
@@ -40,7 +40,7 @@ type ExtendedComponents = Components & {
  * - Interpreta directivas personalizadas.
  * - Limita la altura del contenido y muestra un botón "Leer más" si es necesario.
  */
-export default function FormattedText({ entryType, text, alwaysExpanded = false, disableLinks = false }: Props) {
+export default function RichTextRenderer({ entryType, text, alwaysExpanded = false, disableLinks = false }: RichTextRendererProps) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 

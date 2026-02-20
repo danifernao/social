@@ -9,7 +9,7 @@ import TextLink from '../kit/text-link';
 import { buttonVariants } from '../ui/button';
 import EntryItemOptions from './entry-list-item-options';
 import EntryListItemReactions from './entry-list-item-reactions';
-import FormattedText from './formatted-text';
+import RichTextRenderer from './rich-text-renderer';
 import { Tooltip } from './tooltip';
 import UserAvatar from './user-avatar';
 import UserRoleBadge from './user-role-badge';
@@ -159,7 +159,7 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
             </header>
 
             {/* Contenido principal de la entrada */}
-            <FormattedText entryType={entry.type} text={entry.content} />
+            <RichTextRenderer entryType={entry.type} text={entry.content} />
 
             <footer className="flex gap-4">
                 {/* Reacciones de la entrada */}

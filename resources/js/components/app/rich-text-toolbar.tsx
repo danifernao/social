@@ -32,7 +32,7 @@ import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Tooltip } from './tooltip';
 
-interface FormattingToolbarProps {
+interface RichTextToolbarProps {
     text: string; // Contenido actual del editor de texto.
 
     // Función callback para actualizar el texto.
@@ -49,7 +49,7 @@ interface FormattingToolbarProps {
  * Opera directamente sobre un textarea externo mediante una referencia,
  * manipulando la selección de texto y la posición del cursor.
  */
-export default function FormattingToolbar({ text, onChange, textareaRef }: FormattingToolbarProps) {
+export default function RichTextToolbar({ text, onChange, textareaRef }: RichTextToolbarProps) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 

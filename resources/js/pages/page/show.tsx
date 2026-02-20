@@ -1,4 +1,4 @@
-import FormattedText from '@/components/app/formatted-text';
+import RichTextRenderer from '@/components/app/rich-text-renderer';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
 import type { BreadcrumbItem } from '@/types';
@@ -32,7 +32,7 @@ export default function PageShow() {
                 <h1 className="text-3xl">{page.title}</h1>
 
                 {/* Contenido formateado de la página estática */}
-                <FormattedText entryType="page" text={page.content || ''} alwaysExpanded={true} />
+                <RichTextRenderer entryType="page" text={page.content || ''} alwaysExpanded={true} />
             </AppContentLayout>
         </AppLayout>
     );

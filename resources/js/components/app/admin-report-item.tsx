@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import AdminReportItemCloseDialog from './admin-report-item-close-dialog';
-import FormattedText from './formatted-text';
+import RichTextRenderer from './rich-text-renderer';
 
 interface AdminReportItemProps {
     report: Report;
@@ -117,7 +117,7 @@ export default function AdminReportItem({ report, related }: AdminReportItemProp
                                 <div className="mt-2 text-sm font-semibold md:mt-0">{t('report_snapshot_content')}</div>
                                 <Card>
                                     <CardContent className="text-sm">
-                                        <FormattedText
+                                        <RichTextRenderer
                                             entryType={report.reportable_type as EntryType}
                                             text={(report.reportable_snapshot as Entry).content}
                                             alwaysExpanded
