@@ -585,7 +585,7 @@ export default function FormattingToolbar({ text, onChange, textareaRef }: Forma
 
             {/* Video */}
             <Popover>
-                <Tooltip content={t('video')}>
+                <Tooltip content={t('insert_video')}>
                     <PopoverTrigger asChild>
                         <Button type="button" variant="ghost" size="icon">
                             <SquarePlay className="h-4 w-4" />
