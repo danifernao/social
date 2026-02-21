@@ -166,7 +166,12 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
                     <FormErrors errors={errors} />
 
                     {/* Barra de herramientas de formato */}
-                    <RichTextToolbar text={data.content} onChange={(val) => setData('content', val)} textareaRef={textareaRef} />
+                    <RichTextToolbar
+                        user={entry ? entry.user : auth.user}
+                        text={data.content}
+                        onChange={(val) => setData('content', val)}
+                        textareaRef={textareaRef}
+                    />
 
                     {/* Campo de texto principal */}
                     <TextareaAutosize

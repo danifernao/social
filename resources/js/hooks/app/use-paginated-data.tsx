@@ -124,6 +124,13 @@ export function usePaginatedData<T>({ initialItems, initialCursor, propKey }: Us
     };
 
     /**
+     * Reemplaza manualmente el cursor de paginación.
+     */
+    const updateCursor = (newCursor: string | null) => {
+        setNextCursor(newCursor);
+    };
+
+    /**
      * Restablece los elementos y el cursor a sus valores iniciales.
      */
     const resetProps = () => {
@@ -141,6 +148,7 @@ export function usePaginatedData<T>({ initialItems, initialCursor, propKey }: Us
         loadMore,
         resetProps,
         updateItems,
+        updateCursor,
         handleEntryChanges,
     };
 }

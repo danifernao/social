@@ -184,9 +184,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/reaction', [ReactionController::class, 'toggle'])
         ->name('reaction.toggle');
 
+    // Multimedia
     Route::post('/media', [MediaController::class, 'store'])
-        ->middleware('auth')
         ->name('media.store');
+    Route::get('/user/{user}/media', [MediaController::class, 'index'])
+        ->name('media.index');
+    Route::delete('/media/{media}', [MediaController::class, 'destroy'])
+        ->name('media.destroy');
 
     // Búsqueda
     Route::get('/search', [SearchController::class, 'index'])

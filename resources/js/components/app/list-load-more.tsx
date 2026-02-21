@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ListLoadMoreProps {
-    type: 'post' | 'comment' | 'user' | 'notification'; // Tipo de lista a paginar.
+    type: 'post' | 'comment' | 'user' | 'notification' | 'media'; // Tipo de lista a paginar.
     cursor: string | null; // Cursor que indica si existen más elementos por cargar.
     isProcessing: boolean; // Indica si se está ejecutando una carga en curso.
     autoClick?: boolean; // Define si la carga debe activarse automáticamente al ser visible.
@@ -33,6 +33,7 @@ export default function ListLoadMore({ type, cursor, isProcessing, autoClick = t
         comment: t('comments').toLowerCase(),
         user: t('users').toLowerCase(),
         notification: t('notifications').toLowerCase(),
+        media: t('media_files').toLowerCase(),
     };
 
     // Observa la visibilidad del botón dentro del viewport.

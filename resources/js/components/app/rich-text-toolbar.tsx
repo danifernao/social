@@ -1,9 +1,12 @@
+import { generateThumbnail } from '@/lib/utils';
+import { User } from '@/types';
 import { router } from '@inertiajs/react';
 import {
     Bold,
     CaptionsOff,
     Code,
     EyeOff,
+    GalleryVerticalEnd,
     Heading,
     Heading1,
     Heading2,
@@ -29,9 +32,12 @@ import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import MediaDialog from './media-dialog';
 import { Tooltip } from './tooltip';
 
 interface RichTextToolbarProps {
+    user: User; // Usuario autenticado.
+
     text: string; // Contenido actual del editor de texto.
 
     // Función callback para actualizar el texto.
@@ -48,9 +54,15 @@ interface RichTextToolbarProps {
  * Opera directamente sobre un textarea externo mediante una referencia,
  * manipulando la selección de texto y la posición del cursor.
  */
-export default function RichTextToolbar({ text, onChange, textareaRef }: RichTextToolbarProps) {
+export default function RichTextToolbar({ user, text, onChange, textareaRef }: RichTextToolbarProps) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
+
+    // Estado para controlar el diálogo de selección de archivos multimedia.
+    const [isMediaDialogOpen, setIsMediaDialogOpen] = useState(false);
+
+    // Modo de inserción multimedia.
+    const [mediaMode, setMediaMode] = useState<'image' | 'video' | null>(null);
 
     /**
      * Obtiene la selección actual del textarea.
@@ -126,7 +138,7 @@ export default function RichTextToolbar({ text, onChange, textareaRef }: RichTex
     /**
      * Sube un archivo multimedia.
      */
-    function uploadMedia(
+    async function uploadMedia(
         file: File,
         {
             onStart,
@@ -137,10 +149,18 @@ export default function RichTextToolbar({ text, onChange, textareaRef }: RichTex
             onSuccess: (url: string) => void;
             onFinish: () => void;
         },
-    ): void {
+    ): Promise<void> {
         const formData = new FormData();
 
         formData.append('file', file);
+
+        if (file.type.startsWith('video/')) {
+            const thumbnail = await generateThumbnail(file);
+
+            if (thumbnail) {
+                formData.append('thumbnail', thumbnail, 'thumbnail.jpg');
+            }
+        }
 
         onStart();
 
@@ -501,6 +521,19 @@ export default function RichTextToolbar({ text, onChange, textareaRef }: RichTex
                             {isImgUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                         </Button>
 
+                        {/* Botón para abrir álbum */}
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            title={t('open_album')}
+                            onClick={() => {
+                                setMediaMode('image');
+                                setIsMediaDialogOpen(true);
+                            }}
+                        >
+                            <GalleryVerticalEnd className="h-4 w-4" />
+                        </Button>
+
                         {/* Input oculto */}
                         <input
                             ref={imgFileInputRef}
@@ -613,6 +646,19 @@ export default function RichTextToolbar({ text, onChange, textareaRef }: RichTex
                             {isVideoUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                         </Button>
 
+                        {/* Botón para abrir álbum */}
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            title={t('open_album')}
+                            onClick={() => {
+                                setMediaMode('video');
+                                setIsMediaDialogOpen(true);
+                            }}
+                        >
+                            <GalleryVerticalEnd className="h-4 w-4" />
+                        </Button>
+
                         {/* Input oculto */}
                         <input ref={videoFileInputRef} type="file" accept="video/mp4,video/webm" hidden onChange={onVideoFileSelected} />
                     </div>
@@ -622,6 +668,25 @@ export default function RichTextToolbar({ text, onChange, textareaRef }: RichTex
                     </Button>
                 </PopoverContent>
             </Popover>
+
+            <MediaDialog
+                open={isMediaDialogOpen}
+                user={user}
+                type={mediaMode || 'image'}
+                onClose={() => {
+                    setIsMediaDialogOpen(false);
+                    setMediaMode(null);
+                }}
+                onSelect={(url) => {
+                    if (mediaMode === 'image') {
+                        replaceSelection(`\n![${t('text')}](${url})\n`);
+                    }
+
+                    if (mediaMode === 'video') {
+                        replaceSelection(`\n::video[${url}]\n`);
+                    }
+                }}
+            />
         </div>
     );
 }

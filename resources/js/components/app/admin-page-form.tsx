@@ -203,7 +203,12 @@ export default function AdminPageForm({ page }: Props) {
                             // Modo creación o edición
                             <>
                                 {/* Barra de herramientas de formato */}
-                                <RichTextToolbar text={data.content} onChange={(val) => setData('content', val)} textareaRef={textareaRef} />
+                                <RichTextToolbar
+                                    user={auth.user}
+                                    text={data.content}
+                                    onChange={(val) => setData('content', val)}
+                                    textareaRef={textareaRef}
+                                />
 
                                 {/* Campo de texto principal */}
                                 <TextareaAutosize
