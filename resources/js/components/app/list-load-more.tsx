@@ -27,13 +27,14 @@ export default function ListLoadMore({ type, cursor, isProcessing, autoClick = t
     // en el área visible del navegador.
     const ref = useRef<HTMLButtonElement | null>(null);
 
-    // Mapa que asocia cada tipo de lista con su traducción correspondiente en plural.
+    // Mapa que asocia cada tipo de lista con la clave de su
+    // traducción correspondiente.
     const listType = {
-        post: t('posts').toLowerCase(),
-        comment: t('comments').toLowerCase(),
-        user: t('users').toLowerCase(),
-        notification: t('notifications').toLowerCase(),
-        media: t('media_files').toLowerCase(),
+        post: 'load_more_posts',
+        comment: 'load_more_comments',
+        user: 'load_more_users',
+        notification: 'load_more_notifications',
+        media: 'load_more_files',
     };
 
     // Observa la visibilidad del botón dentro del viewport.
@@ -67,7 +68,7 @@ export default function ListLoadMore({ type, cursor, isProcessing, autoClick = t
         // Botón para cargar más elementos.
         <Button ref={ref} variant="outline" disabled={isProcessing} onClick={onClick}>
             {isProcessing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-            {isProcessing ? t('loading') : t('load_more')} {listType[type]}
+            {isProcessing ? t('loading') : t(listType[type])}
         </Button>
     );
 }
