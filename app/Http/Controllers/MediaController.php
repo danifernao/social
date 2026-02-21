@@ -124,6 +124,11 @@ class MediaController extends Controller
             abort(403);
         }
 
+        // Si existe imagen miniatura, la elimina del almacenamiento.
+        if ($media->thumbnail_path) {
+            Storage::disk($media->disk)->delete($media->thumbnail_path);
+        }
+
         // Elimina el archivo del almacenamiento y de la base de datos.
         Storage::disk($media->disk)->delete($media->path);
         $media->delete();
