@@ -47,7 +47,7 @@ class MediaController extends Controller
                 return $query->where('mime_type', 'LIKE', $type . '/%');
             })
             ->latest()
-            ->cursorPaginate(7, ['*'], 'cursor', $cursor);
+            ->cursorPaginate(12, ['*'], 'cursor', $cursor);
 
 
         return back()->with([
