@@ -10,7 +10,7 @@ interface MediaDialogGridProps {
 }
 
 /**
- * Parrilla que muestra los archivos multimedia de un usuario.
+ * Parrilla que muestra los archivos multimedia subidos por un usuario.
  */
 export default function MediaDialogAlbumGrid({ items, onDelete, onSelect }: MediaDialogGridProps) {
     // Función para traducir los textos de la interfaz.
@@ -22,19 +22,27 @@ export default function MediaDialogAlbumGrid({ items, onDelete, onSelect }: Medi
     }
 
     return (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+        <div className="grid max-h-[70vh] grid-cols-2 gap-3 overflow-y-auto sm:grid-cols-3 md:grid-cols-4">
             {items.map((media) => (
-                <div
+                <button
                     key={media.id}
-                    className="group bg-muted relative cursor-pointer overflow-hidden rounded-lg border"
-                    title={t('select')}
+                    className="group bg-muted relative overflow-hidden rounded-lg border"
+                    title={t('select_file')}
                     onClick={() => onSelect?.(media)}
                 >
                     {/* Vista previa */}
                     {media.type === 'image' ? (
-                        <img src={media.url} className="h-40 w-full object-cover transition-transform group-hover:scale-105" />
+                        <img
+                            src={media.url}
+                            alt={t('image_preview')}
+                            className="h-40 w-full object-cover transition-transform group-hover:scale-105"
+                        />
                     ) : media.thumbnail_url ? (
-                        <img src={media.thumbnail_url} className="h-40 w-full object-cover transition-transform group-hover:scale-105" />
+                        <img
+                            src={media.thumbnail_url}
+                            alt={t('video_thumbnail')}
+                            className="h-40 w-full object-cover transition-transform group-hover:scale-105"
+                        />
                     ) : (
                         <div className="bg-muted flex h-full w-full items-center justify-center">
                             <FileX className="text-muted-foreground h-10 w-10" />
@@ -42,7 +50,7 @@ export default function MediaDialogAlbumGrid({ items, onDelete, onSelect }: Medi
                     )}
 
                     {/* Overlay */}
-                    <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/30" />
+                    <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/30" aria-hidden="true" />
 
                     {/* Acciones */}
                     {onDelete && (
@@ -64,7 +72,7 @@ export default function MediaDialogAlbumGrid({ items, onDelete, onSelect }: Medi
                             </Button>
                         </div>
                     )}
-                </div>
+                </button>
             ))}
         </div>
     );

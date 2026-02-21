@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { User } from '@/types';
 import { Media } from '@/types/modules/media';
+import { useTranslation } from 'react-i18next';
 import MediaDialogAlbum from './media-dialog-album';
 
 interface MediaDialogProps {
@@ -12,14 +13,17 @@ interface MediaDialogProps {
 }
 
 /**
- * Diálogo que muestra el álbum multimedia de un usuario.
+ * Diálogo que muestra el historial de archivos multimedia subidos por un usuario.
  */
 export default function MediaDialog({ open, user, type, onClose, onSelect }: MediaDialogProps) {
+    // Función para traducir los textos de la interfaz.
+    const { t } = useTranslation();
+
     return (
         <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-            <DialogContent className="max-w-4xl">
+            <DialogContent className="!max-w-5xl">
                 <DialogHeader>
-                    <DialogTitle>Archivos</DialogTitle>
+                    <DialogTitle>{t('uploaded_files')}</DialogTitle>
                 </DialogHeader>
 
                 <MediaDialogAlbum

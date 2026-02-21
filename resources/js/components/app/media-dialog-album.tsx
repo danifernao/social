@@ -15,7 +15,9 @@ interface MediaDialogAlbumProps {
 }
 
 /**
- * Álbum de archivos multimedia de un usuario.
+ * Colección de archivos multimedia subidos por un usuario.
+ * Permite paginar a través de los archivos y eliminar aquellos que ya no
+ * se deseen tener en el álbum.
  */
 export default function MediaDialogAlbum({ user, type, onSelect }: MediaDialogAlbumProps) {
     // Función para traducir los textos de la interfaz.
