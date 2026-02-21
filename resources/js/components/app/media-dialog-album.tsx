@@ -53,7 +53,12 @@ export default function MediaDialogAlbum({ user, type, onSelect }: MediaDialogAl
                     setItems((prev) => (cursor ? [...prev, ...collection.data] : collection.data));
                     setNextCursor(collection.meta.next_cursor);
                 },
-                onFinish: () => setProcessing(false),
+                onFinish: () => {
+                    setProcessing(false);
+                    if (loading) {
+                        setLoading(false);
+                    }
+                },
             },
         );
     };
@@ -90,14 +95,7 @@ export default function MediaDialogAlbum({ user, type, onSelect }: MediaDialogAl
 
     return (
         <div className="flex flex-col gap-4">
-            {loading && !items.length ? (
-                <>
-                    {/* Icono de carga mientras se obtienen la lista */}
-                    <div className="flex h-64 items-center justify-center">
-                        <LoaderCircle className="text-muted-foreground h-6 w-6 animate-spin" aria-label={t('loading')} />
-                    </div>
-                </>
-            ) : (
+            {items.length ? (
                 <>
                     {/* Parrilla de archivos */}
                     <MediaDialogGrid items={items} onDelete={handleDelete} onSelect={onSelect} />
@@ -105,6 +103,14 @@ export default function MediaDialogAlbum({ user, type, onSelect }: MediaDialogAl
                     {/* Cargar más */}
                     <ListLoadMore type="media" cursor={nextCursor} isProcessing={processing} onClick={loadMore} autoClick={false} />
                 </>
+            ) : (
+                <div className="flex h-64 items-center justify-center">
+                    {loading ? (
+                        <LoaderCircle className="text-muted-foreground h-6 w-6 animate-spin" aria-label={t('loading')} />
+                    ) : (
+                        t('no_files_found')
+                    )}
+                </div>
             )}
         </div>
     );
