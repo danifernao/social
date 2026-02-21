@@ -62,7 +62,7 @@ export default function UserActions({ user }: UserActionsProps) {
             <DropdownMenu open={open} onOpenChange={setOpen}>
                 {/* Botón de activación del menú */}
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" aria-label="More user actions">
+                    <Button variant="ghost" size="icon" title={t('options')}>
                         <MoreVertical className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
