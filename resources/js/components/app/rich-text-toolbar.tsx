@@ -6,10 +6,10 @@ import {
     CaptionsOff,
     Code,
     EyeOff,
-    GalleryVerticalEnd,
     Heading,
     Heading1,
     Heading2,
+    History,
     Image,
     ImagePlus,
     Italic,
@@ -525,13 +525,13 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                         <Button
                             variant="ghost"
                             size="icon"
-                            title={t('open_album')}
+                            title={t('open_uploads_history')}
                             onClick={() => {
                                 setMediaMode('image');
                                 setIsMediaDialogOpen(true);
                             }}
                         >
-                            <GalleryVerticalEnd className="h-4 w-4" />
+                            <History className="h-4 w-4" />
                         </Button>
 
                         {/* Input oculto */}
@@ -650,13 +650,13 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                         <Button
                             variant="ghost"
                             size="icon"
-                            title={t('open_album')}
+                            title={t('open_uploads_history')}
                             onClick={() => {
                                 setMediaMode('video');
                                 setIsMediaDialogOpen(true);
                             }}
                         >
-                            <GalleryVerticalEnd className="h-4 w-4" />
+                            <History className="h-4 w-4" />
                         </Button>
 
                         {/* Input oculto */}
