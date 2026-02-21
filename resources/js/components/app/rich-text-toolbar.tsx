@@ -9,7 +9,6 @@ import {
     Heading2,
     Image,
     ImagePlus,
-    ImageUp,
     Italic,
     Link,
     Link2,
@@ -499,7 +498,7 @@ export default function RichTextToolbar({ text, onChange, textareaRef }: RichTex
                             disabled={isImgUploading}
                             onClick={() => imgFileInputRef.current?.click()}
                         >
-                            {isImgUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <ImageUp className="h-4 w-4" />}
+                            {isImgUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                         </Button>
 
                         {/* Input oculto */}
