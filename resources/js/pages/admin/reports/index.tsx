@@ -1,4 +1,5 @@
 import AdminReportList from '@/components/app/admin-report-list';
+import AdminReportListSearchBar from '@/components/app/admin-report-list-search-bar';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AdminLayout from '@/layouts/app/admin/layout';
 import AppLayout from '@/layouts/kit/app-layout';
@@ -39,6 +40,9 @@ export default function ReportsIndex() {
 
             <AdminLayout fullWidth>
                 <AppContentLayout noMargin fullWidth>
+                    {/* Barra de búsqueda */}
+                    <AdminReportListSearchBar />
+
                     {/* Pestañas */}
                     <Tabs value={status} onValueChange={handleStatusChange}>
                         <TabsList>
