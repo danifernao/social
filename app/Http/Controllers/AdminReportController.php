@@ -36,6 +36,98 @@ class AdminReportController extends Controller
         $query = Report::query()
             ->with(['reporter', 'resolver', 'reportable'])
             ->orderByDesc('created_at');
+
+        // Filtra por quien hizo el reporte.
+        if ($request->filled('reporter')) {
+            $reporter = $request->query('reporter');
+
+            // Si es numérico, se filtra directamente por ID.
+            if (is_numeric($reporter)) {
+                $query->where('reporter_id', $reporter);
+            } else {
+                // Si es texto, se busca el usuario por username.
+                $user_id = User::where('username', $reporter)->value('id');
+
+                // Si no existe el usuario, la consulta no retorna resultados.
+                $user_id
+                    ? $query->where('reporter_id', $user_id)
+                    : $query->whereRaw('1 = 0');
+            }
+        }
+
+        // Filtra por quien cerró el reporte.
+        if ($request->filled('resolver')) {
+            $resolver = $request->query('resolver');
+
+            // Fuerza el estado a "closed".
+            $status = 'closed';
+
+            if (is_numeric($resolver)) {
+                $query->where('resolver_id', $resolver);
+            } else {
+                $userId = User::where('username', $resolver)->value('id');
+
+                $userId
+                    ? $query->where('resolver_id', $userId)
+                    : $query->whereRaw('1 = 0');
+            }
+        }
+
+        
+        // Indica si ya se aplicó un filtro sobre la entidad reportada.
+        // Los parámetros "user_reported", "post_reported" y "comment_reported"
+        // son excluyentes y solo uno debe afectar la consulta.
+        $filtered = false;
+
+        // Filtra por usuario reportado.
+        if ($request->filled('user_reported')) {
+            $value = $request->query('user_reported');
+
+            $filtered = true;
+
+            if (is_numeric($value)) {
+                // Filtra por ID de usuario.
+                $query->where(function ($query) use ($value) {
+                    // Caso: el usuario en sí fue reportado.
+                    $query->where(function ($q) use ($value) {
+                        $q->where('reportable_type', User::class)
+                          ->where('reportable_snapshot->id', $value);
+                    })
+                    // Caso: se reportó contenido cuyo autor es el usuario.
+                    ->orWhere(function ($q) use ($value) {
+                        $q->whereIn('reportable_type', [Post::class, Comment::class])
+                          ->where('reportable_snapshot->user_id', $value);
+                    });
+                });
+            } else {
+                // Filtra por nombre de usuario.
+                $query->where(function ($query) use ($value) {
+                    // Caso: el usuario en sí fue reportado.
+                    $query->where(function ($q) use ($value) {
+                        $q->where('reportable_type', User::class)
+                          ->where('reportable_snapshot->username', $value);
+                    })
+                    // Caso: se reportó contenido cuyo autor es el usuario.
+                    ->orWhere(function ($q) use ($value) {
+                        $q->whereIn('reportable_type', [Post::class, Comment::class])
+                          ->where('reportable_snapshot->user->username', $value);
+                    });
+                });
+            }
+        }
+
+        // Filtra por publicación reportada.
+        if ($request->filled('post_reported') && !$filtered) {
+            $filtered = true;
+            $query->where('reportable_type', Post::class)
+                  ->where('reportable_id', $request->query('post_reported'));
+        }
+
+        // Filtra por comentario reportado.
+        if ($request->filled('comment_reported') && !$filtered) {
+            $query->where('reportable_type', Comment::class)
+                  ->where('reportable_id', $request->query('comment_reported'));
+        }
         
         // Filtra los reportes según su estado (abiertos o cerrados).
         if ($status === 'closed') {
@@ -44,6 +136,7 @@ class AdminReportController extends Controller
             $query->whereNull('closed_at');
         }
 
+        // Ejecuta la paginación por cursor.
         $reports = $query->cursorPaginate(20)->withQueryString();
 
         // Si la colección actual está vacía pero hay un cursor en la URL,
