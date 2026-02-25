@@ -25,13 +25,16 @@ export default function AdminReportItem({ report, related }: AdminReportItemProp
     // Controla la visibilidad del diálogo de cerrar reporte.
     const [closeOpen, setCloseOpen] = useState(false);
 
-    // Navega al listado de reportes conservando el estado y el cursor si existe.
+    // Navega al listado de reportes conservando los parámetros pasados por URL.
     const handleBack = () => {
-        const params = new URLSearchParams(window.location.search);
-        const status = params.get('status') ?? 'open';
-        const cursor = params.get('cursor');
+        const params = Object.fromEntries(new URLSearchParams(window.location.search));
 
-        router.get(route('admin.report.index'), { status, ...(cursor && { cursor }) }, { preserveScroll: false, preserveState: false });
+        const queryParams = {
+            ...params,
+            status: params.status || 'open',
+        };
+
+        router.get(route('admin.report.index'), queryParams, { preserveScroll: false, preserveState: false });
     };
 
     // Obtiene el enlace del contenido reportado según tipo.

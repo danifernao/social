@@ -141,7 +141,8 @@ class AdminReportController extends Controller
         // Si la colección actual está vacía pero hay un cursor en la URL,
         // redirige a la primera página de la lista de reportes.
         if ($reports->isEmpty() && $request->has('cursor')) {
-            return redirect()->route('admin.report.index');
+            return redirect()
+                ->route('admin.report.index', $request->except('cursor'));
         }
 
         return Inertia::render('admin/reports/index', [
