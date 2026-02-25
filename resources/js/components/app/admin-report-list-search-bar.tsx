@@ -96,7 +96,13 @@ export default function AdminReportListSearchBar() {
     return (
         <div className="flex w-full gap-12">
             {/* Actor del reporte */}
-            <form className="flex flex-1 items-center" onSubmit={(e) => e.preventDefault()}>
+            <form
+                className="flex flex-1 items-center"
+                onSubmit={(e) => {
+                    handleActorSearch();
+                    e.preventDefault();
+                }}
+            >
                 <Select value={currentActorType} onValueChange={setCurrentActorType}>
                     <SelectTrigger className="bg-muted w-fit gap-1 rounded-tr-none rounded-br-none border-none">
                         <SelectValue placeholder={t('reporter')} />
@@ -113,12 +119,17 @@ export default function AdminReportListSearchBar() {
                     value={actorValue}
                     onChange={(e) => setActorValue(e.target.value)}
                     placeholder={t('id_or_username')}
-                    onKeyDown={(e) => e.key === 'Enter' && handleActorSearch()}
                 />
             </form>
 
             {/* Entidad reportada */}
-            <form className="flex flex-1 items-center" onSubmit={(e) => e.preventDefault()}>
+            <form
+                className="flex flex-1 items-center"
+                onSubmit={(e) => {
+                    handleReportedSearch();
+                    e.preventDefault();
+                }}
+            >
                 <Select value={currentReportedType} onValueChange={setCurrentReportedType}>
                     <SelectTrigger className="bg-muted w-fit gap-1 rounded-tr-none rounded-br-none border-none">
                         <SelectValue placeholder={t('post_reported')} />
@@ -135,7 +146,6 @@ export default function AdminReportListSearchBar() {
                     onChange={(e) => setReportedValue(e.target.value)}
                     className="flex-1 rounded-tl-none rounded-bl-none"
                     placeholder={currentReportedType === 'user_reported' ? t('id_or_username') : t('reported_entry_id')}
-                    onKeyDown={(e) => e.key === 'Enter' && handleReportedSearch()}
                 />
             </form>
         </div>
