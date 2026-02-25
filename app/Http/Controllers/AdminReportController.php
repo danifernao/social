@@ -53,10 +53,10 @@ class AdminReportController extends Controller
                     ? $query->where('reporter_id', $user_id)
                     : $query->whereRaw('1 = 0');
             }
-        }
+        } 
 
         // Filtra por quien cerró el reporte.
-        if ($request->filled('resolver')) {
+        elseif ($request->filled('resolver')) {
             $resolver = $request->query('resolver');
 
             // Fuerza el estado a "closed".
@@ -72,7 +72,6 @@ class AdminReportController extends Controller
                     : $query->whereRaw('1 = 0');
             }
         }
-
         
         // Indica si ya se aplicó un filtro sobre la entidad reportada.
         // Los parámetros "user_reported", "post_reported" y "comment_reported"
@@ -137,7 +136,7 @@ class AdminReportController extends Controller
         }
 
         // Ejecuta la paginación por cursor.
-        $reports = $query->cursorPaginate(20)->withQueryString();
+        $reports = $query->cursorPaginate(1)->withQueryString();
 
         // Si la colección actual está vacía pero hay un cursor en la URL,
         // redirige a la primera página de la lista de reportes.

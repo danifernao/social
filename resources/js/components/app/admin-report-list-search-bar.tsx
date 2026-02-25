@@ -16,7 +16,6 @@ export default function AdminReportListSearchBar() {
 
     // Tipo de actor según la URL.
     const initialActorType = (() => {
-        if (params.has('reporter') && params.has('resolver')) return 'reporter_resolver';
         if (params.has('resolver')) return 'resolver';
         if (params.has('reporter')) return 'reporter';
         return 'resolver';
@@ -110,7 +109,6 @@ export default function AdminReportListSearchBar() {
                     <SelectContent>
                         <SelectItem value="reporter">{t('reporter')}</SelectItem>
                         <SelectItem value="resolver">{t('resolver')}</SelectItem>
-                        <SelectItem value="reporter_resolver">{t('reporter_resolver')}</SelectItem>
                     </SelectContent>
                 </Select>
 
