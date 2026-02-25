@@ -136,7 +136,7 @@ class AdminReportController extends Controller
         }
 
         // Ejecuta la paginación por cursor.
-        $reports = $query->cursorPaginate(1)->withQueryString();
+        $reports = $query->cursorPaginate(20)->withQueryString();
 
         // Si la colección actual está vacía pero hay un cursor en la URL,
         // redirige a la primera página de la lista de reportes.
