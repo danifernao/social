@@ -43,47 +43,34 @@ export default function AdminReportListSearchBar() {
     const [currentReportedType, setCurrentReportedType] = useState(initialReportedType);
     const [reportedValue, setReportedValue] = useState(initialReportedValue);
 
-    // Elimina parámetros del actor.
-    const clearActorParams = () => {
-        params.delete('reporter');
-        params.delete('resolver');
-    };
+    // Gestiona la búsqueda de actores de reportes y entidades reportadas.
+    const search = () => {
+        const newParams = new URLSearchParams(window.location.search);
 
-    // Elimina parámetros de la entidad reportada.
-    const clearReportedParams = () => {
-        params.delete('user_reported');
-        params.delete('post_reported');
-        params.delete('comment_reported');
-    };
+        // Limpia todos los filtros de búsqueda para reconstruirlos.
+        newParams.delete('reporter');
+        newParams.delete('resolver');
+        newParams.delete('user_reported');
+        newParams.delete('post_reported');
+        newParams.delete('comment_reported');
+        newParams.delete('cursor');
 
-    // Gestiona la búsqueda del actor.
-    const handleActorSearch = () => {
-        clearActorParams();
-
+        // Gestiona la búsqueda del actor.
         if (actorValue) {
-            if (currentActorType === 'reporter') {
-                params.set('reporter', actorValue);
-                params.set('status', params.get('status') ?? 'open');
-            }
+            newParams.set(currentActorType, actorValue);
 
+            // Si el actor es quien cerró el reporte, fuerza el estado cerrado.
             if (currentActorType === 'resolver') {
-                params.set('resolver', actorValue);
-                params.set('status', 'closed');
+                newParams.set('status', 'closed');
             }
         }
 
-        router.visit(`?${params.toString()}`);
-    };
-
-    // Gestiona la búsqueda por entidad reportada.
-    const handleReportedSearch = () => {
-        clearReportedParams();
-
+        // Gestiona la búsqueda por entidad reportada.
         if (reportedValue) {
-            params.set(currentReportedType, reportedValue);
+            newParams.set(currentReportedType, reportedValue);
         }
 
-        router.visit(`?${params.toString()}`);
+        router.visit(`?${newParams.toString()}`);
     };
 
     return (
@@ -92,7 +79,7 @@ export default function AdminReportListSearchBar() {
             <form
                 className="flex flex-1 items-center"
                 onSubmit={(e) => {
-                    handleActorSearch();
+                    search();
                     e.preventDefault();
                 }}
             >
@@ -118,7 +105,7 @@ export default function AdminReportListSearchBar() {
             <form
                 className="flex flex-1 items-center"
                 onSubmit={(e) => {
-                    handleReportedSearch();
+                    search();
                     e.preventDefault();
                 }}
             >
