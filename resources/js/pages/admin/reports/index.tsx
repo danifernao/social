@@ -37,7 +37,9 @@ export default function ReportsIndex() {
             delete queryParams.resolver;
         }
 
-        router.get(route('admin.report.index'), queryParams, { preserveState: true, preserveScroll: true });
+        delete queryParams.cursor;
+
+        router.get(route('admin.report.index'), queryParams, { preserveScroll: true });
     };
 
     return (
