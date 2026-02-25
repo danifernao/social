@@ -58,25 +58,18 @@ export default function AdminReportListSearchBar() {
 
     // Gestiona la búsqueda del actor.
     const handleActorSearch = () => {
-        if (!currentActorType || !actorValue) return;
-
         clearActorParams();
-        clearReportedParams();
 
-        if (currentActorType === 'reporter') {
-            params.set('reporter', actorValue);
-            params.set('status', params.get('status') ?? 'open');
-        }
+        if (actorValue) {
+            if (currentActorType === 'reporter') {
+                params.set('reporter', actorValue);
+                params.set('status', params.get('status') ?? 'open');
+            }
 
-        if (currentActorType === 'resolver') {
-            params.set('resolver', actorValue);
-            params.set('status', 'closed');
-        }
-
-        if (currentActorType === 'reporter_resolver') {
-            params.set('reporter', actorValue);
-            params.set('resolver', actorValue);
-            params.set('status', 'closed');
+            if (currentActorType === 'resolver') {
+                params.set('resolver', actorValue);
+                params.set('status', 'closed');
+            }
         }
 
         router.visit(`?${params.toString()}`);
@@ -84,10 +77,11 @@ export default function AdminReportListSearchBar() {
 
     // Gestiona la búsqueda por entidad reportada.
     const handleReportedSearch = () => {
-        if (!currentReportedType || !reportedValue) return;
-
         clearReportedParams();
-        params.set(currentReportedType, reportedValue);
+
+        if (reportedValue) {
+            params.set(currentReportedType, reportedValue);
+        }
 
         router.visit(`?${params.toString()}`);
     };
