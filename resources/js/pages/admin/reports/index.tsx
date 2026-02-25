@@ -30,7 +30,14 @@ export default function ReportsIndex() {
     // Maneja el cambio de estado del filtro y recarga la vista
     // pasando el nuevo estado por la URL.
     const handleStatusChange = (value: string) => {
-        router.get(route('admin.report.index'), { status: value }, { preserveState: true, preserveScroll: true });
+        const params = Object.fromEntries(new URLSearchParams(window.location.search));
+        const queryParams: Record<string, string> = { ...params, status: value };
+
+        if (value === 'open' && queryParams.resolver) {
+            delete queryParams.resolver;
+        }
+
+        router.get(route('admin.report.index'), queryParams, { preserveState: true, preserveScroll: true });
     };
 
     return (
