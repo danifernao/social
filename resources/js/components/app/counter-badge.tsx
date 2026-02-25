@@ -7,5 +7,7 @@ export default function CounterBadge({ count }: { count: number }) {
         return null;
     }
 
-    return <div className="ml-auto rounded-sm bg-red-600 p-px px-1 text-xs font-bold text-white">{count > 99 ? '99+' : count}</div>;
+    return (
+        <div className="bg-destructive text-destructive-foreground ml-auto rounded-sm p-px px-1 text-xs font-bold">{count > 99 ? '99+' : count}</div>
+    );
 }
