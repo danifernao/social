@@ -4,14 +4,15 @@ import { usePostVisibility } from '@/hooks/app/use-post-visibility';
 import type { Auth, Comment, Entry, Post } from '@/types';
 import { SpecialPages } from '@/types/modules/page';
 import { useForm, usePage } from '@inertiajs/react';
-import { Globe, LoaderCircle, Lock, Settings2, Users } from 'lucide-react';
+import { LoaderCircle, Settings2 } from 'lucide-react';
 import { SubmitEventHandler, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TextareaAutosize from 'react-textarea-autosize';
 import { toast } from 'sonner';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Field, FieldContent, FieldDescription, FieldLabel, FieldTitle } from '../ui/field';
 import { Switch } from '../ui/switch';
+import EntryPostVisibilityDropdown from './entry-post-visibility-dropdown';
 import FormErrors from './form-errors';
 import RichTextRenderer from './rich-text-renderer';
 import RichTextToolbar from './rich-text-toolbar';
@@ -51,25 +52,6 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
 
     // Referencia para almacenar la posición del cursor en el textarea.
     const selectionRef = useRef<{ start: number; end: number } | null>(null);
-
-    // Opciones de visibilidad para las publicaciones.
-    const visibilityOptions = {
-        public: {
-            icon: Globe,
-            label: 'public',
-            description: 'anyone_can_see_your_post',
-        },
-        following: {
-            icon: Users,
-            label: 'following',
-            description: 'only_users_you_follow_can_see_your_post',
-        },
-        private: {
-            icon: Lock,
-            label: 'private',
-            description: 'only_you_can_see_your_post',
-        },
-    };
 
     // Hook para gestionar la visibilidad de una publicación.
     const { visibility, changeVisibility, isCreatePost } = usePostVisibility({
@@ -226,50 +208,12 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
                             {formType === 'post' && profileUserId === null && (!entry || (entry as Post).profile_user_id === null) && (
                                 <>
                                     {/* Visibilidad de la publicación */}
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                size="icon"
-                                                className="data-[state=open]:bg-muted"
-                                                title={t('post_visibility')}
-                                            >
-                                                {(() => {
-                                                    const Icon = visibilityOptions[visibility!].icon;
-                                                    return <Icon className="h-4 w-4" />;
-                                                })()}
-                                            </Button>
-                                        </DropdownMenuTrigger>
-
-                                        <DropdownMenuContent align="end" className="w-72">
-                                            <DropdownMenuRadioGroup
-                                                value={visibility as PostVisibility}
-                                                onValueChange={(value) => changeVisibility(value as PostVisibility)}
-                                                className="flex flex-col gap-1"
-                                            >
-                                                {Object.entries(visibilityOptions).map(([key, option]) => {
-                                                    const Icon = option.icon;
-
-                                                    return (
-                                                        <DropdownMenuRadioItem
-                                                            key={key}
-                                                            value={key}
-                                                            className="data-[state=checked]:bg-muted flex items-start gap-3 py-3 pl-3 [&>span:first-child]:hidden"
-                                                        >
-                                                            <Icon className="text-muted-foreground mt-1 h-4 w-4" />
-
-                                                            <div className="flex flex-col">
-                                                                <span className="font-semibold">{t(option.label)}</span>
-
-                                                                <span className="text-muted-foreground text-xs">{t(option.description)}</span>
-                                                            </div>
-                                                        </DropdownMenuRadioItem>
-                                                    );
-                                                })}
-                                            </DropdownMenuRadioGroup>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+                                    <EntryPostVisibilityDropdown
+                                        value={visibility as PostVisibility}
+                                        onChange={(value) => changeVisibility(value)}
+                                        variant="outline"
+                                        iconSize={16}
+                                    />
 
                                     {/* Configuración de la publicación */}
                                     <DropdownMenu>

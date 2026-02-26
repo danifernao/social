@@ -1,16 +1,18 @@
+import { useCanActOnUser, useIsAuthUser } from '@/hooks/app/use-auth';
 import { formatDate } from '@/lib/utils';
 import type { Auth, Entry, Post } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { formatDistanceToNow, Locale } from 'date-fns';
 import { enUS, es } from 'date-fns/locale';
-import { Globe, Lock, MessageSquare, MessageSquareLock, Users } from 'lucide-react';
+import { MessageSquare, MessageSquareLock } from 'lucide-react';
+import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import TextLink from '../kit/text-link';
 import { buttonVariants } from '../ui/button';
 import EntryItemOptions from './entry-list-item-options';
 import EntryListItemReactions from './entry-list-item-reactions';
+import EntryPostVisibilityDropdown from './entry-post-visibility-dropdown';
 import RichTextRenderer from './rich-text-renderer';
-import { Tooltip } from './tooltip';
 import UserAvatar from './user-avatar';
 import UserRoleBadge from './user-role-badge';
 
@@ -41,43 +43,47 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
     // Captura el usuario autenticado y nombre de la ruta actual proporcionados por Inertia.
     const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
 
-    // Icono y mensaje de visibilidad según la configuración de la publicación.
-    const visibilityConfig = {
-        public: {
-            icon: Globe,
-            message: t('visible_to_all', { username: entry.user.username }),
-        },
-        following: {
-            icon: Users,
-            message: t('visible_to_user_following', { username: entry.user.username }),
-        },
-        private: {
-            icon: Lock,
-            message: t('visible_to_user_only', { username: entry.user.username }),
-        },
-    };
+    // Visbilidad de la publicación.
+    const [visibility, setVisibility] = useState<PostVisibility>((entry as Post).visibility as PostVisibility);
 
-    // Obtiene el contexto de visibilidad para mostrar el icono
-    // y mensaje correcto.
-    const getVisibilityContext = () => {
-        const isPrivateMessage = entry.type === 'post' && entry.profile_user_id !== null;
+    // Controla el icono cargando.
+    const [processingVisibility, setProcessingVisibility] = useState(false);
 
-        if (isPrivateMessage) {
-            return {
-                icon: MessageSquareLock,
-                message: t('visible_to_author_and_profile_owner', {
-                    author_username: entry.user.username,
-                    profile_owner_username: (entry as Post).profile_owner?.username,
-                }),
-            };
+    // Gestiona el cambio de visibilidad de la publicación.
+    const handleVisibilityChange = (value: PostVisibility) => {
+        if (value === visibility) {
+            return;
         }
 
-        if (entry.type === 'post') {
-            return visibilityConfig[entry.visibility as PostVisibility];
-        }
+        setProcessingVisibility(true);
 
-        return null;
+        router.patch(
+            route('post.update.visibility', entry.id),
+            { visibility: value },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setVisibility(value);
+                },
+                onFinish: () => {
+                    setProcessingVisibility(false);
+                },
+            },
+        );
     };
+
+    // Determina si la publicación fue realizada en perfil ajeno.
+    const isExternalAuthor = entry.type === 'post' && entry.profile_user_id !== null;
+
+    // Título del icono de visibilidad cuando la publicación
+    // fue realizada en perfil ajeno.
+    const externalPostMessage = t('visible_to_author_and_profile_owner', {
+        author_username: entry.user.username,
+        profile_owner_username: (entry as Post).profile_owner?.username,
+    });
+
+    // Determina si se puede editar la publicación.
+    const canEditPost = entry.type === 'post' && (useIsAuthUser(entry.user) || useCanActOnUser(entry.user));
 
     // Tiempo relativo desde la creación de la entrada.
     const distanceToNow = formatDistanceToNow(new Date(entry.created_at), {
@@ -114,27 +120,28 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                     </div>
                 </div>
 
-                <div className="flex items-center justify-center gap-4">
+                <div className="flex items-center justify-center">
                     {/* Visibilidad de la publicación */}
-                    {entry.type === 'post' &&
-                        (() => {
-                            const context = getVisibilityContext();
+                    {isExternalAuthor && (
+                        <div title={externalPostMessage} className="mr-4">
+                            <MessageSquareLock className="h-4 w-4" aria-hidden={true} />
+                        </div>
+                    )}
 
-                            if (!context) return null;
-
-                            const { icon: Icon, message: visibilityMessage } = context;
-
-                            return (
-                                <Tooltip content={visibilityMessage}>
-                                    <span className="text-muted-foreground">
-                                        <Icon className="h-4 w-4" />
-                                    </span>
-                                </Tooltip>
-                            );
-                        })()}
+                    {!isExternalAuthor && entry.type === 'post' && (
+                        <EntryPostVisibilityDropdown
+                            value={visibility}
+                            onChange={handleVisibilityChange}
+                            username={!useIsAuthUser(entry.user) ? entry.user.username : null}
+                            variant="ghost"
+                            iconSize={14}
+                            loading={processingVisibility}
+                            disabled={processingVisibility || !canEditPost}
+                        />
+                    )}
 
                     {/* Fecha de creación con enlace a la entrada */}
-                    <div className="flex gap-4 text-sm">
+                    <div className="mr-6 ml-2 flex text-sm">
                         <Link
                             href={
                                 entry.type === 'post'
