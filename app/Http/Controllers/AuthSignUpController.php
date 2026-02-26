@@ -76,13 +76,7 @@ class AuthSignUpController extends Controller
             $user->assignRole($is_first_user ? 'admin' : 'user');
 
             // Asigna los permisos por defecto.
-            $user->givePermissionTo([
-                'post',
-                'comment',
-                'react',
-                'update_username',
-                'update_avatar',
-            ]);
+            $user->assignDefaultPermissions();
 
             // Si se proporcionó un token, se consume la invitación.
             if ($request->filled('token')) {

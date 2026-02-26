@@ -227,6 +227,20 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Asigna los permisos por defecto al usuario.
+     */
+    public function assignDefaultPermissions(): void
+    {
+        $this->givePermissionTo([
+            'post',
+            'comment',
+            'react',
+            'update_username',
+            'update_avatar',
+        ]);
+    }
+
+    /**
      * Devuelve los IDs de usuarios seguidos por este usuario.
      *
      * @return array<int>

@@ -222,13 +222,7 @@ class AdminUserController extends Controller
             UserBlock::where('blocked_id', $user->id)->delete();
 
             // Asigna todos los permisos por defecto.
-            $user->givePermissionTo([
-                'post',
-                'comment',
-                'react',
-                'update_username',
-                'update_avatar',
-            ]);
+            $user->assignDefaultPermissions();
         }
 
         return back()->with('status', 'role_updated');
