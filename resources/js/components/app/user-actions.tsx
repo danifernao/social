@@ -1,7 +1,7 @@
 import { useCanActOnUser } from '@/hooks/app/use-auth';
 import type { Auth, User } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { MoreVertical, UserCog } from 'lucide-react';
+import { MessageSquareWarning, MoreVertical, UserCog } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/button';
@@ -81,10 +81,20 @@ export default function UserActions({ user }: UserActionsProps) {
                         <UserActionsReport user={user} onDialogClose={() => setOpen(false)} />
                     </DropdownMenuItem>
 
+                    {/* Acción para ver reportes asociados al usuario */}
+                    <DropdownMenuItem asChild>
+                        <Button variant="link" asChild className="w-full justify-start px-4 hover:no-underline">
+                            <Link href={route('admin.report.index', { user_reported: user.id })}>
+                                <MessageSquareWarning className="h-4 w-4" />
+                                <span>{t('view_reports')}</span>
+                            </Link>
+                        </Button>
+                    </DropdownMenuItem>
+
                     {/* Acción administrar usuario */}
                     {canAdmin && (
                         <DropdownMenuItem asChild>
-                            <Button variant="link" asChild className="w-full justify-start hover:no-underline">
+                            <Button variant="link" asChild className="w-full justify-start px-4 hover:no-underline">
                                 <Link href={route('admin.user.edit', user.id)}>
                                     <UserCog className="h-4 w-4" />
                                     <span>{t('manage')}</span>

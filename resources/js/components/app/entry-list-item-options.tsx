@@ -110,11 +110,25 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
 
                     {/* Opción administrativa para gestionar al autor de la entrada */}
                     {useCanActOnUser(entry.user) && (
-                        <DropdownMenuItem asChild>
-                            <Button asChild variant="link" className="w-full justify-start hover:no-underline">
-                                <Link href={route('admin.user.edit', entry.user.id)}>{t('manage_user')}</Link>
-                            </Button>
-                        </DropdownMenuItem>
+                        <>
+                            <DropdownMenuItem asChild>
+                                <Button asChild variant="link" className="w-full justify-start hover:no-underline">
+                                    <Link
+                                        href={route('admin.report.index', {
+                                            [entry.type === 'post' ? 'post_reported' : 'comment_reported']: entry.id,
+                                        })}
+                                    >
+                                        {t('view_reports')}
+                                    </Link>
+                                </Button>
+                            </DropdownMenuItem>
+
+                            <DropdownMenuItem asChild>
+                                <Button asChild variant="link" className="w-full justify-start hover:no-underline">
+                                    <Link href={route('admin.user.edit', entry.user.id)}>{t('manage_user')}</Link>
+                                </Button>
+                            </DropdownMenuItem>
+                        </>
                     )}
                 </DropdownMenuContent>
             </DropdownMenu>

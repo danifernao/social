@@ -341,6 +341,7 @@
     "view": "View",
     "view_note": "View note",
     "view_report": "View report",
+    "view_reports": "View reports",
     "visible_to_all": "Visible to all users",
     "visible_to_author_and_profile_owner": "Visible only to {{author_username}} and {{profile_owner_username}}",
     "visible_to_user_following": "Visible to users {{username}} follows",
