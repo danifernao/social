@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->morphs('reactionable');
-            $table->string('emoji', 20);
+            $table->string('emoji', 20)->collation('utf8mb4_bin');
             $table->unique(['user_id', 'reactionable_id', 'reactionable_type'], 'unique_user_reaction');
             $table->timestamps();
         });
