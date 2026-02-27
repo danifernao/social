@@ -46,7 +46,10 @@ class PostPolicy
         return match ($post->visibility) {
             'public' => true,
             'private' => $user && $user->id === $post->user_id,
-            'following' => $user && $post->user->followsUser($user),
+            'following' => $user && (
+                $user->id === $post->user_id || 
+                $post->user->followsUser($user)
+            ),
             default => false,
         };
     }
