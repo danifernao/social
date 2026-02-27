@@ -1,3 +1,4 @@
+import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import { useCanActOnUser, useIsAuthUser } from '@/hooks/app/use-auth';
 import { formatDate } from '@/lib/utils';
 import type { Auth, Entry, Post } from '@/types';
@@ -5,7 +6,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { formatDistanceToNow, Locale } from 'date-fns';
 import { enUS, es } from 'date-fns/locale';
 import { MessageSquare, MessageSquareLock } from 'lucide-react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import TextLink from '../kit/text-link';
@@ -56,6 +57,9 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
     // Controla el icono cargando.
     const [processingVisibility, setProcessingVisibility] = useState(false);
 
+    // Contexto para notificar cambios en la lista de entradas.
+    const updateEntryList = useContext(EntryListUpdateContext);
+
     // Gestiona el cambio de visibilidad de la publicación.
     const handleVisibilityChange = (value: PostVisibility) => {
         if (value === (entry as Post).visibility) {
@@ -69,6 +73,10 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
             { visibility: value },
             {
                 preserveScroll: true,
+                onSuccess: (page) => {
+                    const entry = page.props.post as Post;
+                    updateEntryList?.('update', entry);
+                },
                 onFinish: () => {
                     setProcessingVisibility(false);
                 },

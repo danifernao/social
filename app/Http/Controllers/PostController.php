@@ -294,7 +294,13 @@ class PostController extends Controller
         $post->visibility = $request->visibility;
         $post->save();
 
-       return back()->with('status','post_updated');
+        // Carga la relación con el usuario autor.
+        $post->load('user');
+
+        // Transforma la publicación utilizando PostResource para el frontend.
+        $post_data = (new PostResource($post))->resolve();
+
+        return back()->with('post', $post_data);
     }
 
     /**
