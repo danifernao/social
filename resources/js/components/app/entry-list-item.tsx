@@ -43,6 +43,15 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
     // Captura el usuario autenticado y nombre de la ruta actual proporcionados por Inertia.
     const { auth, routeName } = usePage<{ auth: Auth; routeName: string }>().props;
 
+    // Determina si la entrada (publicación) fue realizada en perfil ajeno.
+    const isExternalAuthor = entry.type === 'post' && entry.profile_user_id !== null;
+
+    // Determina si el usuario autenticado es el autor de la entrada.
+    const isEntryAuthor = useIsAuthUser(entry.user);
+
+    // Determina si el usuario autenticado puede actualizar la entrada (publicación).
+    const canUpdateEntry = entry.type === 'post' && (isEntryAuthor || useCanActOnUser(entry.user));
+
     // Visbilidad de la publicación.
     const [visibility, setVisibility] = useState<PostVisibility>((entry as Post).visibility as PostVisibility);
 
@@ -72,18 +81,12 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
         );
     };
 
-    // Determina si la publicación fue realizada en perfil ajeno.
-    const isExternalAuthor = entry.type === 'post' && entry.profile_user_id !== null;
-
     // Título del icono de visibilidad cuando la publicación
     // fue realizada en perfil ajeno.
     const externalPostMessage = t('visible_to_author_and_profile_owner', {
         author_username: entry.user.username,
         profile_owner_username: (entry as Post).profile_owner?.username,
     });
-
-    // Determina si se puede editar la publicación.
-    const canEditPost = entry.type === 'post' && (useIsAuthUser(entry.user) || useCanActOnUser(entry.user));
 
     // Tiempo relativo desde la creación de la entrada.
     const distanceToNow = formatDistanceToNow(new Date(entry.created_at), {
@@ -132,11 +135,11 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                         <EntryPostVisibilityDropdown
                             value={visibility}
                             onChange={handleVisibilityChange}
-                            username={!useIsAuthUser(entry.user) ? entry.user.username : null}
+                            username={!isEntryAuthor ? entry.user.username : null}
                             variant="ghost"
                             iconSize={14}
                             loading={processingVisibility}
-                            disabled={processingVisibility || !canEditPost}
+                            disabled={processingVisibility || !canUpdateEntry}
                         />
                     )}
 

@@ -24,6 +24,13 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
+    // Determina si el usuario autenticado es el autor de la entrada y
+    // tiene permiso para actualizarla.
+    const isEntryAuthor = useIsAuthUser(entry.user) && useCheckPermission(entry.type);
+
+    // Determina si el usuario autenticado puede actualizar la entrada.
+    const canUpdateEntry = useCanActOnUser(entry.user);
+
     // Controla la visibilidad del formulario de edición.
     const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
 
@@ -82,7 +89,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
 
                 <DropdownMenuContent>
                     {/* Opción para editar la entrada */}
-                    {((useIsAuthUser(entry.user) && useCheckPermission(entry.type)) || useCanActOnUser(entry.user)) && (
+                    {(isEntryAuthor || canUpdateEntry) && (
                         <DropdownMenuItem asChild>
                             <Button variant="ghost" className="w-full justify-start" onClick={() => setIsFormDialogOpen(true)}>
                                 {t('edit')}
@@ -91,7 +98,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                     )}
 
                     {/* Opción para eliminar la entrada */}
-                    {(useIsAuthUser(entry.user) || useCanActOnUser(entry.user)) && (
+                    {(isEntryAuthor || canUpdateEntry) && (
                         <DropdownMenuItem asChild>
                             <Button variant="ghost" className="w-full justify-start" onClick={() => setIsConfirmDialogOpen(true)}>
                                 {t('delete')}
@@ -100,7 +107,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                     )}
 
                     {/* Opción para reportar la entrada */}
-                    {!useIsAuthUser(entry.user) && (
+                    {!isEntryAuthor && (
                         <DropdownMenuItem asChild>
                             <Button variant="ghost" className="w-full justify-start" onClick={() => setIsReportDialogOpen(true)}>
                                 {t('report')}
@@ -109,7 +116,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                     )}
 
                     {/* Opción administrativa para gestionar al autor de la entrada */}
-                    {useCanActOnUser(entry.user) && (
+                    {canUpdateEntry && (
                         <>
                             <DropdownMenuItem asChild>
                                 <Button asChild variant="link" className="w-full justify-start hover:no-underline">
