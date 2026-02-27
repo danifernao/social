@@ -137,7 +137,7 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                         <EntryPostVisibilityDropdown
                             value={(entry as Post).visibility as PostVisibility}
                             onChange={handleVisibilityChange}
-                            username={!isEntryAuthor ? entry.user.username : null}
+                            username={entry.user.username}
                             variant="ghost"
                             iconSize={14}
                             loading={processingVisibility}

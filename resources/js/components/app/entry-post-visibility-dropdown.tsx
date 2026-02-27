@@ -32,31 +32,34 @@ export default function EntryPostVisibilityDropdown({
     const visibilityOptions = {
         public: {
             icon: Globe,
-            label: 'public',
-            description: username ? 'visible_to_all' : 'anyone_can_see_your_post',
+            title: 'visible_to_all',
+            heading: 'public',
+            description: 'anyone_can_see_your_post',
         },
         following: {
             icon: Users,
-            label: 'following',
-            description: username ? 'visible_to_user_following' : 'only_users_you_follow_can_see_your_post',
+            title: 'visible_to_user_following',
+            heading: 'following',
+            description: 'only_users_you_follow_can_see_your_post',
         },
         private: {
             icon: Lock,
-            label: 'private',
-            description: username ? 'visible_to_user_only' : 'only_you_can_see_your_post',
+            title: 'visible_to_user_only',
+            heading: 'private',
+            description: 'only_you_can_see_your_post',
         },
     };
 
     // Icono y descripción del botón trigger.
     const TriggerIcon = visibilityOptions[value].icon;
-    const TriggerDescription = visibilityOptions[value].description;
+    const TriggerTitle = visibilityOptions[value].title;
 
     return (
         <DropdownMenu>
-            <div title={t(TriggerDescription, { username: username })}>
+            <div title={t(TriggerTitle, { username: username })}>
                 <DropdownMenuTrigger asChild>
                     <Button
-                        aria-label={t(TriggerDescription, { username: username })}
+                        aria-label={t(TriggerTitle, { username: username })}
                         type="button"
                         variant={variant}
                         size="icon"
@@ -86,7 +89,7 @@ export default function EntryPostVisibilityDropdown({
                                 <Icon className="text-muted-foreground mt-1 h-4 w-4" aria-hidden={true} />
 
                                 <div className="flex flex-col">
-                                    <span className="font-semibold">{t(option.label)}</span>
+                                    <span className="font-semibold">{t(option.heading)}</span>
                                     <span className="text-muted-foreground text-xs">{t(option.description)}</span>
                                 </div>
                             </DropdownMenuRadioItem>
