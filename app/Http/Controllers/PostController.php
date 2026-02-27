@@ -209,6 +209,8 @@ class PostController extends Controller
 
     /**
      * Actualiza una publicación existente.
+     * Delega la operación a métodos específicos,
+     * de acuerdo con los valores enviados.
      * 
      * @param Request $request Datos de la petición HTTP.
      * @param Post    $post    Instancia de la publicación
@@ -220,6 +222,25 @@ class PostController extends Controller
         // no tiene permisos para actualizar la publicación.
         $this->authorize('update', $post);
 
+        if ($request->filled('content')) {
+            return $this->updateContent($request, $post);
+        }
+
+        if ($request->filled('visibility')) {
+            return $this->updateVisibility($request, $post);
+        }
+
+        return back()->with('status', 'no_action_performed');
+    }
+
+    /**
+     * Actualiza el contenido de una publicación existente.
+     * 
+     * @param Request $request Datos de la petición HTTP.
+     * @param Post    $post    Instancia de la publicación
+     *                         que se va a actualizar.
+     */
+    private function updateContent(Request $request, Post $post) {
         // Valida los datos enviados desde el formulario.
         $request->validate([
             'content' => 'required|string|max:3000',
@@ -254,6 +275,26 @@ class PostController extends Controller
         $post_data = (new PostResource($post))->resolve();
 
         return back()->with('post', $post_data);
+    }
+
+    /**
+     * Actualiza la visibilidad de una publicación existente.
+     * 
+     * @param Request $request Datos de la petición HTTP.
+     * @param Post    $post    Instancia de la publicación
+     *                         que se va a actualizar.
+     */
+    private function updateVisibility(Request $request, Post $post) {
+        // Valida los datos enviados desde el formulario.
+        $request->validate([
+            'visibility' => 'required|in:public,following,private',
+        ]);
+
+        // Actualiza la visbilidad.
+        $post->visibility = $request->visibility;
+        $post->save();
+
+       return back()->with('status','post_updated');
     }
 
     /**

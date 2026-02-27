@@ -53,8 +53,8 @@ export default function EntryPostVisibilityDropdown({
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <div title={t(TriggerDescription, { username: username })}>
+            <div title={t(TriggerDescription, { username: username })}>
+                <DropdownMenuTrigger asChild>
                     <Button
                         aria-label={t(TriggerDescription, { username: username })}
                         type="button"
@@ -69,8 +69,8 @@ export default function EntryPostVisibilityDropdown({
                             <TriggerIcon style={{ width: iconSize, height: iconSize }} />
                         )}
                     </Button>
-                </div>
-            </DropdownMenuTrigger>
+                </DropdownMenuTrigger>
+            </div>
 
             <DropdownMenuContent align="end" className="w-72">
                 <DropdownMenuRadioGroup value={value} onValueChange={(val) => onChange(val as PostVisibility)} className="flex flex-col gap-1">

@@ -7,6 +7,7 @@ import { enUS, es } from 'date-fns/locale';
 import { MessageSquare, MessageSquareLock } from 'lucide-react';
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import TextLink from '../kit/text-link';
 import { buttonVariants } from '../ui/button';
 import EntryItemOptions from './entry-list-item-options';
@@ -52,30 +53,31 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
     // Determina si el usuario autenticado puede actualizar la entrada (publicación).
     const canUpdateEntry = entry.type === 'post' && (isEntryAuthor || useCanActOnUser(entry.user));
 
-    // Visbilidad de la publicación.
-    const [visibility, setVisibility] = useState<PostVisibility>((entry as Post).visibility as PostVisibility);
-
     // Controla el icono cargando.
     const [processingVisibility, setProcessingVisibility] = useState(false);
 
     // Gestiona el cambio de visibilidad de la publicación.
     const handleVisibilityChange = (value: PostVisibility) => {
-        if (value === visibility) {
+        if (value === (entry as Post).visibility) {
             return;
         }
 
         setProcessingVisibility(true);
 
         router.patch(
-            route('post.update.visibility', entry.id),
+            route('post.update', entry.id),
             { visibility: value },
             {
                 preserveScroll: true,
-                onSuccess: () => {
-                    setVisibility(value);
-                },
                 onFinish: () => {
                     setProcessingVisibility(false);
+                },
+                onError: (errors) => {
+                    toast.error(t('unexpected_error'));
+
+                    if (import.meta.env.DEV) {
+                        console.error(errors);
+                    }
                 },
             },
         );
@@ -133,7 +135,7 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
 
                     {!isExternalAuthor && entry.type === 'post' && (
                         <EntryPostVisibilityDropdown
-                            value={visibility}
+                            value={(entry as Post).visibility as PostVisibility}
                             onChange={handleVisibilityChange}
                             username={!isEntryAuthor ? entry.user.username : null}
                             variant="ghost"
