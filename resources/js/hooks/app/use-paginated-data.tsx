@@ -1,6 +1,6 @@
 import type { EntryAction } from '@/types';
 import { router, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
@@ -23,6 +23,8 @@ interface UsePaginatedProps<T extends WithProps> {
     insertAtStart?: boolean;
 }
 
+type InternalItem<T> = T & { _order: number };
+
 /**
  * Hook genérico para gestionar datos paginados por cursor
  * y sincronizar cambios individuales sobre la colección.
@@ -31,11 +33,43 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Estados que contienen la lista de elementos renderizados, el cursor
-    // de paginación y un indicador que especifica si se está solicitando
-    // una nueva página de datos al servidor.
-    const [items, setItems] = useState<T[]>(initialItems);
+    // Contador persistente para mantener el orden de la lista.
+    const orderCounter = useRef(0);
+
+    // Asigna "_order" a los nuevos elementos de la lista
+    // para conservar el orden original.
+    const mapWithOrder = (items: T[]): InternalItem<T>[] => {
+        return items.map((item) => ({
+            ...item,
+            _order: orderCounter.current++,
+        }));
+    };
+
+    // Ordena la lista de elementos de acuerdo con el orden original.
+    // El elemento fijado siempre va de primero.
+    const sortItems = (list: InternalItem<T>[]) => {
+        return [...list].sort((a, b) => {
+            // Elemento fijado.
+            if (a.is_pinned && !b.is_pinned) {
+                return -1;
+            }
+
+            if (!a.is_pinned && b.is_pinned) {
+                return 1;
+            }
+
+            // Orden original.
+            return a._order - b._order;
+        });
+    };
+
+    // Lista de elementos.
+    const [items, setItems] = useState<InternalItem<T>[]>(() => mapWithOrder(initialItems));
+
+    // Cursor de paginación.
     const [nextCursor, setNextCursor] = useState<string | null>(initialCursor);
+
+    // Indica si se está solicitando una nueva página de datos al servidor.
     const [processing, setProcessing] = useState(false);
 
     // Nombre de la ruta actual proporcionada por Inertia.
@@ -65,16 +99,24 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
             // evitando duplicados por ID.
             onSuccess: (page) => {
                 const pageData = (page.props as any)[propKey];
-                const newItems: T[] = pageData?.data ?? [];
-                const next = pageData?.meta.next_cursor ?? null;
+                const rawNewItems: T[] = pageData?.data ?? [];
+
+                // Asigna "_order" a los nuevos elementos para conservar
+                // su posición original.
+                const newItemsWithOrder = mapWithOrder(rawNewItems);
 
                 setItems((prev) => {
-                    const newIds = new Set(newItems.map((item) => item.id));
+                    // Colección de IDs de los nuevos elementos.
+                    const newIds = new Set(newItemsWithOrder.map((item) => item.id));
+
+                    // Retira potenciales duplicados de la colección vieja.
                     const filteredPrev = prev.filter((item) => !newIds.has(item.id));
-                    return [...filteredPrev, ...newItems];
+
+                    // Ordena la lista resultante.
+                    return sortItems([...filteredPrev, ...newItemsWithOrder]);
                 });
 
-                setNextCursor(next);
+                setNextCursor(pageData?.meta.next_cursor ?? null);
             },
             onError: (errors) => {
                 toast.error(t('unexpected_error'));
@@ -97,36 +139,33 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
         setItems((prev) => {
             // Reemplaza el elemento existente por su versión actualizada.
             if (action === 'update') {
-                const index = prev.findIndex((i) => i.id === item.id);
+                const existingItem = prev.find((i) => i.id === item.id);
 
-                if (index === -1) {
+                if (!existingItem) {
                     return prev;
                 }
 
-                let updated = [...prev];
+                // Agrega el orden original al nuevo elemento.
+                const updatedItem: InternalItem<T> = {
+                    ...item,
+                    _order: existingItem._order,
+                };
 
-                if (supportsPinnedItems) {
-                    updated = prev.map((i) => {
-                        // Actualiza el elemento.
-                        if (i.id === item.id) {
-                            return item;
-                        }
+                // Si el nuevo elemento está fijado, se desfijan los demás.
+                let newList = prev.map((i) => {
+                    if (i.id === item.id) {
+                        return updatedItem;
+                    }
 
-                        // Si el elemento está fijado, desfija cualquier otro.
-                        if (item.is_pinned && i.is_pinned) {
-                            return { ...i, is_pinned: false };
-                        }
+                    if (supportsPinnedItems && item.is_pinned && i.is_pinned) {
+                        return { ...i, is_pinned: false };
+                    }
 
-                        return i;
-                    });
+                    return i;
+                });
 
-                    // El elemento fijado va primero en la lista.
-                    return updated.sort((a, b) => (b.is_pinned ? 1 : 0) - (a.is_pinned ? 1 : 0));
-                }
-
-                updated[index] = item;
-
-                return updated;
+                // Se ordenan los elementos de acuerdo al orden original.
+                return sortItems(newList);
             }
 
             // Elimina el elemento correspondiente según su ID.
@@ -134,18 +173,14 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
                 return prev.filter((i) => i.id !== item.id);
             }
 
-            if (insertAtStart) {
-                // Si el primer elemento de la lista actual está fijado,
-                // inserta el nuevo después de este.
-                if (supportsPinnedItems && prev.length > 0 && prev[0].is_pinned) {
-                    const [pinned, ...rest] = prev;
-                    return [pinned, item, ...rest];
-                }
+            // Si es un nuevo elemento, se le asigna el orden original.
+            const newItem: InternalItem<T> = {
+                ...item,
+                _order: insertAtStart ? Math.min(...prev.map((i) => i._order), 0) - 1 : orderCounter.current++,
+            };
 
-                return [item, ...prev];
-            }
-
-            return [...prev, item];
+            // Se ordenan los elementos de acuerdo al orden original.
+            return sortItems([...prev, newItem]);
         });
     };
 
@@ -153,14 +188,14 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
      * Reemplaza manualmente la lista completa de elementos.
      */
     const updateItems = (newItems: T[]) => {
-        setItems(newItems);
+        setItems(() => mapWithOrder(newItems));
     };
 
     /**
      * Restablece los elementos y el cursor a sus valores iniciales.
      */
     const resetProps = () => {
-        setItems(initialItems);
+        setItems(() => mapWithOrder(initialItems));
         setNextCursor(initialCursor);
     };
 
