@@ -168,6 +168,7 @@ class PostController extends Controller
         $comments_query = $post
             ->comments()
             ->with('user')
+            ->orderByDesc('is_pinned')
             ->oldest();
 
         // Excluye comentarios de usuarios con bloqueos mutuos.
@@ -230,6 +231,10 @@ class PostController extends Controller
             return $this->updateVisibility($request, $post);
         }
 
+        if ($request->filled('is_pinned')) {
+            return $this->updateIsPinned($request, $post);
+        }
+
         return back()->with('status', 'no_action_performed');
     }
 
@@ -285,13 +290,53 @@ class PostController extends Controller
      *                         que se va a actualizar.
      */
     private function updateVisibility(Request $request, Post $post) {
-        // Valida los datos enviados desde el formulario.
+        // Valida los datos enviados.
         $request->validate([
             'visibility' => 'required|in:public,following,private',
         ]);
 
         // Actualiza la visbilidad.
         $post->visibility = $request->visibility;
+        $post->save();
+
+        // Carga la relación con el usuario autor.
+        $post->load('user');
+
+        // Transforma la publicación utilizando PostResource para el frontend.
+        $post_data = (new PostResource($post))->resolve();
+
+        return back()->with('post', $post_data);
+    }
+
+    /**
+     * Actualiza el estado fijo de una publicación existente.
+     * 
+     * @param Request $request Datos de la petición HTTP.
+     * @param Post    $post    Instancia de la publicación
+     *                         que se va a actualizar.
+     */    
+    private function updateIsPinned(Request $request, Post $post)
+    {
+        // Valida los datos enviados.
+        $request->validate([
+            'is_pinned' => 'required|boolean',
+        ]);
+
+        // Deniega acceso si se trata de una publicación en perfil ajeno. 
+        if ($post->profile_user_id) {
+            abort(403);
+        }
+
+        // Desfija cualquier otra publicación fijada.
+        if ($request->boolean('is_pinned')) {
+            Post::where('user_id', $post->user_id)
+                ->where('is_pinned', true)
+                ->where('id', '!=', $post->id)
+                ->update(['is_pinned' => false]);
+        }
+
+        // Marca la publicación con el estado especificado.
+        $post->is_pinned = $request->boolean('is_pinned');
         $post->save();
 
         // Carga la relación con el usuario autor.

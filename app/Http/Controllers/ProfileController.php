@@ -85,7 +85,7 @@ class ProfileController extends Controller
                 ]
             );
         } else {
-            $posts = Post::with(['user', 'profileOwner'])
+            $posts_query = Post::with(['user', 'profileOwner'])
                 ->withCount('comments')
                 ->visibleTo($auth_user)
                 ->where(function ($query) use ($posts_type, $user, $auth_user) {
@@ -98,7 +98,14 @@ class ProfileController extends Controller
 
                     // Publicaciones creadas por otros en el perfil del usuario.
                     $query->where('profile_user_id', $user->id);
-                })
+                });
+
+            // Ordena poniendo primero la publicación fijada.
+            if ($posts_type === 'own') {
+                $posts_query->orderByDesc('is_pinned');
+            }
+
+            $posts = $posts_query
                 ->latest()
                 ->cursorPaginate(7, ['*'], 'cursor', $cursor);
                 

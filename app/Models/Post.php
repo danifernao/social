@@ -33,6 +33,7 @@ class Post extends Model
      */
     protected $casts = [
         'is_closed' => 'boolean',
+        'is_pinned' => 'boolean',
     ];
 
     /**

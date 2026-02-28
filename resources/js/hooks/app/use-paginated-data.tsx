@@ -1,14 +1,15 @@
 import type { EntryAction } from '@/types';
-import { router } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
-type WithId = {
+type WithProps = {
     id: number | string;
+    is_pinned: boolean;
 };
 
-interface UsePaginatedProps<T extends WithId> {
+interface UsePaginatedProps<T extends WithProps> {
     initialItems: T[]; // Lista inicial de elementos.
 
     // Cursor inicial utilizado para solicitar la siguiente página.
@@ -26,7 +27,7 @@ interface UsePaginatedProps<T extends WithId> {
  * Hook genérico para gestionar datos paginados por cursor
  * y sincronizar cambios individuales sobre la colección.
  */
-export function usePaginatedData<T extends WithId>({ initialItems, initialCursor, propKey, insertAtStart = false }: UsePaginatedProps<T>) {
+export function usePaginatedData<T extends WithProps>({ initialItems, initialCursor, propKey, insertAtStart = false }: UsePaginatedProps<T>) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
@@ -36,6 +37,12 @@ export function usePaginatedData<T extends WithId>({ initialItems, initialCursor
     const [items, setItems] = useState<T[]>(initialItems);
     const [nextCursor, setNextCursor] = useState<string | null>(initialCursor);
     const [processing, setProcessing] = useState(false);
+
+    // Nombre de la ruta actual proporcionada por Inertia.
+    const { routeName } = usePage<{ routeName: string }>().props;
+
+    // Determina si es un perfil de usuario o la página de una publicación.
+    const supportsPinnedItems = ['profile.show', 'post.show'].includes(routeName);
 
     /**
      * Solicita la siguiente página de resultados al servidor.
@@ -96,7 +103,27 @@ export function usePaginatedData<T extends WithId>({ initialItems, initialCursor
                     return prev;
                 }
 
-                const updated = [...prev];
+                let updated = [...prev];
+
+                if (supportsPinnedItems) {
+                    updated = prev.map((i) => {
+                        // Actualiza el elemento.
+                        if (i.id === item.id) {
+                            return item;
+                        }
+
+                        // Si el elemento está fijado, desfija cualquier otro.
+                        if (item.is_pinned && i.is_pinned) {
+                            return { ...i, is_pinned: false };
+                        }
+
+                        return i;
+                    });
+
+                    // El elemento fijado va primero en la lista.
+                    return updated.sort((a, b) => (b.is_pinned ? 1 : 0) - (a.is_pinned ? 1 : 0));
+                }
+
                 updated[index] = item;
 
                 return updated;
@@ -107,9 +134,18 @@ export function usePaginatedData<T extends WithId>({ initialItems, initialCursor
                 return prev.filter((i) => i.id !== item.id);
             }
 
-            // Inserta un nuevo elemento al inicio o al final
-            // de la colección.
-            return insertAtStart ? [item, ...prev] : [...prev, item];
+            if (insertAtStart) {
+                // Si el primer elemento de la lista actual está fijado,
+                // inserta el nuevo después de este.
+                if (supportsPinnedItems && prev.length > 0 && prev[0].is_pinned) {
+                    const [pinned, ...rest] = prev;
+                    return [pinned, item, ...rest];
+                }
+
+                return [item, ...prev];
+            }
+
+            return [...prev, item];
         });
     };
 

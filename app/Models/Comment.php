@@ -25,6 +25,15 @@ class Comment extends Model
     ];
 
     /**
+     * Define los casts automáticos de atributos.
+     *
+     * @var array<string,string>
+     */
+    protected $casts = [
+        'is_pinned' => 'boolean',
+    ];
+
+    /**
      * Atributos que se agregan automáticamente al serializar.
      *
      * @var list<string>

@@ -10,6 +10,7 @@ export interface Post {
     profile_owner: User;
     visibility: 'public' | 'private' | 'following' | null;
     is_closed: boolean;
+    is_pinned: boolean;
     content: string;
     comments_count: number;
     reactions: Reaction[];

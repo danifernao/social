@@ -22,6 +22,7 @@ return new class extends Migration
             $table->enum('visibility', ['public', 'following', 'private'])
                 ->nullable();
             $table->boolean('is_closed')->default(false);
+            $table->boolean('is_pinned')->default(false);
             $table->timestamps();
         });
     }

@@ -1,6 +1,6 @@
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import { useCanActOnUser, useCheckPermission, useIsAuthUser } from '@/hooks/app/use-auth';
-import type { Entry } from '@/types';
+import type { Entry, Post, User } from '@/types';
 import { Link, router } from '@inertiajs/react';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { EllipsisVertical } from 'lucide-react';
@@ -31,6 +31,9 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
     // Determina si el usuario autenticado puede actualizar la entrada.
     const canUpdateEntry = useCanActOnUser(entry.user);
 
+    // Determina si el usuario autenticado puede fijar la entrada.
+    const canPinEntry = (entry.type === 'post' && isEntryAuthor) || (entry.type === 'comment' && useIsAuthUser({ id: entry.post_user_id } as User));
+
     // Controla la visibilidad del formulario de edición.
     const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
 
@@ -48,11 +51,59 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
         setIsFormDialogOpen(false);
     };
 
-    // Define la ruta de eliminación según el tipo de entrada.
-    const routeName = entry.type === 'post' ? 'post.delete' : 'comment.delete';
+    // Controla el estado de la opción fijar/desfijar.
+    const [isPinning, setIsPinning] = useState(false);
 
     // Define el nombre del parámetro requerido por la ruta.
     const routeParamKey = entry.type === 'post' ? 'post' : 'comment';
+
+    // Define la ruta de actualización según el tipo de entrada.
+    const updateRouteName = entry.type === 'post' ? 'post.update' : 'comment.update';
+
+    // Mensaje mostrado tras fijar/desfijar una entrada.
+    const pinnedMessage =
+        entry.type === 'post'
+            ? entry.is_pinned
+                ? t('post_unpinned')
+                : t('post_pinned')
+            : entry.is_pinned
+              ? t('comment_unpinned')
+              : t('comment_pinned');
+
+    const togglePin = () => {
+        setIsPinning(true);
+
+        router.patch(
+            route(updateRouteName, { [routeParamKey]: entry.id }),
+            {
+                is_pinned: !entry.is_pinned,
+            },
+            {
+                preserveScroll: true,
+                onSuccess: (page) => {
+                    const updatedEntry = entry.type === 'post' ? (page.props.post as Post) : (page.props.comment as Comment);
+
+                    // Informa al contexto del cambio realizado.
+                    updateEntryList?.('update', updatedEntry);
+
+                    toast.success(pinnedMessage);
+                },
+                onError: (errors) => {
+                    toast.error(t('unexpected_error'));
+
+                    if (import.meta.env.DEV) {
+                        console.error(errors);
+                    }
+                },
+                onFinish: () => {
+                    setIsPinning(false);
+                },
+            },
+        );
+    };
+
+    // Define la ruta de eliminación según el tipo de entrada.
+    const deleteRouteName = entry.type === 'post' ? 'post.delete' : 'comment.delete';
 
     // Mensaje mostrado tras eliminar la entrada.
     const deletedMessage = entry.type === 'post' ? t('post_deleted') : t('comment_deleted');
@@ -60,7 +111,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
     // Ejecuta la eliminación de la entrada tras la confirmación del usuario.
     const onConfirm = () => {
         setIsConfirmDialogOpen(false);
-        router.delete(route(routeName, { [routeParamKey]: entry.id }), {
+        router.delete(route(deleteRouteName, { [routeParamKey]: entry.id }), {
             preserveScroll: true,
             onSuccess: () => {
                 // Notifica al contexto que la entrada fue eliminada.
@@ -88,6 +139,15 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent>
+                    {/* Opción para fijar la entrada */}
+                    {(canPinEntry || canUpdateEntry) && (
+                        <DropdownMenuItem asChild>
+                            <Button variant="ghost" className="w-full justify-start" onClick={togglePin} disabled={isPinning}>
+                                {entry.is_pinned ? t('unpin') : t('pin')}
+                            </Button>
+                        </DropdownMenuItem>
+                    )}
+
                     {/* Opción para editar la entrada */}
                     {(isEntryAuthor || canUpdateEntry) && (
                         <DropdownMenuItem asChild>

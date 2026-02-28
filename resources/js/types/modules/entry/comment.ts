@@ -6,8 +6,10 @@ export interface Comment {
     id: number;
     user_id: number;
     post_id: number;
+    post_user_id: number;
     user: User;
     content: string;
+    is_pinned: boolean;
     reactions: Reaction[];
     updated_at: string;
     created_at: string;

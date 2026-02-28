@@ -130,12 +130,33 @@ class CommentController extends Controller
     }
 
     /**
-     * Actualiza el contenido de un comentario existente.
+     * Actualiza un comentario existente.
+     * Delega la operación a métodos específicos,
+     * de acuerdo con los valores enviados.
      *
      * @param Request $request Datos de la petición HTTP.
      * @param Comment $comment Instancia del comentario que se va a actualizar.
      */
     public function update(Request $request, Comment $comment)
+    {
+        if ($request->filled('content')) {
+            return $this->updateContent($request, $comment);
+        }
+
+        if ($request->filled('is_pinned')) {
+            return $this->updateIsPinned($request, $comment);
+        }
+
+        return back()->with('status', 'no_action_performed');
+    }
+
+    /**
+     * Actualiza el contenido de un comentario existente.
+     *
+     * @param Request $request Datos de la petición HTTP.
+     * @param Comment $comment Instancia del comentario que se va a actualizar.
+     */
+    public function updateContent(Request $request, Comment $comment)
     {
         // Deniega el acceso si el usuario autenticado
         // no tiene permisos para actualizar el comentario.
@@ -155,6 +176,44 @@ class CommentController extends Controller
 
         // Sincroniza las menciones presentes en el comentario.
         $this->mentionService->sync($comment, $request->user());
+
+        // Transforma el comentario utilizando CommentResource para el frontend.
+        $comment_data = (new CommentResource($comment))->resolve();
+        
+        return back()->with('comment',  $comment_data);
+    }
+
+    /**
+     * Actualiza el estado fijado de un comentario existente.
+     *
+     * @param Request $request Datos de la petición HTTP.
+     * @param Comment $comment Instancia del comentario que se va a actualizar.
+     */
+    public function updateIsPinned(Request $request, Comment $comment)
+    {
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos para actualizar la publicación.
+        $this->authorize('update', $comment->post);
+
+        // Valida los datos enviados.
+        $request->validate([
+            'is_pinned' => 'required|boolean',
+        ]);
+
+        // Desfija cualquier otro comentario.
+        if ($request->boolean('is_pinned')) {
+            Comment::where('post_id', $comment->post_id)
+                ->where('is_pinned', true)
+                ->where('id', '!=', $comment->id)
+                ->update(['is_pinned' => false]);
+        }
+
+        // Marca el comentario con el estado especificado.
+        $comment->is_pinned = $request->boolean('is_pinned');
+        $comment->save();
+
+        // Carga la relación del autor del comentario y sus permisos.
+        $comment->load('user');
 
         // Transforma el comentario utilizando CommentResource para el frontend.
         $comment_data = (new CommentResource($comment))->resolve();
