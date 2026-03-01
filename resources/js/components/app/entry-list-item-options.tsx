@@ -1,7 +1,7 @@
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import { useCanActOnUser, useCheckPermission, useIsAuthUser } from '@/hooks/app/use-auth';
 import type { Entry, Post, User } from '@/types';
-import { Link, router } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { EllipsisVertical } from 'lucide-react';
 import { useContext, useState } from 'react';
@@ -24,6 +24,9 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
+    // Captura el nombre de la ruta actual proporcionado por Inertia.
+    const { routeName } = usePage<{ routeName: string }>().props;
+
     // Determina si el usuario autenticado es el autor de la entrada y
     // tiene permiso para actualizarla.
     const isEntryAuthor = useIsAuthUser(entry.user) && useCheckPermission(entry.type);
@@ -32,7 +35,9 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
     const canUpdateEntry = useCanActOnUser(entry.user);
 
     // Determina si el usuario autenticado puede fijar la entrada.
-    const canPinEntry = (entry.type === 'post' && isEntryAuthor) || (entry.type === 'comment' && useIsAuthUser({ id: entry.post_user_id } as User));
+    const canPinEntry =
+        (routeName === 'profile.show' && entry.type === 'post' && !entry.profile_user_id && (isEntryAuthor || canUpdateEntry)) ||
+        (routeName === 'post.show' && entry.type === 'comment' && (useIsAuthUser({ id: entry.post_user_id } as User) || canUpdateEntry));
 
     // Controla la visibilidad del formulario de edición.
     const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
@@ -140,7 +145,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
 
                 <DropdownMenuContent>
                     {/* Opción para fijar la entrada */}
-                    {(canPinEntry || canUpdateEntry) && (
+                    {canPinEntry && (
                         <DropdownMenuItem asChild>
                             <Button variant="ghost" className="w-full justify-start" onClick={togglePin} disabled={isPinning}>
                                 {entry.is_pinned ? t('unpin') : t('pin')}
