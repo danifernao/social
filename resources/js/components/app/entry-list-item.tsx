@@ -136,7 +136,10 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                                 <div className="text-sm">
                                     <Trans i18nKey="posted_on_profile" values={{ username: entry.profile_owner.username }}>
                                         <TextLink
-                                            href={route('profile.show', entry.profile_owner.username)}
+                                            href={route('profile.show', {
+                                                user: entry.profile_owner.username,
+                                                posts: 'others',
+                                            })}
                                             tabIndex={5}
                                             className="font-semibold no-underline"
                                         ></TextLink>
