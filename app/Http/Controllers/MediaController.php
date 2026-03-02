@@ -56,6 +56,33 @@ class MediaController extends Controller
     }
 
     /**
+     * Muestra un archivo multimedia.
+     * 
+     * @param Request $request Datos de la petición HTTP.
+     * @param Media   $media   Archivo multimedia que se desea ver.
+     */
+    public function show(Request $request, Media $media)
+    {
+        // Obtiene la ruta compartida en la solicitud HTTP.
+        $requested_path = $request->route()->originalParameter('media');
+
+        // Determina cuál de las dos rutas del registro multimedia se debe usar.
+        $path_to_file = ($requested_path === $media->thumbnail_path) 
+            ? $media->thumbnail_path 
+            : $media->path;
+
+        // Verifica que el archivo exista.
+        if (!$path_to_file || !Storage::disk($media->disk)->exists($path_to_file)) {
+            abort(404);
+        }
+
+        // Obtiene la ruta absoluta del archivo consultado.
+        $absolute_path = Storage::disk($media->disk)->path($path_to_file);
+
+        return response()->file($absolute_path);
+    }
+
+    /**
      * Guarda un archivo multimedia.
      * 
      * @param Request $request Datos de la petición HTTP.
@@ -70,34 +97,37 @@ class MediaController extends Controller
                 'mimes:jpg,jpeg,png,webp,gif,mp4,webm',
                 'max:5120',
             ],
-            'thumbnail' => ['nullable', 'image', 'max:2048'],
+            'thumbnail' => ['nullable', 'image', 'max:5120'],
         ]);
 
         // Obtiene el archivo.
         $file = $data['file'];
 
+        // Disco de almacenamiento.
+        $disk = 'local';
+
         // Nombre único y aleatorio.
         $filename = Str::uuid()->toString() . '.' . $file->getClientOriginalExtension();
 
         // Guarda el archivo en el almacenamiento local.
-        $path = $file->storeAs('media', $filename, 'public');
+        $path = $file->storeAs('attachments', $filename, $disk);
 
         if ($request->hasFile('thumbnail')) {
-            $thumb_path = $request->file('thumbnail')->store('media/thumbs', 'public');
+            $thumb_path = $request->file('thumbnail')->store('attachments/thumbs', $disk);
         }
 
         // Guarda los datos del archivo en la base de datos.
         $media = Media::create([
-            'user_id'   => $request->user()->id,
-            'disk'      => 'public',
-            'path'      => $path,
+            'user_id'        => $request->user()->id,
+            'disk'           => $disk,
+            'path'           => $path,
             'thumbnail_path' => $thumb_path ?? null,
-            'mime_type' => $file->getMimeType(),
-            'size'      => $file->getSize(),
+            'mime_type'      => $file->getMimeType(),
+            'size'           => $file->getSize(),
         ]);
 
-        // URL pública del archivo.
-        $url = Storage::disk($media->disk)->url($media->path);
+        // URL del archivo.
+        $url = route('media.show', ['media' => $media->path]);
 
         return back()->with([
             'media_url' => $url,

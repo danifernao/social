@@ -31,8 +31,7 @@ class Media extends Model
      */
     public function getUrlAttribute(): string
     {
-        
-        return Storage::disk($this->disk)->url($this->path);
+        return route('media.show', ['media' => $this->path]);
     }
 
     /**
@@ -43,8 +42,9 @@ class Media extends Model
     public function getThumbnailUrlAttribute(): ?string
     {
         if ($this->thumbnail_path) {
-            return Storage::disk($this->disk)->url($this->thumbnail_path);
+            return route('media.show', ['media' => $this->thumbnail_path]);
         }
+        
         return null;
     }
 

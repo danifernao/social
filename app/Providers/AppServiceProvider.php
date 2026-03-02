@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Comment;
+use App\Models\Media;
 use App\Models\Post;
 use App\Models\User;
 use App\Observers\CommentObserver;
@@ -49,9 +50,26 @@ class AppServiceProvider extends ServiceProvider
             if (is_numeric($value)) {
                 return User::findOrFail($value);
             }
+            
             // Si no es numérico, se asume que es un nombre de usuario
             // y se busca por ese campo.
             return User::where('username', $value)->firstOrFail();
+        });
+
+        // Permite que las rutas como /media/{media} acepten tanto IDs numéricos
+        // como rutas de archivo.
+        Route::bind('media', function ($value) {
+            // Si el valor es numérico, se asume que es un ID
+            // y se busca al archivo por ID.
+            if (is_numeric($value)) {
+                return Media::findOrFail($value);
+            }
+
+            // Si no es numérico, se asume que es una ruta
+            // y se busca por esa columna.
+            return Media::where('path', $value)
+                ->orWhere('thumbnail_path', $value)
+                ->firstOrFail();
         });
 
         // Registra los observadores.

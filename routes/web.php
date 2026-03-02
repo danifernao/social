@@ -187,10 +187,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('reaction.index');
 
     // Multimedia
-    Route::post('/media', [MediaController::class, 'store'])
-        ->name('media.store');
     Route::get('/user/{user}/media', [MediaController::class, 'index'])
         ->name('media.index');
+    Route::post('/media', [MediaController::class, 'store'])
+        ->name('media.store');
     Route::delete('/media/{media}', [MediaController::class, 'destroy'])
         ->name('media.destroy');
 
@@ -346,6 +346,9 @@ Route::get('/post/{post}/comment/{comment}', [PostController::class, 'show'])
     ->name('post.comment.show');
 Route::get('/page/{lang}/{slug}', [AdminPageController::class, 'show'])
     ->name('page.show');
+Route::get('/media/{media}', [MediaController::class, 'show'])
+    ->where('media', '.*')
+    ->name('media.show');
 
 Route::get('/comment/{comment}', function (Request $request, Comment $comment) {
     return redirect()->route('post.comment.show', [
