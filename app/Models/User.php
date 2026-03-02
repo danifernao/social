@@ -80,7 +80,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getAvatarUrlAttribute(): ?string
     {
         return $this->avatar_path
-            ? Storage::disk('public')->url($this->avatar_path)
+            ? route('media.show', ['media' => $this->avatar_path])
             : null;
     }
 
@@ -88,11 +88,18 @@ class User extends Authenticatable implements MustVerifyEmail
      * Atributo computado: rol lógico del usuario.
      *
      * @return string
-     */
-    
+     */    
     public function getRoleAttribute(): string
     {
         return $this->roles->first()?->name ?? 'user';
+    }
+
+    /**
+     * Relación: el registro del archivo del avatar del usuario.
+     */ 
+    public function avatarMedia()
+    {
+        return $this->hasOne(Media::class, 'path', 'avatar_path');
     }
 
     /**

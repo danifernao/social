@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\MediaResource;
 use App\Models\Media;
 use App\Models\User;
+use App\Services\MediaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -25,7 +26,8 @@ class MediaController extends Controller
 
         // Deniega acceso si el usuario autenticado no es el propietario
         // del archivo y no tiene permisos de moderación
-        if ($auth_user->id !== $user->id && !$auth_user->hasAnyRole(['admin', 'mod'])) {
+        if ($auth_user->id !== $user->id &&
+            !$auth_user->hasAnyRole(['admin', 'mod'])) {
             abort(403);
         }
 
@@ -43,6 +45,7 @@ class MediaController extends Controller
         // Consulta de archivos multimedia del usuario.
         $media = Media::query()
             ->where('user_id', $user->id)
+            ->noAvatars()
             ->when($type, function ($query, $type) {
                 return $query->where('mime_type', 'LIKE', $type . '/%');
             })
@@ -85,9 +88,11 @@ class MediaController extends Controller
     /**
      * Guarda un archivo multimedia.
      * 
-     * @param Request $request Datos de la petición HTTP.
+     * @param Request      $request       Datos de la petición HTTP.
+     * @param MediaService $mediaService  Servicio para gestionar archivos
+     *                                    multimedia.
      */
-    public function store(Request $request)
+    public function store(Request $request, MediaService $mediaService)
     {
         // Valida los datos del archivo enviado.
         $data = $request->validate([
@@ -100,31 +105,13 @@ class MediaController extends Controller
             'thumbnail' => ['nullable', 'image', 'max:5120'],
         ]);
 
-        // Obtiene el archivo.
-        $file = $data['file'];
-
-        // Disco de almacenamiento.
-        $disk = 'local';
-
-        // Nombre único y aleatorio.
-        $filename = Str::uuid()->toString() . '.' . $file->getClientOriginalExtension();
-
-        // Guarda el archivo en el almacenamiento local.
-        $path = $file->storeAs('attachments', $filename, $disk);
-
-        if ($request->hasFile('thumbnail')) {
-            $thumb_path = $request->file('thumbnail')->store('attachments/thumbs', $disk);
-        }
-
-        // Guarda los datos del archivo en la base de datos.
-        $media = Media::create([
-            'user_id'        => $request->user()->id,
-            'disk'           => $disk,
-            'path'           => $path,
-            'thumbnail_path' => $thumb_path ?? null,
-            'mime_type'      => $file->getMimeType(),
-            'size'           => $file->getSize(),
-        ]);
+        // Guarda el archivo en el almacenamiento y en la base de datos.
+        $media = $mediaService->store(
+            $request->file('file'),
+            $request->user()->id,
+            'attachments',
+            $request->file('thumbnail')
+        );
 
         // URL del archivo.
         $url = route('media.show', ['media' => $media->path]);
@@ -138,10 +125,12 @@ class MediaController extends Controller
      * Elimina un archivo multimedia.
      * Solo el propietario del archivo o moderadores pueden eliminarlo.
      * 
-     * @param Request $request Datos de la petición HTTP.
-     * @param Media   $media   Archivo multimedia a eliminar.
+     * @param Request $request            Datos de la petición HTTP.
+     * @param Media   $media              Archivo multimedia a eliminar.
+     * @param MediaService $mediaService  Servicio para gestionar archivos
+     *                                    multimedia.
      */
-    public function destroy(Request $request, Media $media)
+    public function destroy(Request $request, Media $media, MediaService $mediaService)
     {
         // Obtiene el usuario autenticado.
         $auth_user = $request->user();
@@ -154,14 +143,8 @@ class MediaController extends Controller
             abort(403);
         }
 
-        // Si existe imagen miniatura, la elimina del almacenamiento.
-        if ($media->thumbnail_path) {
-            Storage::disk($media->disk)->delete($media->thumbnail_path);
-        }
-
         // Elimina el archivo del almacenamiento y de la base de datos.
-        Storage::disk($media->disk)->delete($media->path);
-        $media->delete();
+        $mediaService->delete($media);
 
         return back()->with('status', 'media_deleted');
     }

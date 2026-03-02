@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Rules\UserRules;
+use App\Services\MediaService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -39,10 +40,12 @@ class SettingsProfileController extends Controller
      * o eliminación del avatar y la invalidación de la verificación
      * del correo si este fue modificado.
      *
-     * @param Request           $request Datos validados del perfil.
-     * @return RedirectResponse          Redirección tras actualizar el perfil.
+     * @param Request           $request      Datos validados del perfil.
+     * @param MediaService      $mediaService Servicio para gestionar archivos
+     *                                        multimedia.
+     * @return RedirectResponse               Redirección tras actualizar el perfil.
      */
-    public function update(Request $request): RedirectResponse
+    public function update(Request $request, MediaService $mediaService): RedirectResponse
     {
         // Obtiene el usuario autenticado.
         $user = $request->user();
@@ -62,26 +65,25 @@ class SettingsProfileController extends Controller
         }
 
         if ($user->can('update_avatar')) {
-            // Función anónima para eliminar el avatar existente.
-            $deleteAvatar = fn() => 
-                $user->avatar_path &&
-                Storage::disk('public')->exists($user->avatar_path)
-                    ? Storage::disk('public')->delete($user->avatar_path)
-                    : null;
-
-            // Elimina el avatar actual si el usuario lo solicitó.
-            if ($data['remove_avatar']) {
-                $deleteAvatar();
-                $data['avatar_path'] = null;
+            // Elimina el avatar si el usuario lo solicita o
+            // si va a subir uno nuevo.
+            if ($data['remove_avatar'] || $request->hasFile('avatar')) {
+                if ($user->avatar_path) {
+                    $mediaService->delete($user->avatarMedia);
+                    $user->avatar_path = null;
+                }
             }
 
-          // Procesa la carga de un nuevo avatar si fue enviado.
-          if ($request->hasFile('avatar')) {
-              $deleteAvatar();
-              $data['avatar_path'] = $request
-                  ->file('avatar')
-                  ->store('avatars', 'public');
-          }
+            // Guarda el nuevo avatar si se dispone de un archivo.
+            if ($request->hasFile('avatar')) {
+                $media = $mediaService->store(
+                    $request->file('avatar'),
+                    $user->id,
+                    'avatars'
+                );
+
+                $user->avatar_path = $media->path;
+            }
         }
         else {
             // Si el usuario no tiene permiso para actualizar el avatar,
@@ -93,11 +95,10 @@ class SettingsProfileController extends Controller
         $user->fill($data);
 
         // Detecta si el correo cambió.
-        $emailChanged = $user->isDirty('email');
-
+        $email_changed = $user->isDirty('email');
 
         // Si el correo fue modificado, invalida la verificación previa.
-        if ($emailChanged) {
+        if ($email_changed) {
             $user->email_verified_at = null;
         }
 
@@ -106,7 +107,7 @@ class SettingsProfileController extends Controller
 
         // Envía al correo del usuario el enlace de verificación solo
         // si la dirección cambió.
-        if ($emailChanged) {
+        if ($email_changed) {
             $user->sendEmailVerificationNotification();
         }
 
@@ -122,7 +123,7 @@ class SettingsProfileController extends Controller
      * @param Request           $request Datos de la petición HTTP.
      * @return RedirectResponse          Redirección tras eliminar la cuenta.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request, MediaService $mediaService): RedirectResponse
     {
         // Valida los datos enviados desde el formulario.
         $request->validate([

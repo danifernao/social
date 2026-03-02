@@ -60,4 +60,15 @@ class Media extends Model
         }
         return null;
     }
+
+    /**
+     * Filtra la consulta para excluir archivos que sean avatares.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query Instancia de la consulta.
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeNoAvatars($query)
+    {
+        return $query->where('path', 'NOT LIKE', 'avatars/%');
+    }
 }
