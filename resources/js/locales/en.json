@@ -126,6 +126,7 @@
     "general": "General",
     "go_back": "Go back",
     "green": "Green",
+    "height": "Height",
     "hidden_block": "Hidden block",
     "hidden_text": "Hidden text",
     "hide_content": "Hide content",
@@ -358,6 +359,7 @@
     "welcome_message": "Connect, share, and see what others think.",
     "welcome_to_site": "Welcome to {{siteName}}",
     "whats_on_your_mind": "What's on your mind?",
+    "width": "Width",
     "yellow": "Yellow",
     "yes": "Yes"
 }

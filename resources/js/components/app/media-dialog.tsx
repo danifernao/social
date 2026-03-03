@@ -9,7 +9,7 @@ interface MediaDialogProps {
     open: boolean;
     user: User;
     type: 'image' | 'video';
-    onClose: () => void;
+    onClose?: () => void;
     onSelect: (url: string) => void;
 }
 
@@ -21,7 +21,7 @@ export default function MediaDialog({ open, user, type, onClose, onSelect }: Med
     const { t } = useTranslation();
 
     return (
-        <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+        <Dialog open={open} onOpenChange={(v) => !v && onClose?.()}>
             <DialogContent className="!max-w-5xl">
                 <DialogHeader>
                     <DialogTitle>{t('uploaded_files')}</DialogTitle>
@@ -33,7 +33,7 @@ export default function MediaDialog({ open, user, type, onClose, onSelect }: Med
                     type={type}
                     onSelect={(media: Media) => {
                         onSelect?.(media.url);
-                        onClose();
+                        onClose?.();
                     }}
                 />
             </DialogContent>

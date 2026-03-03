@@ -94,9 +94,30 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
         },
 
         // Renderiza imágenes optimizadas con carga diferida.
-        img: ({ src, alt }) => (
-            <img src={src ?? ''} alt={alt ?? ''} loading="lazy" className="mb-4 aspect-[4/3] h-auto max-w-full rounded last:mb-0" />
-        ),
+        img: ({ node }) => {
+            const properties = node?.properties ?? {};
+            const src = typeof properties.src === 'string' ? properties.src : '';
+            const alt = typeof properties.alt === 'string' ? properties.alt : '';
+
+            const width = typeof properties.width === 'number' ? properties.width : undefined;
+            const height = typeof properties.height === 'number' ? properties.height : undefined;
+
+            const directiveType = typeof properties['data-directive-type'] === 'string' ? properties['data-directive-type'] : undefined;
+            const isInline = directiveType === 'textDirective';
+
+            return (
+                <img
+                    src={src}
+                    alt={alt}
+                    loading="lazy"
+                    style={{
+                        width: width ? `${width}px` : undefined,
+                        height: height ? `${height}px` : undefined,
+                    }}
+                    className={cn('mb-4 rounded-lg last:mb-0', isInline ? 'inline align-middle' : 'mb-4 block last:mb-0')}
+                />
+            );
+        },
 
         hr: () => <hr className="my-4 border-t" />,
 
@@ -157,8 +178,8 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
             const service = node?.properties?.['data-service'] || 'generic';
 
             const src = typeof properties.src === 'string' ? properties.src : undefined;
-            const width = typeof properties.width === 'string' || typeof properties.width === 'number' ? properties.width : undefined;
-            const height = typeof properties.height === 'string' || typeof properties.height === 'number' ? properties.height : undefined;
+            const width = typeof properties.width === 'number' ? properties.width : undefined;
+            const height = typeof properties.height === 'number' ? properties.height : undefined;
 
             return (
                 <iframe
@@ -168,7 +189,7 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
                     height={height ?? '315'}
                     allowFullScreen
                     loading="lazy"
-                    className={cn('mb-4 aspect-video h-full w-full rounded border-0 last:mb-0', service === 'youtube' && 'bg-muted')}
+                    className={cn('mb-4 aspect-video rounded-lg border-0 last:mb-0', service === 'youtube' && 'bg-muted')}
                 />
             );
         },

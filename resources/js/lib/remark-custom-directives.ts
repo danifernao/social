@@ -1,6 +1,6 @@
 import { visit } from 'unist-util-visit';
 import { VFile } from 'vfile';
-import { Root, Node, Literal } from 'mdast';
+import { Root, Node, Literal, Image } from 'mdast';
 import {
   TextDirective,
   LeafDirective,
@@ -68,8 +68,7 @@ export default function remarkCustomDirectives() {
 
     // Recorre todos los nodos del árbol Markdown.
     visit(tree, (node: Node) => {
-      if (isDirective(node)) {        
-        
+      if (isDirective(node)) {
         /**
          * Manejo de la directiva ":style".
          * Se aplica únicamente a directivas de texto en línea.
@@ -122,6 +121,43 @@ export default function remarkCustomDirectives() {
         }
 
         /**
+         * Manejo de la directiva ":image".
+         * Solo se procesa cuando es una directiva de tipo hoja.
+         */
+        if ((node.type === 'textDirective' || node.type === 'leafDirective') && node.name === 'image') {
+          const imgNode = node as LeafDirective;
+
+          let src = '';
+
+          // Se obtiene el primer hijo, que se espera contenga la URL.
+          const firstChild = imgNode.children?.[0];
+
+          // Si el hijo existe y es un nodo literal,
+          // se extrae el valor como URL de la imagen.
+          if (firstChild && isLiteral(firstChild)) {
+              src = firstChild.value;
+          }
+
+          // Obtiene los atributos.
+          const attrs = imgNode.attributes || {};
+          const alt = attrs.alt || '';
+          const width = parseNumericAttr(attrs.width);
+          const height = parseNumericAttr(attrs.height);
+
+          node.data = {
+            hName: 'img',
+            hProperties: {
+              src,
+              alt,
+              ...(width ? { width } : {}),
+              ...(height ? { height } : {}),
+            },
+          };
+
+          node.children = [];
+        }
+
+        /**
          * Manejo de la directiva ":video".
          * Solo se procesa cuando es una directiva de tipo hoja.
          */
@@ -139,6 +175,11 @@ export default function remarkCustomDirectives() {
               url = firstChild.value;
           }
 
+          // Obtiene los atributos.
+          const attrs = videoNode.attributes || {};
+          const width = parseNumericAttr(attrs.width);
+          const height = parseNumericAttr(attrs.height);
+
           // Se detecta el servicio de video a partir de la URL.
           const service = detectVideoService(url);
 
@@ -147,7 +188,11 @@ export default function remarkCustomDirectives() {
             case 'youtube':
               videoNode.data = {
                 hName: 'iframe',
-                hProperties: buildVideoIframeProps('youtube', url),
+                hProperties: {
+                  ...buildVideoIframeProps('youtube', url),
+                  ...(width ? { width } : {}),
+                  ...(height ? { height } : {}),
+                }
               };
               break;
 
@@ -156,8 +201,11 @@ export default function remarkCustomDirectives() {
                 hName: 'video',
                 hProperties: {
                   src: url,
+                  style: [
+                    width ? `width:${width}px;` : '',
+                    height ? `height:${height}px;` : '',
+                  ].join(''),
                   controls: true,
-                  className: 'w-full max-w-3xl mx-auto rounded-lg',
                 },
               };
               break;
@@ -175,6 +223,23 @@ export default function remarkCustomDirectives() {
       }
     });
   };
+}
+
+/**
+ * Valida que un atributo sea un número positivo.
+ */
+function parseNumericAttr(value: unknown): number | undefined {
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  if (!/^\d+$/.test(value)) {
+    return undefined;
+  }
+
+  const num = Number(value);
+
+  return Number.isFinite(num) && num > 0 ? num : undefined;
 }
 
 /**
@@ -210,11 +275,8 @@ function buildVideoIframeProps(service: 'youtube', url: string) {
 
       return {
         src: `https://www.youtube.com/embed/${videoId}`,
-        width: 560,
-        height: 315,
         frameBorder: 0,
-        allow:
-          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+        allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
         allowFullScreen: true,
         'data-service': 'youtube',
       };

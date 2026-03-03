@@ -64,6 +64,15 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     // Modo de inserción multimedia.
     const [mediaMode, setMediaMode] = useState<'image' | 'video' | null>(null);
 
+    // Estados para controlar la apertura manual
+    // de los Popovers de imagen y video.
+    const [isImagePopoverOpen, setIsImagePopoverOpen] = useState(false);
+    const [isVideoPopoverOpen, setIsVideoPopoverOpen] = useState(false);
+
+    // Clases para ocultar los botones en los campos para números.
+    const noSpinButtonClassName =
+        '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
+
     /**
      * Obtiene la selección actual del textarea.
      * Retorna las posiciones de inicio y fin junto con el texto seleccionado.
@@ -199,7 +208,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
      */
 
     // Atributos de la imagen.
-    const [imageData, setImageData] = useState({ alt: '', url: '' });
+    const [imageData, setImageData] = useState({ alt: '', url: '', width: '', height: '' });
 
     // Referencia del campo de archivo de imagen.
     const imgFileInputRef = useRef<HTMLInputElement | null>(null);
@@ -211,11 +220,16 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     function applyImage(): void {
         const sel = getSelection();
         const selectedIsUrl = sel && /^https?:\/\//i.test(sel.value);
+
         const defaultAlt = sel && sel.start !== sel.end && !selectedIsUrl ? sel.value : `${t('text')}`;
         const altToUse = imageData.alt.trim() || defaultAlt;
         const urlToUse = sel && selectedIsUrl ? sel.value : imageData.url.trim() || `${window.location.origin}/samples/cat.jpg`;
-        replaceSelection(`\n![${altToUse}](${urlToUse})\n`);
-        setImageData({ alt: '', url: '' });
+        const widthAttr = imageData.width ? ` width=${imageData.width}` : '';
+        const heightAttr = imageData.height ? ` height=${imageData.height}` : '';
+
+        replaceSelection(`\n::image[${urlToUse}]{alt="${altToUse}"${widthAttr}${heightAttr}}\n`);
+
+        setImageData({ alt: '', url: '', width: '', height: '' });
     }
 
     // Sube una imagen al seleccionar un archivo.
@@ -242,7 +256,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
      */
 
     // Atributos del video.
-    const [videoData, setVideoData] = useState({ url: '' });
+    const [videoData, setVideoData] = useState({ url: '', width: '', height: '' });
 
     // Referencia del input de archivo de video.
     const videoFileInputRef = useRef<HTMLInputElement | null>(null);
@@ -253,10 +267,16 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     // Inserta el video en el editor.
     function applyVideo(): void {
         const sel = getSelection();
+
         const url = videoData.url.trim() || (sel ? sel.value : '');
         const finalUrl = url || `${window.location.origin}/samples/cat.mp4`;
-        replaceSelection(`\n::video[${finalUrl}]\n`);
-        setVideoData({ url: '' });
+
+        const widthAttr = videoData.width ? ` width=${videoData.width}` : '';
+        const heightAttr = videoData.height ? ` height=${videoData.height}` : '';
+
+        replaceSelection(`\n::video[${finalUrl}]{${widthAttr}${heightAttr}}\n`);
+
+        setVideoData({ url: '', width: '', height: '' });
     }
 
     // Sube un video al seleccionar un archivo.
@@ -269,7 +289,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
         uploadMedia(file, {
             onStart: () => setIsVideoUploading(true),
-            onSuccess: (url) => setVideoData({ url }),
+            onSuccess: (url) => setVideoData((p) => ({ ...p, url })),
             onFinish: () => setIsVideoUploading(false),
         });
     }
@@ -501,7 +521,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
             </Popover>
 
             {/* Imagen */}
-            <Popover>
+            <Popover open={isImagePopoverOpen} onOpenChange={setIsImagePopoverOpen}>
                 <Tooltip content={t('insert_image')}>
                     <PopoverTrigger asChild>
                         <Button variant="ghost" size="icon" disabled={isImgUploading}>
@@ -561,6 +581,37 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                         value={imageData.alt}
                         onChange={(e) => setImageData((p) => ({ ...p, alt: e.target.value }))}
                     />
+
+                    {/* Ancho / alto */}
+                    <div className="flex gap-2">
+                        <Input
+                            type="number"
+                            min="0"
+                            placeholder={t('width')}
+                            value={imageData.width}
+                            onChange={(e) =>
+                                setImageData((p) => ({
+                                    ...p,
+                                    width: e.target.value,
+                                }))
+                            }
+                            className={noSpinButtonClassName}
+                        />
+
+                        <Input
+                            type="number"
+                            min="0"
+                            placeholder={t('height')}
+                            value={imageData.height}
+                            onChange={(e) =>
+                                setImageData((p) => ({
+                                    ...p,
+                                    height: e.target.value,
+                                }))
+                            }
+                            className={noSpinButtonClassName}
+                        />
+                    </div>
 
                     {/* Botón insertar imagen */}
                     <Button size="sm" className="mt-2" onClick={applyImage} disabled={isImgUploading}>
@@ -643,7 +694,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
             </Popover>
 
             {/* Video */}
-            <Popover>
+            <Popover open={isVideoPopoverOpen} onOpenChange={setIsVideoPopoverOpen}>
                 <Tooltip content={t('insert_video')}>
                     <PopoverTrigger asChild>
                         <Button type="button" variant="ghost" size="icon">
@@ -658,7 +709,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                             disabled={isVideoUploading}
                             placeholder={`${window.location.origin}/samples/cat.mp4`}
                             value={videoData.url}
-                            onChange={(e) => setVideoData({ url: e.target.value })}
+                            onChange={(e) => setVideoData((p) => ({ ...p, url: e.target.value }))}
                         />
 
                         {/* Botón subir video */}
@@ -690,6 +741,37 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                         <input ref={videoFileInputRef} type="file" accept="video/mp4,video/webm" hidden onChange={onVideoFileSelected} />
                     </div>
 
+                    {/* Ancho / alto */}
+                    <div className="flex gap-2">
+                        <Input
+                            type="number"
+                            min="0"
+                            placeholder={t('width')}
+                            value={videoData.width}
+                            onChange={(e) =>
+                                setVideoData((p) => ({
+                                    ...p,
+                                    width: e.target.value,
+                                }))
+                            }
+                            className={noSpinButtonClassName}
+                        />
+
+                        <Input
+                            type="number"
+                            min="0"
+                            placeholder={t('height')}
+                            value={videoData.height}
+                            onChange={(e) =>
+                                setVideoData((p) => ({
+                                    ...p,
+                                    height: e.target.value,
+                                }))
+                            }
+                            className={noSpinButtonClassName}
+                        />
+                    </div>
+
                     <Button size="sm" className="mt-2" onClick={applyVideo}>
                         <SquarePlay className="mr-2 h-4 w-4" /> {t('insert_video')}
                     </Button>
@@ -706,11 +788,19 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                 }}
                 onSelect={(url) => {
                     if (mediaMode === 'image') {
-                        replaceSelection(`\n![${t('text')}](${url})\n`);
+                        setImageData((prev) => ({
+                            ...prev,
+                            url,
+                        }));
+                        setIsImagePopoverOpen(true);
                     }
 
                     if (mediaMode === 'video') {
-                        replaceSelection(`\n::video[${url}]\n`);
+                        setVideoData((prev) => ({
+                            ...prev,
+                            url,
+                        }));
+                        setIsVideoPopoverOpen(true);
                     }
                 }}
             />

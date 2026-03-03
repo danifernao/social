@@ -126,6 +126,7 @@
     "general": "General",
     "go_back": "Atrás",
     "green": "Verde",
+    "height": "Alto",
     "hidden_block": "Bloque oculto",
     "hidden_text": "Texto oculto",
     "hide_content": "Ocultar contenido",
@@ -358,6 +359,7 @@
     "welcome_message": "Conecta, comparte y descubre lo que otros piensan.",
     "welcome_to_site": "Bienvenido a {{siteName}}",
     "whats_on_your_mind": "¿En qué estás pensando?",
+    "width": "Ancho",
     "yellow": "Amarillo",
     "yes": "Sí"
 }
