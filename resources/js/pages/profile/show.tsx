@@ -5,6 +5,7 @@ import ProfileHeader from '@/components/app/profile-header';
 import { Tooltip } from '@/components/app/tooltip';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
+import { useCheckPermission } from '@/hooks/app/use-auth';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
@@ -29,11 +30,15 @@ export default function ProfileShow() {
     const filter = route().params.posts === 'others' ? 'others' : 'own';
 
     // Determina si el usuario autenticado tiene permiso para publicar.
-    const canPost = auth.user && auth.user.permissions.includes('post');
+    const canPost = auth.user && useCheckPermission('post');
 
     // Determina si el usuario autenticado está visitando su propio perfil y
     // tiene permiso para publicar.
     const isOwner = auth.user && auth.user.id === user.id && canPost;
+
+    // Determina si existe bloqueo entre el usuario autenticado
+    // y el dueño del perfil.
+    const isBlocked = auth.user && (user.is_blocked || user.blocked_me);
 
     // ID del usuario del perfil en el que se publica si no es el propietario.
     const profileUserId = !isOwner && canPost ? user.id : null;
@@ -78,7 +83,7 @@ export default function ProfileShow() {
                 {/* Contexto para sincronizar cambios en el listado de publicaciones */}
                 <EntryListUpdateContext.Provider value={applyItemChange}>
                     {/* Formulario para crear publicaciones */}
-                    {(isOwner || canPost) && <EntryForm profileUserId={profileUserId} />}
+                    {!isBlocked && (isOwner || canPost) && <EntryForm profileUserId={profileUserId} />}
 
                     {/* Filtro de publicaciones del perfil */}
                     {auth.user && (
