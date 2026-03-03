@@ -27,7 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'username',
         'email',
         'password',
-        'avatar_path',
+        'avatar_media_id',
         'language',
     ];
 
@@ -79,8 +79,8 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getAvatarUrlAttribute(): ?string
     {
-        return $this->avatar_path
-            ? route('media.show', ['media' => $this->avatar_path])
+        return $this->avatar_media_id
+            ? route('media.show', ['media' => $this->avatarMedia->path])
             : null;
     }
 
@@ -99,7 +99,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */ 
     public function avatarMedia()
     {
-        return $this->hasOne(Media::class, 'path', 'avatar_path');
+        return $this->belongsTo(Media::class, 'avatar_media_id');
     }
 
     /**

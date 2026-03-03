@@ -7,6 +7,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Models\UserBlock;
 use App\Rules\UserRules;
+use App\Services\MediaService;
 use App\Traits\HandlesPasswordConfirmation;
 use App\Utils\UsernameGenerator;
 use Illuminate\Auth\Events\Registered;
@@ -125,10 +126,13 @@ class AdminUserController extends Controller
      * Valida la acción solicitada, confirma la contraseña del moderador
      * y delega la ejecución a métodos específicos.
      *
-     * @param Request $request Datos de la petición HTTP.
-     * @param User    $user    Instancia del usuario que se va a modificar.
+     * @param Request           $request Datos de la petición HTTP.
+     * @param User              $user    Instancia del usuario que se va
+     *                                   a modificar.
+     * @param MediaService $mediaService Servicio para gestionar archivos
+     *                                   multimedia.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $user, MediaService $mediaService)
     {
         // Obtiene el usuario autenticado.
         $auth_user = $request->user();
@@ -166,7 +170,7 @@ class AdminUserController extends Controller
                 return $this->changeRole($request, $user);
 
             case 'delete_avatar':
-                return $this->deleteAvatar($user);
+                return $this->deleteAvatar($user, $mediaService);
 
             case 'change_username':
                 return $this->changeUsername($request, $user);
@@ -231,21 +235,17 @@ class AdminUserController extends Controller
     /**
      * Elimina el avatar de un usuario.
      * 
-     * @param User $user Instancia del usuario al que se
-     *                   le va a eliminar el avatar.
+     * @param User         $user         Instancia del usuario al que se
+     *                                   le va a eliminar el avatar.
+     * @param MediaService $mediaService Servicio para gestionar archivos
+     *                                   multimedia.
      */
-    private function deleteAvatar(User $user)
+    private function deleteAvatar(User $user, MediaService $mediaService)
     {
         // Elimina el archivo del avatar si existe.
-        if (
-            $user->avatar_path &&
-            Storage::disk('public')->exists($user->avatar_path)
-        ) {
-            Storage::disk('public')->delete($user->avatar_path);
-        }
+        $mediaService->delete($user->avatarMedia);
 
-        // Limpia la ruta del avatar en la base de datos.
-        $user->avatar_path = null;
+        $user->avatar_media_id = null;
         $user->save();
 
         return back()->with('status', 'avatar_deleted');

@@ -68,9 +68,9 @@ class SettingsProfileController extends Controller
             // Elimina el avatar si el usuario lo solicita o
             // si va a subir uno nuevo.
             if ($data['remove_avatar'] || $request->hasFile('avatar')) {
-                if ($user->avatar_path) {
+                if ($user->avatar_media_id) {
                     $mediaService->delete($user->avatarMedia);
-                    $user->avatar_path = null;
+                    $user->avatar_media_id = null;
                 }
             }
 
@@ -82,7 +82,7 @@ class SettingsProfileController extends Controller
                     'avatars'
                 );
 
-                $user->avatar_path = $media->path;
+                $user->avatar_media_id = $media->id;
             }
         }
         else {
