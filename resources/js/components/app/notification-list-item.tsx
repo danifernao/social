@@ -62,13 +62,18 @@ export default function NotificationListItem({ notification }: NotificationListI
 
     // Marca la notificación como leída cuando es visible en pantalla.
     useEffect(() => {
-        if (notification.read_at || !notificationRef.current) return;
+        // No se observa nada si la notificación está leída.
+        if (notification.read_at || !notificationRef.current) {
+            return;
+        }
 
         const observer = new IntersectionObserver(
             ([entry]) => {
+                // Entrada del elemento en la vista.
                 if (entry.isIntersecting && !hasTriggeredRequest.current) {
                     hasTriggeredRequest.current = true;
 
+                    // Marca la notificación como leída.
                     fetch(route('notification.markOneAsRead', notification.id), {
                         method: 'PATCH',
                         headers: {
@@ -77,23 +82,30 @@ export default function NotificationListItem({ notification }: NotificationListI
                         },
                     })
                         .then((response) => {
-                            if (!response.ok) throw new Error('Failed');
+                            if (!response.ok) {
+                                throw new Error('Failed');
+                            }
+
                             return response.json();
                         })
-                        .then((data) => {
-                            if (data.status === 'ok') {
-                                setTimeout(() => {
-                                    setShouldShowAsRead(true);
-                                }, 3000);
-                            }
-                        })
                         .catch((errors) => {
-                            console.error(errors);
+                            if (import.meta.env.DEV) {
+                                console.error(errors);
+                            }
+
+                            // Reintenta en el próximo scroll.
+                            hasTriggeredRequest.current = false;
                         });
+                }
+
+                // Salida del elemento de la vista.
+                if (!entry.isIntersecting && hasTriggeredRequest.current) {
+                    setShouldShowAsRead(true);
+                    observer.disconnect();
                 }
             },
             {
-                threshold: 0.5, // Se considera visible cuando al menos la mitad está en pantalla.
+                threshold: 0.1,
             },
         );
 
@@ -105,7 +117,7 @@ export default function NotificationListItem({ notification }: NotificationListI
     return (
         <li
             ref={notificationRef}
-            className={`flex flex-col border-b px-4 py-4 last:border-b-0 ${notification.read_at || shouldShowAsRead ? 'text-gray-500' : ''}`}
+            className={`flex flex-col border-b px-4 py-4 transition-colors duration-500 last:border-b-0 ${notification.read_at || shouldShowAsRead ? 'text-muted-foreground' : ''}`}
         >
             {/* Enlace de la notificación */}
             <Link href={url}>
