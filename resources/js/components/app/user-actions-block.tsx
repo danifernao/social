@@ -1,7 +1,6 @@
 import { usePostAction } from '@/hooks/app/use-post-action';
 import { User } from '@/types';
 import { LoaderCircle, Lock, LockOpen } from 'lucide-react';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/button';
 
@@ -19,18 +18,13 @@ export default function UserActionsBlock({ user }: UserActionsBlockProps) {
     // Hook para ejecutar acciones POST.
     const { isProcessing, execute } = usePostAction();
 
-    // Estado local que refleja si el usuario está bloqueado.
-    const [isBlocked, setIsBlocked] = useState(user.is_blocked);
-
     // Alterna el estado de bloqueo.
     const toggleBlock = () => {
         execute(
             'user.block',
             { user: user.id },
             {
-                onSuccess: () => {
-                    setIsBlocked((prev) => !prev);
-                },
+                preserveState: false,
             },
         );
     };

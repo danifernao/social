@@ -4,6 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 interface UsePostActionOptions {
+    // Indica si se desea preservar el estado.
+    preserveState?: boolean;
+
     // Callback opcional que se ejecuta cuando la petición se completa con éxito.
     onSuccess?: () => void;
 
@@ -39,6 +42,7 @@ export function usePostAction() {
             route(routeName, routeParams),
             {},
             {
+                preserveState: options.preserveState ?? true,
                 preserveScroll: true,
                 onSuccess: () => {
                     options.onSuccess?.();
