@@ -62,12 +62,13 @@ class AppServiceProvider extends ServiceProvider
             // Si el valor es numérico, se asume que es un ID
             // y se busca al archivo por ID.
             if (is_numeric($value)) {
-                return Media::findOrFail($value);
+                return Media::withTrashed()->findOrFail($value);
             }
 
             // Si no es numérico, se asume que es una ruta
             // y se busca por esa columna.
-            return Media::where('path', $value)
+            return Media::withTrashed()
+                ->where('path', $value)
                 ->orWhere('thumbnail_path', $value)
                 ->firstOrFail();
         });

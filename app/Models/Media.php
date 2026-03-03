@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -10,6 +11,8 @@ use Illuminate\Support\Facades\Storage;
  */
 class Media extends Model
 {
+    use SoftDeletes;
+
     /**
      * Atributos asignables masivamente.
      *
@@ -59,6 +62,16 @@ class Media extends Model
             return explode('/', $this->mime_type)[0];
         }
         return null;
+    }
+
+    /**
+     * Relación: archivos reportados.
+     *
+     * @return BelongsToMany<Report, Media>
+     */ 
+    public function reports()
+    {
+        return $this->belongsToMany(Report::class);
     }
 
     /**

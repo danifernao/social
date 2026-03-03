@@ -66,6 +66,16 @@ class MediaController extends Controller
      */
     public function show(Request $request, Media $media)
     {
+        // Si se hizo soft-delete sobre el archivo y no tiene permisos
+        // de moderación, muestra error.
+        if ($media->trashed()) {
+            $auth_user = $request->user();
+
+            if (!$auth_user || !$auth_user->hasAnyRole(['admin', 'mod'])) {
+                abort(404);
+            }
+        }
+
         // Obtiene la ruta compartida en la solicitud HTTP.
         $requested_path = $request->route()->originalParameter('media');
 

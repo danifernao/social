@@ -68,6 +68,16 @@ class Report extends Model
     }
 
     /**
+     * Relación: archivos reportados.
+     *
+     * @return BelongsToMany<Media, Report>
+     */   
+    public function media()
+    {
+        return $this->belongsToMany(Media::class);
+    }
+
+    /**
      * Scope que filtra los reportes que aún no han sido cerrados.
      *
      * Un reporte se considera "pendiente" cuando el campo "closed_at"

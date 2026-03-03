@@ -7,11 +7,13 @@ use App\Http\Resources\PostResource;
 use App\Http\Resources\ReportResource;
 use App\Http\Resources\UserResource;
 use App\Models\Comment;
+use App\Models\Media;
 use App\Models\Post;
 use App\Models\Report;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
@@ -223,13 +225,39 @@ class AdminReportController extends Controller
 
             // Crea el reporte almacenando la referencia al contenido
             // y su copia inmutable para revisión posterior.
-            Report::create([
+            $report = Report::create([
                 'reporter_id'          => $auth_user->id,
                 'reportable_type'      => get_class($reportable),
                 'reportable_id'        => $reportable->id,
                 'reportable_snapshot'  => $snapshot,
                 'reporter_note'        => $data['reporter_note'] ?? null,
             ]);
+
+            // Busca posibles rutas de archivos multimedia
+            // dentro de la instantanea.
+            $paths = collect($snapshot)
+                ->flatten()
+                ->filter(fn($value) => is_string($value))
+                ->flatMap(function ($string) {
+                    preg_match_all(
+                        '/(?:https?:\/\/)?(?:[^\s\/]+\.)?[^\s\/]*\/?media\/([^\s\)"]+)/',
+                        $string,
+                        $matches
+                    );
+                    return $matches[1] ?? [];
+                })
+                ->unique()
+                ->values();
+
+            // Busca registros de archivos multimedia existentes.
+            $media = Media::withTrashed()
+                ->whereIn('path', $paths)
+                ->get();
+
+            // Asocia los archivos multimedia al reporte.
+            if ($media->isNotEmpty()) {
+                $report->media()->syncWithoutDetaching($media->pluck('id'));
+            }
         }
         
         return back()->with('status', 'report_sent');

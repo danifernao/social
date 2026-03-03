@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('media', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('user_id');
             $table->string('disk')->default('public');
             $table->string('path');
             $table->string('thumbnail_path')->nullable();
             $table->string('mime_type');
             $table->unsignedBigInteger('size')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -65,6 +65,17 @@ class MediaService
      */
     public function delete(Media $media): bool
     {
+        // Carga los reportes asociados al archivo.
+        $media->load('reports');
+
+        // Verifica si el archivo está asociado a algún reporte.
+        $has_reports = $media->reports()->exists();
+
+        // Si tiene un reporte ascociado, hace un soft-delete.
+        if ($has_reports) {
+            return $media->delete();
+        }
+
         // Instancia del motor de almacenamiento.
         $storage = Storage::disk($media->disk);
 
@@ -79,7 +90,7 @@ class MediaService
         }
 
         // Borrar registro de la base de datos.
-        return $media->delete();
+        return $media->forceDelete();
     }
 
     /**
@@ -89,33 +100,40 @@ class MediaService
      */
     public function deleteAllFromUser(int $user_id): void
     {
-        // Obtiene todos los registros multimedia del usuario.
-        $all_media = Media::where('user_id', $user_id)->get();
+        // Obtiene todos los archivos multimedia del usuario.
+        $all_media = Media::withTrashed()
+            ->where('user_id', $user_id)
+            ->get();
 
         if ($all_media->isEmpty()) {
             return;
         }
 
-        // Agrupa por disco.
-        $grouped_by_disk = $all_media->groupBy('disk');
+        foreach ($all_media as $media) {
+            // Verifica si el archivo está reportado.
+            $has_reports = $media->reports()->exists();
 
-        foreach ($grouped_by_disk as $disk_name => $media_items) {
-            // Instancia del motor de almacenamiento.
-            $storage = Storage::disk($disk_name);
-
-            // Recolecta todos las rutas.
-            $paths_to_delete = [];
-
-            foreach ($media_items as $item) {
-                $paths_to_delete[] = $item->path;
-
-                if ($item->thumbnail_path) {
-                    $paths_to_delete[] = $item->thumbnail_path;
+            // Si está reportado, se hace soft-delete sobre él.
+            if ($has_reports) {
+                if (!$media->trashed()) {
+                    $media->delete();
                 }
+                continue;
             }
 
-            // Borra todas las imágenes del usuario en el disco iterado.
-            $storage->delete($paths_to_delete);
+            // Si no está reportado, elimina físicamente.
+            $storage = Storage::disk($media->disk);
+
+            if ($media->thumbnail_path && $storage->exists($media->thumbnail_path)) {
+                $storage->delete($media->thumbnail_path);
+            }
+
+            if ($storage->exists($media->path)) {
+                $storage->delete($media->path);
+            }
+
+            // Eliminación definitiva del registro.
+            $media->forceDelete();
         }
     }
 }
