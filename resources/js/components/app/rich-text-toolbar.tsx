@@ -435,11 +435,11 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                 </Tooltip>
 
                 <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
-                    <Button variant="ghost" className="flex items-center gap-2 text-sm" onClick={() => onHeading(1)}>
+                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={() => onHeading(1)}>
                         <Heading1 className="h-4 w-4" />
                         {t('title')}
                     </Button>
-                    <Button variant="ghost" className="flex items-center gap-2 text-sm" onClick={() => onHeading(2)}>
+                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={() => onHeading(2)}>
                         <Heading2 className="h-4 w-4" />
                         {t('subtitle')}
                     </Button>
