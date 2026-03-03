@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Media;
 use App\Models\User;
+use App\Services\MediaService;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Storage;
 
