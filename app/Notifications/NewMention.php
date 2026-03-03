@@ -16,14 +16,14 @@ class NewMention extends Notification
     /**
      * Crea una nueva instancia de la notificación.
      *
-     * @param User $sender          Usuario que realizó la mención.
-     * @param string $contextType   Tipo de contenido donde ocurrió la mención.
-     * @param int $contextId        ID del contenido mencionado.
+     * @param User   $sender       Usuario que realizó la mención.
+     * @param string $context_type Tipo de contenido donde ocurrió la mención.
+     * @param int    $context_id   ID del contenido mencionado.
      */
     public function __construct(
         public User $sender,
-        public string $contextType,
-        public int $contextId
+        public string $context_type,
+        public int $context_id
     ) {}
 
     /**
@@ -50,12 +50,12 @@ class NewMention extends Notification
             'type' => 'mention', // Tipo de notificación.
             'data' => [
                 'sender' => [ // Usuario que realizó la mención.
-                    'id' => $this->sender->id,
+                    'id'       => $this->sender->id,
                     'username' => $this->sender->username,
                 ],
                 'context' => [ // Contenido donde ocurrió la mención.
-                    'type' => $this->contextType, // "post" o "comment".
-                    'id' => $this->contextId, // ID de publicación o comentario.
+                    'type' => $this->context_type, // "post" o "comment".
+                    'id'   => $this->context_id, // ID de publicación o comentario.
                 ],
             ],
         ];

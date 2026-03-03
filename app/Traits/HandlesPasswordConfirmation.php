@@ -17,16 +17,16 @@ trait HandlesPasswordConfirmation
      * Verifica que la contraseña proporcionada coincida con la del
      * usuario autenticado y controla los intentos fallidos.
      *
-     * @param string $password      Contraseña ingresada por el usuario.
-     * @param int    $maxAttempts   Número máximo de intentos permitidos.
-     * @param int    $decaySeconds  Tiempo en segundos antes de reiniciar
-     *                              el contador de intentos.
+     * @param string $password       Contraseña ingresada por el usuario.
+     * @param int    $max_attempts   Número máximo de intentos permitidos.
+     * @param int    $decay_seconds  Tiempo en segundos antes de reiniciar
+     *                               el contador de intentos.
      * @throws \Illuminate\Validation\ValidationException
      */
     public function confirmPassword(
         string $password,
-        int $maxAttempts = 5,
-        int $decaySeconds = 60
+        int $max_attempts = 5,
+        int $decay_seconds = 60
     ): void
     {
         $user = auth()->user();
@@ -36,7 +36,7 @@ trait HandlesPasswordConfirmation
 
         // Verifica si el usuario ha superado el número máximo
         // de intentos permitidos para confirmar la contraseña.
-        if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
+        if (RateLimiter::tooManyAttempts($key, $max_attempts)) {
             $seconds = RateLimiter::availableIn($key);
 
             throw ValidationException::withMessages([
@@ -50,7 +50,7 @@ trait HandlesPasswordConfirmation
         // Si la contraseña es incorrecta, se registra el intento
         // fallido y se lanza una excepción de validación.
         if (!Hash::check($password, $user->password)) {
-            RateLimiter::hit($key, $decaySeconds);
+            RateLimiter::hit($key, $decay_seconds);
 
             throw ValidationException::withMessages([
                 'pass_confirmation' => __(

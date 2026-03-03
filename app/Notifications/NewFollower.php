@@ -44,7 +44,7 @@ class NewFollower extends Notification
             'type' => 'follow', // Tipo de notificación.
             'data' => [
                 'sender' => [ // Usuario que inició el seguimiento.
-                    'id' => $this->follower->id,
+                    'id'       => $this->follower->id,
                     'username' => $this->follower->username,
                 ],
             ],

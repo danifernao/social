@@ -16,14 +16,14 @@ class NewCommentOnPost extends Notification
     /**
      * Crea una nueva instancia de la notificación.
      *
-     * @param User $sender        Usuario que realizó el comentario.
-     * @param int  $postId        ID de la publicación comentada.
-     * @param int  $postAuthorId  ID del autor de la publicación.
+     * @param User $sender         Usuario que realizó el comentario.
+     * @param int  $post_id        ID de la publicación comentada.
+     * @param int  $post_author_id ID del autor de la publicación.
      */
     public function __construct(
         public User $sender,
-        public int $postId,
-        public int $postAuthorId
+        public int $post_id,
+        public int $post_author_id
     ) {}
 
     /**
@@ -50,13 +50,13 @@ class NewCommentOnPost extends Notification
             'type' => 'comment', // Tipo de notificación.
             'data' => [
                 'sender' => [ // Usuario que realizó el comentario.
-                    'id' => $this->sender->id,
+                    'id'       => $this->sender->id,
                     'username' => $this->sender->username,
                 ],
                 'context' => [ // Contexto donde ocurrió el comentario.
-                    'type' => 'post',
-                    'id' => $this->postId,
-                    'author_id' => $this->postAuthorId,
+                    'type'      => 'post',
+                    'id'        => $this->post_id,
+                    'author_id' => $this->post_author_id,
                 ],
             ],
         ];

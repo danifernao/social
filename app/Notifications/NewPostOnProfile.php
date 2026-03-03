@@ -17,11 +17,11 @@ class NewPostOnProfile extends Notification
      * Crea una nueva instancia de la notificación.
      *
      * @param User $sender  Usuario que creó la publicación.
-     * @param int  $postId  ID de la publicación creada.
+     * @param int  $post_id ID de la publicación creada.
      */
     public function __construct(
         public User $sender,
-        public int $postId,
+        public int $post_id,
     ) {}
 
     /**
@@ -48,12 +48,12 @@ class NewPostOnProfile extends Notification
             'type' => 'post', // Tipo de notificación.
             'data' => [
                 'sender' => [ // Usuario que creó la publicación.
-                    'id' => $this->sender->id,
+                    'id'       => $this->sender->id,
                     'username' => $this->sender->username,
                 ],
                 'context' => [ // Contexto de la publicación creada.
                     'type' => 'post',
-                    'id' => $this->postId,
+                    'id'   => $this->post_id,
                 ],
             ],
         ];

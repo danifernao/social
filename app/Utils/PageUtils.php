@@ -52,28 +52,28 @@ class PageUtils
 
         // Inicializa la estructura base de la respuesta,
         // asignando null a cada tipo especial por idioma.
-        $pagesByLang = [];
+        $pages_by_lang = [];
         foreach ($languages as $lang) {
-            $pagesByLang[$lang] = array_fill_keys(
+            $pages_by_lang[$lang] = array_fill_keys(
                 self::getSpecialTypes(), null
             );
         }
 
         // Recupera todas las páginas de tipo especial
         // junto con su idioma y slug.
-        $specialPages = Page::query()
+        $special_pages = Page::query()
             ->whereIn('type', self::getSpecialTypes())
             ->get(['language', 'type', 'slug']);
 
         // Asigna el slug de cada página encontrada
         // dentro de la estructura correspondiente
         // a su idioma y tipo.
-        foreach ($specialPages as $page) {
-            $pagesByLang[$page->language][$page->type] = [
+        foreach ($special_pages as $page) {
+            $pages_by_lang[$page->language][$page->type] = [
                 'slug' => $page->slug,
             ];
         }
 
-        return $pagesByLang;
+        return $pages_by_lang;
     }
 }

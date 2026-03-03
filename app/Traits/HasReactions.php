@@ -18,24 +18,24 @@ trait HasReactions
      *   - el número total de reacciones,
      *   - si un usuario específico ha reaccionado con ese emoji.
      *
-     * @param int|null $userId ID del usuario para comprobar si reaccionó
-     *                         con cada emoji.
-     *                         Si es null, no se evalúa la reacción del usuario.
-     * @return Collection Colección de arreglos con la información resumida
-     *                    de las reacciones por emoji.
+     * @param int|null $user_id ID del usuario para comprobar si reaccionó
+     *                          con cada emoji.
+     *                          Si es null, no se evalúa la reacción del usuario.
+     * @return Collection       Colección de arreglos con la información resumida
+     *                          de las reacciones por emoji.
      */
-    public function reactionsSummary($userId): Collection
+    public function reactionsSummary($user_id): Collection
     {
         return $this->reactions()
             ->get()
             ->groupBy('emoji')
             // Genera el resumen para cada grupo de reacciones.
-            ->map(function ($group) use ($userId) {
+            ->map(function ($group) use ($user_id) {
                 return [
                     'emoji' => $group->first()->emoji,
                     'count' => $group->count(),
-                    'reactedByUser' => $userId
-                        ? $group->contains('user_id', $userId)
+                    'reactedByUser' => $user_id
+                        ? $group->contains('user_id', $user_id)
                         : false,
                 ];
             })
