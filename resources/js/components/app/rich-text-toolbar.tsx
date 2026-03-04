@@ -30,6 +30,7 @@ import {
     Minus,
     PaintBucket,
     Quote,
+    Smile,
     SquareCode,
     SquarePlay,
     Strikethrough,
@@ -42,6 +43,7 @@ import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import EmojiPicker from './emoji-picker';
 import MediaDialog from './media-dialog';
 
 interface RichTextToolbarProps {
@@ -73,10 +75,11 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     // Modo de inserción multimedia.
     const [mediaMode, setMediaMode] = useState<'image' | 'video' | null>(null);
 
-    // Estados para controlar la apertura manual
-    // de los Popovers de imagen y video.
+    // Estados para controlar la apertura manual de los Popovers
+    // de imagen, video y emoji.
     const [isImagePopoverOpen, setIsImagePopoverOpen] = useState(false);
     const [isVideoPopoverOpen, setIsVideoPopoverOpen] = useState(false);
+    const [isEmojiPopoverOpen, setIsEmojiPopoverOpen] = useState(false);
 
     // Clases para ocultar los botones en los campos para números.
     const noSpinButtonClassName =
@@ -319,6 +322,21 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
             onSuccess: (url) => setVideoData((p) => ({ ...p, url })),
             onFinish: () => setIsVideoUploading(false),
         });
+    }
+
+    /**
+     * Inserta el emoji seleccionado.
+     */
+    function onEmojiSelect(emoji: any) {
+        const native = emoji.native;
+
+        if (!native) {
+            return;
+        }
+
+        replaceSelection(native);
+
+        setIsEmojiPopoverOpen(false);
     }
 
     /**
@@ -970,6 +988,18 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                             <SquarePlay className="mr-2 h-4 w-4" /> {t('insert_video')}
                         </Button>
                     </form>
+                </PopoverContent>
+            </Popover>
+
+            <Popover open={isEmojiPopoverOpen} onOpenChange={setIsEmojiPopoverOpen}>
+                <PopoverTrigger asChild>
+                    <Button type="button" variant="ghost" size="icon" title={t('insert_emoji')} className="data-[state=open]:bg-accent">
+                        <Smile className="h-4 w-4" />
+                    </Button>
+                </PopoverTrigger>
+
+                <PopoverContent className="w-auto p-0">
+                    <EmojiPicker onSelect={onEmojiSelect} />
                 </PopoverContent>
             </Popover>
 
