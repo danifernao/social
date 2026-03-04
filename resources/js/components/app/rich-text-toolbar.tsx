@@ -580,7 +580,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                         {/* Campo URL */}
                         <Input
                             disabled={isImgUploading}
-                            placeholder={`${window.location.origin}/samples/cat.jpg`}
+                            placeholder={'https://'}
                             value={imageData.url}
                             onChange={(e) => setImageData((p) => ({ ...p, url: e.target.value }))}
                         />
@@ -768,7 +768,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                         {/* Campo URL */}
                         <Input
                             disabled={isVideoUploading}
-                            placeholder={`${window.location.origin}/samples/cat.mp4`}
+                            placeholder={'https://'}
                             value={videoData.url}
                             onChange={(e) => setVideoData((p) => ({ ...p, url: e.target.value }))}
                         />
