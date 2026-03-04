@@ -157,3 +157,10 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* Custom CSS */
+
+/* Oculta :emoji: de la previsualización del selector de emojis */
+em-emoji-picker {
+  --preview-subtitle-size: 0 !important;
+}
