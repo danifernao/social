@@ -456,7 +456,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     }
 
     return (
-        <div className="flex flex-wrap items-center gap-1 p-1">
+        <div className="flex flex-wrap items-center gap-1">
             {/* Formato básico (Negrita, Cursiva y Tachado) */}
             <Popover>
                 <PopoverTrigger asChild>
@@ -609,20 +609,34 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                     </Button>
                 </PopoverTrigger>
 
-                <PopoverContent className="flex w-64 flex-col gap-2 p-4">
-                    <Input
-                        placeholder={t('link_text')}
-                        value={linkData.text}
-                        onChange={(e) => setLinkData((p) => ({ ...p, text: e.target.value }))}
-                    />
-                    <Input
-                        placeholder="https://example.com"
-                        value={linkData.url}
-                        onChange={(e) => setLinkData((p) => ({ ...p, url: e.target.value }))}
-                    />
-                    <Button size="sm" className="mt-2" onClick={applyLink}>
-                        <Link2 className="mr-2 h-4 w-4" /> {t('insert_link')}
-                    </Button>
+                <PopoverContent className="p-4">
+                    <form
+                        className="flex w-64 flex-col gap-2"
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            applyLink();
+                        }}
+                    >
+                        {/* Campo texto */}
+                        <Input
+                            placeholder={t('link_text')}
+                            value={linkData.text}
+                            onChange={(e) => setLinkData((p) => ({ ...p, text: e.target.value }))}
+                        />
+
+                        {/* Campo URL */}
+                        <Input
+                            type="url"
+                            placeholder="https://example.com"
+                            value={linkData.url}
+                            onChange={(e) => setLinkData((p) => ({ ...p, url: e.target.value }))}
+                        />
+
+                        {/* Botón insertar enlace */}
+                        <Button size="sm" type="submit" className="mt-2">
+                            <Link2 className="mr-2 h-4 w-4" /> {t('insert_link')}
+                        </Button>
+                    </form>
                 </PopoverContent>
             </Popover>
 
@@ -651,94 +665,104 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                     </Button>
                 </PopoverTrigger>
 
-                <PopoverContent className="flex w-64 flex-col gap-2 p-4">
-                    <div className="flex gap-2">
-                        {/* Campo URL */}
+                <PopoverContent className="p-4">
+                    <form
+                        className="flex w-64 flex-col gap-2"
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            applyImage();
+                        }}
+                    >
+                        <div className="flex gap-2">
+                            {/* Campo URL */}
+                            <Input
+                                type="url"
+                                disabled={isImgUploading}
+                                placeholder={'https://'}
+                                value={imageData.url}
+                                onChange={(e) => setImageData((p) => ({ ...p, url: e.target.value }))}
+                            />
+
+                            {/* Botón subir imagen */}
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                title={t('upload_image')}
+                                disabled={isImgUploading}
+                                onClick={() => imgFileInputRef.current?.click()}
+                            >
+                                {isImgUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                            </Button>
+
+                            {/* Botón para abrir álbum */}
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                title={t('open_uploads_history')}
+                                onClick={() => {
+                                    setMediaMode('image');
+                                    setIsMediaDialogOpen(true);
+                                }}
+                            >
+                                <History className="h-4 w-4" />
+                            </Button>
+
+                            {/* Input oculto */}
+                            <input
+                                ref={imgFileInputRef}
+                                type="file"
+                                accept="image/png,image/jpeg,image/webp,image/gif"
+                                hidden
+                                onChange={onImgFileSelected}
+                            />
+                        </div>
+
+                        {/* Campo texto alternativo */}
                         <Input
                             disabled={isImgUploading}
-                            placeholder={'https://'}
-                            value={imageData.url}
-                            onChange={(e) => setImageData((p) => ({ ...p, url: e.target.value }))}
+                            placeholder={t('alternative_text')}
+                            value={imageData.alt}
+                            onChange={(e) => setImageData((p) => ({ ...p, alt: e.target.value }))}
                         />
 
-                        {/* Botón subir imagen */}
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            title={t('upload_image')}
-                            disabled={isImgUploading}
-                            onClick={() => imgFileInputRef.current?.click()}
-                        >
-                            {isImgUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                        {/* Ancho / alto */}
+                        <div className="flex gap-2">
+                            <Input
+                                type="number"
+                                min="0"
+                                placeholder={t('width')}
+                                value={imageData.width}
+                                onChange={(e) =>
+                                    setImageData((p) => ({
+                                        ...p,
+                                        width: e.target.value,
+                                    }))
+                                }
+                                className={noSpinButtonClassName}
+                            />
+
+                            <Input
+                                type="number"
+                                min="0"
+                                placeholder={t('height')}
+                                value={imageData.height}
+                                onChange={(e) =>
+                                    setImageData((p) => ({
+                                        ...p,
+                                        height: e.target.value,
+                                    }))
+                                }
+                                className={noSpinButtonClassName}
+                            />
+                        </div>
+
+                        {/* Botón insertar imagen */}
+                        <Button type="submit" size="sm" className="mt-2" disabled={isImgUploading}>
+                            <ImagePlus className="mr-2 h-4 w-4" /> {t('insert_image')}
                         </Button>
-
-                        {/* Botón para abrir álbum */}
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            title={t('open_uploads_history')}
-                            onClick={() => {
-                                setMediaMode('image');
-                                setIsMediaDialogOpen(true);
-                            }}
-                        >
-                            <History className="h-4 w-4" />
-                        </Button>
-
-                        {/* Input oculto */}
-                        <input
-                            ref={imgFileInputRef}
-                            type="file"
-                            accept="image/png,image/jpeg,image/webp,image/gif"
-                            hidden
-                            onChange={onImgFileSelected}
-                        />
-                    </div>
-
-                    {/* Campo texto alternativo */}
-                    <Input
-                        disabled={isImgUploading}
-                        placeholder={t('alternative_text')}
-                        value={imageData.alt}
-                        onChange={(e) => setImageData((p) => ({ ...p, alt: e.target.value }))}
-                    />
-
-                    {/* Ancho / alto */}
-                    <div className="flex gap-2">
-                        <Input
-                            type="number"
-                            min="0"
-                            placeholder={t('width')}
-                            value={imageData.width}
-                            onChange={(e) =>
-                                setImageData((p) => ({
-                                    ...p,
-                                    width: e.target.value,
-                                }))
-                            }
-                            className={noSpinButtonClassName}
-                        />
-
-                        <Input
-                            type="number"
-                            min="0"
-                            placeholder={t('height')}
-                            value={imageData.height}
-                            onChange={(e) =>
-                                setImageData((p) => ({
-                                    ...p,
-                                    height: e.target.value,
-                                }))
-                            }
-                            className={noSpinButtonClassName}
-                        />
-                    </div>
-
-                    {/* Botón insertar imagen */}
-                    <Button size="sm" className="mt-2" onClick={applyImage} disabled={isImgUploading}>
-                        <ImagePlus className="mr-2 h-4 w-4" /> {t('insert_image')}
-                    </Button>
+                    </form>
                 </PopoverContent>
             </Popover>
 
@@ -829,79 +853,90 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                         <SquarePlay className="h-4 w-4" />
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="flex w-64 flex-col gap-2 p-4">
-                    <div className="flex gap-2">
-                        {/* Campo URL */}
-                        <Input
-                            disabled={isVideoUploading}
-                            placeholder={'https://'}
-                            value={videoData.url}
-                            onChange={(e) => setVideoData((p) => ({ ...p, url: e.target.value }))}
-                        />
 
-                        {/* Botón subir video */}
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            title={t('upload_video')}
-                            disabled={isVideoUploading}
-                            onClick={() => videoFileInputRef.current?.click()}
-                        >
-                            {isVideoUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                <PopoverContent className="p-4">
+                    <form
+                        className="flex w-64 flex-col gap-2"
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            applyVideo();
+                        }}
+                    >
+                        <div className="flex gap-2">
+                            {/* Campo URL */}
+                            <Input
+                                type="url"
+                                disabled={isVideoUploading}
+                                placeholder={'https://'}
+                                value={videoData.url}
+                                onChange={(e) => setVideoData((p) => ({ ...p, url: e.target.value }))}
+                            />
+
+                            {/* Botón subir video */}
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                title={t('upload_video')}
+                                disabled={isVideoUploading}
+                                onClick={() => videoFileInputRef.current?.click()}
+                            >
+                                {isVideoUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                            </Button>
+
+                            {/* Botón para abrir álbum */}
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                title={t('open_uploads_history')}
+                                onClick={() => {
+                                    setMediaMode('video');
+                                    setIsMediaDialogOpen(true);
+                                }}
+                            >
+                                <History className="h-4 w-4" />
+                            </Button>
+
+                            {/* Input oculto */}
+                            <input ref={videoFileInputRef} type="file" accept="video/mp4,video/webm" hidden onChange={onVideoFileSelected} />
+                        </div>
+
+                        {/* Ancho / alto */}
+                        <div className="flex gap-2">
+                            <Input
+                                type="number"
+                                min="0"
+                                placeholder={t('width')}
+                                value={videoData.width}
+                                onChange={(e) =>
+                                    setVideoData((p) => ({
+                                        ...p,
+                                        width: e.target.value,
+                                    }))
+                                }
+                                className={noSpinButtonClassName}
+                            />
+
+                            <Input
+                                type="number"
+                                min="0"
+                                placeholder={t('height')}
+                                value={videoData.height}
+                                onChange={(e) =>
+                                    setVideoData((p) => ({
+                                        ...p,
+                                        height: e.target.value,
+                                    }))
+                                }
+                                className={noSpinButtonClassName}
+                            />
+                        </div>
+
+                        <Button size="sm" type="submit" className="mt-2">
+                            <SquarePlay className="mr-2 h-4 w-4" /> {t('insert_video')}
                         </Button>
-
-                        {/* Botón para abrir álbum */}
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            title={t('open_uploads_history')}
-                            onClick={() => {
-                                setMediaMode('video');
-                                setIsMediaDialogOpen(true);
-                            }}
-                        >
-                            <History className="h-4 w-4" />
-                        </Button>
-
-                        {/* Input oculto */}
-                        <input ref={videoFileInputRef} type="file" accept="video/mp4,video/webm" hidden onChange={onVideoFileSelected} />
-                    </div>
-
-                    {/* Ancho / alto */}
-                    <div className="flex gap-2">
-                        <Input
-                            type="number"
-                            min="0"
-                            placeholder={t('width')}
-                            value={videoData.width}
-                            onChange={(e) =>
-                                setVideoData((p) => ({
-                                    ...p,
-                                    width: e.target.value,
-                                }))
-                            }
-                            className={noSpinButtonClassName}
-                        />
-
-                        <Input
-                            type="number"
-                            min="0"
-                            placeholder={t('height')}
-                            value={videoData.height}
-                            onChange={(e) =>
-                                setVideoData((p) => ({
-                                    ...p,
-                                    height: e.target.value,
-                                }))
-                            }
-                            className={noSpinButtonClassName}
-                        />
-                    </div>
-
-                    <Button size="sm" className="mt-2" onClick={applyVideo}>
-                        <SquarePlay className="mr-2 h-4 w-4" /> {t('insert_video')}
-                    </Button>
+                    </form>
                 </PopoverContent>
             </Popover>
 

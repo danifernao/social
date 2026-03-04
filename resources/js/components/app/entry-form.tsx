@@ -161,10 +161,7 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
                     </Button>
                 </div>
             ) : (
-                <form onSubmit={submitForm} className="space-y-3">
-                    {/* Errores de validación del formulario */}
-                    <FormErrors errors={errors} />
-
+                <div className="space-y-3">
                     {/* Barra de herramientas de formato */}
                     <RichTextToolbar
                         user={entry ? entry.user : auth.user}
@@ -173,110 +170,115 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
                         textareaRef={textareaRef}
                     />
 
-                    {/* Campo de texto principal */}
-                    <TextareaAutosize
-                        ref={textareaRef}
-                        className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                        minRows={1}
-                        maxRows={10}
-                        value={data.content}
-                        onChange={(e) => setData('content', e.target.value)}
-                        disabled={processing}
-                        placeholder={t('whats_on_your_mind')}
-                        maxLength={3000}
-                    />
+                    <form onSubmit={submitForm} className="space-y-3">
+                        {/* Errores de validación del formulario */}
+                        <FormErrors errors={errors} />
 
-                    <div className="flex items-center gap-4">
-                        {/* Enlace a las normas de la comunidad */}
-                        <div className="text-muted-foreground flex-1 text-sm">
-                            {specialPages[auth.user.language].guidelines && (
-                                <a
-                                    href={route('page.show', {
-                                        lang: auth.user.language,
-                                        slug: specialPages[i18n.currentLang].guidelines?.slug,
-                                    })}
-                                    className="hover:underline"
-                                    target="_blank"
-                                >
-                                    {t('community_guidelines')}
-                                </a>
-                            )}
-                        </div>
+                        {/* Campo de texto principal */}
+                        <TextareaAutosize
+                            ref={textareaRef}
+                            className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                            minRows={1}
+                            maxRows={10}
+                            value={data.content}
+                            onChange={(e) => setData('content', e.target.value)}
+                            disabled={processing}
+                            placeholder={t('whats_on_your_mind')}
+                            maxLength={3000}
+                        />
 
-                        <div className="flex items-center gap-2">
-                            {/* Opciones de configuración */}
-                            {formType === 'post' && profileUserId === null && (!entry || (entry as Post).profile_user_id === null) && (
-                                <>
-                                    {/* Visibilidad de la publicación */}
-                                    <EntryPostVisibilityDropdown
-                                        value={visibility as PostVisibility}
-                                        onChange={(value) => changeVisibility(value)}
+                        <div className="flex items-center gap-4">
+                            {/* Enlace a las normas de la comunidad */}
+                            <div className="text-muted-foreground flex-1 text-sm">
+                                {specialPages[auth.user.language].guidelines && (
+                                    <a
+                                        href={route('page.show', {
+                                            lang: auth.user.language,
+                                            slug: specialPages[i18n.currentLang].guidelines?.slug,
+                                        })}
+                                        className="hover:underline"
+                                        target="_blank"
+                                    >
+                                        {t('community_guidelines')}
+                                    </a>
+                                )}
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                                {/* Opciones de configuración */}
+                                {formType === 'post' && profileUserId === null && (!entry || (entry as Post).profile_user_id === null) && (
+                                    <>
+                                        {/* Visibilidad de la publicación */}
+                                        <EntryPostVisibilityDropdown
+                                            value={visibility as PostVisibility}
+                                            onChange={(value) => changeVisibility(value)}
+                                            variant="outline"
+                                            iconSize={16}
+                                        />
+
+                                        {/* Configuración de la publicación */}
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    size="icon"
+                                                    className="data-[state=open]:bg-muted"
+                                                    title={t('post_settings')}
+                                                >
+                                                    <Settings2 className="h-4 w-4" />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+
+                                            <DropdownMenuContent align="end" className="w-72">
+                                                <FieldLabel htmlFor="is-closed" className="border-none">
+                                                    <Field orientation="horizontal">
+                                                        <FieldContent>
+                                                            <FieldTitle>{t('comments')}</FieldTitle>
+                                                            <FieldDescription>
+                                                                {t(data.is_closed ? 'comments_disabled' : 'comments_enabled')}
+                                                            </FieldDescription>
+                                                        </FieldContent>
+                                                        <Switch
+                                                            id="is-closed"
+                                                            checked={!Boolean(data.is_closed)}
+                                                            onCheckedChange={(checked) => setData('is_closed', !checked)}
+                                                        />
+                                                    </Field>
+                                                </FieldLabel>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </>
+                                )}
+
+                                {/* Botón para activar la vista previa */}
+                                {data.content.trim().length > 0 && (
+                                    <Button
+                                        type="button"
                                         variant="outline"
-                                        iconSize={16}
-                                    />
+                                        onClick={() => {
+                                            if (textareaRef.current) {
+                                                selectionRef.current = {
+                                                    start: textareaRef.current.selectionStart,
+                                                    end: textareaRef.current.selectionEnd,
+                                                };
+                                            }
+                                            setPreviewMode(true);
+                                        }}
+                                    >
+                                        {t('preview')}
+                                    </Button>
+                                )}
 
-                                    {/* Configuración de la publicación */}
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                size="icon"
-                                                className="data-[state=open]:bg-muted"
-                                                title={t('post_settings')}
-                                            >
-                                                <Settings2 className="h-4 w-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-
-                                        <DropdownMenuContent align="end" className="w-72">
-                                            <FieldLabel htmlFor="is-closed" className="border-none">
-                                                <Field orientation="horizontal">
-                                                    <FieldContent>
-                                                        <FieldTitle>{t('comments')}</FieldTitle>
-                                                        <FieldDescription>
-                                                            {t(data.is_closed ? 'comments_disabled' : 'comments_enabled')}
-                                                        </FieldDescription>
-                                                    </FieldContent>
-                                                    <Switch
-                                                        id="is-closed"
-                                                        checked={!Boolean(data.is_closed)}
-                                                        onCheckedChange={(checked) => setData('is_closed', !checked)}
-                                                    />
-                                                </Field>
-                                            </FieldLabel>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </>
-                            )}
-
-                            {/* Botón para activar la vista previa */}
-                            {data.content.trim().length > 0 && (
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    onClick={() => {
-                                        if (textareaRef.current) {
-                                            selectionRef.current = {
-                                                start: textareaRef.current.selectionStart,
-                                                end: textareaRef.current.selectionEnd,
-                                            };
-                                        }
-                                        setPreviewMode(true);
-                                    }}
-                                >
-                                    {t('preview')}
+                                {/* Botón de envío */}
+                                <Button type="submit" disabled={processing || data.content.trim().length === 0}>
+                                    {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                                    {formType === 'post' ? t('post') : t('comment')}
                                 </Button>
-                            )}
-
-                            {/* Botón de envío */}
-                            <Button type="submit" disabled={processing || data.content.trim().length === 0}>
-                                {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                                {formType === 'post' ? t('post') : t('comment')}
-                            </Button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             )}
         </>
     );
