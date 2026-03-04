@@ -99,7 +99,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
      * Reemplaza el texto seleccionado por el contenido indicado
      * y reposiciona el cursor de forma controlada.
      */
-    function replaceSelection(replacement: string, moveCursorOffset = 0): void {
+    function replaceSelection(replacement: string, moveCursorOffset = 0) {
         const textarea = textareaRef.current;
 
         if (!textarea) return;
@@ -134,7 +134,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
      * Aplica una transformación si existe selección,
      * o inserta un texto de respaldo en caso contrario.
      */
-    function applyOrInsert({ fnWhenSelected, fallback }: { fnWhenSelected: (selected: string) => string; fallback: string }): void {
+    function applyOrInsert({ fnWhenSelected, fallback }: { fnWhenSelected: (selected: string) => string; fallback: string }) {
         const sel = getSelection();
 
         if (sel && sel.start !== sel.end) {
@@ -149,7 +149,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
      */
     const [linkData, setLinkData] = useState({ text: '', url: '' });
 
-    function applyLink(): void {
+    function applyLink() {
         const sel = getSelection();
         const selectedIsUrl = sel && /^https?:\/\//i.test(sel.value);
         const defaultText = sel && !selectedIsUrl ? sel.value : 'example';
@@ -255,7 +255,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     }
 
     // Sube una imagen al seleccionar un archivo.
-    function onImgFileSelected(e: ChangeEvent<HTMLInputElement>): void {
+    function onImgFileSelected(e: ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
 
         if (!file) {
@@ -305,7 +305,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     }
 
     // Sube un video al seleccionar un archivo.
-    function onVideoFileSelected(e: ChangeEvent<HTMLInputElement>): void {
+    function onVideoFileSelected(e: ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
 
         if (!file) {
@@ -431,17 +431,28 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     } as const;
 
     // Aplica un color de fuente.
-    function onColorSelected(key: keyof typeof colors): void {
+    function onColorSelected(key: keyof typeof colors) {
         const sel = getSelection();
         const content = sel && sel.start !== sel.end ? sel.value : t('text');
         replaceSelection(`:style[${content}]{color=${key}}`);
     }
 
     // Aplica un tamaño de fuente.
-    function onSizeSelected(key: keyof typeof sizes): void {
+    function onSizeSelected(key: keyof typeof sizes) {
         const sel = getSelection();
         const content = sel && sel.start !== sel.end ? sel.value : t('text');
         replaceSelection(`:style[${content}]{size=${key}}`);
+    }
+
+    // Tamaño de fuente personalizado en píxeles.
+    const [customSize, setCustomSize] = useState('16');
+
+    // Aplica un tamaño de fuente personalizado.
+    function onCustomSizeApply() {
+        const sel = getSelection();
+        const content = sel && sel.start !== sel.end ? sel.value : t('text');
+
+        replaceSelection(`:style[${content}]{size=${customSize.trim()}}`);
     }
 
     return (
@@ -501,6 +512,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                 </PopoverTrigger>
 
                 <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
+                    {/* Tamaños predefinidos */}
                     {(Object.keys(sizes) as (keyof typeof sizes)[]).map((key) => (
                         <Button
                             key={key}
@@ -515,6 +527,26 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                             <span className={sizes[key].text}>{t(sizes[key].tl)}</span>
                         </Button>
                     ))}
+
+                    {/* Tamaño personalizado */}
+                    <div className="mt-2 flex w-full items-center gap-2">
+                        <Input
+                            type="number"
+                            min="6"
+                            max="60"
+                            placeholder={t('custom_size')}
+                            value={customSize}
+                            onChange={(e) => setCustomSize(e.target.value)}
+                            title={t('only_nums_between_6_and_16_are_allowed')}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && (e.target as HTMLInputElement).checkValidity()) {
+                                    e.preventDefault();
+                                    onCustomSizeApply();
+                                }
+                            }}
+                            className={noSpinButtonClassName}
+                        />
+                    </div>
                 </PopoverContent>
             </Popover>
 

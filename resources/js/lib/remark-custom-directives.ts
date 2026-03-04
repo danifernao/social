@@ -79,15 +79,30 @@ export default function remarkCustomDirectives() {
 
           // Obtiene los atributos definidos en la directiva (si existen).
           const attrs = styleNode.attributes || {};
-
           const colorAttr = attrs.color as ColorKey | undefined;
-          const sizeAttr = attrs.size as SizeKey | undefined;
+          const sizeAttr = attrs.size as string | undefined;
 
-          // Valida que el color exista dentro del mapa permitido.
+          // Obtiene la clase del color correspondiente.
           const colorClass = colorAttr && colorAttr in colors ? colors[colorAttr] : '';
 
-          // Valida que el tamaño exista dentro del mapa permitido.
-          const sizeClass = sizeAttr && sizeAttr in sizes ? sizes[sizeAttr] : '';
+          // Clase predefinida del tamaño de fuente.
+          let sizeClass = '';
+
+          // Estilo en línea del tamaño de fuente personalizado.
+          let inlineStyle = '';
+          
+          // Si se trata de un tamaño predefinido,
+          // obtiene la clase correspondiente.
+          if (sizeAttr && sizeAttr in sizes) {
+            sizeClass = sizes[sizeAttr as SizeKey];
+          } else {
+            const num = parseNumericAttr(sizeAttr);
+
+            // Tamaño personalizado.
+            if (num && num >= 6 && num <= 60) {
+              inlineStyle = `font-size: ${num}px;`;
+            }
+          }
 
           // Define la información necesaria para que remark-rehype
           // genere un elemento <span> con las clases correspondientes.
@@ -95,6 +110,7 @@ export default function remarkCustomDirectives() {
             hName: 'span',
             hProperties: {
               className: [colorClass, sizeClass].join(' '),
+              style: inlineStyle,
             },
           };
         }
