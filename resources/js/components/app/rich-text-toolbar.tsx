@@ -2,6 +2,7 @@ import { generateThumbnail } from '@/lib/utils';
 import { User } from '@/types';
 import { router } from '@inertiajs/react';
 import {
+    ALargeSmall,
     AlignCenter,
     AlignJustify,
     AlignLeft,
@@ -446,26 +447,33 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
     return (
         <div className="flex flex-wrap items-center gap-1 p-1">
-            {/* Negrita */}
-            <Tooltip content={t('apply_bold')}>
-                <Button type="button" variant="ghost" size="icon" onClick={onBold}>
-                    <Bold className="h-4 w-4" />
-                </Button>
-            </Tooltip>
+            {/* Formato básico (Negrita, Cursiva y Tachado) */}
+            <Popover>
+                <Tooltip content={t('format_text')}>
+                    <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <Type className="h-4 w-4" />
+                        </Button>
+                    </PopoverTrigger>
+                </Tooltip>
 
-            {/* Cursiva */}
-            <Tooltip content={t('apply_italic')}>
-                <Button type="button" variant="ghost" size="icon" onClick={onItalic}>
-                    <Italic className="h-4 w-4" />
-                </Button>
-            </Tooltip>
+                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
+                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={onBold}>
+                        <Bold className="h-4 w-4" />
+                        {t('bold')}
+                    </Button>
 
-            {/* Tachado */}
-            <Tooltip content={t('apply_strikethrough')}>
-                <Button type="button" variant="ghost" size="icon" onClick={onStrikethrough}>
-                    <Strikethrough className="h-4 w-4" />
-                </Button>
-            </Tooltip>
+                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={onItalic}>
+                        <Italic className="h-4 w-4" />
+                        {t('italic')}
+                    </Button>
+
+                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={onStrikethrough}>
+                        <Strikethrough className="h-4 w-4" />
+                        {t('strikethrough')}
+                    </Button>
+                </PopoverContent>
+            </Popover>
 
             {/* Color de fuente */}
             <Popover>
@@ -493,7 +501,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                 <Tooltip content={t('change_font_size')}>
                     <PopoverTrigger asChild>
                         <Button variant="ghost" size="icon">
-                            <Type className="h-4 w-4" />
+                            <ALargeSmall className="h-4 w-4" />
                         </Button>
                     </PopoverTrigger>
                 </Tooltip>
