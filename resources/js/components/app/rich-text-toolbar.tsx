@@ -14,6 +14,10 @@ import {
     Heading,
     Heading1,
     Heading2,
+    Heading3,
+    Heading4,
+    Heading5,
+    Heading6,
     History,
     Image,
     ImagePlus,
@@ -330,13 +334,22 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     // Inserta texto tachado.
     const onStrikethrough = () => applyOrInsert({ fnWhenSelected: (s) => `~~${s}~~`, fallback: `~~${t('text')}~~` });
 
+    // Iconos de encabezados.
+    const headingIcons = {
+        1: Heading1,
+        2: Heading2,
+        3: Heading3,
+        4: Heading4,
+        5: Heading5,
+        6: Heading6,
+    };
+
     // Inserta encabezados según el nivel indicado.
-    function onHeading(level: number): void {
+    const onHeading = (level: number) =>
         applyOrInsert({
             fnWhenSelected: (s) => `\n${'#'.repeat(level)} ${s}\n`,
             fallback: `\n${'#'.repeat(level)} ${t('text')}\n`,
         });
-    }
 
     // Alinea el texto.
     function onAlign(type: 'left' | 'right' | 'center' | 'justify') {
@@ -588,14 +601,22 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                 </PopoverTrigger>
 
                 <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
-                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={() => onHeading(1)}>
-                        <Heading1 className="h-4 w-4" />
-                        {t('title')}
-                    </Button>
-                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={() => onHeading(2)}>
-                        <Heading2 className="h-4 w-4" />
-                        {t('subtitle')}
-                    </Button>
+                    {(Object.keys(headingIcons) as unknown as (keyof typeof headingIcons)[]).map((level) => {
+                        const Icon = headingIcons[level];
+
+                        return (
+                            <Button
+                                key={level}
+                                type="button"
+                                variant="ghost"
+                                className="flex w-full items-center justify-start gap-2 text-sm"
+                                onClick={() => onHeading(Number(level))}
+                            >
+                                <Icon className="h-4 w-4" />
+                                {t('heading_level', { level })}
+                            </Button>
+                        );
+                    })}
                 </PopoverContent>
             </Popover>
 

@@ -68,8 +68,14 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
         strong: ({ children }) => <strong>{children}</strong>,
         em: ({ children }) => <em>{children}</em>,
         del: ({ children }) => <del className="line-through">{children}</del>,
+
+        // Cabeceras
         h1: ({ children }) => <h1 className="mb-4 text-xl font-bold">{children}</h1>,
         h2: ({ children }) => <h2 className="mb-4 text-lg font-bold">{children}</h2>,
+        h3: ({ children }) => <h3 className="mb-3 text-base font-semibold">{children}</h3>,
+        h4: ({ children }) => <h4 className="mb-3 text-sm font-semibold">{children}</h4>,
+        h5: ({ children }) => <h5 className="mb-2 text-sm font-medium">{children}</h5>,
+        h6: ({ children }) => <h6 className="mb-2 text-xs font-medium">{children}</h6>,
 
         // Renderiza enlaces internos con Inertia y enlaces externos
         // usando etiquetas <a> estándar.
@@ -250,6 +256,10 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
                         'em',
                         'h1',
                         'h2',
+                        'h3',
+                        'h4',
+                        'h5',
+                        'h6',
                         'hr',
                         'a',
                         'img',
