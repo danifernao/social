@@ -2,6 +2,10 @@ import { generateThumbnail } from '@/lib/utils';
 import { User } from '@/types';
 import { router } from '@inertiajs/react';
 import {
+    AlignCenter,
+    AlignJustify,
+    AlignLeft,
+    AlignRight,
     Bold,
     CaptionsOff,
     Code,
@@ -336,6 +340,14 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
         });
     }
 
+    // Alinea el texto.
+    function onAlign(type: 'left' | 'right' | 'center' | 'justify') {
+        const sel = getSelection();
+        const content = sel && sel.start !== sel.end ? sel.value : t('text');
+
+        replaceSelection(`\n:::${type}\n${content}\n:::\n`);
+    }
+
     // Inserta cita en bloque.
     const onQuote = () =>
         applyOrInsert({
@@ -455,28 +467,6 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                 </Button>
             </Tooltip>
 
-            {/* Encabezados (H1 y H2) */}
-            <Popover>
-                <Tooltip content={t('insert_heading')}>
-                    <PopoverTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                            <Heading className="h-4 w-4" />
-                        </Button>
-                    </PopoverTrigger>
-                </Tooltip>
-
-                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
-                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={() => onHeading(1)}>
-                        <Heading1 className="h-4 w-4" />
-                        {t('title')}
-                    </Button>
-                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={() => onHeading(2)}>
-                        <Heading2 className="h-4 w-4" />
-                        {t('subtitle')}
-                    </Button>
-                </PopoverContent>
-            </Popover>
-
             {/* Color de fuente */}
             <Popover>
                 <Tooltip content={t('change_font_color')}>
@@ -522,6 +512,61 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                             <span className={sizes[key].text}>{t(sizes[key].tl)}</span>
                         </Button>
                     ))}
+                </PopoverContent>
+            </Popover>
+
+            {/* Alineación de texto */}
+            <Popover>
+                <Tooltip content={t('align_text')}>
+                    <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <AlignLeft className="h-4 w-4" />
+                        </Button>
+                    </PopoverTrigger>
+                </Tooltip>
+
+                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
+                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={() => onAlign('left')}>
+                        <AlignLeft className="h-4 w-4" />
+                        {t('align_left')}
+                    </Button>
+
+                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={() => onAlign('center')}>
+                        <AlignCenter className="h-4 w-4" />
+                        {t('align_center')}
+                    </Button>
+
+                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={() => onAlign('right')}>
+                        <AlignRight className="h-4 w-4" />
+                        {t('align_right')}
+                    </Button>
+
+                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={() => onAlign('justify')}>
+                        <AlignJustify className="h-4 w-4" />
+                        {t('align_justify')}
+                    </Button>
+                </PopoverContent>
+            </Popover>
+
+            {/* Encabezados (H1 y H2) */}
+            <Popover>
+                <Tooltip content={t('insert_heading')}>
+                    <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <Heading className="h-4 w-4" />
+                        </Button>
+                    </PopoverTrigger>
+                </Tooltip>
+
+                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
+                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={() => onHeading(1)}>
+                        <Heading1 className="h-4 w-4" />
+                        {t('title')}
+                    </Button>
+                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={() => onHeading(2)}>
+                        <Heading2 className="h-4 w-4" />
+                        {t('subtitle')}
+                    </Button>
                 </PopoverContent>
             </Popover>
 

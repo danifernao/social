@@ -121,6 +121,27 @@ export default function remarkCustomDirectives() {
         }
 
         /**
+         * Manejo de directivas de alineación de texto.
+         */
+        if (node.type === 'containerDirective' && ['left', 'right', 'center', 'justify'].includes(node.name)) {
+          const alignMap: Record<string, string> = {
+            left: 'text-left',
+            right: 'text-right',
+            center: 'text-center',
+            justify: 'text-justify',
+          };
+
+          const className = alignMap[node.name];
+
+          node.data = {
+            hName: 'div',
+            hProperties: {
+              className,
+            },
+          };
+        }
+
+        /**
          * Manejo de la directiva ":image".
          * Solo se procesa cuando es una directiva de tipo hoja.
          */

@@ -263,6 +263,7 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
                         'iframe',
                         'video',
                         'del',
+                        'div',
                     ]}
                     components={components}
                 >
