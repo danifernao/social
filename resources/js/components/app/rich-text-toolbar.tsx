@@ -150,12 +150,10 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     const [linkData, setLinkData] = useState({ text: '', url: '' });
 
     function applyLink() {
-        const sel = getSelection();
-        const selectedIsUrl = sel && /^https?:\/\//i.test(sel.value);
-        const defaultText = sel && !selectedIsUrl ? sel.value : 'example';
-        const textToUse = linkData.text.trim() || defaultText;
-        const urlToUse = linkData.url.trim() || 'https://example.com';
-        replaceSelection(`[${textToUse}](${urlToUse})`);
+        const text = linkData.text.trim() || t('text');
+        const url = linkData.url.trim() || 'https://example.com';
+
+        replaceSelection(`[${text}](${url})`);
         setLinkData({ text: '', url: '' });
     }
 
@@ -604,7 +602,21 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
             {/* Enlace */}
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="data-[state=open]:bg-accent" title={t('insert_link')}>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="data-[state=open]:bg-accent"
+                        title={t('insert_link')}
+                        onClick={(e) => {
+                            const selectedUrl = getSelectedUrl();
+
+                            if (selectedUrl) {
+                                e.preventDefault();
+                                replaceSelection(`[${selectedUrl}](${selectedUrl})`);
+                                return;
+                            }
+                        }}
+                    >
                         <Link className="h-4 w-4" />
                     </Button>
                 </PopoverTrigger>
