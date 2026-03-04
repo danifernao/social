@@ -1,6 +1,4 @@
 import type { Auth, Entry } from '@/types';
-import data from '@emoji-mart/data';
-import Picker from '@emoji-mart/react';
 import { router, usePage } from '@inertiajs/react';
 import { Info, SmilePlus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -9,6 +7,7 @@ import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { ButtonGroup } from '../ui/button-group';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import EmojiPicker from './emoji-picker';
 import EntryListItemReactionsInfo from './entry-list-item-reactions-info';
 
 interface EntryListItemReactionsProps {
@@ -174,7 +173,7 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
             {/* Selector de emojis */}
             {showPicker && (
                 <div className="absolute z-50 mt-2" ref={pickerRef}>
-                    <Picker data={data} onEmojiSelect={handleSelect} />
+                    <EmojiPicker onSelect={handleSelect} />
                 </div>
             )}
         </div>
