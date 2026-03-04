@@ -251,8 +251,8 @@ function detectVideoService(url: string): 'youtube' | 'html5' | null {
     return 'youtube';
   }
 
-  // Video HTML5 (mp4, webm, ogg)
-  if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(url)) {
+  // Video HTML5 (mp4, webm)
+  if (/\.(mp4|webm)(\?.*)?$/i.test(url)) {
     return 'html5';
   }
 

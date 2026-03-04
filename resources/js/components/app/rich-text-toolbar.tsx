@@ -116,6 +116,16 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     }
 
     /**
+     * Obtiene la URL seleccionada.
+     */
+    function getSelectedUrl(): string {
+        const sel = getSelection();
+        const selectedIsUrl = sel && /^https?:\/\//i.test(sel.value);
+
+        return selectedIsUrl ? sel.value.trim() : '';
+    }
+
+    /**
      * Aplica una transformación si existe selección,
      * o inserta un texto de respaldo en caso contrario.
      */
@@ -218,16 +228,23 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
     // Inserta la imagen en el editor.
     function applyImage(): void {
-        const sel = getSelection();
-        const selectedIsUrl = sel && /^https?:\/\//i.test(sel.value);
+        const alt = imageData.alt.trim();
+        const url = imageData.url.trim() || `${window.location.origin}/samples/cat.jpg`;
+        const attrs = [];
 
-        const defaultAlt = sel && sel.start !== sel.end && !selectedIsUrl ? sel.value : `${t('text')}`;
-        const altToUse = imageData.alt.trim() || defaultAlt;
-        const urlToUse = sel && selectedIsUrl ? sel.value : imageData.url.trim() || `${window.location.origin}/samples/cat.jpg`;
-        const widthAttr = imageData.width ? ` width=${imageData.width}` : '';
-        const heightAttr = imageData.height ? ` height=${imageData.height}` : '';
+        if (alt) {
+            attrs.push(`alt="${alt}"`);
+        }
 
-        replaceSelection(`\n::image[${urlToUse}]{alt="${altToUse}"${widthAttr}${heightAttr}}\n`);
+        if (imageData.width) {
+            attrs.push(`width=${imageData.width}`);
+        }
+
+        if (imageData.height) {
+            attrs.push(`height=${imageData.height}`);
+        }
+
+        replaceSelection(`\n::image[${url}]${attrs.length ? `{${attrs.join(' ')}}` : ''}\n`);
 
         setImageData({ alt: '', url: '', width: '', height: '' });
     }
@@ -266,15 +283,18 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
     // Inserta el video en el editor.
     function applyVideo(): void {
-        const sel = getSelection();
+        const url = imageData.url.trim() || `${window.location.origin}/samples/cat.mp4`;
+        const attrs = [];
 
-        const url = videoData.url.trim() || (sel ? sel.value : '');
-        const finalUrl = url || `${window.location.origin}/samples/cat.mp4`;
+        if (videoData.width) {
+            attrs.push(`width=${videoData.width}`);
+        }
 
-        const widthAttr = videoData.width ? ` width=${videoData.width}` : '';
-        const heightAttr = videoData.height ? ` height=${videoData.height}` : '';
+        if (videoData.height) {
+            attrs.push(`height=${videoData.height}`);
+        }
 
-        replaceSelection(`\n::video[${finalUrl}]{${widthAttr}${heightAttr}}\n`);
+        replaceSelection(`\n::video[${url}]${attrs.length ? `{${attrs.join(' ')}}` : ''}\n`);
 
         setVideoData({ url: '', width: '', height: '' });
     }
@@ -524,7 +544,22 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
             <Popover open={isImagePopoverOpen} onOpenChange={setIsImagePopoverOpen}>
                 <Tooltip content={t('insert_image')}>
                     <PopoverTrigger asChild>
-                        <Button variant="ghost" size="icon" disabled={isImgUploading}>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            disabled={isImgUploading}
+                            onClick={(e) => {
+                                const selectedUrl = getSelectedUrl();
+
+                                if (selectedUrl) {
+                                    e.preventDefault();
+                                    replaceSelection(`\n::image[${selectedUrl}]\n`);
+                                    return;
+                                }
+
+                                setIsImagePopoverOpen(true);
+                            }}
+                        >
                             <Image className="h-4 w-4" />
                         </Button>
                     </PopoverTrigger>
@@ -697,7 +732,22 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
             <Popover open={isVideoPopoverOpen} onOpenChange={setIsVideoPopoverOpen}>
                 <Tooltip content={t('insert_video')}>
                     <PopoverTrigger asChild>
-                        <Button type="button" variant="ghost" size="icon">
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                                const selectedUrl = getSelectedUrl();
+
+                                if (selectedUrl) {
+                                    e.preventDefault();
+                                    replaceSelection(`\n::video[${selectedUrl}]\n`);
+                                    return;
+                                }
+
+                                setIsVideoPopoverOpen(true);
+                            }}
+                        >
                             <SquarePlay className="h-4 w-4" />
                         </Button>
                     </PopoverTrigger>
@@ -784,6 +834,15 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                 type={mediaMode || 'image'}
                 onClose={() => {
                     setIsMediaDialogOpen(false);
+
+                    if (mediaMode === 'image') {
+                        setIsImagePopoverOpen(true);
+                    }
+
+                    if (mediaMode === 'video') {
+                        setIsVideoPopoverOpen(true);
+                    }
+
                     setMediaMode(null);
                 }}
                 onSelect={(url) => {
