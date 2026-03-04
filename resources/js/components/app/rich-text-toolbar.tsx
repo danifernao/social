@@ -39,7 +39,6 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import MediaDialog from './media-dialog';
-import { Tooltip } from './tooltip';
 
 interface RichTextToolbarProps {
     user: User; // Usuario autenticado.
@@ -449,13 +448,11 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
         <div className="flex flex-wrap items-center gap-1 p-1">
             {/* Formato básico (Negrita, Cursiva y Tachado) */}
             <Popover>
-                <Tooltip content={t('format_text')}>
-                    <PopoverTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                            <Type className="h-4 w-4" />
-                        </Button>
-                    </PopoverTrigger>
-                </Tooltip>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" className="data-[state=open]:bg-accent" title={t('format_text')}>
+                        <Type className="h-4 w-4" />
+                    </Button>
+                </PopoverTrigger>
 
                 <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
                     <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={onBold}>
@@ -477,13 +474,12 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
             {/* Color de fuente */}
             <Popover>
-                <Tooltip content={t('change_font_color')}>
-                    <PopoverTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                            <PaintBucket className="h-4 w-4" />
-                        </Button>
-                    </PopoverTrigger>
-                </Tooltip>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" className="data-[state=open]:bg-accent" title={t('change_font_color')}>
+                        <PaintBucket className="h-4 w-4" />
+                    </Button>
+                </PopoverTrigger>
+
                 <PopoverContent className="flex w-auto gap-2">
                     {(Object.keys(colors) as (keyof typeof colors)[]).map((key) => (
                         <button
@@ -498,13 +494,12 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
             {/* Tamaño de fuente */}
             <Popover>
-                <Tooltip content={t('change_font_size')}>
-                    <PopoverTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                            <ALargeSmall className="h-4 w-4" />
-                        </Button>
-                    </PopoverTrigger>
-                </Tooltip>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" className="data-[state=open]:bg-accent" title={t('change_font_size')}>
+                        <ALargeSmall className="h-4 w-4" />
+                    </Button>
+                </PopoverTrigger>
+
                 <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
                     {(Object.keys(sizes) as (keyof typeof sizes)[]).map((key) => (
                         <Button
@@ -525,13 +520,11 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
             {/* Alineación de texto */}
             <Popover>
-                <Tooltip content={t('align_text')}>
-                    <PopoverTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                            <AlignLeft className="h-4 w-4" />
-                        </Button>
-                    </PopoverTrigger>
-                </Tooltip>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" className="data-[state=open]:bg-accent" title={t('align_text')}>
+                        <AlignLeft className="h-4 w-4" />
+                    </Button>
+                </PopoverTrigger>
 
                 <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
                     <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={() => onAlign('left')}>
@@ -558,13 +551,11 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
             {/* Encabezados (H1 y H2) */}
             <Popover>
-                <Tooltip content={t('insert_heading')}>
-                    <PopoverTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                            <Heading className="h-4 w-4" />
-                        </Button>
-                    </PopoverTrigger>
-                </Tooltip>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" className="data-[state=open]:bg-accent" title={t('insert_heading')}>
+                        <Heading className="h-4 w-4" />
+                    </Button>
+                </PopoverTrigger>
 
                 <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
                     <Button variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={() => onHeading(1)}>
@@ -580,13 +571,12 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
             {/* Enlace */}
             <Popover>
-                <Tooltip content={t('insert_link')}>
-                    <PopoverTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                            <Link className="h-4 w-4" />
-                        </Button>
-                    </PopoverTrigger>
-                </Tooltip>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" className="data-[state=open]:bg-accent" title={t('insert_link')}>
+                        <Link className="h-4 w-4" />
+                    </Button>
+                </PopoverTrigger>
+
                 <PopoverContent className="flex w-64 flex-col gap-2 p-4">
                     <Input
                         placeholder={t('link_text')}
@@ -606,28 +596,29 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
             {/* Imagen */}
             <Popover open={isImagePopoverOpen} onOpenChange={setIsImagePopoverOpen}>
-                <Tooltip content={t('insert_image')}>
-                    <PopoverTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            disabled={isImgUploading}
-                            onClick={(e) => {
-                                const selectedUrl = getSelectedUrl();
+                <PopoverTrigger asChild>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        disabled={isImgUploading}
+                        onClick={(e) => {
+                            const selectedUrl = getSelectedUrl();
 
-                                if (selectedUrl) {
-                                    e.preventDefault();
-                                    replaceSelection(`\n::image[${selectedUrl}]\n`);
-                                    return;
-                                }
+                            if (selectedUrl) {
+                                e.preventDefault();
+                                replaceSelection(`\n::image[${selectedUrl}]\n`);
+                                return;
+                            }
 
-                                setIsImagePopoverOpen(true);
-                            }}
-                        >
-                            <Image className="h-4 w-4" />
-                        </Button>
-                    </PopoverTrigger>
-                </Tooltip>
+                            setIsImagePopoverOpen(true);
+                        }}
+                        title={t('insert_image')}
+                        className="data-[state=open]:bg-accent"
+                    >
+                        <Image className="h-4 w-4" />
+                    </Button>
+                </PopoverTrigger>
+
                 <PopoverContent className="flex w-64 flex-col gap-2 p-4">
                     <div className="flex gap-2">
                         {/* Campo URL */}
@@ -720,28 +711,22 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
             </Popover>
 
             {/* Separador horizontal */}
-            <Tooltip content={t('insert_separator')}>
-                <Button type="button" variant="ghost" size="icon" onClick={onSeparator}>
-                    <Minus className="h-4 w-4" />
-                </Button>
-            </Tooltip>
+            <Button type="button" variant="ghost" size="icon" title={t('insert_separator')} onClick={onSeparator}>
+                <Minus className="h-4 w-4" />
+            </Button>
 
             {/* Cita en bloque */}
-            <Tooltip content={t('quote')}>
-                <Button type="button" variant="ghost" size="icon" onClick={onQuote}>
-                    <Quote className="h-4 w-4" />
-                </Button>
-            </Tooltip>
+            <Button type="button" variant="ghost" size="icon" title={t('quote')} onClick={onQuote}>
+                <Quote className="h-4 w-4" />
+            </Button>
 
             {/* Código */}
             <Popover>
-                <Tooltip content={t('insert_code')}>
-                    <PopoverTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                            <Code className="h-4 w-4" />
-                        </Button>
-                    </PopoverTrigger>
-                </Tooltip>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" title={t('insert_code')} className="data-[state=open]:bg-accent">
+                        <Code className="h-4 w-4" />
+                    </Button>
+                </PopoverTrigger>
                 <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
                     <Button variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onInlineCode}>
                         <Code className="h-4 w-4" />
@@ -756,13 +741,11 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
             {/* Lista */}
             <Popover>
-                <Tooltip content={t('insert_list')}>
-                    <PopoverTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                            <List className="h-4 w-4" />
-                        </Button>
-                    </PopoverTrigger>
-                </Tooltip>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" title={t('insert_list')} className="data-[state=open]:bg-accent">
+                        <List className="h-4 w-4" />
+                    </Button>
+                </PopoverTrigger>
                 <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
                     <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onOrderedList}>
                         <ListOrdered className="h-4 w-4" /> {t('ordered_list')}
@@ -775,13 +758,11 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
             {/* Contenido oculto */}
             <Popover>
-                <Tooltip content={t('hide_content')}>
-                    <PopoverTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                            <EyeOff className="h-4 w-4" />
-                        </Button>
-                    </PopoverTrigger>
-                </Tooltip>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" title={t('hide_content')} className="data-[state=open]:bg-accent">
+                        <EyeOff className="h-4 w-4" />
+                    </Button>
+                </PopoverTrigger>
                 <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
                     <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onHiddenInline}>
                         <EyeOff className="h-4 w-4" /> {t('hidden_text')}
@@ -794,28 +775,28 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
             {/* Video */}
             <Popover open={isVideoPopoverOpen} onOpenChange={setIsVideoPopoverOpen}>
-                <Tooltip content={t('insert_video')}>
-                    <PopoverTrigger asChild>
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={(e) => {
-                                const selectedUrl = getSelectedUrl();
+                <PopoverTrigger asChild>
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        title={t('insert_video')}
+                        className="data-[state=open]:bg-accent"
+                        onClick={(e) => {
+                            const selectedUrl = getSelectedUrl();
 
-                                if (selectedUrl) {
-                                    e.preventDefault();
-                                    replaceSelection(`\n::video[${selectedUrl}]\n`);
-                                    return;
-                                }
+                            if (selectedUrl) {
+                                e.preventDefault();
+                                replaceSelection(`\n::video[${selectedUrl}]\n`);
+                                return;
+                            }
 
-                                setIsVideoPopoverOpen(true);
-                            }}
-                        >
-                            <SquarePlay className="h-4 w-4" />
-                        </Button>
-                    </PopoverTrigger>
-                </Tooltip>
+                            setIsVideoPopoverOpen(true);
+                        }}
+                    >
+                        <SquarePlay className="h-4 w-4" />
+                    </Button>
+                </PopoverTrigger>
                 <PopoverContent className="flex w-64 flex-col gap-2 p-4">
                     <div className="flex gap-2">
                         {/* Campo URL */}
