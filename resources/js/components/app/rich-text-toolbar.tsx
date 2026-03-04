@@ -445,7 +445,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     }
 
     // Tamaño de fuente personalizado en píxeles.
-    const [customSize, setCustomSize] = useState('16');
+    const [customSize, setCustomSize] = useState('');
 
     // Aplica un tamaño de fuente personalizado.
     function onCustomSizeApply() {
