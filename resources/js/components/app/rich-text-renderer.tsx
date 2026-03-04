@@ -1,6 +1,7 @@
 import remarkCustomDirectives from '@/lib/remark-custom-directives';
 import remarkHashtag from '@/lib/remark-hashtag';
 import remarkMention from '@/lib/remark-mention';
+import remarkStrike from '@/lib/remark-strike';
 import { cn } from '@/lib/utils';
 import { EntryType } from '@/types';
 import { Link } from '@inertiajs/react';
@@ -233,7 +234,14 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
             {/* Contenedor del contenido con altura controlada */}
             <div ref={contentRef} className={cn(baseClass, expanded || forceExpanded.current ? 'max-h-full' : 'max-h-[600px]')}>
                 <Markdown
-                    remarkPlugins={[remarkBreaks, remarkDirective, remarkCustomDirectives, remarkMention, [remarkHashtag, { entryType }]]}
+                    remarkPlugins={[
+                        remarkStrike,
+                        remarkBreaks,
+                        remarkDirective,
+                        remarkCustomDirectives,
+                        remarkMention,
+                        [remarkHashtag, { entryType }],
+                    ]}
                     allowedElements={[
                         'p',
                         'span',
@@ -254,6 +262,7 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
                         'hidden',
                         'iframe',
                         'video',
+                        'del',
                     ]}
                     components={components}
                 >

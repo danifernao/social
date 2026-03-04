@@ -23,6 +23,7 @@ import {
     Quote,
     SquareCode,
     SquarePlay,
+    Strikethrough,
     Type,
     Upload,
 } from 'lucide-react';
@@ -324,6 +325,9 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     // Inserta texto en cursiva.
     const onItalic = () => applyOrInsert({ fnWhenSelected: (s) => `*${s}*`, fallback: `*${t('text')}*` });
 
+    // Inserta texto tachado.
+    const onStrikethrough = () => applyOrInsert({ fnWhenSelected: (s) => `~~${s}~~`, fallback: `~~${t('text')}~~` });
+
     // Inserta encabezados según el nivel indicado.
     function onHeading(level: number): void {
         applyOrInsert({
@@ -441,6 +445,13 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
             <Tooltip content={t('apply_italic')}>
                 <Button type="button" variant="ghost" size="icon" onClick={onItalic}>
                     <Italic className="h-4 w-4" />
+                </Button>
+            </Tooltip>
+
+            {/* Tachado */}
+            <Tooltip content={t('apply_strikethrough')}>
+                <Button type="button" variant="ghost" size="icon" onClick={onStrikethrough}>
+                    <Strikethrough className="h-4 w-4" />
                 </Button>
             </Tooltip>
 
