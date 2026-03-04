@@ -1,12 +1,13 @@
 import type { Auth, Entry } from '@/types';
 import { router, usePage } from '@inertiajs/react';
 import { Info, SmilePlus } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { ButtonGroup } from '../ui/button-group';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import EmojiPicker from './emoji-picker';
 import EntryListItemReactionsInfo from './entry-list-item-reactions-info';
 
@@ -29,10 +30,7 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
     const [reactions, setReactions] = useState(entry.reactions || []);
 
     // Controla la visibilidad del selector de emojis.
-    const [showPicker, setShowPicker] = useState(false);
-
-    // Referencia al contenedor del selector para detectar clics externos.
-    const pickerRef = useRef<HTMLDivElement>(null);
+    const [emojiOpen, setEmojiOpen] = useState(false);
 
     // Alterna una reacción del usuario autenticado.
     const toggleReaction = (emoji: string) => {
@@ -97,25 +95,8 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
     // Gestiona la selección de un emoji desde el selector.
     const handleSelect = (emoji: { native: string }) => {
         toggleReaction(emoji.native);
-        setShowPicker(false);
+        setEmojiOpen(false);
     };
-
-    // Cierra el selector cuando se hace clic fuera de él.
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (pickerRef.current && !pickerRef.current.contains(event.target as Node)) {
-                setShowPicker(false);
-            }
-        };
-
-        if (showPicker) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [showPicker]);
 
     return (
         <div className="relative flex gap-2">
@@ -160,20 +141,21 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                             </Dialog>
                         )}
 
-                        {/* Botón para abrir el selector de emojis */}
+                        {/* Selector de emojis */}
                         {auth.user.permissions.includes('react') && (
-                            <Button onClick={() => setShowPicker(!showPicker)} variant="outline" title={t('react')}>
-                                <SmilePlus className="h-4 w-4" aria-hidden={true} />
-                            </Button>
+                            <Popover open={emojiOpen} onOpenChange={setEmojiOpen}>
+                                <PopoverTrigger asChild>
+                                    <Button variant="outline" title={t('react')}>
+                                        <SmilePlus className="h-4 w-4" aria-hidden />
+                                    </Button>
+                                </PopoverTrigger>
+
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    <EmojiPicker onSelect={handleSelect} />
+                                </PopoverContent>
+                            </Popover>
                         )}
                     </ButtonGroup>
-                </div>
-            )}
-
-            {/* Selector de emojis */}
-            {showPicker && (
-                <div className="absolute z-50 mt-2" ref={pickerRef}>
-                    <EmojiPicker onSelect={handleSelect} />
                 </div>
             )}
         </div>
