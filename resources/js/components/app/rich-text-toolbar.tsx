@@ -92,12 +92,16 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     function getSelection() {
         const textarea = textareaRef.current;
 
-        if (!textarea) return null;
+        if (!textarea) {
+            return null;
+        }
 
         const start = textarea.selectionStart;
         const end = textarea.selectionEnd;
 
-        if (start == null || end == null) return null;
+        if (start == null || end == null) {
+            return null;
+        }
 
         return { start, end, value: textarea.value.substring(start, end) };
     }
@@ -109,7 +113,9 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     function replaceSelection(replacement: string, moveCursorOffset = 0) {
         const textarea = textareaRef.current;
 
-        if (!textarea) return;
+        if (!textarea) {
+            return;
+        }
 
         const start = textarea.selectionStart ?? 0;
         const end = textarea.selectionEnd ?? 0;
@@ -141,27 +147,55 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
      * Aplica una transformación si existe selección,
      * o inserta un texto de respaldo en caso contrario.
      */
-    function applyOrInsert({ fnWhenSelected, fallback }: { fnWhenSelected: (selected: string) => string; fallback: string }) {
+    type ApplyOptions = {
+        fnWhenSelected: (s: string) => string;
+        fallback: string;
+        block?: boolean;
+        beforeLines?: number;
+        afterLines?: number;
+    };
+
+    function applyOrInsert({ fnWhenSelected, fallback, block = false, beforeLines = 1, afterLines = 1 }: ApplyOptions) {
         const sel = getSelection();
 
-        if (sel && sel.start !== sel.end) {
-            replaceSelection(fnWhenSelected(sel.value));
+        const content = sel && sel.start !== sel.end ? fnWhenSelected(sel.value) : fallback;
+
+        if (block) {
+            insertBlock(content, beforeLines, afterLines);
         } else {
-            replaceSelection(fallback);
+            replaceSelection(content);
         }
     }
 
     /**
-     * Gestiona la inserción de enlaces.
+     * Inserta un bloque asegurando una cantidad mínima de saltos
+     * de línea antes y después del contenido.
      */
-    const [linkData, setLinkData] = useState({ text: '', url: '' });
+    function insertBlock(content: string, beforeLines = 1, afterLines = 1) {
+        const sel = getSelection();
 
-    function applyLink() {
-        const text = linkData.text.trim() || t('text');
-        const url = linkData.url.trim() || 'https://example.com';
+        if (!sel) {
+            return;
+        }
 
-        replaceSelection(`[${text}](${url})`);
-        setLinkData({ text: '', url: '' });
+        const before = text.slice(0, sel.start);
+        const after = text.slice(sel.end);
+
+        // Cuenta saltos existentes antes del cursor.
+        const beforeMatch = before.match(/\n*$/);
+        const existingBefore = beforeMatch ? beforeMatch[0].length : 0;
+
+        // Cuenta saltos existentes después del cursor.
+        const afterMatch = after.match(/^\n*/);
+        const existingAfter = afterMatch ? afterMatch[0].length : 0;
+
+        // Si no hay texto antes, no se agregan saltos.
+        const requiredBefore = before.length === 0 ? 0 : beforeLines;
+
+        const prefix = '\n'.repeat(Math.max(0, requiredBefore - existingBefore));
+        const suffix = '\n'.repeat(Math.max(0, afterLines - existingAfter));
+
+        replaceSelection(`${prefix}${content}${suffix}`);
     }
 
     /**
@@ -254,7 +288,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
             attrs.push(`height=${imageData.height}`);
         }
 
-        replaceSelection(`\n::image[${url}]${attrs.length ? `{${attrs.join(' ')}}` : ''}\n`);
+        insertBlock(`::image[${url}]${attrs.length ? `{${attrs.join(' ')}}` : ''}`);
 
         setImageData({ alt: '', url: '', width: '', height: '' });
     }
@@ -304,7 +338,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
             attrs.push(`height=${videoData.height}`);
         }
 
-        replaceSelection(`\n::video[${url}]${attrs.length ? `{${attrs.join(' ')}}` : ''}\n`);
+        insertBlock(`::video[${url}]${attrs.length ? `{${attrs.join(' ')}}` : ''}`);
 
         setVideoData({ url: '', width: '', height: '' });
     }
@@ -322,6 +356,19 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
             onSuccess: (url) => setVideoData((p) => ({ ...p, url })),
             onFinish: () => setIsVideoUploading(false),
         });
+    }
+
+    /**
+     * Gestiona la inserción de enlaces.
+     */
+    const [linkData, setLinkData] = useState({ text: '', url: '' });
+
+    function applyLink() {
+        const text = linkData.text.trim() || t('text');
+        const url = linkData.url.trim() || 'https://example.com';
+
+        replaceSelection(`[${text}](${url})`);
+        setLinkData({ text: '', url: '' });
     }
 
     /**
@@ -365,8 +412,9 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     // Inserta encabezados según el nivel indicado.
     const onHeading = (level: number) =>
         applyOrInsert({
-            fnWhenSelected: (s) => `\n${'#'.repeat(level)} ${s}\n`,
-            fallback: `\n${'#'.repeat(level)} ${t('text')}\n`,
+            fnWhenSelected: (s) => `${'#'.repeat(level)} ${s}`,
+            fallback: `${'#'.repeat(level)} ${t('text')}`,
+            block: true,
         });
 
     // Alinea el texto.
@@ -374,14 +422,17 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
         const sel = getSelection();
         const content = sel && sel.start !== sel.end ? sel.value : t('text');
 
-        replaceSelection(`\n:::${type}\n${content}\n:::\n`);
+        insertBlock(`:::${type}\n${content}\n:::`);
     }
 
     // Inserta cita en bloque.
     const onQuote = () =>
         applyOrInsert({
-            fnWhenSelected: (s) => `\n> ${s}\n\n`,
-            fallback: `\n> ${t('text')}\n\n`,
+            fnWhenSelected: (s) => `> ${s}`,
+            fallback: `> ${t('text')}`,
+            block: true,
+            beforeLines: 1,
+            afterLines: 2,
         });
 
     // Inserta código en línea.
@@ -395,30 +446,35 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     const onCodeBlock = () => {
         const sel = getSelection();
         const content = sel && sel.start !== sel.end ? sel.value : t('text');
-        replaceSelection(`\n\`\`\`\n${content}\n\`\`\`\n`);
+
+        insertBlock(`\`\`\`\n${content}\n\`\`\``);
     };
 
     // Inserta lista ordenada.
     const onOrderedList = () => {
         const sel = getSelection();
+
         if (sel && sel.start !== sel.end) {
             const lines = sel.value.split(/\r?\n/);
             const replaced = lines.map((ln, i) => `${i + 1}. ${ln}`).join('\n');
-            replaceSelection(`\n${replaced}\n\n`);
+
+            insertBlock(replaced, 1, 2);
         } else {
-            replaceSelection(`\n1. ${t('first_item')}\n2. ${t('second_item')}\n3. ${t('third_item')}\n\n`);
+            insertBlock(`1. ${t('first_item')}\n2. ${t('second_item')}\n3. ${t('third_item')}`, 2, 2);
         }
     };
 
     // Inserta lista sin orden.
     const onUnorderedList = () => {
         const sel = getSelection();
+
         if (sel && sel.start !== sel.end) {
             const lines = sel.value.split(/\r?\n/);
             const replaced = lines.map((ln) => `- ${ln}`).join('\n');
-            replaceSelection(`\n${replaced}\n\n`);
+
+            insertBlock(replaced, 1, 2);
         } else {
-            replaceSelection(`\n- ${t('first_item')}\n- ${t('second_item')}\n- ${t('third_item')}\n\n`);
+            insertBlock(`- ${t('first_item')}\n- ${t('second_item')}\n- ${t('third_item')}`, 2, 2);
         }
     };
 
@@ -433,7 +489,8 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     const onHiddenBlock = () => {
         const sel = getSelection();
         const content = sel && sel.start !== sel.end ? sel.value : t('text');
-        replaceSelection(`\n:::hidden\n${content}\n:::\n`);
+
+        insertBlock(`:::hidden\n${content}\n:::`);
     };
 
     // Inserta separador horizontal.
@@ -463,6 +520,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     function onColorSelected(key: keyof typeof colors) {
         const sel = getSelection();
         const content = sel && sel.start !== sel.end ? sel.value : t('text');
+
         replaceSelection(`:style[${content}]{color=${key}}`);
     }
 
@@ -470,6 +528,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     function onSizeSelected(key: keyof typeof sizes) {
         const sel = getSelection();
         const content = sel && sel.start !== sel.end ? sel.value : t('text');
+
         replaceSelection(`:style[${content}]{size=${key}}`);
     }
 
