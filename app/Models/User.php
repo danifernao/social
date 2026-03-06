@@ -53,7 +53,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return array<string, string>
      */
-    protected function casts(): array
+    protected function casts()
     {
         return [
             'email_verified_at' => 'datetime',
@@ -67,7 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return string
      */
-    public function getTypeAttribute(): string
+    public function getTypeAttribute()
     {
         return 'user';
     }
@@ -77,7 +77,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return string|null
      */
-    public function getAvatarUrlAttribute(): ?string
+    public function getAvatarUrlAttribute()
     {
         return $this->avatar_media_id
             ? route('media.show', ['media' => $this->avatarMedia->path])
@@ -89,13 +89,15 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return string
      */    
-    public function getRoleAttribute(): string
+    public function getRoleAttribute()
     {
         return $this->roles->first()?->name ?? 'user';
     }
 
     /**
      * Relación: el registro del archivo del avatar del usuario.
+     * 
+     * @return BelongsTo<Media, User>
      */ 
     public function avatarMedia()
     {
@@ -132,19 +134,6 @@ class User extends Authenticatable implements MustVerifyEmail
                 'follower_id'
             )
             ->withTimestamps();
-    }
-
-    /**
-     * Verifica si el usuario sigue a otro usuario.
-     *
-     * @param User $user Usuario a comprobar.
-     * @return bool
-     */
-    public function followsUser(User $user): bool
-    {
-        return $this->follows()
-            ->where('followed_id', $user->id)
-            ->exists();
     }
 
     /**
@@ -208,12 +197,27 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Relación: publicaciones cuyas notificaciones el usuario ha silenciado.
+     * 
+     * @return BelongsToMany<Post, User>
+     */
+    public function mutedPosts()
+    {
+        return $this->belongsToMany(
+            Post::class,
+            'post_notification_mutes',
+            'user_id',
+            'post_id'
+        )->withTimestamps();
+    }
+
+    /**
      * Determina si el usuario puede gestionar a otro usuario.
      *
      * @param User $user Usuario objetivo.
      * @return bool
      */
-    public function canActOn(User $user): bool
+    public function canActOn(User $user)
     {
         // No puede actuar sobre sí mismo.
         if ($this->id === $user->id) {
@@ -236,7 +240,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Asigna los permisos por defecto al usuario.
      */
-    public function assignDefaultPermissions(): void
+    public function assignDefaultPermissions()
     {
         $this->givePermissionTo([
             'post',
@@ -245,6 +249,19 @@ class User extends Authenticatable implements MustVerifyEmail
             'update_username',
             'update_avatar',
         ]);
+    }
+
+    /**
+     * Verifica si el usuario sigue a otro usuario.
+     *
+     * @param User $user Usuario a comprobar.
+     * @return bool
+     */
+    public function followsUser(User $user)
+    {
+        return $this->follows()
+            ->where('followed_id', $user->id)
+            ->exists();
     }
 
     /**
@@ -266,7 +283,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param Collection<int, User> $users Colección de usuarios a evaluar.
      * @return Collection<int, User> Colección con la propiedad "is_followed".
      */
-    public function withFollowStatus(Collection $users): Collection
+    public function withFollowStatus(Collection $users)
     {
         $followed_ids = $this->followedUserIds();
 
@@ -285,7 +302,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param User $user Usuario a comprobar.
      * @return bool
      */
-    public function hasBlocked(User $user): bool
+    public function hasBlocked(User $user)
     {
         return $this->blockedUsers()->where('blocked_id', $user->id)->exists();
     }
@@ -296,7 +313,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param User $user Usuario a comprobar.
      * @return bool
      */
-    public function hasBlockedOrBeenBlockedBy(User $user): bool
+    public function hasBlockedOrBeenBlockedBy(User $user)
     {
         return $this->hasBlocked($user) || $user->hasBlocked($this);
     }
@@ -308,7 +325,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @param User $user Usuario objetivo del bloqueo / desbloqueo.
      */
-    public function toggleBlock(User $user): void
+    public function toggleBlock(User $user)
     {
         if ($this->hasBlocked($user)) {
             $this->blockedUsers()->detach($user->id); // Desbloquea.
@@ -327,7 +344,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return array<int>
      */
-    public function excludedUserIds(): array
+    public function excludedUserIds()
     {
         return $this->blockedUsers->pluck('id')
             ->merge($this->blockedByUsers->pluck('id'))

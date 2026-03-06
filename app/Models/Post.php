@@ -48,7 +48,7 @@ class Post extends Model
      *
      * @return string
      */
-    public function getTypeAttribute(): string
+    public function getTypeAttribute()
     {
         return 'post';
     }
@@ -111,6 +111,22 @@ class Post extends Model
     public function mentions()
     {
         return $this->morphMany(Mention::class, 'mentionable');
+    }
+
+    /**
+     * Relación: usuarios que han silenciado las notificaciones
+     * de esta publicación.
+     *
+     * @return BelongsToMany<User, Post>
+     */
+    public function mutedUsers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'post_notification_mutes',
+            'post_id',
+            'user_id'
+        )->withTimestamps();
     }
 
     /**
