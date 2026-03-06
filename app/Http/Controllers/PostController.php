@@ -104,7 +104,7 @@ class PostController extends Controller
         // Notifica al propietario del perfil si se publicó en un perfil ajeno.
         if ($profile_owner) {
             $profile_owner->notify(
-                new NewPostOnProfile($auth_user, $post->id)
+                new NewPostOnProfile($auth_user, $post)
             );
         }
 
@@ -119,7 +119,7 @@ class PostController extends Controller
         // y notifica las menciones presentes en la publicación.
         if (!$profile_owner) {
             $this->mentionService
-                ->createWithNotifications($post, $auth_user, 'post');
+                ->createWithNotifications($post, $auth_user);
         }
 
         // Transforma la publicación utilizando UserResource para el frontend.

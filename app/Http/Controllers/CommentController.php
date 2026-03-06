@@ -73,7 +73,7 @@ class CommentController extends Controller
             // Detecta, registra y notifica las menciones presentes
             // en el comentario.
             $this->mentionService
-                ->createWithNotifications($comment, $auth_user, 'comment');
+                ->createWithNotifications($comment, $auth_user);
 
             // Recupera los usuarios mencionados en el comentario.
             $mentioned_users = User::whereIn(
@@ -90,7 +90,7 @@ class CommentController extends Controller
         if ($post->user_id !== $auth_user->id
             && !in_array($post->user_id, $notified_user_ids)) {
             $post->user->notify(
-                new NewCommentOnPost($auth_user, $post->id, $post->user_id)
+                new NewCommentOnPost($auth_user, $post)
             );
         }
 
@@ -119,7 +119,7 @@ class CommentController extends Controller
         // Notifica a los demás comentaristas sobre el nuevo comentario.
         $users_to_notify->each(function ($user) use ($auth_user, $post) {
             $user->notify(
-                new NewCommentOnPost($auth_user, $post->id, $post->user_id)
+                new NewCommentOnPost($auth_user, $post)
             );
         });
 

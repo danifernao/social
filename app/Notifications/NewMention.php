@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notification;
 
 /**
@@ -16,14 +17,13 @@ class NewMention extends Notification
     /**
      * Crea una nueva instancia de la notificación.
      *
-     * @param User   $sender       Usuario que realizó la mención.
-     * @param string $context_type Tipo de contenido donde ocurrió la mención.
-     * @param int    $context_id   ID del contenido mencionado.
+     * @param User  $sender Usuario que realizó la mención.
+     * @param Model $model  Modelo de la publicación o comentario en donde
+     *                      se realizó la mención.
      */
     public function __construct(
         public User $sender,
-        public string $context_type,
-        public int $context_id
+        public Model $model,
     ) {}
 
     /**
@@ -54,8 +54,8 @@ class NewMention extends Notification
                     'username' => $this->sender->username,
                 ],
                 'context' => [ // Contenido donde ocurrió la mención.
-                    'type' => $this->context_type, // "post" o "comment".
-                    'id'   => $this->context_id, // ID de publicación o comentario.
+                    'type' => strtolower(class_basename($this->model)), // "post" o "comment".
+                    'id'   => $this->model->id, // ID de publicación o comentario.
                 ],
             ],
         ];

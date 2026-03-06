@@ -28,18 +28,15 @@ class MentionService
      * 
      * @param Model  $model     Modelo que contiene el contenido con menciones.
      * @param User   $auth_user Usuario que realiza la acción.
-     * @param string $context   Tipo de contenido: "post" o "comment".
      */
     public function createWithNotifications(
         Model $model,
-        User $auth_user,
-        string $context
+        User $auth_user
     ): void {
         $this->processMentions(
             $model,
             $auth_user,
-            notify: true,
-            context: $context
+            notify: true
         );
     }
 
@@ -50,14 +47,12 @@ class MentionService
      *                               con menciones.
      * @param User        $auth_user Usuario que realiza la acción.
      * @param bool        $notify    Indica si se deben enviar notificaciones.
-     * @param string|null $context   Tipo de contenido: "post" o "comment".
      */
     private function processMentions(
         Model $model,
         User $auth_user,
-        bool $notify,
-        ?string $context = null
-    ): void {
+        bool $notify
+    ) {
         // Extrae usuarios mencionados desde el contenido del modelo.
         $mentioned_users = MentionParser::extractMentionedUsers($model->content);
 
@@ -81,9 +76,9 @@ class MentionService
             $model->mentions()->create(['user_id' => $user_id]);
 
             // Envía notificación al usuario mencionado, si corresponde.
-            if ($notify && $context) {
+            if ($notify) {
                 $user = $mentioned_users->firstWhere('id', $user_id);
-                $user->notify(new NewMention($auth_user, $context, $model->id));
+                $user->notify(new NewMention($auth_user, $model));
             }
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -21,7 +22,7 @@ class NewPostOnProfile extends Notification
      */
     public function __construct(
         public User $sender,
-        public int $post_id,
+        public Post $post,
     ) {}
 
     /**
@@ -53,7 +54,7 @@ class NewPostOnProfile extends Notification
                 ],
                 'context' => [ // Contexto de la publicación creada.
                     'type' => 'post',
-                    'id'   => $this->post_id,
+                    'id'   => $this->post->id,
                 ],
             ],
         ];

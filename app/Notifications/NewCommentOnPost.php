@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -17,13 +18,11 @@ class NewCommentOnPost extends Notification
      * Crea una nueva instancia de la notificación.
      *
      * @param User $sender         Usuario que realizó el comentario.
-     * @param int  $post_id        ID de la publicación comentada.
-     * @param int  $post_author_id ID del autor de la publicación.
+     * @param Post $post           Publicación comentada.
      */
     public function __construct(
         public User $sender,
-        public int $post_id,
-        public int $post_author_id
+        public Post $post,
     ) {}
 
     /**
@@ -55,8 +54,8 @@ class NewCommentOnPost extends Notification
                 ],
                 'context' => [ // Contexto donde ocurrió el comentario.
                     'type'      => 'post',
-                    'id'        => $this->post_id,
-                    'author_id' => $this->post_author_id,
+                    'id'        => $this->post->id,
+                    'author_id' => $this->post->user_id,
                 ],
             ],
         ];
