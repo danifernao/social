@@ -169,7 +169,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ->name('store');
             Route::patch('{post}', [PostController::class, 'update'])
                 ->name('update');
-            Route::post('{post}', [PostNotificationMuteController::class, 'toggle'])
+            Route::post('{post}/mute', [PostNotificationMuteController::class, 'toggle'])
                 ->name('mute.toggle');
             Route::delete('{post}', [PostController::class, 'delete'])
                 ->name('delete');
