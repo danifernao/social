@@ -18,6 +18,12 @@ class PostResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        // Obtiene el usuario autenticado.
+        $auth_user = $request->user();
+
+        // Determina si la publicación está silenciada o no.
+        $is_muted = $auth_user ? $this->isMutedBy($auth_user) : false;
+
         // Autor de la publicación, solo si la relación fue cargada.
         $author = $this->whenLoaded('user', function () {
             return (new UserResource($this->user))->resolve();
@@ -41,6 +47,7 @@ class PostResource extends JsonResource
             'profile_owner'   => $profile_owner,
             'is_closed'       => $this->is_closed,
             'is_pinned'       => $this->is_pinned,
+            'is_muted'        => $is_muted,
             'reactions'       => $this->reactions ?? [],
             'comments_count'  => $this->comments_count ?? 0,
         ];

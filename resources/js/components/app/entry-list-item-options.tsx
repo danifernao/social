@@ -57,7 +57,13 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
     };
 
     // Controla el estado de la opción fijar/desfijar.
-    const [isPinning, setIsPinning] = useState(false);
+    const [isTogglingPin, setIsTogglingPin] = useState(false);
+
+    // Determina si una publicación está silenciada o no.
+    const [isMuted, setIsMuted] = useState(entry.type === 'post' ? entry.is_muted : null);
+
+    // Controla el estado de la opción silenciar o dejar de silenciar.
+    const [isTogglingMute, setIsTogglingMute] = useState(false);
 
     // Define el nombre del parámetro requerido por la ruta.
     const routeParamKey = entry.type === 'post' ? 'post' : 'comment';
@@ -75,8 +81,15 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
               ? t('comment_unpinned')
               : t('comment_pinned');
 
+    // Define la ruta de eliminación según el tipo de entrada.
+    const deleteRouteName = entry.type === 'post' ? 'post.delete' : 'comment.delete';
+
+    // Mensaje mostrado tras eliminar la entrada.
+    const deletedMessage = entry.type === 'post' ? t('post_deleted') : t('comment_deleted');
+
+    // Alterna el estado fijado de la entrada.
     const togglePin = () => {
-        setIsPinning(true);
+        setIsTogglingPin(true);
 
         router.patch(
             route(updateRouteName, { [routeParamKey]: entry.id }),
@@ -101,21 +114,46 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                     }
                 },
                 onFinish: () => {
-                    setIsPinning(false);
+                    setIsTogglingPin(false);
                 },
             },
         );
     };
 
-    // Define la ruta de eliminación según el tipo de entrada.
-    const deleteRouteName = entry.type === 'post' ? 'post.delete' : 'comment.delete';
+    // Activa o desactiva las notificaciones para la publicación.
+    const toggleMute = () => {
+        setIsTogglingMute(true);
 
-    // Mensaje mostrado tras eliminar la entrada.
-    const deletedMessage = entry.type === 'post' ? t('post_deleted') : t('comment_deleted');
+        router.patch(
+            route('post.mute.toggle', entry.id),
+            {},
+            {
+                preserveScroll: true,
+                onSuccess: (page) => {
+                    const props = page.props as unknown as { status: string; message: string };
+
+                    setIsMuted(props.status === 'post_muted');
+
+                    toast.success(props.message);
+                },
+                onError: (errors) => {
+                    toast.error(t('unexpected_error'));
+
+                    if (import.meta.env.DEV) {
+                        console.error(errors);
+                    }
+                },
+                onFinish: () => {
+                    setIsTogglingMute(false);
+                },
+            },
+        );
+    };
 
     // Ejecuta la eliminación de la entrada tras la confirmación del usuario.
     const onConfirm = () => {
         setIsConfirmDialogOpen(false);
+
         router.delete(route(deleteRouteName, { [routeParamKey]: entry.id }), {
             preserveScroll: true,
             onSuccess: () => {
@@ -147,8 +185,17 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                     {/* Opción para fijar la entrada */}
                     {canPinEntry && (
                         <DropdownMenuItem asChild>
-                            <Button variant="ghost" className="w-full justify-start" onClick={togglePin} disabled={isPinning}>
+                            <Button variant="ghost" className="w-full justify-start" onClick={togglePin} disabled={isTogglingPin}>
                                 {entry.is_pinned ? t('unpin') : t('pin')}
+                            </Button>
+                        </DropdownMenuItem>
+                    )}
+
+                    {/* Opción para silenciar o dejar de silenciar las notificaciones asociadas a la publicación */}
+                    {entry.type === 'post' && (
+                        <DropdownMenuItem asChild>
+                            <Button variant="ghost" className="w-full justify-start" onClick={toggleMute}>
+                                {isMuted ? t('unmute_post') : t('mute_post')}
                             </Button>
                         </DropdownMenuItem>
                     )}

@@ -10,6 +10,7 @@ use App\Http\Controllers\FollowController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PostNotificationMuteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\MediaController;
@@ -168,6 +169,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ->name('store');
             Route::patch('{post}', [PostController::class, 'update'])
                 ->name('update');
+            Route::patch('{post}', [PostNotificationMuteController::class, 'toggle'])
+                ->name('mute.toggle');
             Route::delete('{post}', [PostController::class, 'delete'])
                 ->name('delete');
         });

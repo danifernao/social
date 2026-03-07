@@ -11,6 +11,7 @@ export interface Post {
     visibility: 'public' | 'private' | 'following' | null;
     is_closed: boolean;
     is_pinned: boolean;
+    is_muted: boolean;
     content: string;
     comments_count: number;
     reactions: Reaction[];

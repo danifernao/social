@@ -130,6 +130,20 @@ class Post extends Model
     }
 
     /**
+     * Determina si la publicación está silenciada para un usuario dado.
+     *
+     * @param  User $user Usuario para el cual se verificará
+     *                    el estado de silencio.
+     * @return bool
+     */
+    public function isMutedBy(User $user)
+    {
+        return $this->mutedUsers()
+            ->where('user_id', $user->id)
+            ->exists();
+    }
+    
+    /**
      * Filtra las publicaciones visibles para un usuario dado.
      *
      * @param Builder   $query  Instancia del query builder sobre el modelo Post.
