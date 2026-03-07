@@ -124,7 +124,7 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
     const toggleMute = () => {
         setIsTogglingMute(true);
 
-        router.patch(
+        router.post(
             route('post.mute.toggle', entry.id),
             {},
             {

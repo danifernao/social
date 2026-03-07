@@ -169,7 +169,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ->name('store');
             Route::patch('{post}', [PostController::class, 'update'])
                 ->name('update');
-            Route::patch('{post}', [PostNotificationMuteController::class, 'toggle'])
+            Route::post('{post}', [PostNotificationMuteController::class, 'toggle'])
                 ->name('mute.toggle');
             Route::delete('{post}', [PostController::class, 'delete'])
                 ->name('delete');
@@ -184,7 +184,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('comment.delete');
     
     // Reacciones
-    Route::put('/reaction', [ReactionController::class, 'toggle'])
+    Route::post('/reaction', [ReactionController::class, 'toggle'])
         ->name('reaction.toggle');
     Route::get('/reactions', [ReactionController::class, 'index'])
         ->name('reaction.index');

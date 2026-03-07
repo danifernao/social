@@ -34,7 +34,7 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
 
     // Alterna una reacción del usuario autenticado.
     const toggleReaction = (emoji: string) => {
-        router.put(
+        router.post(
             route('reaction.toggle'),
             { type: entry.type, id: entry.id, emoji },
             {
