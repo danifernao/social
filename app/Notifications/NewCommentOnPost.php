@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Gate;
 
 /**
  * Notificación enviada cuando un usuario comenta en una publicación ajena.
@@ -35,6 +36,36 @@ class NewCommentOnPost extends Notification
     public function via(object $notifiable): array
     {
         return ['database'];
+    }
+
+    /**
+     * Determina si la notificación debe enviarse.
+     *
+     * @param object $notifiable Usuario que recibirá la notificación.
+     * @param string $channel    Canal de notificación.
+     * @return bool
+     */
+    public function shouldSend(object $notifiable, string $channel): bool
+    {
+        // Si el usuario ha silenciado esta publicación,
+        // no se debe enviar la notificación.
+        if ($this->post->isMutedBy($notifiable)) {
+            return false;
+        }
+
+        // Si el usuario no puede ver la publicación,
+        // no se debe enviar la notificación.
+        if (!Gate::forUser($notifiable)->allows('view', $this->post)) {
+            return false;
+        }
+
+        // Si existe bloqueo entre quien comenta y quien sería notificado,
+        // no se debe enviar la notificación.
+        if ($notifiable->hasBlockedOrBeenBlockedBy($this->sender)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

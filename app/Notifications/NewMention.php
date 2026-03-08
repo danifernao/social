@@ -2,10 +2,12 @@
 
 namespace App\Notifications;
 
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Gate;
 
 /**
  * Notificación enviada cuando un usuario es mencionado en un contenido.
@@ -36,6 +38,41 @@ class NewMention extends Notification
     public function via(object $notifiable): array
     {
         return ['database'];
+    }
+
+    /**
+     * Determina si la notificación debe enviarse.
+     *
+     * @param object $notifiable Usuario que recibirá la notificación.
+     * @param string $channel    Canal de notificación.
+     * @return bool
+     */
+    public function shouldSend(object $notifiable, string $channel): bool
+    {
+        // Determina la publicación asociada al contenido.
+        $post = $this->model instanceof Post
+            ? $this->model
+            : $this->model->post;
+
+        // Si el usuario ha silenciado esta publicación,
+        // no se debe enviar la notificación.
+        if ($post->isMutedBy($notifiable)) {
+            return false;
+        }
+
+        // Si el usuario no puede ver la publicación,
+        // no se debe enviar la notificación.
+        if (!Gate::forUser($notifiable)->allows('view', $post)) {
+            return false;
+        }
+
+        // Si existe bloqueo entre quien menciona y quien sería notificado,
+        // no se debe enviar la notificación.
+        if ($notifiable->hasBlockedOrBeenBlockedBy($this->sender)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
