@@ -30,13 +30,17 @@ class HomeController extends Controller
         // Obtiene el cursor para la paginación.
         $cursor = $request->header('X-Cursor');
 
+        // Determina el tipo de feed solicitado.
+        $feed = $request->input('feed', 'following');
+
         // Consulta base de las publicaciones.
         $query = Post::with(['user', 'profileOwner'])
             ->withCount('comments')
             ->visibleTo($auth_user);
 
-        // Si el usuario no es moderador, se aplican filtros adicionales.
-        if (!$auth_user->hasAnyRole(['admin', 'mod'])) {
+        // Muestra únicamente las publicaciones del propio usuario,
+        // las realizadas en su perfil y las de usuarios que sigue.
+        if ($feed === "following") {
             $query->where(function ($q) use ($auth_user) {
                 // Publicaciones propias del usuario autenticado.
                 $q->where('user_id', $auth_user->id);
@@ -65,6 +69,7 @@ class HomeController extends Controller
         );
 
         return Inertia::render('home/index', [
+            'feed' => $feed,
             'posts' => PostResource::collection($posts),
         ]);
     }

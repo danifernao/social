@@ -1,13 +1,14 @@
 import EntryForm from '@/components/app/entry-form';
 import EntryList from '@/components/app/entry-list';
 import ListLoadMore from '@/components/app/list-load-more';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import { useCheckPermission } from '@/hooks/app/use-auth';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
-import type { Auth, BreadcrumbItem, Post, Posts } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import type { BreadcrumbItem, Post, Posts } from '@/types';
+import { Head, router, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -19,7 +20,7 @@ export default function HomeIndex() {
 
     // Captura el usuario autenticado y la lista de publicaciones
     // proporcionados por Inertia.
-    const { auth, posts } = usePage<{ auth: Auth; posts: Posts }>().props;
+    const { feed, posts } = usePage<{ feed: string; posts: Posts }>().props;
 
     // Usa el hook de paginación para gestionar el feed de publicaciones.
     const {
@@ -34,6 +35,11 @@ export default function HomeIndex() {
         propKey: 'posts', // Propiedad de la respuesta de Inertia que contiene los datos.
         insertAtStart: true, // Indica que los nuevos elementos deben agregarse al inicio de la lista.
     });
+
+    // Maneja el cambio de pestaña.
+    const handleChange = (value: string) => {
+        router.get(route('home.index'), { feed: value }, { preserveScroll: true });
+    };
 
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
@@ -53,6 +59,14 @@ export default function HomeIndex() {
                 <EntryListUpdateContext.Provider value={applyItemChange}>
                     {/* Formulario para crear una nueva publicación */}
                     {useCheckPermission('post') && <EntryForm />}
+
+                    {/* Pestañas */}
+                    <Tabs value={feed} onValueChange={handleChange}>
+                        <TabsList>
+                            <TabsTrigger value="all">{t('global')}</TabsTrigger>
+                            <TabsTrigger value="following">{t('following')}</TabsTrigger>
+                        </TabsList>
+                    </Tabs>
 
                     {/* Listado de publicaciones del feed */}
                     <EntryList entries={entries} />
