@@ -242,6 +242,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Administración
     Route::prefix('admin')
+        ->middleware('password.confirm')
         ->name('admin.')
         ->group(function () {
             // Página de administración por defecto.
@@ -305,7 +306,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::prefix('users')
                 ->name('user.')
                 ->group(function () {
-                    Route::get('/', [AdminUserController::class, 'index'])
+                    Route::get('/', [AdminUserController::class, 'index'])                        
                         ->name('index');
                     Route::get('{user}', [AdminUserController::class, 'edit'])
                         ->name('edit');

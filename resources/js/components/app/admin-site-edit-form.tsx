@@ -1,12 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAdminActionForm } from '@/hooks/app/use-admin-action-form';
 import { SiteSettings } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
-import ConfirmActionDialog from './admin-confirm-action-dialog';
 import FormErrors from './form-errors';
 
 interface AdminSiteEditFormProps {
@@ -23,18 +22,42 @@ export default function AdminSiteEditForm({ settings }: AdminSiteEditFormProps) 
     // Estado que refleja si el registro de usuarios está habilitado o no.
     const [isRegistrationEnabled, setIsRegistrationEnabled] = useState(settings.is_user_registration_enabled);
 
-    // Inicializa y gestiona el formulario de configuración del sitio.
-    const { form, handleAction, confirmAction, isDialogOpen, closeDialog } = useAdminActionForm({
-        initialData: {},
-        route: () => route('admin.site.update'),
-        onSuccess: (action) => {
-            switch (action) {
-                case 'toggle_user_registration':
-                    setIsRegistrationEnabled((prev) => !prev);
-                    break;
-            }
-        },
+    // Inicializa el formulario de Inertia.
+    const form = useForm({
+        action: '',
     });
+
+    // Registra una acción administrativa pendiente.
+    const handleAction = (action: string) => {
+        form.setData('action', action);
+    };
+
+    // Envía la acción administrativa.
+    const sendForm = () => {
+        form.patch(route('admin.site.update'), {
+            preserveScroll: true,
+            onSuccess: () => {
+                if (form.data.action === 'toggle_user_registration') {
+                    setIsRegistrationEnabled((prev) => !prev);
+                }
+
+                toast.success(t('changes_saved'));
+            },
+            onError: (errors) => {
+                toast.error(t('unexpected_error'));
+
+                if (import.meta.env.DEV) {
+                    console.error(errors);
+                }
+            },
+        });
+    };
+
+    useEffect(() => {
+        if (form.data.action) {
+            sendForm();
+        }
+    }, [form.data.action]);
 
     return (
         <form className="space-y-8">
@@ -79,15 +102,6 @@ export default function AdminSiteEditForm({ settings }: AdminSiteEditFormProps) 
                     )}
                 </CardContent>
             </Card>
-
-            {/* Confirmación de la acción */}
-            <ConfirmActionDialog
-                open={isDialogOpen}
-                onOpenChange={closeDialog}
-                password={form.data.privileged_password}
-                onPasswordChange={(value) => form.setData('privileged_password', value)}
-                onConfirm={confirmAction}
-            />
         </form>
     );
 }
