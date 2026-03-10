@@ -9,28 +9,39 @@
 ## Funcionalidades principales
 
 - **Publicaciones y comentarios**
-    - Permite publicar contenido con formato básico utilizando Markdown.
-    - Permite **mencionar a otros usuarios** y usar **hashtags**.
-    - Permite **reaccionar** con **emojis**.
-- **Inicio**
-    - Muestra publicaciones recientes de los usuarios seguidos.
-- **Perfiles públicos**
-    - Página pública con información del usuario y sus publicaciones.
-- **Sistema de seguimiento**
-    - Seguir y dejar de seguir a otros usuarios.
-    - Listado de seguidores y seguidos.
-- **Bloqueo de usuarios**
-    - Posibilidad de bloquear usuarios para evitar interacción.
+    - Permite dar formato a publicaciones y comentarios mediante Markdown.
+    - Permite subir imágenes y videos desde el editor.
+    - Permite mencionar a otros usuarios.
+    - Premite usar _hashtags_.
+    - Permite reaccionar con _emojis_.
+    - Permite definir la visibilidad de las publicaciones: público, solo seguidos o privado.
+    - Permite desactivar comentarios.
+    - Permite desactivar notificaciones.
+    - Perimte fijar un comentario en el hilo de la publicación.
+- **Feed principal**
+    - Permite ver las publicaciones recientes de los usuarios seguidos o de toda la red social.
+    - Permite reportar publicaciones.
+- **Perfiles**
+    - Permite fijar un publicación.
+    - Permite publicar de forma privada en el perfil de otro usuario.
+- **Relaciones e interacciones**
+    - Permite seguir y dejar de seguir a otros usuarios.
+    - Permite ver la lista de seguidores y seguidos de cualquier usuario.
+    - Permite bloquear usuarios.
+    - Permite reportar usuarios.
 - **Búsqueda**
-    - Búsqueda unificada por publicaciones o usuarios.
+    - Permite buscar publicaciones públicas o usuarios.
 - **Notificaciones**
-    - Notifica cuando alguien comenta en una publicación propia.
-    - Notifica cuando alguien menciona a un usuario (en publicaciones o comentarios).
+    - Notifica cuando alguien comenta en una publicación propia o en una en la que se ha participado.
+    - Notifica cuando alguien menciona a un usuario.
     - Notifica cuando un usuario comienza a seguir a otro.
 - **Panel de administración**
-    - Funcionalidades administrativas para la gestión de usuarios.
+    - Permite desactivar el registro de usuarios y generar invitaciones.
+    - Permite crear y gestionar páginas estáticas.
+    - Permite gestionar la información de los usuarios registrados.
+    - Permite gestionar los reportes rgistrados por los usuarios.
 - **Multilenguaje**
-    - Interfaz disponible en varios idiomas, con detección automática del idioma preferido o selección manual.
+    - Interfaz disponible en español e inglés.
 
 ## Instalación
 
