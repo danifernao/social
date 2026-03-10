@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -8,6 +8,17 @@ import { LoaderCircle } from 'lucide-react';
 import { Fragment, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '../ui/alert-dialog';
 import { Checkbox } from '../ui/checkbox';
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
 import FormErrors from './form-errors';
@@ -362,16 +373,30 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                         {form.data.action === 'delete_account' && <FormErrors errors={form.errors} />}
                         <p>{t('delete_user_account_and_data')}</p>
 
-                        {/* Botón para eliminar el usuario */}
-                        <Button
-                            type="button"
-                            variant="destructive"
-                            onClick={() => handleAction('delete_account')}
-                            disabled={form.processing && form.data.action === 'delete_account'}
-                        >
-                            {form.processing && form.data.action === 'delete_account' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            {t('delete')}
-                        </Button>
+                        {/* Botón y diálogo de confirmación para eliminar el usuario */}
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button type="button" variant="destructive" disabled={form.processing && form.data.action === 'delete_account'}>
+                                    {form.processing && form.data.action === 'delete_account' && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                                    {t('delete')}
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>{t('delete_user')}</AlertDialogTitle>
+                                    <AlertDialogDescription>{t('action_irreversible_warning')}</AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+                                    <AlertDialogAction
+                                        className={buttonVariants({ variant: 'destructive' })}
+                                        onClick={() => handleAction('delete_account')}
+                                    >
+                                        {t('delete')}
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                     </CardContent>
                 </Card>
             )}
