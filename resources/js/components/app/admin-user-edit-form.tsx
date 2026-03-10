@@ -1,26 +1,16 @@
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useAdminActionForm } from '@/hooks/app/use-admin-action-form';
 import { Auth, User, UserPermission } from '@/types';
-import { useForm, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { Fragment, useEffect } from 'react';
+import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from '../ui/alert-dialog';
 import { Checkbox } from '../ui/checkbox';
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
+import ConfirmActionDialog from './admin-confirm-action-dialog';
 import FormErrors from './form-errors';
 
 interface AdminUserEditFormProps {
@@ -53,52 +43,26 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
         { key: 'update_username', label: t('can_update_username') },
     ];
 
-    // Inicializa el formulario de Inertia.
-    const form = useForm({
-        action: '',
-        new_username: user.username,
-        new_email: user.email,
-        new_role: user.role,
-        random_password: false,
-        permission_key: '',
-    });
-
-    // Registra una acción administrativa pendiente.
-    const handleAction = (action: string) => {
-        form.setData('action', action);
-    };
-
-    // Envía los datos del formulario.
-    const sendForm = () => {
-        form.patch(route('admin.user.update', user.id), {
-            preserveScroll: true,
-            onSuccess: (page) => {
-                // Sincroniza el nombre de usuario actualizado desde la respuesta del servidor.
-                if (form.data.action === 'change_username') {
+    // Inicializa y gestiona el formulario de acciones administrativas sobre el usuario.
+    const { form, handleAction, confirmAction, isDialogOpen, closeDialog } = useAdminActionForm({
+        initialData: {
+            new_username: user.username,
+            new_email: user.email,
+            new_role: user.role,
+            random_password: false,
+            permission_key: '',
+        },
+        route: () => route('admin.user.update', user.id),
+        onSuccess: (action, page) => {
+            switch (action) {
+                case 'change_username':
+                    // Sincroniza el nombre de usuario actualizado desde la respuesta del servidor.
                     const typedPage = page as unknown as { props: { user: User } };
-                    form.setData('new_username', typedPage.props.user.username);
-                }
-
-                toast.success(t('changes_saved'));
-            },
-            onError: (errors) => {
-                toast.error(t('unexpected_error'));
-
-                if (import.meta.env.DEV) {
-                    console.error(errors);
-                }
-            },
-            onFinish: () => {
-                form.setData('action', '');
-            },
-        });
-    };
-
-    useEffect(() => {
-        if (form.data.action) {
-            sendForm();
-        }
-    }, [form.data.action]);
+                    form.setData((prev) => ({ ...prev, new_username: typedPage.props.user.username }));
+                    break;
+            }
+        },
+    });
 
     return (
         <form className="space-y-8">
@@ -373,33 +337,27 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                         {form.data.action === 'delete_account' && <FormErrors errors={form.errors} />}
                         <p>{t('delete_user_account_and_data')}</p>
 
-                        {/* Botón y diálogo de confirmación para eliminar el usuario */}
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button type="button" variant="destructive" disabled={form.processing && form.data.action === 'delete_account'}>
-                                    {form.processing && form.data.action === 'delete_account' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                                    {t('delete')}
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>{t('delete_user')}</AlertDialogTitle>
-                                    <AlertDialogDescription>{t('action_irreversible_warning')}</AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-                                    <AlertDialogAction
-                                        className={buttonVariants({ variant: 'destructive' })}
-                                        onClick={() => handleAction('delete_account')}
-                                    >
-                                        {t('delete')}
-                                    </AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
+                        {/* Botón para eliminar el usuario */}
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            onClick={() => handleAction('delete_account')}
+                            disabled={form.processing && form.data.action === 'delete_account'}
+                        >
+                            {form.processing && form.data.action === 'delete_account' && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                            {t('delete')}
+                        </Button>
                     </CardContent>
                 </Card>
             )}
+            {/* Confirmación de la acción */}
+            <ConfirmActionDialog
+                open={isDialogOpen}
+                onOpenChange={closeDialog}
+                password={form.data.privileged_password}
+                onPasswordChange={(value) => form.setData('privileged_password', value)}
+                onConfirm={confirmAction}
+            />
         </form>
     );
 }

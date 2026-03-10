@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\UserBlock;
 use App\Rules\UserRules;
 use App\Services\MediaService;
+use App\Traits\HandlesPasswordConfirmation;
 use App\Utils\UsernameGenerator;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -26,6 +27,8 @@ use Inertia\Inertia;
  */
 class AdminUserController extends Controller
 {
+    use HandlesPasswordConfirmation;
+
     /**
      * Muestra una lista paginada de usuarios para el panel de administración.
      * Permite aplicar búsqueda y ordenamiento sobre los resultados.
@@ -155,7 +158,11 @@ class AdminUserController extends Controller
                     'delete_account',
                 ])
             ],
+            'privileged_password' => ['required', 'string'],
         ]);
+
+        // Verifica que la contraseña ingresada por el moderador sea correcta.
+        $this->confirmPassword($request->input('privileged_password'));
 
         // Ejecuta la acción correspondiente delegando a métodos específicos.
         switch ($request->action) {
