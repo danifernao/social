@@ -18,7 +18,7 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                 {items.map((item) => (
                     <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton asChild isActive={item.href === pathname || item.isActive} tooltip={{ children: item.title }}>
-                            <Link href={item.href}>
+                            <Link href={item.href} preserveState={false}>
                                 {item.icon && <item.icon />}
                                 <span>{item.title}</span>
                                 {item.name === 'notifications' && <NotificationBadge />}

@@ -87,7 +87,7 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
                                     'bg-muted': item.isActive,
                                 })}
                             >
-                                <Link href={item.href} prefetch>
+                                <Link href={item.href} preserveState={false}>
                                     {item.title}
                                     {item.name === 'reports' && <AdminReportBadge />}
                                 </Link>

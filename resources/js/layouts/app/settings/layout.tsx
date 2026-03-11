@@ -71,7 +71,9 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                                     'bg-muted': item.isActive,
                                 })}
                             >
-                                <Link href={item.href}>{item.title}</Link>
+                                <Link href={item.href} preserveState={false}>
+                                    {item.title}
+                                </Link>
                             </Button>
                         ))}
                     </nav>
