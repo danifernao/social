@@ -13,6 +13,9 @@ interface UseAdminActionFormOptions<T> {
 
     // Callback opcional que se ejecuta cuando la acción se completa con éxito.
     onSuccess?: (action: string, response: any) => void;
+
+    // Callback opcional que se ejecuta cuando la petición finaliza.
+    onFinish?: () => void;
 }
 
 /**
@@ -20,7 +23,12 @@ interface UseAdminActionFormOptions<T> {
  * que requieren confirmación mediante contraseña privilegiada
  * antes de ejecutar una acción sensible.
  */
-export function useAdminActionForm<T extends Record<string, any>>({ initialData, route: formRoute, onSuccess }: UseAdminActionFormOptions<T>) {
+export function useAdminActionForm<T extends Record<string, any>>({
+    initialData,
+    route: formRoute,
+    onSuccess,
+    onFinish,
+}: UseAdminActionFormOptions<T>) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
@@ -87,6 +95,9 @@ export function useAdminActionForm<T extends Record<string, any>>({ initialData,
                 if (import.meta.env.DEV) {
                     console.error(errors);
                 }
+            },
+            onFinish: () => {
+                onFinish?.();
             },
         });
     };

@@ -63,6 +63,11 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                     break;
             }
         },
+        onFinish: () => {
+            if (form.data.new_role !== user.role) {
+                form.setData('new_role', user.role);
+            }
+        },
     });
 
     return (
@@ -115,20 +120,26 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                         {form.data.action === 'change_role' && <FormErrors errors={form.errors} />}
 
                         {/* Selector de rol de usuario */}
-                        <Select
-                            value={form.data.new_role}
-                            onValueChange={(value: 'user' | 'mod' | 'admin') => form.setData('new_role', value)}
-                            disabled={form.processing && form.data.action === 'change_role'}
-                        >
-                            <SelectTrigger className="w-[200px]">
-                                <SelectValue placeholder={t('select_role')} />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="admin">{t('administrator')}</SelectItem>
-                                <SelectItem value="mod">{t('moderator')}</SelectItem>
-                                <SelectItem value="user">{t('user')}</SelectItem>
-                            </SelectContent>
-                        </Select>
+                        <div className="flex items-center gap-2">
+                            <Select
+                                value={form.data.new_role}
+                                onValueChange={(value: 'user' | 'mod' | 'admin') => {
+                                    form.setData('new_role', value);
+                                    handleAction('change_role');
+                                }}
+                                disabled={form.processing && form.data.action === 'change_role'}
+                            >
+                                <SelectTrigger className="w-[200px]">
+                                    <SelectValue placeholder={t('select_role')} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="admin">{t('administrator')}</SelectItem>
+                                    <SelectItem value="mod">{t('moderator')}</SelectItem>
+                                    <SelectItem value="user">{t('user')}</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            {form.processing && form.data.action === 'change_role' && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                        </div>
 
                         {/* Descripción de los roles disponibles */}
                         <dl className="text-muted-foreground grid grid-cols-[min-content_1fr] gap-2 text-sm">
@@ -139,16 +150,6 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                                 </Fragment>
                             ))}
                         </dl>
-
-                        {/* Botón para guardar el nuevo rol */}
-                        <Button
-                            type="button"
-                            onClick={() => handleAction('change_role')}
-                            disabled={form.processing && form.data.action === 'change_role'}
-                        >
-                            {form.processing && form.data.action === 'change_role' && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            {t('change')}
-                        </Button>
                     </CardContent>
                 </Card>
             )}
@@ -354,7 +355,12 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
             {/* Confirmación de la acción */}
             <ConfirmActionDialog
                 open={isDialogOpen}
-                onOpenChange={closeDialog}
+                onOpenChange={(open) => {
+                    if (!open && form.data.new_role !== user.role) {
+                        form.setData('new_role', user.role);
+                    }
+                    closeDialog();
+                }}
                 password={form.data.privileged_password}
                 onPasswordChange={(value) => form.setData('privileged_password', value)}
                 onConfirm={confirmAction}
