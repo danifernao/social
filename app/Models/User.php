@@ -245,6 +245,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->givePermissionTo([
             'post',
             'comment',
+            'mention',
             'react',
             'update_username',
             'update_avatar',

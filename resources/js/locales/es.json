@@ -29,6 +29,7 @@
     "blue": "Azul",
     "bold": "Negrita",
     "can_comment": "Puede comentar",
+    "can_mention": "Puede mencionar",
     "can_post": "Puede publicar",
     "can_react": "Puede reaccionar",
     "can_update_avatar": "Puede actualizar su avatar",

@@ -54,6 +54,12 @@ class NewMention extends Notification
             ? $this->model
             : $this->model->post;
 
+        // Si quien menciona no puede mencionar,
+        // no se debe enviar la notificación.
+        if ($this->sender->cannot('mention')) {
+            return false;
+        }
+
         // Si el usuario ha silenciado esta publicación,
         // no se debe enviar la notificación.
         if ($post->isMutedBy($notifiable)) {

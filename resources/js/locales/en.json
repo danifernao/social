@@ -29,6 +29,7 @@
     "blue": "Blue",
     "bold": "Bold",
     "can_comment": "Can comment",
+    "can_mention": "Can mention",
     "can_post": "Can post",
     "can_react": "Can react",
     "can_update_avatar": "Can update avatar",
