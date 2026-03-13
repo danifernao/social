@@ -51,7 +51,6 @@ use App\Http\Controllers\AuthSessionController;
 use App\Http\Controllers\AuthSignUpController;
 use App\Http\Controllers\AuthVerifyEmailController;
 
-use App\Http\Middleware\EnsureEmailNotVerified;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -118,7 +117,7 @@ Route::middleware(['auth'])->group(function () {
 | Rutas autenticadas (sin verificación)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', EnsureEmailNotVerified::class])->group(function () {
+Route::middleware(['auth', 'unverified'])->group(function () {
     Route::get('verify-email', [AuthVerifyEmailController::class, 'prompt'])
         ->name('verification.notice');
 

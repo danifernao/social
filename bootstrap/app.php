@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureEmailNotVerified;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\HandleInvitationAccess;
@@ -30,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'registration.access' => HandleRegistrationAccess::class,
             'invitation.access' => HandleInvitationAccess::class,
+            'unverified' => EnsureEmailNotVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
