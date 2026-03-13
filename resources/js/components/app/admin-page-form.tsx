@@ -102,7 +102,7 @@ export default function AdminPageForm({ page }: Props) {
                             {t('language')}
                         </Label>
                         <Select disabled={isEditing || processing} value={data.language} onValueChange={handleLanguageChange}>
-                            <SelectTrigger id="language" className="w-max">
+                            <SelectTrigger id="language" aria-label={t('select_language')} className="w-max">
                                 <SelectValue placeholder={t('select_language')} />
                             </SelectTrigger>
                             <SelectContent>
@@ -123,7 +123,7 @@ export default function AdminPageForm({ page }: Props) {
                             {t('type')}
                         </Label>
                         <Select disabled={processing} value={data.type} onValueChange={(value: PageType) => setData('type', value)}>
-                            <SelectTrigger id="type" className="w-max">
+                            <SelectTrigger id="type" className="w-max" aria-label={t('select_page_type')}>
                                 <SelectValue placeholder={t('select_page_type')} />
                             </SelectTrigger>
                             <SelectContent>
@@ -218,6 +218,7 @@ export default function AdminPageForm({ page }: Props) {
                                     value={data.content ?? ''}
                                     onChange={(e) => setData('content', e.target.value)}
                                     disabled={processing}
+                                    aria-label={t('page_content')}
                                     placeholder={t('page_content')}
                                 />
 

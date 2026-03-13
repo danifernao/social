@@ -129,7 +129,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                                 }}
                                 disabled={form.processing && form.data.action === 'change_role'}
                             >
-                                <SelectTrigger className="w-[200px]">
+                                <SelectTrigger className="w-[200px]" aria-label={t('select_role')}>
                                     <SelectValue placeholder={t('select_role')} />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -237,6 +237,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                         value={form.data.new_username}
                         onChange={(e) => form.setData('new_username', e.target.value)}
                         disabled={form.processing && form.data.action === 'change_username'}
+                        aria-label={t('username')}
                     />
 
                     {/* Descripción del comportamiento esperado */}
@@ -268,6 +269,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                         {/* Campo de correo electrónico */}
                         <Input
                             placeholder={t('new_email')}
+                            aria-label={t('new_email')}
                             value={form.data.new_email}
                             onChange={(e) => form.setData('new_email', e.target.value)}
                             disabled={form.processing && form.data.action === 'change_email'}

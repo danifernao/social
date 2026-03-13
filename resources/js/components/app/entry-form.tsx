@@ -183,6 +183,7 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
                             value={data.content}
                             onChange={(e) => setData('content', e.target.value)}
                             disabled={processing}
+                            aria-label={t('whats_on_your_mind')}
                             placeholder={t('whats_on_your_mind')}
                             maxLength={3000}
                         />
