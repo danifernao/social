@@ -1,0 +1,57 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Resources\ContentHistoryResource;
+use App\Models\Comment;
+use App\Models\ContentHistory;
+use App\Models\Post;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+
+/**
+ * Controlador responsable de mostrar el historial
+ * de cambios de publicaciones y comentarios.
+ */
+class ContentHistoryController extends Controller
+{
+    use AuthorizesRequests;
+
+    /**
+     * Muestra el historial de cambios de una publicación o comentario.
+     * 
+     * @param Request      $request Datos de la petición HTTP.
+     * @param Post         $post    Publicación que se desea consultar.
+     * @param Comment|null $comment Comentario que se desea consultar.
+     */
+    public function index(Request $request, Post $post, Comment $comment = null)
+    {
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos de moderación.
+        $this->authorize('moderate');
+
+        // Si se indicó un comentario, valida que pertenezca
+        // a la publicación indicada en la URL.
+        if ($comment && $comment->post_id !== $post->id) {
+            abort(404);
+        }
+
+        // Obtiene el cursor para la paginación.
+        $cursor = $request->header('X-Cursor');
+
+        // Determina el modelo cuyo historial se va a consultar.
+        $model = $comment ?? $post;
+
+        // Obtiene el historial de cambios.
+        $histories = ContentHistory::with('user')
+            ->where('historable_type', $model::class)
+            ->where('historable_id', $model->id)
+            ->oldest()
+            ->cursorPaginate($per_page, ['*'], 'cursor', $cursor);
+
+        return Inertia::render('history/index', [
+            'histories' => ContentHistoryResource::collection($histories),
+        ]);
+    }
+}

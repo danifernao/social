@@ -6,6 +6,7 @@
 */
 use App\Http\Controllers\BlockUserController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ContentHistoryController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
@@ -168,6 +169,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ->name('store');
             Route::patch('{post}', [PostController::class, 'update'])
                 ->name('update');
+            Route::get('{post}/history', [ContentHistoryController::class, 'index'])
+                ->name('history');
             Route::post('{post}/mute', [PostNotificationMuteController::class, 'toggle'])
                 ->name('mute.toggle');
             Route::delete('{post}', [PostController::class, 'delete'])
@@ -177,6 +180,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Comentarios
     Route::post('/post/{post}/comment', [CommentController::class, 'store'])
         ->name('comment.store');
+    Route::get('/post/{post}/comment/{comment}/history', [ContentHistoryController::class, 'index'])
+        ->name('comment.history');
     Route::patch('/comment/{comment}', [CommentController::class, 'update'])
         ->name('comment.update');
     Route::delete('/comment/{comment}', [CommentController::class, 'delete'])

@@ -2,6 +2,8 @@
 
 namespace App\Observers;
 
+use App\Models\ContentHistory;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use App\Models\Comment;
 use App\Notifications\NewCommentOnPost;
@@ -15,10 +17,34 @@ use Illuminate\Notifications\DatabaseNotification;
 class PostObserver
 {
     /**
+     * Método que se ejecuta antes de actualizar una publicación.
+     */
+    public function updating(Post $post)
+    {
+        // Si el contenido no fue modificado,
+        // no se registra historial.
+        if (!$post->isDirty('content')) {
+            return;
+        }
+
+        ContentHistory::create([
+            'historable_id' => $post->id,
+            'historable_type' => Post::class,
+            'user_id' => Auth::id(),
+            'content' => $post->getOriginal('content'),
+        ]);
+    }
+
+    /**
      * Método que se ejecuta antes de que una publicación sea eliminada.
      */
     public function deleting(Post $post)
     {
+        // Elimina el historial asociado a la publicación.
+        ContentHistory::where('historable_type', Post::class)
+            ->where('historable_id', $post->id)
+            ->delete();
+
         // Elimina las menciones hechas en la publicación.
         $post->mentions()->delete();
 
