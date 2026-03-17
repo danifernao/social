@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CommentResource;
 use App\Http\Resources\ContentHistoryResource;
+use App\Http\Resources\PostResource;
 use App\Models\Comment;
 use App\Models\ContentHistory;
 use App\Models\Post;
@@ -48,9 +50,20 @@ class ContentHistoryController extends Controller
             ->where('historable_type', $model::class)
             ->where('historable_id', $model->id)
             ->oldest()
-            ->cursorPaginate($per_page, ['*'], 'cursor', $cursor);
+            ->cursorPaginate(7, ['*'], 'cursor', $cursor);
+
+        // Carga el autor de la publicación.
+        $post->load('user');
+
+        // Transforma la publicación para el frontend.
+        $post_data = (new PostResource($post->load('user')))->resolve();
+
+        // Transforma el comentario para el frontend.
+        $comment_data = $comment ? (new CommentResource($comment))->resolve() : null;
 
         return Inertia::render('history/index', [
+            'post' => $post_data,
+            'comment' => $comment_data,
             'histories' => ContentHistoryResource::collection($histories),
         ]);
     }

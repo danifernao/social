@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 type WithProps = {
     id: number | string;
-    is_pinned: boolean;
+    is_pinned?: boolean;
 };
 
 interface UsePaginatedProps<T extends WithProps> {
