@@ -17,12 +17,24 @@ use Illuminate\Notifications\DatabaseNotification;
 class PostObserver
 {
     /**
+     * Método que se ejecuta después de crear una publicación.
+     */
+    public function created(Post $post)
+    {
+        ContentHistory::create([
+            'historable_id' => $post->id,
+            'historable_type' => Post::class,
+            'user_id' => Auth::id(),
+            'content' => $post->content,
+        ]);
+    }
+
+    /**
      * Método que se ejecuta antes de actualizar una publicación.
      */
     public function updating(Post $post)
     {
-        // Si el contenido no fue modificado,
-        // no se registra historial.
+        // Si el contenido no fue modificado, no se registra historial.
         if (!$post->isDirty('content')) {
             return;
         }
@@ -31,7 +43,7 @@ class PostObserver
             'historable_id' => $post->id,
             'historable_type' => Post::class,
             'user_id' => Auth::id(),
-            'content' => $post->getOriginal('content'),
+            'content' => $post->content,
         ]);
     }
 

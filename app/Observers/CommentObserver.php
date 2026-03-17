@@ -16,12 +16,24 @@ use Illuminate\Support\Facades\Auth;
 class CommentObserver
 {
     /**
+     * Método que se ejecuta después de crear un comentario.
+     */
+    public function created(Comment $comment): void
+    {
+        ContentHistory::create([
+            'historable_id' => $comment->id,
+            'historable_type' => Comment::class,
+            'user_id' => Auth::id(),
+            'content' => $comment->content,
+        ]);
+    }
+
+    /**
      * Método que se ejecuta antes de actualizar un comentario.
      */
     public function updating(Comment $comment): void
     {
-        // Si el contenido no fue modificado,
-        // no se registra historial.
+        // Si el contenido no fue modificado, no se registra historial.
         if (!$comment->isDirty('content')) {
             return;
         }
@@ -30,7 +42,7 @@ class CommentObserver
             'historable_id' => $comment->id,
             'historable_type' => Comment::class,
             'user_id' => Auth::id(),
-            'content' => $comment->getOriginal('content'),
+            'content' => $comment->content,
         ]);
     }
 
