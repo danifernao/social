@@ -29,10 +29,6 @@ class ContentHistoryController extends Controller
      */
     public function index(Request $request, Post $post, Comment $comment = null)
     {
-        // Deniega el acceso si el usuario autenticado
-        // no tiene permisos de moderación.
-        $this->authorize('moderate');
-
         // Si se indicó un comentario, valida que pertenezca
         // a la publicación indicada en la URL.
         if ($comment && $comment->post_id !== $post->id) {

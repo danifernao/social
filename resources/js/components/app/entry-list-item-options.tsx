@@ -227,24 +227,24 @@ export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
                         </DropdownMenuItem>
                     )}
 
+                    {/* Historial de cambios de la entrada */}
+                    <DropdownMenuItem asChild>
+                        <Button asChild variant="link" className="w-full justify-start hover:no-underline">
+                            <Link
+                                href={
+                                    entry.type === 'post'
+                                        ? route('post.history', entry.id)
+                                        : route('comment.history', { post: entry.post_id, comment: entry.id })
+                                }
+                            >
+                                {t('view_edit_history')}
+                            </Link>
+                        </Button>
+                    </DropdownMenuItem>
+
                     {/* Opción administrativa para gestionar al autor de la entrada */}
                     {canUpdateEntry && (
                         <>
-                            {/* Historial de cambios de la entrada */}
-                            <DropdownMenuItem asChild>
-                                <Button asChild variant="link" className="w-full justify-start hover:no-underline">
-                                    <Link
-                                        href={
-                                            entry.type === 'post'
-                                                ? route('post.history', entry.id)
-                                                : route('comment.history', { post: entry.post_id, comment: entry.id })
-                                        }
-                                    >
-                                        {t('edit_history')}
-                                    </Link>
-                                </Button>
-                            </DropdownMenuItem>
-
                             {/* Ver reportes asociados a la entrada */}
                             <DropdownMenuItem asChild>
                                 <Button asChild variant="link" className="w-full justify-start hover:no-underline">
