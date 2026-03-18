@@ -63,11 +63,6 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
                     break;
             }
         },
-        onFinish: () => {
-            if (form.data.new_role !== user.role) {
-                form.setData('new_role', user.role);
-            }
-        },
     });
 
     return (
