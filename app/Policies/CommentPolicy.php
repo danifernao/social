@@ -14,6 +14,34 @@ use Illuminate\Auth\Access\Response;
 class CommentPolicy
 {
     /**
+     * Determina si un usuario puede ver un comentario.
+     *
+     * @param User    $user    Usuario autenticado.
+     * @param Comment $comment Comentario que se desea ver.
+     * @return bool
+     */
+    public function view(User $user, Comment $comment): bool
+    {
+        // Los moderadores siempre pueden ver los comentarios.
+        if ($user && $user->hasAnyRole(['admin', 'mod'])) {
+            return true;
+        }
+
+        // Si no puede ver la publicación, no puede ver el comentario.
+        if ($user && $user->cannot('view', $comment->post)) {
+            return false;
+        }
+
+        // Si hay un bloqueo mutuo entre el usuario autenticado y
+        // el autor del comentario, no puede verlo.
+        if ($user && $user->hasBlockedOrBeenBlockedBy($comment->user)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Determina si un usuario puede comentar una publicación.
      *
      * @param User $user Usuario autenticado.
@@ -73,7 +101,7 @@ class CommentPolicy
      * Verifica si un usuario puede modificar (actualizar o eliminar)
      * un comentario.
      *
-     * @param User $user Usuario que intenta realizar la acción.
+     * @param User    $user    Usuario que intenta realizar la acción.
      * @param Comment $comment Comentario sobre el que se realiza la acción.
      * @return bool
      */

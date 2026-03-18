@@ -35,6 +35,15 @@ class ContentHistoryController extends Controller
             abort(404);
         }
 
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos para ver el comentario o la publicación.
+        if ($comment) {
+            $this->authorize('view', $comment);
+        } else {
+            $this->authorize('view', $post);
+        }
+        
+
         // Obtiene el cursor para la paginación.
         $cursor = $request->header('X-Cursor');
 
