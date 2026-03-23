@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 /**
  * Vista principal que muestra el historial de cambios de una entrada.
  */
-export default function HomeIndex() {
+export default function EditHistoryIndex() {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
