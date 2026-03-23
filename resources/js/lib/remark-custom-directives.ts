@@ -23,20 +23,11 @@ const colors = {
   pink: 'text-pink-400',
 };
 
-// Mapa de tamaños de fuente permitidos.
-const sizes = {
-  xsmall: 'text-xs',
-  small: 'text-sm',
-  large: 'text-lg',
-  xlarge: 'text-xl',
-};
-
 
 /** 
  * Tipos
  */
 type ColorKey = keyof typeof colors;
-type SizeKey = keyof typeof sizes;
 type DirectiveNode = TextDirective | LeafDirective | ContainerDirective;
 
 
@@ -80,37 +71,16 @@ export default function remarkCustomDirectives() {
           // Obtiene los atributos definidos en la directiva (si existen).
           const attrs = styleNode.attributes || {};
           const colorAttr = attrs.color as ColorKey | undefined;
-          const sizeAttr = attrs.size as string | undefined;
 
           // Obtiene la clase del color correspondiente.
           const colorClass = colorAttr && colorAttr in colors ? colors[colorAttr] : '';
-
-          // Clase predefinida del tamaño de fuente.
-          let sizeClass = '';
-
-          // Estilo en línea del tamaño de fuente personalizado.
-          let inlineStyle = '';
-          
-          // Si se trata de un tamaño predefinido,
-          // obtiene la clase correspondiente.
-          if (sizeAttr && sizeAttr in sizes) {
-            sizeClass = sizes[sizeAttr as SizeKey];
-          } else {
-            const num = parseNumericAttr(sizeAttr);
-
-            // Tamaño personalizado.
-            if (num && num >= 6 && num <= 60) {
-              inlineStyle = `font-size: ${num}px;`;
-            }
-          }
 
           // Define la información necesaria para que remark-rehype
           // genere un elemento <span> con las clases correspondientes.
           node.data = {
             hName: 'span',
             hProperties: {
-              className: [colorClass, sizeClass].join(' '),
-              style: inlineStyle,
+              className: [colorClass].join(' '),
             },
           };
         }

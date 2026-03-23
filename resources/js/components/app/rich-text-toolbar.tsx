@@ -2,7 +2,6 @@ import { generateThumbnail } from '@/lib/utils';
 import { User } from '@/types';
 import { router } from '@inertiajs/react';
 import {
-    ALargeSmall,
     AlignCenter,
     AlignJustify,
     AlignLeft,
@@ -524,25 +523,6 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
         replaceSelection(`:style[${content}]{color=${key}}`);
     }
 
-    // Aplica un tamaño de fuente.
-    function onSizeSelected(key: keyof typeof sizes) {
-        const sel = getSelection();
-        const content = sel && sel.start !== sel.end ? sel.value : t('text');
-
-        replaceSelection(`:style[${content}]{size=${key}}`);
-    }
-
-    // Tamaño de fuente personalizado en píxeles.
-    const [customSize, setCustomSize] = useState('');
-
-    // Aplica un tamaño de fuente personalizado.
-    function onCustomSizeApply() {
-        const sel = getSelection();
-        const content = sel && sel.start !== sel.end ? sel.value : t('text');
-
-        replaceSelection(`:style[${content}]{size=${customSize.trim()}}`);
-    }
-
     return (
         <div className="flex flex-wrap items-center gap-1">
             {/* Formato básico (Negrita, Cursiva y Tachado) */}
@@ -588,53 +568,6 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                             className={`h-6 w-6 rounded-full ${colors[key]} border border-gray-300 transition-transform hover:scale-110`}
                         />
                     ))}
-                </PopoverContent>
-            </Popover>
-
-            {/* Tamaño de fuente */}
-            <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="data-[state=open]:bg-accent" title={t('change_font_size')}>
-                        <ALargeSmall className="h-4 w-4" />
-                    </Button>
-                </PopoverTrigger>
-
-                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
-                    {/* Tamaños predefinidos */}
-                    {(Object.keys(sizes) as (keyof typeof sizes)[]).map((key) => (
-                        <Button
-                            key={key}
-                            variant="ghost"
-                            className="flex w-full items-center justify-start gap-2"
-                            onClick={() => onSizeSelected(key)}
-                        >
-                            <div className="flex w-6 justify-center">
-                                <Type className={sizes[key].icon} />
-                            </div>
-
-                            <span className={sizes[key].text}>{t(sizes[key].tl)}</span>
-                        </Button>
-                    ))}
-
-                    {/* Tamaño personalizado */}
-                    <div className="mt-2 flex w-full items-center gap-2">
-                        <Input
-                            type="number"
-                            min="6"
-                            max="60"
-                            placeholder={t('custom_size')}
-                            value={customSize}
-                            onChange={(e) => setCustomSize(e.target.value)}
-                            title={t('only_nums_between_6_and_16_are_allowed')}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' && (e.target as HTMLInputElement).checkValidity()) {
-                                    e.preventDefault();
-                                    onCustomSizeApply();
-                                }
-                            }}
-                            className={noSpinButtonClassName}
-                        />
-                    </div>
                 </PopoverContent>
             </Popover>
 
