@@ -175,7 +175,7 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                                 href={
                                     entry.type === 'post'
                                         ? route('post.show', entry.id)
-                                        : route('post.comment.show', { post: entry.post_id, comment: entry.id })
+                                        : route('post.comment.show', { post: entry.post_id, comment: entry.id }) + '#comments'
                                 }
                                 title={formatDate(entry.created_at)}
                             >

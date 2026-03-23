@@ -45,10 +45,11 @@ export default function HomeIndex() {
             ? [
                   {
                       title: t('single_comment'),
-                      href: route('post.comment.show', {
-                          post: post.id,
-                          comment: comment.id,
-                      }),
+                      href:
+                          route('post.comment.show', {
+                              post: post.id,
+                              comment: comment.id,
+                          }) + '#comments',
                   },
               ]
             : []),
