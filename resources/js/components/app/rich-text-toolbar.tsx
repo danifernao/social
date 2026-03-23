@@ -33,7 +33,6 @@ import {
     SquareCode,
     SquarePlay,
     Strikethrough,
-    Type,
     Upload,
 } from 'lucide-react';
 import React, { ChangeEvent, useRef, useState } from 'react';
@@ -42,6 +41,7 @@ import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Separator } from '../ui/separator';
 import EmojiPicker from './emoji-picker';
 import MediaDialog from './media-dialog';
 
@@ -526,36 +526,120 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     return (
         <div className="flex flex-wrap items-center gap-1">
             {/* Formato básico (Negrita, Cursiva y Tachado) */}
+            <Button variant="ghost" className="h-8 w-8" title={t('bold')} onClick={onBold}>
+                <Bold />
+            </Button>
+
+            <Button variant="ghost" className="h-8 w-8" title={t('italic')} onClick={onItalic}>
+                <Italic />
+            </Button>
+
+            <Button variant="ghost" className="h-8 w-8" title={t('strikethrough')} onClick={onStrikethrough}>
+                <Strikethrough />
+            </Button>
+
+            <Separator orientation="vertical" className="h-6" />
+
+            {/* Encabezados (H1 y H2) */}
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="data-[state=open]:bg-accent" title={t('format_text')}>
-                        <Type className="h-4 w-4" />
+                    <Button variant="ghost" className="data-[state=open]:bg-accent h-8 w-8" title={t('insert_heading')}>
+                        <Heading />
                     </Button>
                 </PopoverTrigger>
 
                 <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
-                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={onBold}>
-                        <Bold className="h-4 w-4" />
-                        {t('bold')}
-                    </Button>
+                    {(Object.keys(headingIcons) as unknown as (keyof typeof headingIcons)[]).map((level) => {
+                        const Icon = headingIcons[level];
 
-                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={onItalic}>
-                        <Italic className="h-4 w-4" />
-                        {t('italic')}
-                    </Button>
+                        return (
+                            <Button
+                                key={level}
+                                type="button"
+                                variant="ghost"
+                                className="flex w-full items-center justify-start gap-2 text-sm"
+                                onClick={() => onHeading(Number(level))}
+                            >
+                                <Icon />
+                                {t('heading_level', { level })}
+                            </Button>
+                        );
+                    })}
+                </PopoverContent>
+            </Popover>
 
-                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={onStrikethrough}>
-                        <Strikethrough className="h-4 w-4" />
-                        {t('strikethrough')}
+            {/* Separador horizontal */}
+            <Button type="button" variant="ghost" className="h-8 w-8" title={t('insert_separator')} onClick={onSeparator}>
+                <Minus />
+            </Button>
+
+            <Separator orientation="vertical" className="h-6" />
+
+            {/* Cita en bloque */}
+            <Button type="button" variant="ghost" className="h-8 w-8" title={t('quote')} onClick={onQuote}>
+                <Quote />
+            </Button>
+
+            {/* Código */}
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" title={t('insert_code')} className="data-[state=open]:bg-accent h-8 w-8">
+                        <Code />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
+                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onInlineCode}>
+                        <Code />
+                        {t('inline_code')}
+                    </Button>
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onCodeBlock}>
+                        <SquareCode />
+                        {t('code_block')}
                     </Button>
                 </PopoverContent>
             </Popover>
 
+            {/* Lista */}
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" title={t('insert_list')} className="data-[state=open]:bg-accent h-8 w-8">
+                        <List />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onOrderedList}>
+                        <ListOrdered /> {t('ordered_list')}
+                    </Button>
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onUnorderedList}>
+                        <List /> {t('unordered_list')}
+                    </Button>
+                </PopoverContent>
+            </Popover>
+
+            {/* Contenido oculto */}
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" title={t('hide_content')} className="data-[state=open]:bg-accent h-8 w-8">
+                        <EyeOff />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onHiddenInline}>
+                        <EyeOff /> {t('hidden_text')}
+                    </Button>
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onHiddenBlock}>
+                        <CaptionsOff /> {t('hidden_block')}
+                    </Button>
+                </PopoverContent>
+            </Popover>
+
+            <Separator orientation="vertical" className="h-6" />
+
             {/* Color de fuente */}
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="data-[state=open]:bg-accent" title={t('change_font_color')}>
-                        <PaintBucket className="h-4 w-4" />
+                    <Button variant="ghost" className="data-[state=open]:bg-accent h-8 w-8" title={t('change_font_color')}>
+                        <PaintBucket />
                     </Button>
                 </PopoverTrigger>
 
@@ -574,69 +658,42 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
             {/* Alineación de texto */}
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="data-[state=open]:bg-accent" title={t('align_text')}>
-                        <AlignLeft className="h-4 w-4" />
+                    <Button variant="ghost" className="data-[state=open]:bg-accent h-8 w-8" title={t('align_text')}>
+                        <AlignLeft />
                     </Button>
                 </PopoverTrigger>
 
                 <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
                     <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={() => onAlign('left')}>
-                        <AlignLeft className="h-4 w-4" />
+                        <AlignLeft />
                         {t('align_left')}
                     </Button>
 
                     <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={() => onAlign('center')}>
-                        <AlignCenter className="h-4 w-4" />
+                        <AlignCenter />
                         {t('align_center')}
                     </Button>
 
                     <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={() => onAlign('right')}>
-                        <AlignRight className="h-4 w-4" />
+                        <AlignRight />
                         {t('align_right')}
                     </Button>
 
                     <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={() => onAlign('justify')}>
-                        <AlignJustify className="h-4 w-4" />
+                        <AlignJustify />
                         {t('align_justify')}
                     </Button>
                 </PopoverContent>
             </Popover>
 
-            {/* Encabezados (H1 y H2) */}
-            <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="data-[state=open]:bg-accent" title={t('insert_heading')}>
-                        <Heading className="h-4 w-4" />
-                    </Button>
-                </PopoverTrigger>
-
-                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
-                    {(Object.keys(headingIcons) as unknown as (keyof typeof headingIcons)[]).map((level) => {
-                        const Icon = headingIcons[level];
-
-                        return (
-                            <Button
-                                key={level}
-                                type="button"
-                                variant="ghost"
-                                className="flex w-full items-center justify-start gap-2 text-sm"
-                                onClick={() => onHeading(Number(level))}
-                            >
-                                <Icon className="h-4 w-4" />
-                                {t('heading_level', { level })}
-                            </Button>
-                        );
-                    })}
-                </PopoverContent>
-            </Popover>
+            <Separator orientation="vertical" className="h-6" />
 
             {/* Enlace */}
             <Popover>
                 <PopoverTrigger asChild>
                     <Button
                         variant="ghost"
-                        size="icon"
-                        className="data-[state=open]:bg-accent"
+                        className="data-[state=open]:bg-accent h-8 w-8"
                         title={t('insert_link')}
                         onClick={(e) => {
                             const selectedUrl = getSelectedUrl();
@@ -648,7 +705,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                             }
                         }}
                     >
-                        <Link className="h-4 w-4" />
+                        <Link />
                     </Button>
                 </PopoverTrigger>
 
@@ -688,7 +745,6 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                 <PopoverTrigger asChild>
                     <Button
                         variant="ghost"
-                        size="icon"
                         disabled={isImgUploading}
                         onClick={(e) => {
                             const selectedUrl = getSelectedUrl();
@@ -702,9 +758,9 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                             setIsImagePopoverOpen(true);
                         }}
                         title={t('insert_image')}
-                        className="data-[state=open]:bg-accent"
+                        className="data-[state=open]:bg-accent h-8 w-8"
                     >
-                        <Image className="h-4 w-4" />
+                        <Image />
                     </Button>
                 </PopoverTrigger>
 
@@ -735,7 +791,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                                 disabled={isImgUploading}
                                 onClick={() => imgFileInputRef.current?.click()}
                             >
-                                {isImgUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                                {isImgUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload />}
                             </Button>
 
                             {/* Botón para abrir álbum */}
@@ -749,7 +805,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                                     setIsMediaDialogOpen(true);
                                 }}
                             >
-                                <History className="h-4 w-4" />
+                                <History />
                             </Button>
 
                             {/* Input oculto */}
@@ -809,78 +865,14 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                 </PopoverContent>
             </Popover>
 
-            {/* Separador horizontal */}
-            <Button type="button" variant="ghost" size="icon" title={t('insert_separator')} onClick={onSeparator}>
-                <Minus className="h-4 w-4" />
-            </Button>
-
-            {/* Cita en bloque */}
-            <Button type="button" variant="ghost" size="icon" title={t('quote')} onClick={onQuote}>
-                <Quote className="h-4 w-4" />
-            </Button>
-
-            {/* Código */}
-            <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" title={t('insert_code')} className="data-[state=open]:bg-accent">
-                        <Code className="h-4 w-4" />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
-                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onInlineCode}>
-                        <Code className="h-4 w-4" />
-                        {t('inline_code')}
-                    </Button>
-                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onCodeBlock}>
-                        <SquareCode className="h-4 w-4" />
-                        {t('code_block')}
-                    </Button>
-                </PopoverContent>
-            </Popover>
-
-            {/* Lista */}
-            <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" title={t('insert_list')} className="data-[state=open]:bg-accent">
-                        <List className="h-4 w-4" />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
-                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onOrderedList}>
-                        <ListOrdered className="h-4 w-4" /> {t('ordered_list')}
-                    </Button>
-                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onUnorderedList}>
-                        <List className="h-4 w-4" /> {t('unordered_list')}
-                    </Button>
-                </PopoverContent>
-            </Popover>
-
-            {/* Contenido oculto */}
-            <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" title={t('hide_content')} className="data-[state=open]:bg-accent">
-                        <EyeOff className="h-4 w-4" />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
-                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onHiddenInline}>
-                        <EyeOff className="h-4 w-4" /> {t('hidden_text')}
-                    </Button>
-                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onHiddenBlock}>
-                        <CaptionsOff className="h-4 w-4" /> {t('hidden_block')}
-                    </Button>
-                </PopoverContent>
-            </Popover>
-
             {/* Video */}
             <Popover open={isVideoPopoverOpen} onOpenChange={setIsVideoPopoverOpen}>
                 <PopoverTrigger asChild>
                     <Button
                         type="button"
                         variant="ghost"
-                        size="icon"
                         title={t('insert_video')}
-                        className="data-[state=open]:bg-accent"
+                        className="data-[state=open]:bg-accent h-8 w-8"
                         onClick={(e) => {
                             const selectedUrl = getSelectedUrl();
 
@@ -893,7 +885,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                             setIsVideoPopoverOpen(true);
                         }}
                     >
-                        <SquarePlay className="h-4 w-4" />
+                        <SquarePlay />
                     </Button>
                 </PopoverTrigger>
 
@@ -924,7 +916,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                                 disabled={isVideoUploading}
                                 onClick={() => videoFileInputRef.current?.click()}
                             >
-                                {isVideoUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                                {isVideoUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload />}
                             </Button>
 
                             {/* Botón para abrir álbum */}
@@ -938,7 +930,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                                     setIsMediaDialogOpen(true);
                                 }}
                             >
-                                <History className="h-4 w-4" />
+                                <History />
                             </Button>
 
                             {/* Input oculto */}
@@ -983,10 +975,13 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                 </PopoverContent>
             </Popover>
 
+            <Separator orientation="vertical" className="h-6" />
+
+            {/* Emoji */}
             <Popover open={isEmojiPopoverOpen} onOpenChange={setIsEmojiPopoverOpen}>
                 <PopoverTrigger asChild>
-                    <Button type="button" variant="ghost" size="icon" title={t('insert_emoji')} className="data-[state=open]:bg-accent">
-                        <Smile className="h-4 w-4" />
+                    <Button type="button" variant="ghost" title={t('insert_emoji')} className="data-[state=open]:bg-accent h-8 w-8">
+                        <Smile />
                     </Button>
                 </PopoverTrigger>
 
