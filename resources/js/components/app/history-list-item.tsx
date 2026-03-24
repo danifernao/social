@@ -1,3 +1,4 @@
+import { formatDate } from '@/lib/utils';
 import type { EntryType } from '@/types';
 import { History } from '@/types/modules/entry/history';
 import { formatDistanceToNow, Locale } from 'date-fns';
@@ -53,8 +54,10 @@ export default function HistoryListItem({ first, history }: EntryListItemProps) 
                     </div>
 
                     {/* Fecha de creación del registro */}
-                    <div className="pl-2 text-sm">
-                        <time dateTime={history.created_at}>{distanceToNow}</time>
+                    <div className="pl-2 text-sm first-letter:uppercase">
+                        <time title={formatDate(history.created_at)} dateTime={history.created_at}>
+                            {distanceToNow}
+                        </time>
                     </div>
                 </footer>
             </article>
