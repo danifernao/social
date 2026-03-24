@@ -112,6 +112,7 @@
     "edit_post": "Edit post",
     "edit_post_content": "Edit the content of your post.",
     "edit_user": "Edit user",
+    "edited": "Edited",
     "edited_by_deleted_user_no": "Edited by deleted user #{{id}}",
     "edited_by_user": "<0>Edited by</0> <1>{{username}}</1>",
     "email": "Email",

@@ -169,8 +169,8 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                             />
                         )}
 
-                        {/* Fecha de creación con enlace a la entrada */}
-                        <div className="mr-6 ml-2 flex text-sm">
+                        <div className="mr-6 ml-2 flex gap-6 text-sm">
+                            {/* Fecha de creación */}
                             <Link
                                 href={
                                     entry.type === 'post'
@@ -178,9 +178,24 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                                         : route('post.comment.show', { post: entry.post_id, comment: entry.id }) + '#comments'
                                 }
                                 title={formatDate(entry.created_at)}
+                                className="first-letter:uppercase"
                             >
                                 <time dateTime={entry.created_at}>{distanceToNow}</time>
                             </Link>
+
+                            {/* Indicador de que el contenido fue editado */}
+                            {entry.last_edited_at && (
+                                <Link
+                                    href={
+                                        entry.type === 'post'
+                                            ? route('post.show', entry.id)
+                                            : route('post.comment.show', { post: entry.post_id, comment: entry.id }) + '#comments'
+                                    }
+                                    title={formatDate(entry.last_edited_at)}
+                                >
+                                    {t('edited')}
+                                </Link>
+                            )}
                         </div>
 
                         {/* Opciones disponibles para los usuarios autenticados */}

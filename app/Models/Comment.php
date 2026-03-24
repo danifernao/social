@@ -38,7 +38,7 @@ class Comment extends Model
      *
      * @var list<string>
      */
-    protected $appends = ['type'];
+    protected $appends = ['type', 'last_edited_at'];
 
     /**
      * Atributo computado: tipo del modelo, útil para el frontend.
@@ -49,6 +49,16 @@ class Comment extends Model
     {
         return 'comment';
     }
+
+    /**
+     * Atributo computado: fecha de la última edición del contenido.
+     *
+     * @return string|null
+     */
+    public function getLastEditedAtAttribute(): ?string
+    {
+        return $this->histories()->latest('created_at')->value('created_at');
+    } 
 
     /**
      * Relación: el usuario que escribió el comentario.
@@ -88,5 +98,15 @@ class Comment extends Model
     public function mentions()
     {
         return $this->morphMany(Mention::class, 'mentionable');
+    }
+
+    /**
+     * Relación polimórfica: historial de ediciones del contenido.
+     * 
+     * @return MorphMany<ContentHistory, Comment>
+     */
+    public function histories()
+    {
+        return $this->morphMany(ContentHistory::class, 'historable');
     }
 }

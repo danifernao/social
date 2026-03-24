@@ -17,6 +17,7 @@ export interface Post {
     reactions: Reaction[];
     updated_at: string;
     created_at: string;
+    last_edited_at: string | null;
 }
 
 export interface Posts {

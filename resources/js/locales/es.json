@@ -112,6 +112,7 @@
     "edit_post": "Editar publicación",
     "edit_post_content": "Edita el contenido de tu publicación.",
     "edit_user": "Editar usuario",
+    "edited": "Editado",
     "edited_by_deleted_user_no": "Editado por usuario eliminado #{{id}}",
     "edited_by_user": "<0>Editado por</0> <1>{{username}}</1>",
     "email": "Correo electrónico",

@@ -34,6 +34,7 @@ class CommentResource extends JsonResource
             'is_pinned'      => $this->is_pinned,
             'created_at'     => $this->created_at,
             'updated_at'     => $this->updated_at,
+            'last_edited_at' => $this->last_edited_at,
             'type'           => $this->type,
             'user'           => $author,
             'reactions'      => $this->reactions ?? [],

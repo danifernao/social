@@ -11,8 +11,9 @@ export interface Comment {
     content: string;
     is_pinned: boolean;
     reactions: Reaction[];
-    updated_at: string;
     created_at: string;
+    updated_at: string;
+    last_edited_at: string | null;
 }
 
 export interface Comments {
