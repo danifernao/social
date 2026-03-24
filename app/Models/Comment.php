@@ -52,13 +52,24 @@ class Comment extends Model
 
     /**
      * Atributo computado: fecha de la última edición del contenido.
+     * 
+     * Todo comentario tiene al menos un registro en el historial que representa
+     * su contenido inicial. Si solo existe un registro, se considera que no ha
+     * sido editado.
      *
      * @return string|null
      */
     public function getLastEditedAtAttribute(): ?string
     {
-        return $this->histories()->latest('created_at')->value('created_at');
-    } 
+        $dates = $this->histories()
+            ->latest('created_at')
+            ->limit(2)
+            ->pluck('created_at');
+
+        return $dates->count() > 1
+            ? $dates->first()
+            : null;
+    }
 
     /**
      * Relación: el usuario que escribió el comentario.
