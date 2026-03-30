@@ -53,10 +53,10 @@ class ReportResource extends JsonResource
     protected function get_reportable_kind(): string
     {
         return match($this->reportable_type) {
-            'App\Models\Post'    => 'post',
-            'App\Models\Comment' => 'comment',
-            'App\Models\User'    => 'user',
-            default              => 'unknown',
+            Post::class    => 'post',
+            Comment::class => 'comment',
+            User::class    => 'user',
+            default        => 'unknown',
         };
     }
 }
