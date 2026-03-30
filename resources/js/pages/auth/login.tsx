@@ -68,6 +68,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             autoComplete="email"
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
+                            disabled={processing}
                             placeholder={t('dummy_email')}
                         />
                         <InputError message={errors.email} />
@@ -91,6 +92,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             autoComplete="current-password"
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
+                            disabled={processing}
                             placeholder={t('password')}
                         />
                         <InputError message={errors.password} />
@@ -103,6 +105,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             name="remember"
                             checked={data.remember}
                             onClick={() => setData('remember', !data.remember)}
+                            disabled={processing}
                             tabIndex={3}
                         />
                         <Label htmlFor="remember">{t('remember_me')}</Label>

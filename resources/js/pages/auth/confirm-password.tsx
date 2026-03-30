@@ -46,11 +46,12 @@ export default function ConfirmPassword() {
                             id="password"
                             type="password"
                             name="password"
-                            placeholder={t('password')}
                             autoComplete="current-password"
                             value={data.password}
                             autoFocus
                             onChange={(e) => setData('password', e.target.value)}
+                            disabled={processing}
+                            placeholder={t('password')}
                         />
                         <InputError message={errors.password} />
                     </div>
