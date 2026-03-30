@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use App\Http\Resources\UserResource;
+use App\Models\Comment;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -40,9 +42,9 @@ class ContentHistoryResource extends JsonResource
     protected function get_historable_kind(): string
     {
         return match($this->historable_type) {
-            'App\Models\Post'    => 'post',
-            'App\Models\Comment' => 'comment',
-            default              => 'unknown',
+            Post::class    => 'post',
+            Comment::class => 'comment',
+            default        => 'unknown',
         };
     }
 }
