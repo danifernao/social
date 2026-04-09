@@ -122,7 +122,7 @@ class PostController extends Controller
                 ->createWithNotifications($post, $auth_user);
         }
 
-        // Transforma la publicación utilizando UserResource para el frontend.
+        // Transforma la publicación utilizando PostResource para el frontend.
         $post_data = (new PostResource($post))->resolve();
 
         return back()->with('post', $post_data);
