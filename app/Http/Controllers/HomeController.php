@@ -33,6 +33,17 @@ class HomeController extends Controller
         // Determina el tipo de feed solicitado.
         $feed = $request->input('feed', 'following');
 
+        // Obtiene el tipo de feed solicitado.
+        $feed = $request->input('feed');
+
+        // Define los tipos de feed permitidos.
+        $allowed_feeds = ['following', 'all'];
+
+        // Si el feed solicitado no es válido, se establece el feed por defecto.
+        if (!in_array($feed, $allowed_feeds)) {
+            $feed = 'following';
+        }
+
         // Consulta base de las publicaciones.
         $query = Post::with(['user', 'profileOwner'])
             ->withCount('comments')

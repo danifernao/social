@@ -15,12 +15,35 @@ import { useTranslation } from 'react-i18next';
  * Vista principal que muestra el feed de publicaciones del usuario autenticado.
  */
 export default function HomeIndex() {
+    // Clave en el almacenamiento local para guardar la última pestaña seleccionada.
+    const storageKey = 'home:index:feed';
+
+    // Captura la URL, el tipo de feed y la lista de publicaciones proporcionados por Inertia.
+    const {
+        url,
+        props: { feed, posts },
+    } = usePage<{
+        feed: string;
+        posts: Posts;
+    }>();
+
+    // Extrae la parte de búsqueda de la URL actual.
+    const search = url.includes('?') ? url.split('?')[1] : '';
+
+    // Determina si la URL actual contiene el parámetro 'feed'.
+    const hasFeedParam = new URLSearchParams(search).has('feed');
+
+    // Recupera la última pestaña seleccionada del almacenamiento local.
+    const storedFeed = localStorage.getItem(storageKey);
+
+    // Si no hay un parámetro 'feed' en la URL pero sí una pestaña almacenada, navega a esa pestaña.
+    if (!hasFeedParam && storedFeed && storedFeed !== feed) {
+        router.get(route('home.index'), { feed: storedFeed }, { preserveScroll: true });
+        return null;
+    }
+
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
-
-    // Captura el usuario autenticado y la lista de publicaciones
-    // proporcionados por Inertia.
-    const { feed, posts } = usePage<{ feed: string; posts: Posts }>().props;
 
     // Usa el hook de paginación para gestionar el feed de publicaciones.
     const {
@@ -38,6 +61,7 @@ export default function HomeIndex() {
 
     // Maneja el cambio de pestaña.
     const handleChange = (value: string) => {
+        localStorage.setItem(storageKey, value);
         router.get(route('home.index'), { feed: value }, { preserveScroll: true });
     };
 
