@@ -12,19 +12,22 @@ use Illuminate\Support\Str;
 class UserFactory extends Factory
 {
     /**
-     * The current password being used by the factory.
+     * La contraseña actual que se está utilizando en la factory.
+     * Esto se utiliza para evitar que se genere una nueva contraseña hasheada
+     * cada vez que se cree un usuario, lo que mejora el rendimiento de
+     * las pruebas.
      */
     protected static ?string $password;
 
     /**
-     * Define the model's default state.
+     * Define el estado por defecto del modelo User.
      *
      * @return array<string, mixed>
      */
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'username' => fake()->userName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
@@ -33,7 +36,7 @@ class UserFactory extends Factory
     }
 
     /**
-     * Indicate that the model's email address should be unverified.
+     * Indica que el usuario no ha verificado su correo electrónico.
      */
     public function unverified(): static
     {
