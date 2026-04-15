@@ -2,6 +2,8 @@
 
 use App\Models\User;
 
+// Comprueba que la ruta de confirmación de contraseña responda correctamente
+// para un usuario autenticado.
 test('confirm password screen can be rendered', function () {
     $user = User::factory()->create();
 
@@ -10,6 +12,7 @@ test('confirm password screen can be rendered', function () {
     $response->assertStatus(200);
 });
 
+// Comprueba que la contraseña pueda ser confirmada correctamente.
 test('password can be confirmed', function () {
     $user = User::factory()->create();
 
@@ -21,6 +24,8 @@ test('password can be confirmed', function () {
     $response->assertSessionHasNoErrors();
 });
 
+// Comprueba que la contraseña no pueda ser confirmada
+// con una contraseña incorrecta.
 test('password is not confirmed with invalid password', function () {
     $user = User::factory()->create();
 

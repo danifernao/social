@@ -1,6 +1,6 @@
 <?php
 
-// Comprueba que la página de registro cargue correctamente.
+// Comprueba que la ruta de registro de usuario responda correctamente.
 test('registration screen can be rendered', function () {
     $response = $this->get('/register');
 
