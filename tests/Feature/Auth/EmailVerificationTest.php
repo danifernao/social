@@ -5,6 +5,8 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
 
+// Comprueba que la ruta de verificación de correo responde correctamente
+// para un usuario no verificado.
 test('email verification screen can be rendered', function () {
     $user = User::factory()->unverified()->create();
 
@@ -13,6 +15,7 @@ test('email verification screen can be rendered', function () {
     $response->assertStatus(200);
 });
 
+// Comprueba que el correo electrónico pueda ser verificado.
 test('email can be verified', function () {
     $user = User::factory()->unverified()->create();
 
@@ -28,9 +31,11 @@ test('email can be verified', function () {
 
     Event::assertDispatched(Verified::class);
     expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
-    $response->assertRedirect(route('dashboard', absolute: false).'?verified=1');
+    $response->assertRedirect(route('home.index', absolute: false).'?verified=1');
 });
 
+// Comprueba que el correo electrónico no pueda ser verificado
+// con un hash incorrecto.
 test('email is not verified with invalid hash', function () {
     $user = User::factory()->unverified()->create();
 
