@@ -67,7 +67,10 @@ class SettingsProfileController extends Controller
         if ($user->can('update_avatar')) {
             // Elimina el avatar si el usuario lo solicita o
             // si va a subir uno nuevo.
-            if ($data['remove_avatar'] || $request->hasFile('avatar')) {
+            if (
+              ($data['remove_avatar'] ?? false)
+              || $request->hasFile('avatar')
+            ) {
                 if ($user->avatar_media_id) {
                     $mediaService->delete($user->avatarMedia);
                     $user->avatar_media_id = null;
