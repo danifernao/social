@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
+// Comprueba que los usuarios autenticados puedan actualizar su contraseña.
 test('password can be updated', function () {
     $user = User::factory()->create();
 
@@ -22,6 +23,7 @@ test('password can be updated', function () {
     expect(Hash::check('new-password', $user->refresh()->password))->toBeTrue();
 });
 
+// Comprueba que se requiera la contraseña actual para actualizar la contraseña.
 test('correct password must be provided to update password', function () {
     $user = User::factory()->create();
 
