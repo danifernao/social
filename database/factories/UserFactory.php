@@ -36,6 +36,16 @@ class UserFactory extends Factory
     }
 
     /**
+     * Asigna los permisos predeterminados al usuario después de crearlo.
+     */
+    public function withPermissions(): static
+    {
+        return $this->afterCreating(function ($user) {
+            $user->assignDefaultPermissions();
+        });
+    }
+
+    /**
      * Indica que el usuario no ha verificado su correo electrónico.
      */
     public function unverified(): static
