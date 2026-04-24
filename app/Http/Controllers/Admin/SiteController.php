@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Invitation;
@@ -18,7 +18,7 @@ use Inertia\Inertia;
  * aplicando control de acceso y confirmación de contraseña para acciones
  * privilegiadas.
  */
-class AdminSiteController extends Controller
+class SiteController extends Controller
 {
     use HandlesPasswordConfirmation;
 

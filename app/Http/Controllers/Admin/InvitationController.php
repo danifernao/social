@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\InvitationResource;
 use App\Models\Invitation;
 use Illuminate\Http\Request;
@@ -13,7 +13,7 @@ use Inertia\Inertia;
  * Controlador responsable de la gestión administrativa
  * de invitaciones de registro.
  */
-class AdminInvitationController extends Controller
+class InvitationController extends Controller
 {
     /**
      * Muestra el listado paginado de invitaciones.

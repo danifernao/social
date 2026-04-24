@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
@@ -25,7 +25,7 @@ use Inertia\Inertia;
  * Permite listar, crear, editar y eliminar usuarios, así como
  * ejecutar acciones privilegiadas.
  */
-class AdminUserController extends Controller
+class UserController extends Controller
 {
     use HandlesPasswordConfirmation;
 

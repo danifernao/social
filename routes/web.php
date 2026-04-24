@@ -33,11 +33,11 @@ use App\Http\Controllers\SettingsProfileController;
 | Controladores de administración
 |--------------------------------------------------------------------------
 */
-use App\Http\Controllers\AdminInvitationController;
-use App\Http\Controllers\AdminPageController;
-use App\Http\Controllers\AdminReportController;
-use App\Http\Controllers\AdminSiteController;
-use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\Admin\InvitationController;
+use App\Http\Controllers\Admin\StaticPageController;
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\SiteController;
+use App\Http\Controllers\Admin\UserController;
 
 
 /*
@@ -269,9 +269,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::prefix('site')
                 ->name('site.')
                 ->group(function () {
-                    Route::get('/', [AdminSiteController::class, 'edit'])
+                    Route::get('/', [SiteController::class, 'edit'])
                         ->name('edit');
-                    Route::patch('/', [AdminSiteController::class, 'update'])
+                    Route::patch('/', [SiteController::class, 'update'])
                         ->name('update');
                 });
 
@@ -280,11 +280,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ->middleware('invitation.access')
                 ->name('invitation.')
                 ->group(function () {
-                    Route::get('/', [AdminInvitationController::class, 'index'])
+                    Route::get('/', [InvitationController::class, 'index'])
                         ->name('index');
-                    Route::post('/', [AdminInvitationController::class, 'store'])
+                    Route::post('/', [InvitationController::class, 'store'])
                         ->name('store');
-                    Route::delete('{invitation}', [AdminInvitationController::class, 'destroy'])
+                    Route::delete('{invitation}', [InvitationController::class, 'destroy'])
                         ->name('destroy');
                 });
 
@@ -292,17 +292,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::prefix('pages')
                 ->name('page.')
                 ->group(function () {
-                    Route::get('/', [AdminPageController::class, 'index'])
+                    Route::get('/', [StaticPageController::class, 'index'])
                         ->name('index');
-                    Route::get('/create', [AdminPageController::class, 'create'])
+                    Route::get('/create', [StaticPageController::class, 'create'])
                         ->name('create');
-                    Route::post('/create', [AdminPageController::class, 'store'])
+                    Route::post('/create', [StaticPageController::class, 'store'])
                         ->name('store');
-                    Route::get('/{page}/edit', [AdminPageController::class, 'edit'])
+                    Route::get('/{page}/edit', [StaticPageController::class, 'edit'])
                         ->name('edit');
-                    Route::patch('/{page}/edit', [AdminPageController::class, 'update'])
+                    Route::patch('/{page}/edit', [StaticPageController::class, 'update'])
                         ->name('update');
-                    Route::delete('{page}', [AdminPageController::class, 'destroy'])
+                    Route::delete('{page}', [StaticPageController::class, 'destroy'])
                         ->name('destroy');
                 });
 
@@ -310,11 +310,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::prefix('users')
                 ->name('user.')
                 ->group(function () {
-                    Route::get('/', [AdminUserController::class, 'index'])                        
+                    Route::get('/', [UserController::class, 'index'])                        
                         ->name('index');
-                    Route::get('{user}', [AdminUserController::class, 'edit'])
+                    Route::get('{user}', [UserController::class, 'edit'])
                         ->name('edit');
-                    Route::patch('{user}', [AdminUserController::class, 'update'])
+                    Route::patch('{user}', [UserController::class, 'update'])
                         ->name('update');
                 });
 
@@ -322,11 +322,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::prefix('reports')
                 ->name('report.')
                 ->group(function () {
-                    Route::get('/', [AdminReportController::class, 'index'])
+                    Route::get('/', [ReportController::class, 'index'])
                         ->name('index');
-                    Route::get('/{report}', [AdminReportController::class, 'show'])
+                    Route::get('/{report}', [ReportController::class, 'show'])
                         ->name('show');
-                    Route::patch('/{report}', [AdminReportController::class, 'update'])
+                    Route::patch('/{report}', [ReportController::class, 'update'])
                         ->name('update');
                 });
         });
@@ -337,7 +337,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('confirm-password', [AuthPasswordConfirmController::class, 'store']);
 
     // Creación de reportes
-    Route::post('report', [AdminReportController::class, 'store'])
+    Route::post('report', [ReportController::class, 'store'])
         ->name('report.store');
 });
 
@@ -352,7 +352,7 @@ Route::get('/post/{post}', [PostController::class, 'show'])
     ->name('post.show');
 Route::get('/post/{post}/comment/{comment}', [PostController::class, 'show'])
     ->name('post.comment.show');
-Route::get('/page/{lang}/{slug}', [AdminPageController::class, 'show'])
+Route::get('/page/{lang}/{slug}', [StaticPageController::class, 'show'])
     ->name('page.show');
 Route::get('/media/{media}', [MediaController::class, 'show'])
     ->where('media', '.*')

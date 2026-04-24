@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Page;
 use App\Http\Resources\PageResource;
 use App\Rules\SlugRule;
@@ -15,7 +16,7 @@ use Illuminate\Validation\Rule;
  * Controlador responsable de la gestión administrativa de páginas informativas.
  * Maneja el listado, creación, visualización, edición y eliminación de páginas.
  */
-class AdminPageController extends Controller
+class StaticPageController extends Controller
 {
     /**
      * Muestra una lista paginada de páginas informativas
