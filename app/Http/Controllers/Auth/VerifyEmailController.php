@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Rules\UserRules;
@@ -18,7 +18,7 @@ use Inertia\Response;
  * Gestiona la visualización del aviso de verificación, el reenvío del
  * correo de verificación y la confirmación final del correo.
  */
-class AuthVerifyEmailController extends Controller
+class VerifyEmailController extends Controller
 {
     /**
      * Muestra la vista que solicita al usuario verificar su correo electrónico.

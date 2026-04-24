@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Invitation;
@@ -25,7 +25,7 @@ use Inertia\Response;
  * ingresados, crear la cuenta y autenticar automáticamente
  * al usuario recién registrado.
  */
-class AuthSignUpController extends Controller
+class RegisterController extends Controller
 {
     /**
      * Muestra la página de registro de usuario.

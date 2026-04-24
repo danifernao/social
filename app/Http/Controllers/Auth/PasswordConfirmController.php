@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -17,7 +17,7 @@ use Inertia\Response;
  * y validar la contraseña del usuario antes de ejecutar acciones
  * sensibles.
  */
-class AuthPasswordConfirmController extends Controller
+class PasswordConfirmController extends Controller
 {
     /**
      * Muestra el formulario para confirmar la contraseña del usuario.

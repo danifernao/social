@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
@@ -17,7 +17,7 @@ use Inertia\Response;
  * Permite mostrar el formulario de inicio de sesión, autenticar usuarios y
  * cerrar sesiones activas.
  */
-class AuthSessionController extends Controller
+class SessionController extends Controller
 {
     /**
      * Muestra la página de inicio de sesión.

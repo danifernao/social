@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -16,7 +16,7 @@ use Inertia\Response;
  * Permite mostrar el formulario para solicitar el enlace de restablecimiento
  * y enviarlo por correo electrónico si el usuario existe.
  */
-class AuthPasswordForgotController extends Controller
+class ForgotPasswordController extends Controller
 {
     /**
      * Muestra la página para solicitar restablecer contraseña.

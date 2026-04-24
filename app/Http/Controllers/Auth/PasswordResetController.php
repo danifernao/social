@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\PasswordReset;
@@ -20,7 +20,7 @@ use Inertia\Response;
  * Permite mostrar el formulario de cambio de contraseña y procesar
  * el restablecimiento.
  */
-class AuthPasswordResetController extends Controller
+class PasswordResetController extends Controller
 {
     /**
      * Muestra el formulario para restablecer la contraseña.
