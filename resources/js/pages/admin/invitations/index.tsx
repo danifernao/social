@@ -1,4 +1,4 @@
-import InvitationList from '@/components/app/admin/invitations/invitation-list';
+import InvitationList from '@/components/app/admin/invitations/list';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
