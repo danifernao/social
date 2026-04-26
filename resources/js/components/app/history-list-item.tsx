@@ -7,7 +7,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import TextLink from '../kit/text-link';
 import RichTextRenderer from './rich-text-renderer';
 
-interface EntryListItemProps {
+interface EntryItemProps {
     first: boolean;
     history: History;
 }
@@ -15,7 +15,7 @@ interface EntryListItemProps {
 /**
  * Registro de un cambio en el contenido de la entrada.
  */
-export default function HistoryListItem({ first, history }: EntryListItemProps) {
+export default function HistoryListItem({ first, history }: EntryItemProps) {
     // Funciones de traducción y acceso al idioma actual.
     const { i18n, t } = useTranslation();
 

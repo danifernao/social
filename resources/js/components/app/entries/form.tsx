@@ -9,13 +9,13 @@ import { SubmitEventHandler, useContext, useEffect, useRef, useState } from 'rea
 import { useTranslation } from 'react-i18next';
 import TextareaAutosize from 'react-textarea-autosize';
 import { toast } from 'sonner';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import { Field, FieldContent, FieldDescription, FieldLabel, FieldTitle } from '../ui/field';
-import { Switch } from '../ui/switch';
-import EntryPostVisibilityDropdown from './entry-post-visibility-dropdown';
-import FormErrors from './form-errors';
-import RichTextRenderer from './rich-text-renderer';
-import RichTextToolbar from './rich-text-toolbar';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../../ui/dropdown-menu';
+import { Field, FieldContent, FieldDescription, FieldLabel, FieldTitle } from '../../ui/field';
+import { Switch } from '../../ui/switch';
+import FormErrors from '../form-errors';
+import RichTextRenderer from '../rich-text-renderer';
+import RichTextToolbar from '../rich-text-toolbar';
+import EntryPostVisibilityDropdown from './post-visibility-dropdown';
 
 interface EntryFormProps {
     entry?: Entry; // Una entrada existente (publicación o comentario).

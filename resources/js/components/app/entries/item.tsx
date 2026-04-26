@@ -9,17 +9,16 @@ import { MessageSquare, MessageSquareLock, Pin } from 'lucide-react';
 import { useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import TextLink from '../kit/text-link';
-import { buttonVariants } from '../ui/button';
-import EntryItemOptions from './entry-list-item-options';
-import EntryListItemReactions from './entry-list-item-reactions';
-import EntryPostVisibilityDropdown from './entry-post-visibility-dropdown';
-import RichTextRenderer from './rich-text-renderer';
-import UserAvatar from './user-avatar';
-import UserRoleBadge from './user-role-badge';
+import TextLink from '../../kit/text-link';
+import { buttonVariants } from '../../ui/button';
+import RichTextRenderer from '../rich-text-renderer';
+import UserAvatar from '../user-avatar';
+import UserRoleBadge from '../user-role-badge';
+import EntryOptions from './options';
+import EntryPostVisibilityDropdown from './post-visibility-dropdown';
+import EntryReactions from './reactions';
 
-interface EntryListItemProps {
-    // Entrada a mostrar, puede ser una publicación o un comentario.
+interface EntryItemProps {
     entry: Entry;
 }
 
@@ -29,8 +28,7 @@ type PostVisibility = NonNullable<Post['visibility']>;
 /**
  * Entrada (publicación o comentario).
  */
-export default function EntryListItem({ entry }: EntryListItemProps) {
-    // Funciones de traducción y acceso al idioma actual.
+export default function EntryItem({ entry }: EntryItemProps) {
     const { i18n, t } = useTranslation();
 
     // Relación entre idioma y configuración regional de fechas.
@@ -201,7 +199,7 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
                         {/* Opciones disponibles para los usuarios autenticados */}
                         {auth.user && (
                             <div>
-                                <EntryItemOptions entry={entry} />
+                                <EntryOptions entry={entry} />
                             </div>
                         )}
                     </div>
@@ -212,7 +210,7 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
 
                 <footer className="flex gap-4">
                     {/* Reacciones de la entrada */}
-                    <EntryListItemReactions entry={entry} />
+                    <EntryReactions entry={entry} />
 
                     {/* Enlace a los comentarios cuando es una publicación */}
                     {entry.type === 'post' && routeName !== 'post.show' && (

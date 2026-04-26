@@ -3,8 +3,8 @@ import { Link, router } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../ui/button';
-import UserAvatar from './user-avatar';
+import { Button } from '../../ui/button';
+import UserAvatar from '../user-avatar';
 
 interface ReactionsInfo {
     type: 'post' | 'comment'; // Tipo de entrada.
@@ -25,8 +25,7 @@ type FetchMode = 'initial' | 'users' | 'append';
 /**
  * Muestra información adicional sobre las reacciones de una entrada.
  */
-export default function EntryListItemReactionsInfo({ entry }: { entry: Entry }) {
-    // Función para traducir los textos de la interfaz.
+export default function EntryReactionsInfo({ entry }: { entry: Entry }) {
     const { t } = useTranslation();
 
     // Emojis asociados a la entrada. Cada uno viene acompañado con

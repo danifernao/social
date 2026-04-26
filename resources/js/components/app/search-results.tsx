@@ -1,6 +1,6 @@
 import { Post, User } from '@/types';
 import EmptyMessage from './empty-message';
-import EntryList from './entry-list';
+import EntryList from './entries/list';
 import UserList from './user-list';
 
 interface SearchResultsProps {

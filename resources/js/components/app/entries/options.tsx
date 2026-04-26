@@ -7,21 +7,20 @@ import { EllipsisVertical } from 'lucide-react';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { Button } from '../ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import EntryForm from './entry-form';
-import ReportDialog from './report-dialog';
+import { Button } from '../../ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../../ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../ui/dropdown-menu';
+import ReportDialog from '../report-dialog';
+import EntryForm from './form';
 
-interface EntryItemOptionsProps {
-    entry: Entry; // Entrada (publicación o comentario) sobre la que se ejecutarán las acciones.
+interface EntryOptionsProps {
+    entry: Entry;
 }
 
 /**
  * Menú de opciones para editar o eliminar una entrada.
  */
-export default function EntryItemOptions({ entry }: EntryItemOptionsProps) {
-    // Función para traducir los textos de la interfaz.
+export default function EntryOptions({ entry }: EntryOptionsProps) {
     const { t } = useTranslation();
 
     // Captura el nombre de la ruta actual proporcionado por Inertia.

@@ -1,6 +1,6 @@
-import EntryForm from '@/components/app/entry-form';
-import EntryList from '@/components/app/entry-list';
-import EntryListItem from '@/components/app/entry-list-item';
+import EntryItem from '@/components/app/entries/item';
+import EntryList from '@/components/app/entries/list';
+import EntryForm from '@/components/app/entries/form';
 import ListLoadMore from '@/components/app/list-load-more';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import { useCheckPermission } from '@/hooks/app/use-auth';
@@ -80,7 +80,7 @@ export default function PostShow() {
             <AppContentLayout>
                 <article className="flex flex-col gap-8">
                     {/* Publicación principal */}
-                    <EntryListItem entry={post} />
+                    <EntryItem entry={post} />
 
                     {/* Sección de comentarios */}
                     <section id="comments" ref={commentsRef} className="flex flex-col gap-8">

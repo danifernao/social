@@ -25,7 +25,6 @@ export default function EntryPostVisibilityDropdown({
     disabled = false,
     loading = false,
 }: EntryPostVisibilityDropdownProps) {
-    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Icono y mensaje de visibilidad según la configuración de la publicación.

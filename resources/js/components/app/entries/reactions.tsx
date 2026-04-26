@@ -4,14 +4,14 @@ import { Info, SmilePlus } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { Button } from '../ui/button';
-import { ButtonGroup } from '../ui/button-group';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import EmojiPicker from './emoji-picker';
-import EntryListItemReactionsInfo from './entry-list-item-reactions-info';
+import { Button } from '../../ui/button';
+import { ButtonGroup } from '../../ui/button-group';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../ui/dialog';
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
+import EmojiPicker from '../emoji-picker';
+import EntryReactionsInfo from './reactions-info';
 
-interface EntryListItemReactionsProps {
+interface EntryReactionsProps {
     // Entrada (publicación o comentario) sobre la que se pueden aplicar reacciones.
     entry: Entry;
 }
@@ -19,7 +19,7 @@ interface EntryListItemReactionsProps {
 /**
  * Gestiona y muestra las reacciones de una entrada.
  */
-export default function EntryListItemReactions({ entry }: EntryListItemReactionsProps) {
+export default function EntryReactions({ entry }: EntryReactionsProps) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
@@ -136,7 +136,7 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                                         <DialogTitle>{t('reactions')}</DialogTitle>
                                         <DialogDescription>{t('user_reaction_details')}</DialogDescription>
                                     </DialogHeader>
-                                    <EntryListItemReactionsInfo entry={entry} />
+                                    <EntryReactionsInfo entry={entry} />
                                 </DialogContent>
                             </Dialog>
                         )}
