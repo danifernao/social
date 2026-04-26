@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Social;
 
+use App\Http\Controllers\Controller;
 use App\Http\Resources\MediaResource;
 use App\Models\Media;
 use App\Models\User;

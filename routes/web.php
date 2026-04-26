@@ -4,18 +4,18 @@
 | Controladores sociales
 |--------------------------------------------------------------------------
 */
-use App\Http\Controllers\BlockUserController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\ContentHistoryController;
-use App\Http\Controllers\FollowController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\PostNotificationMuteController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ReactionController;
-use App\Http\Controllers\MediaController;
-use App\Http\Controllers\SearchController;
+use App\Http\Controllers\Social\BlockUserController;
+use App\Http\Controllers\Social\CommentController;
+use App\Http\Controllers\Social\ContentHistoryController;
+use App\Http\Controllers\Social\FollowController;
+use App\Http\Controllers\Social\HomeController;
+use App\Http\Controllers\Social\NotificationController;
+use App\Http\Controllers\Social\PostController;
+use App\Http\Controllers\Social\PostNotificationMuteController;
+use App\Http\Controllers\Social\ProfileController;
+use App\Http\Controllers\Social\ReactionController;
+use App\Http\Controllers\Social\MediaController;
+use App\Http\Controllers\Social\SearchController;
 
 
 /*
