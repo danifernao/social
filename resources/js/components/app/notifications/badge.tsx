@@ -2,13 +2,12 @@ import { Auth } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { useEcho } from '@laravel/echo-react';
 import { useState } from 'react';
-import CounterBadge from './counter-badge';
+import CounterBadge from '../counter-badge';
 
 /**
  * Badge con la cantidad de notificaciones no leídas del usuario autenticado.
  */
 export default function NotificationBadge() {
-    // Captura el usuario autenticado y la cantidad inicial de notificaciones no leídas.
     const { auth, unreadNotisCount } = usePage<{ auth: Auth; unreadNotisCount: number }>().props;
 
     // Estado local que almacena la cantidad actual de notificaciones no leídas.

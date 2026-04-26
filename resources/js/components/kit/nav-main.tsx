@@ -3,7 +3,7 @@ import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import ReportBadge from '../app/admin/reports/badge';
-import NotificationBadge from '../app/notification-badge';
+import NotificationBadge from '../app/notifications/badge';
 
 export function NavMain({ items = [] }: { items: NavItem[] }) {
     const { t } = useTranslation();

@@ -1,9 +1,9 @@
-import NotificationListItem from '@/components/app/notification-list-item';
+import NotificationItem from '@/components/app/notifications/item';
 import type { Notification } from '@/types';
-import EmptyMessage from './empty-message';
+import EmptyMessage from '../empty-message';
 
 interface NotificationListProps {
-    notifications: Notification[]; // Lista de notificaciones a mostrar.
+    notifications: Notification[];
 }
 
 /**
@@ -15,7 +15,7 @@ export default function NotificationList({ notifications }: NotificationListProp
             {notifications.length > 0 ? (
                 <ul className="flex flex-1 flex-col">
                     {notifications.map((notification) => (
-                        <NotificationListItem key={notification.id} notification={notification} />
+                        <NotificationItem key={notification.id} notification={notification} />
                     ))}
                 </ul>
             ) : (

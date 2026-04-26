@@ -1,6 +1,6 @@
 import ListLoadMore from '@/components/app/list-load-more';
-import NotificationHeader from '@/components/app/notification-header';
-import NotificationList from '@/components/app/notification-list';
+import NotificationHeader from '@/components/app/notifications/header';
+import NotificationList from '@/components/app/notifications/list';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';

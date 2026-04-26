@@ -7,16 +7,15 @@ import { enUS, es } from 'date-fns/locale';
 import { useEffect, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-interface NotificationListItemProps {
-    notification: Notification; // Notificación a mostrar.
+interface NotificationItemProps {
+    notification: Notification;
 }
 
 /**
  * Elemento individual del listado de notificaciones.
  * Se marca como leída automáticamente cuando entra en pantalla.
  */
-export default function NotificationListItem({ notification }: NotificationListItemProps) {
-    // Función para traducir los textos de la interfaz y acceder al idioma actual.
+export default function NotificationItem({ notification }: NotificationItemProps) {
     const { i18n } = useTranslation();
 
     // Captura el token CSRF proporcionado por Inertia.
