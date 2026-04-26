@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Utils\Locales;
@@ -13,7 +13,7 @@ use Inertia\Inertia;
  * Controlador responsable de la configuración del idioma de la interfaz.
  * Permite al usuario visualizar el idioma actual y actualizarlo.
  */
-class SettingsLanguageController extends Controller
+class LanguageController extends Controller
 {
     /**
      * Muestra la página para cambiar el idioma de la interfaz.

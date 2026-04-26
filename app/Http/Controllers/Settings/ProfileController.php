@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Rules\UserRules;
@@ -20,7 +20,7 @@ use Inertia\Response;
  * gestionar el avatar y eliminar la cuenta del usuario, aplicando
  * las validaciones y restricciones correspondientes.
  */
-class SettingsProfileController extends Controller
+class ProfileController extends Controller
 {
     /**
      * Muestra la página de configuración del perfil del usuario.

@@ -23,9 +23,9 @@ use App\Http\Controllers\SearchController;
 | Controladores de configuración
 |--------------------------------------------------------------------------
 */
-use App\Http\Controllers\SettingsLanguageController;
-use App\Http\Controllers\SettingsPasswordController;
-use App\Http\Controllers\SettingsProfileController;
+use App\Http\Controllers\Settings\LanguageController;
+use App\Http\Controllers\Settings\PasswordController;
+use App\Http\Controllers\Settings\ProfileController as SettingsProfileController;
 
 
 /*
@@ -229,14 +229,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete('profile', [SettingsProfileController::class, 'destroy'])
                 ->name('profile.destroy');
 
-            Route::get('password', [SettingsPasswordController::class, 'edit'])
+            Route::get('password', [PasswordController::class, 'edit'])
                 ->name('password.edit');
-            Route::put('password', [SettingsPasswordController::class, 'update'])
+            Route::put('password', [PasswordController::class, 'update'])
                 ->name('password.update');
 
-            Route::get('language', [SettingsLanguageController::class, 'edit'])
+            Route::get('language', [LanguageController::class, 'edit'])
                 ->name('language.edit');
-            Route::patch('language', [SettingsLanguageController::class, 'update'])
+            Route::patch('language', [LanguageController::class, 'update'])
                 ->name('language.update');
 
             Route::get('appearance', function () {

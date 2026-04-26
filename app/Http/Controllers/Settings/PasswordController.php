@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -14,7 +14,7 @@ use Inertia\Response;
  * Controlador responsable de la gestión de la contraseña del usuario.
  * Permite mostrar el formulario de cambio de contraseña y actualizarla.
  */
-class SettingsPasswordController extends Controller
+class PasswordController extends Controller
 {
     /**
      * Muestra la página de configuración de contraseña del usuario.
