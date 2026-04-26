@@ -11,8 +11,8 @@ import { SubmitEventHandler, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TextareaAutosize from 'react-textarea-autosize';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select';
-import RichTextRenderer from '../../rich-text-renderer';
-import RichTextToolbar from '../../rich-text-toolbar';
+import RichTextRenderer from '../../rich-text/renderer';
+import RichTextToolbar from '../../rich-text/toolbar';
 
 interface StaticPageFormProps {
     page?: Page; // Página opcional, si existe el formulario se usa en modo edición.

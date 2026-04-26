@@ -13,8 +13,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../../ui
 import { Field, FieldContent, FieldDescription, FieldLabel, FieldTitle } from '../../ui/field';
 import { Switch } from '../../ui/switch';
 import FormErrors from '../form-errors';
-import RichTextRenderer from '../rich-text-renderer';
-import RichTextToolbar from '../rich-text-toolbar';
+import RichTextRenderer from '../rich-text/renderer';
+import RichTextToolbar from '../rich-text/toolbar';
 import EntryPostVisibilityDropdown from './post-visibility-dropdown';
 
 interface EntryFormProps {

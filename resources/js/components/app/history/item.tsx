@@ -5,7 +5,7 @@ import { formatDistanceToNow, Locale } from 'date-fns';
 import { enUS, es } from 'date-fns/locale';
 import { Trans, useTranslation } from 'react-i18next';
 import TextLink from '../../kit/text-link';
-import RichTextRenderer from '../rich-text-renderer';
+import RichTextRenderer from '../rich-text/renderer';
 
 interface EntryItemProps {
     first: boolean;

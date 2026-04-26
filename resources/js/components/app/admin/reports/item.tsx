@@ -5,7 +5,7 @@ import { Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../../ui/card';
-import RichTextRenderer from '../../rich-text-renderer';
+import RichTextRenderer from '../../rich-text/renderer';
 import CloseReportDialog from './close-dialog';
 
 interface ReportItemProps {

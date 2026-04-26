@@ -38,12 +38,12 @@ import {
 import React, { ChangeEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { Separator } from '../ui/separator';
-import EmojiPicker from './emoji-picker';
-import MediaDialog from './media-dialog';
+import { Button } from '../../ui/button';
+import { Input } from '../../ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
+import { Separator } from '../../ui/separator';
+import EmojiPicker from '../emoji-picker';
+import MediaDialog from '../media-dialog';
 
 interface RichTextToolbarProps {
     user: User; // Usuario autenticado.
@@ -65,7 +65,6 @@ interface RichTextToolbarProps {
  * manipulando la selección de texto y la posición del cursor.
  */
 export default function RichTextToolbar({ user, text, onChange, textareaRef }: RichTextToolbarProps) {
-    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Estado para controlar el diálogo de selección de archivos multimedia.

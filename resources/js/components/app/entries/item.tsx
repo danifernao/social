@@ -11,7 +11,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import TextLink from '../../kit/text-link';
 import { buttonVariants } from '../../ui/button';
-import RichTextRenderer from '../rich-text-renderer';
+import RichTextRenderer from '../rich-text/renderer';
 import UserAvatar from '../users/avatar';
 import UserRoleBadge from '../users/role-badge';
 import EntryOptions from './options';

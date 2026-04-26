@@ -1,4 +1,4 @@
-import RichTextRenderer from '@/components/app/rich-text-renderer';
+import RichTextRenderer from '@/components/app/rich-text/renderer';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
 import type { BreadcrumbItem } from '@/types';

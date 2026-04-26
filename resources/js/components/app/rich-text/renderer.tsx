@@ -11,7 +11,7 @@ import type { Components } from 'react-markdown';
 import Markdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import remarkDirective from 'remark-directive';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 
 interface RichTextRendererProps {
     // Tipo de entrada que define el contexto de menciones y hashtags.
@@ -42,7 +42,6 @@ type ExtendedComponents = Components & {
  * - Limita la altura del contenido y muestra un botón "Leer más" si es necesario.
  */
 export default function RichTextRenderer({ entryType, text, alwaysExpanded = false, disableLinks = false }: RichTextRendererProps) {
-    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Referencia al contenedor del contenido renderizado.
