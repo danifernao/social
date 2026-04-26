@@ -4,7 +4,7 @@ import { SearchType, SearchTypes } from '@/types';
 import { Search } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 
 interface SearchBarProps {
     type: SearchType; // Tipo de búsqueda inicial (publicación o usuario).
@@ -17,7 +17,6 @@ interface SearchBarProps {
  * Barra de búsqueda que permite filtrar publicaciones o usuarios.
  */
 export default function SearchBar({ type, query, onSubmit }: SearchBarProps) {
-    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Tipos de búsqueda disponibles con su etiqueta visible.

@@ -1,6 +1,6 @@
 import ListLoadMore from '@/components/app/list-load-more';
-import SearchBar from '@/components/app/search-bar';
-import SearchSearchResults from '@/components/app/search-results';
+import SearchBar from '@/components/app/search/bar';
+import Results from '@/components/app/search/results';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
@@ -97,7 +97,7 @@ export default function SearchIndex() {
                 {/* Contexto para sincronizar cambios en los resultados */}
                 <EntryListUpdateContext.Provider value={applyItemChange}>
                     {/* Listado de resultados según el tipo de búsqueda */}
-                    <SearchSearchResults results={type === 'post' ? (results as Post[]) : (results as User[])} />
+                    <Results results={type === 'post' ? (results as Post[]) : (results as User[])} />
                 </EntryListUpdateContext.Provider>
 
                 {/* Botón para cargar más resultados */}

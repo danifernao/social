@@ -1,7 +1,7 @@
 import { Post, User } from '@/types';
-import EmptyMessage from './empty-message';
-import EntryList from './entries/list';
-import UserList from './users/list';
+import EmptyMessage from '../empty-message';
+import EntryList from '../entries/list';
+import UserList from '../users/list';
 
 interface SearchResultsProps {
     results: Post[] | User[]; // Resultados de la búsqueda (publicaciones o usuarios).
