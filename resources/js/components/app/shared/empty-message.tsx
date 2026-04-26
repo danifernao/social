@@ -10,7 +10,6 @@ interface EmptyMessageProps {
  * o un mensaje personalizado.
  */
 export default function EmptyMessage({ custom = '' }: EmptyMessageProps) {
-    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Nombre de la ruta actual proporcionada por Inertia.

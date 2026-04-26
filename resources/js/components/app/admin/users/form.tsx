@@ -10,7 +10,7 @@ import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Checkbox } from '../../../ui/checkbox';
 import { ToggleGroup, ToggleGroupItem } from '../../../ui/toggle-group';
-import FormErrors from '../../form-errors';
+import FormErrors from '../../shared/form-errors';
 import ConfirmActionDialog from '../actions/confirm-dialog';
 
 interface UserEditFormProps {

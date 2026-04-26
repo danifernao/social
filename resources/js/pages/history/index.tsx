@@ -1,5 +1,5 @@
 import HistoryList from '@/components/app/history/list';
-import ListLoadMore from '@/components/app/list-load-more';
+import ListLoadMore from '@/components/app/shared/list-load-more';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';

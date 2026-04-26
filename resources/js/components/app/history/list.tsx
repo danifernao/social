@@ -1,5 +1,5 @@
 import { History } from '@/types/modules/entry/history';
-import EmptyMessage from '../empty-message';
+import EmptyMessage from '../shared/empty-message';
 import HistoryItem from './item';
 
 interface HistoryListProps {

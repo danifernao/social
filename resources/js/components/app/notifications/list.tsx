@@ -1,6 +1,6 @@
 import NotificationItem from '@/components/app/notifications/item';
 import type { Notification } from '@/types';
-import EmptyMessage from '../empty-message';
+import EmptyMessage from '../shared/empty-message';
 
 interface NotificationListProps {
     notifications: Notification[];

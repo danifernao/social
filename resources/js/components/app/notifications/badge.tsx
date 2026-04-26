@@ -2,7 +2,7 @@ import { Auth } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { useEcho } from '@laravel/echo-react';
 import { useState } from 'react';
-import CounterBadge from '../counter-badge';
+import CounterBadge from '../shared/counter-badge';
 
 /**
  * Badge con la cantidad de notificaciones no leídas del usuario autenticado.

@@ -1,5 +1,5 @@
 import { TriangleAlert } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '../../ui/alert';
 
 interface FormErrorsProps {
     // Conjunto de errores del formulario, indexados por nombre de campo.

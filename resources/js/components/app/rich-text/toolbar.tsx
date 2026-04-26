@@ -42,8 +42,8 @@ import { Button } from '../../ui/button';
 import { Input } from '../../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 import { Separator } from '../../ui/separator';
-import EmojiPicker from '../emoji-picker';
 import MediaDialog from '../media/dialog';
+import EmojiPicker from '../shared/emoji-picker';
 
 interface RichTextToolbarProps {
     user: User; // Usuario autenticado.

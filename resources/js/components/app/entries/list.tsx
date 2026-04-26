@@ -1,6 +1,6 @@
 import EntryItem from '@/components/app/entries/item';
 import type { Entry } from '@/types';
-import EmptyMessage from '../empty-message';
+import EmptyMessage from '../shared/empty-message';
 
 interface EntryListProps {
     entries: Entry[];

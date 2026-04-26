@@ -1,6 +1,6 @@
 import UserItem from '@/components/app/users/item';
 import type { User } from '@/types';
-import EmptyMessage from '../empty-message';
+import EmptyMessage from '../shared/empty-message';
 
 interface UserListProps {
     users: User[];

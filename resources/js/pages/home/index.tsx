@@ -1,6 +1,6 @@
 import EntryForm from '@/components/app/entries/form';
 import EntryList from '@/components/app/entries/list';
-import ListLoadMore from '@/components/app/list-load-more';
+import ListLoadMore from '@/components/app/shared/list-load-more';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import { useCheckPermission } from '@/hooks/app/use-auth';

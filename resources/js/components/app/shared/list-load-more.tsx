@@ -20,7 +20,6 @@ export default function ListLoadMore({ type, cursor, isProcessing, autoClick = t
     // que cargar, por lo que el botón no se renderiza.
     if (!cursor) return null;
 
-    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Referencia al botón para poder observar cuándo entra

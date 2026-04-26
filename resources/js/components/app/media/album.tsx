@@ -5,7 +5,7 @@ import { LoaderCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import ListLoadMore from '../list-load-more';
+import ListLoadMore from '../shared/list-load-more';
 import MediaAlbumGrid from './album-grid';
 
 interface MediaAlbumProps {

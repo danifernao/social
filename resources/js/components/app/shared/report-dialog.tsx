@@ -26,7 +26,6 @@ interface ReportDialogProps {
  * Diálogo para crear un reporte sobre una publicación, comentario o usuario.
  */
 export default function ReportDialog({ open, onOpenChange, reportableType, reportableId }: ReportDialogProps) {
-    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Errores de validación.

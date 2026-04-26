@@ -8,7 +8,7 @@ import { Button } from '../../ui/button';
 import { ButtonGroup } from '../../ui/button-group';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
-import EmojiPicker from '../emoji-picker';
+import EmojiPicker from '../shared/emoji-picker';
 import EntryReactionsInfo from './reactions-info';
 
 interface EntryReactionsProps {

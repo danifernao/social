@@ -1,7 +1,7 @@
+import EntryForm from '@/components/app/entries/form';
 import EntryItem from '@/components/app/entries/item';
 import EntryList from '@/components/app/entries/list';
-import EntryForm from '@/components/app/entries/form';
-import ListLoadMore from '@/components/app/list-load-more';
+import ListLoadMore from '@/components/app/shared/list-load-more';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import { useCheckPermission } from '@/hooks/app/use-auth';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';

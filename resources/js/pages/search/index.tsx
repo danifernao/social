@@ -1,6 +1,6 @@
-import ListLoadMore from '@/components/app/list-load-more';
 import SearchBar from '@/components/app/search/bar';
 import Results from '@/components/app/search/results';
+import ListLoadMore from '@/components/app/shared/list-load-more';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
