@@ -1,4 +1,4 @@
-import AdminInvitationList from '@/components/app/admin-invitation-list';
+import InvitationList from '@/components/app/admin/invitations/invitation-list';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -132,12 +132,7 @@ export default function PagesIndex() {
                     </Tabs>
 
                     {/* Listado de invitaciones */}
-                    <AdminInvitationList
-                        status={status}
-                        invitations={invitations.data}
-                        previous={invitations.links.prev}
-                        next={invitations.links.next}
-                    />
+                    <InvitationList status={status} invitations={invitations.data} previous={invitations.links.prev} next={invitations.links.next} />
                 </AppContentLayout>
             </AdminLayout>
         </AppLayout>

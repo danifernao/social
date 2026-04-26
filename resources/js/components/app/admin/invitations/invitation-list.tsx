@@ -15,12 +15,12 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from '../ui/alert-dialog';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import AdminTablePagination from './admin-table-pagination';
+} from '../../../ui/alert-dialog';
+import { Button } from '../../../ui/button';
+import { Input } from '../../../ui/input';
+import AdminTablePagination from '../../admin-table-pagination';
 
-interface AdminInvitationListProps {
+interface InvitationListProps {
     status: 'pending' | 'accepted'; // Estado de las invitaciones.
     invitations: Invitation[]; // Lista de invitaciones.
     previous: string | null; // URL de la página anterior para la paginación.
@@ -30,7 +30,7 @@ interface AdminInvitationListProps {
 /**
  * Listado de enlaces de invitaciones de registro.
  */
-export default function AdminInvitationList({ status, invitations, previous, next }: AdminInvitationListProps) {
+export default function InvitationList({ status, invitations, previous, next }: InvitationListProps) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
