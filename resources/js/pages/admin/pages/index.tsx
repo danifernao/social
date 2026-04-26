@@ -1,4 +1,4 @@
-import AdminPageList from '@/components/app/admin-page-list';
+import StaticPageList from '@/components/app/admin/static-pages/list';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AdminLayout from '@/layouts/app/admin/layout';
@@ -78,7 +78,7 @@ export default function PagesIndex() {
                     </div>
 
                     {/* Listado de páginas estáticas */}
-                    <AdminPageList pages={pages.data} previous={pages.links.prev} next={pages.links.next} />
+                    <StaticPageList pages={pages.data} previous={pages.links.prev} next={pages.links.next} />
                 </AppContentLayout>
             </AdminLayout>
         </AppLayout>

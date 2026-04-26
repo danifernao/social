@@ -15,10 +15,10 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from '../ui/alert-dialog';
-import AdminTablePagination from './admin-table-pagination';
+} from '../../../ui/alert-dialog';
+import AdminTablePagination from '../../admin-table-pagination';
 
-interface Props {
+interface StaticPageListProps {
     pages: Page[]; // Lista de páginas estáticas.
     previous: string | null; // URL de la página anterior para la paginación.
     next: string | null; // URL de la página siguiente para la paginación.
@@ -27,7 +27,7 @@ interface Props {
 /**
  * Listado de las páginas estáticas registradas.
  */
-export default function AdminPageList({ pages, previous, next }: Props) {
+export default function StaticPageList({ pages, previous, next }: StaticPageListProps) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 

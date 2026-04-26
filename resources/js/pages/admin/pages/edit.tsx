@@ -1,4 +1,4 @@
-import AdminPageForm from '@/components/app/admin-page-form';
+import StaticPageForm from '@/components/app/admin/static-pages/form';
 import AdminLayout from '@/layouts/app/admin/layout';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
@@ -37,7 +37,7 @@ export default function PagesEdit() {
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
                     {/* Formulario de edición de la página estática */}
-                    <AdminPageForm page={page} />
+                    <StaticPageForm page={page} />
                 </AppContentLayout>
             </AdminLayout>
         </AppLayout>

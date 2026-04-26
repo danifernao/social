@@ -10,11 +10,11 @@ import { LoaderCircle } from 'lucide-react';
 import { SubmitEventHandler, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import TextareaAutosize from 'react-textarea-autosize';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import RichTextRenderer from './rich-text-renderer';
-import RichTextToolbar from './rich-text-toolbar';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../ui/select';
+import RichTextRenderer from '../../rich-text-renderer';
+import RichTextToolbar from '../../rich-text-toolbar';
 
-interface Props {
+interface StaticPageFormProps {
     page?: Page; // Página opcional, si existe el formulario se usa en modo edición.
 }
 
@@ -23,7 +23,7 @@ interface Props {
  * Si recibe una página, precarga los campos y ajusta la petición para actualizar.
  * Si no recibe una página, el formulario crea una nueva.
  */
-export default function AdminPageForm({ page }: Props) {
+export default function StaticPageForm({ page }: StaticPageFormProps) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
