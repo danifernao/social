@@ -4,8 +4,8 @@ import { History } from '@/types/modules/entry/history';
 import { formatDistanceToNow, Locale } from 'date-fns';
 import { enUS, es } from 'date-fns/locale';
 import { Trans, useTranslation } from 'react-i18next';
-import TextLink from '../kit/text-link';
-import RichTextRenderer from './rich-text-renderer';
+import TextLink from '../../kit/text-link';
+import RichTextRenderer from '../rich-text-renderer';
 
 interface EntryItemProps {
     first: boolean;
@@ -15,8 +15,7 @@ interface EntryItemProps {
 /**
  * Registro de un cambio en el contenido de la entrada.
  */
-export default function HistoryListItem({ first, history }: EntryItemProps) {
-    // Funciones de traducción y acceso al idioma actual.
+export default function HistoryItem({ first, history }: EntryItemProps) {
     const { i18n, t } = useTranslation();
 
     // Relación entre idioma y configuración regional de fechas.

@@ -1,4 +1,4 @@
-import HistoryList from '@/components/app/history-list';
+import HistoryList from '@/components/app/history/list';
 import ListLoadMore from '@/components/app/list-load-more';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
