@@ -2,19 +2,18 @@ import { User } from '@/types';
 import { Flag } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../ui/button';
-import ReportDialog from './report-dialog';
+import { Button } from '../../../ui/button';
+import ReportDialog from '../../report-dialog';
 
 interface UserActionsReportProps {
-    user: User; // El usuario que se reportará.
-    onDialogClose: () => void; // Callback que se dispara al cerrarse el diálogo.
+    user: User;
+    onDialogClose: () => void;
 }
 
 /**
  * Botón para reportar a un usuario.
  */
 export default function UserActionsReport({ user, onDialogClose }: UserActionsReportProps) {
-    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Controla la visibilidad del diálogo para reportar la entrada.

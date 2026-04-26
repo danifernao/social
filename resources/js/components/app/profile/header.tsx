@@ -1,19 +1,18 @@
 import type { Auth, User } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import UserActions from './user-actions';
-import UserAvatar from './user-avatar';
-import UserRoleBadge from './user-role-badge';
+import UserActions from '../users/actions/actions';
+import UserAvatar from '../users/avatar';
+import UserRoleBadge from '../users/role-badge';
 
 interface ProfileHeaderProps {
-    user: User; // Usuario del perfil visitado.
+    user: User;
 }
 
 /**
  * Encabezado del perfil público de un usuario.
  */
 export default function ProfileHeader({ user }: ProfileHeaderProps) {
-    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Captura el usuario autenticado proporcionado por Inertia.

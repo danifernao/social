@@ -4,7 +4,7 @@ import { LoaderCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../../ui/button';
-import UserAvatar from '../user-avatar';
+import UserAvatar from '../users/avatar';
 
 interface ReactionsInfo {
     type: 'post' | 'comment'; // Tipo de entrada.

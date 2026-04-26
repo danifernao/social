@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 interface UserRoleBadgeProps {
-    role: string; // Rol del usuario.
+    role: string;
 }
 
 /**
@@ -13,7 +13,6 @@ export default function UserRoleBadge({ role }: UserRoleBadgeProps) {
         return null;
     }
 
-    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Define las clases de Tailwind según el rol del usuario.

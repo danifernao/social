@@ -1,11 +1,11 @@
 import type { User } from '@/types';
 import { Link } from '@inertiajs/react';
-import UserActionsFollow from './user-actions-follow';
-import UserAvatar from './user-avatar';
-import UserRoleBadge from './user-role-badge';
+import UserActionsFollow from './actions/follow';
+import UserAvatar from './avatar';
+import UserRoleBadge from './role-badge';
 
-interface UserListItemProps {
-    user: User; // Usuario que se mostrará en el item de la lista.
+interface UserItemProps {
+    user: User;
 }
 
 /**
@@ -17,7 +17,7 @@ interface UserListItemProps {
  * - La insignia de rol del usuario.
  * - Una acción para seguir o dejar de seguir, cuando aplica.
  */
-export default function UserListItem({ user }: UserListItemProps) {
+export default function UserItem({ user }: UserItemProps) {
     return (
         <div className="bg-card text-card-foreground flex gap-6 rounded-xl border px-6 py-6 shadow-sm">
             {/* Sección izquierda: avatar y datos básicos del usuario */}

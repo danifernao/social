@@ -8,7 +8,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import { SubmitEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import UserAvatar from '../../user-avatar';
+import UserAvatar from '../../users/avatar';
 import TablePagination from '../shared/table-pagination';
 
 interface UserListProps {

@@ -1,7 +1,7 @@
 import { type User } from '@/types';
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import UserAvatar from '../app/user-avatar';
+import UserAvatar from '../app/users/avatar';
 
 export function UserInfo({ user, showEmail = false }: { user: User; showEmail?: boolean }) {
     const { t } = useTranslation();

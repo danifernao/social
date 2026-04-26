@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 interface UserAvatarProps {
-    user: User; // Usuario del cual se mostrará el avatar.
+    user: User;
     className?: string; // Clases opcionales para controlar el tamaño y estilo del avatar.
 }
 
@@ -11,7 +11,6 @@ interface UserAvatarProps {
  * Avatar de un usuario.
  */
 export default function UserAvatar({ user, className = 'w-10 h-10' }: UserAvatarProps) {
-    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     return (

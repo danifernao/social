@@ -3,17 +3,16 @@ import { type User } from '@/types';
 import { LoaderCircle, UserMinus, UserPlus } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../ui/button';
+import { Button } from '../../../ui/button';
 
 interface UserActionsFollowProps {
-    user: User; // Usuario al que se desea seguir o dejar de seguir.
+    user: User;
 }
 
 /**
  * Botón para seguir o dejar de seguir a un usuario.
  */
 export default function UserActionsFollow({ user }: UserActionsFollowProps) {
-    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Hook para ejecutar acciones POST.

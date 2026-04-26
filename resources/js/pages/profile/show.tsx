@@ -1,7 +1,7 @@
 import EntryForm from '@/components/app/entries/form';
 import EntryList from '@/components/app/entries/list';
 import ListLoadMore from '@/components/app/list-load-more';
-import ProfileHeader from '@/components/app/profile-header';
+import ProfileHeader from '@/components/app/profile/header';
 import { Tooltip } from '@/components/app/tooltip';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';

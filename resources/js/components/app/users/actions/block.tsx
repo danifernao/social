@@ -2,17 +2,16 @@ import { usePostAction } from '@/hooks/app/use-post-action';
 import { User } from '@/types';
 import { LoaderCircle, Lock, LockOpen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../ui/button';
+import { Button } from '../../../ui/button';
 
 interface UserActionsBlockProps {
-    user: User; // El usuario sobre el cual se aplicará el bloqueo o desbloqueo.
+    user: User;
 }
 
 /**
  * Botón para bloquear o desbloquear a un usuario.
  */
 export default function UserActionsBlock({ user }: UserActionsBlockProps) {
-    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Hook para ejecutar acciones POST.

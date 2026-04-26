@@ -1,6 +1,6 @@
 import { FollowNav } from '@/components/app/follow-nav';
 import ListLoadMore from '@/components/app/list-load-more';
-import UserList from '@/components/app/user-list';
+import UserList from '@/components/app/users/list';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';

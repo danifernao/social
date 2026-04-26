@@ -4,14 +4,14 @@ import { Link, usePage } from '@inertiajs/react';
 import { MessageSquareWarning, MoreVertical, UserCog } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import UserActionsBlock from './user-actions-block';
-import UserActionsFollow from './user-actions-follow';
-import UserActionsReport from './user-actions-report';
+import { Button } from '../../../ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../../ui/dropdown-menu';
+import UserActionsBlock from './block';
+import UserActionsFollow from './follow';
+import UserActionsReport from './report';
 
 interface UserActionsProps {
-    user: User; // Usuario sobre el cual se ejecutarán las acciones.
+    user: User;
 }
 
 /**
@@ -22,10 +22,7 @@ interface UserActionsProps {
  * o administrar el usuario.
  */
 export default function UserActions({ user }: UserActionsProps) {
-    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
-
-    // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;
 
     // Si no hay usuario autenticado, no se muestran acciones.
