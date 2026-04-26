@@ -6,7 +6,7 @@ import { LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import FormErrors from './form-errors';
+import FormErrors from '../shared/form-errors';
 
 interface ReportDialogProps {
     // Controla si el diálogo está abierto.

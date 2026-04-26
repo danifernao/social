@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { Button } from '../../ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../../ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../ui/dropdown-menu';
-import ReportDialog from '../shared/report-dialog';
+import ReportDialog from '../reports/dialog';
 import EntryForm from './form';
 
 interface EntryOptionsProps {

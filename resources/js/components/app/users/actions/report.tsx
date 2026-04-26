@@ -3,7 +3,7 @@ import { Flag } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../../../ui/button';
-import ReportDialog from '../../shared/report-dialog';
+import ReportDialog from '../../reports/dialog';
 
 interface UserActionsReportProps {
     user: User;
