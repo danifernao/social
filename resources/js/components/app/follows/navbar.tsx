@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
-interface FollowPageNavProps {
+interface FollowNavProps {
     pageName: 'following' | 'followers'; // Identifica la sección actualmente activa.
     username: string; // Nombre de usuario del perfil que se está visualizando.
 }
@@ -11,8 +11,7 @@ interface FollowPageNavProps {
  * Barra de navegación que permite alternar entre
  * las secciones de "Seguidos" y "Seguidores" de un perfil de usuario.
  */
-export function FollowNav({ pageName, username }: FollowPageNavProps) {
-    // Función para traducir los textos de la interfaz.
+export function FollowNav({ pageName, username }: FollowNavProps) {
     const { t } = useTranslation();
 
     // Clase base compartida por ambas pestañas.
