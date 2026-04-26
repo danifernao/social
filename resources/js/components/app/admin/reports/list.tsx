@@ -4,7 +4,7 @@ import { formatDate } from '@/lib/utils';
 import { Report } from '@/types/modules/report';
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import AdminTablePagination from '../../admin-table-pagination';
+import TablePagination from '../shared/table-pagination';
 import ReportNote from './note';
 
 interface ReportListProps {
@@ -158,7 +158,7 @@ export default function ReportList({ status, reports, previous, next }: ReportLi
             </div>
 
             {/* Paginación */}
-            <AdminTablePagination previous={previous} next={next} />
+            <TablePagination previous={previous} next={next} />
         </div>
     );
 }

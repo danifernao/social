@@ -8,10 +8,10 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import { SubmitEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import AdminTablePagination from './admin-table-pagination';
-import UserAvatar from './user-avatar';
+import UserAvatar from '../../user-avatar';
+import TablePagination from '../shared/table-pagination';
 
-interface Props {
+interface UserListProps {
     users: User[]; // Lista de usuarios.
     previous: string | null; // URL de la página anterior para la paginación.
     next: string | null; // URL de la página siguiente para la paginación.
@@ -20,14 +20,13 @@ interface Props {
 /**
  * Listado de usuarios registrados para su administración.
  */
-export default function AdminUserList({ users, previous, next }: Props) {
-    // Función para traducir los textos de la interfaz.
+export default function UserList({ users, previous, next }: UserListProps) {
     const { t } = useTranslation();
 
     // Captura la URL actual proporcionada por Inertia.
     const { url } = usePage();
 
-    // Obtiene los parámetros de la consulta actual (por ejemplo: ?query=user&orderBy=id)
+    // Obtiene los parámetros de la consulta actual.
     const queryParams = new URLSearchParams(url.split('?')[1]);
 
     // Nombre de la columna usada para el ordenamiento actual.
@@ -213,7 +212,7 @@ export default function AdminUserList({ users, previous, next }: Props) {
             </div>
 
             {/* Paginación */}
-            <AdminTablePagination previous={previous} next={next} />
+            <TablePagination previous={previous} next={next} />
         </div>
     );
 }

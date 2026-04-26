@@ -18,7 +18,7 @@ import {
 } from '../../../ui/alert-dialog';
 import { Button } from '../../../ui/button';
 import { Input } from '../../../ui/input';
-import AdminTablePagination from '../../admin-table-pagination';
+import TablePagination from '../shared/table-pagination';
 
 interface InvitationListProps {
     status: 'pending' | 'accepted'; // Estado de las invitaciones.
@@ -173,7 +173,7 @@ export default function InvitationList({ status, invitations, previous, next }: 
             </div>
 
             {/* Paginación */}
-            <AdminTablePagination previous={previous} next={next} />
+            <TablePagination previous={previous} next={next} />
         </div>
     );
 }

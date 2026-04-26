@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
-interface Props {
+interface TablePaginationProps {
     previous: string | null; // URL de la página anterior.
     next: string | null; // URL de la página siguiente.
 }
@@ -10,7 +10,7 @@ interface Props {
 /**
  * Controles de paginación de una tabla.
  */
-export default function AdminTablePagination({ previous, next }: Props) {
+export default function TablePagination({ previous, next }: TablePaginationProps) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 

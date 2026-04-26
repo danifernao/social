@@ -1,4 +1,4 @@
-import AdminUserEditForm from '@/components/app/admin-user-edit-form';
+import UserEditForm from '@/components/app/admin/users/form';
 import AdminLayout from '@/layouts/app/admin/layout';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
@@ -42,7 +42,7 @@ export default function UsersEdit() {
                     </h2>
 
                     {/* Formulario de edición del usuario */}
-                    <AdminUserEditForm user={user} />
+                    <UserEditForm user={user} />
                 </AppContentLayout>
             </AdminLayout>
         </AppLayout>

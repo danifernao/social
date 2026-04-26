@@ -5,19 +5,18 @@ import { Link } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
-import ConfirmActionDialog from './admin-confirm-action-dialog';
-import FormErrors from './form-errors';
+import { ToggleGroup, ToggleGroupItem } from '../../../ui/toggle-group';
+import FormErrors from '../../form-errors';
+import ConfirmActionDialog from '../actions/confirm-dialog';
 
-interface AdminSiteEditFormProps {
+interface SiteEditFormProps {
     settings: SiteSettings; // Configuración del sitio.
 }
 
 /**
  * Formulario para la gestión de la configuración del sitio.
  */
-export default function AdminSiteEditForm({ settings }: AdminSiteEditFormProps) {
-    // Función para traducir los textos de la interfaz.
+export default function SiteEditForm({ settings }: SiteEditFormProps) {
     const { t } = useTranslation();
 
     // Estado que refleja si el registro de usuarios está habilitado o no.

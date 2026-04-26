@@ -1,4 +1,4 @@
-import AdminSiteEditForm from '@/components/app/admin-site-edit-form';
+import SiteEditForm from '@/components/app/admin/site/form';
 import AdminLayout from '@/layouts/app/admin/layout';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
@@ -33,7 +33,7 @@ export default function SiteEdit() {
             {/* Formulario para editar los datos globales del sitio */}
             <AdminLayout>
                 <AppContentLayout noMargin={true} fullWidth={true}>
-                    <AdminSiteEditForm settings={site_settings} />
+                    <SiteEditForm settings={site_settings} />
                 </AppContentLayout>
             </AdminLayout>
         </AppLayout>

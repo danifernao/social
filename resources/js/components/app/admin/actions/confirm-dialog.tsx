@@ -17,7 +17,6 @@ interface ConfirmActionDialogProps {
  * Requiere que el usuario ingrese su contraseña para poder continuar.
  */
 export default function ConfirmActionDialog({ open, onOpenChange, password, onPasswordChange, onConfirm }: ConfirmActionDialogProps) {
-    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     // Referencia al botón de confirmación del diálogo.

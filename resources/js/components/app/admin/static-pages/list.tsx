@@ -16,7 +16,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '../../../ui/alert-dialog';
-import AdminTablePagination from '../../admin-table-pagination';
+import TablePagination from '../shared/table-pagination';
 
 interface StaticPageListProps {
     pages: Page[]; // Lista de páginas estáticas.
@@ -156,7 +156,7 @@ export default function StaticPageList({ pages, previous, next }: StaticPageList
             </div>
 
             {/* Paginación */}
-            <AdminTablePagination previous={previous} next={next} />
+            <TablePagination previous={previous} next={next} />
         </div>
     );
 }

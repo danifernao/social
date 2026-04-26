@@ -1,4 +1,4 @@
-import AdminUserList from '@/components/app/admin-user-list';
+import UserList from '@/components/app/admin/users/list';
 import AdminLayout from '@/layouts/app/admin/layout';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
@@ -42,7 +42,7 @@ export default function UsersIndex() {
             <AdminLayout fullWidth={true}>
                 <AppContentLayout noMargin={true} fullWidth={true}>
                     {/* Listado paginado de usuarios */}
-                    <AdminUserList users={users.data} previous={users.links.prev} next={users.links.next} />
+                    <UserList users={users.data} previous={users.links.prev} next={users.links.next} />
                 </AppContentLayout>
             </AdminLayout>
         </AppLayout>

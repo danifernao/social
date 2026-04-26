@@ -8,23 +8,20 @@ import { usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Checkbox } from '../ui/checkbox';
-import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
-import ConfirmActionDialog from './admin-confirm-action-dialog';
-import FormErrors from './form-errors';
+import { Checkbox } from '../../../ui/checkbox';
+import { ToggleGroup, ToggleGroupItem } from '../../../ui/toggle-group';
+import FormErrors from '../../form-errors';
+import ConfirmActionDialog from '../actions/confirm-dialog';
 
-interface AdminUserEditFormProps {
-    user: User; // Usuario que se va a gestionar.
+interface UserEditFormProps {
+    user: User;
 }
 
 /**
  * Formulario para la gestión de un usuario.
  */
-export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
-    // Función para traducir los textos de la interfaz.
+export default function UserEditForm({ user }: UserEditFormProps) {
     const { t } = useTranslation();
-
-    // Captura el usuario autenticado proporcionado por Inertia.
     const { auth } = usePage<{ auth: Auth }>().props;
 
     // Mapa de roles con sus descripciones.
