@@ -1,4 +1,4 @@
-import AdminReportBadge from '@/components/app/admin-report-badge';
+import ReportBadge from '@/components/app/admin/reports/badge';
 import Heading from '@/components/kit/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -89,7 +89,7 @@ export default function AdminLayout({ children, fullWidth }: AdminLayoutProps) {
                             >
                                 <Link href={item.href} preserveState={false}>
                                     {item.title}
-                                    {item.name === 'reports' && <AdminReportBadge />}
+                                    {item.name === 'reports' && <ReportBadge />}
                                 </Link>
                             </Button>
                         ))}

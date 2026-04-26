@@ -2,13 +2,12 @@ import { Auth } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { useEcho } from '@laravel/echo-react';
 import { useState } from 'react';
-import CounterBadge from './counter-badge';
+import CounterBadge from '../../counter-badge';
 
 /**
  * Badge con la cantidad de reportes pendientes.
  */
-export default function AdminReportBadge() {
-    // Captura el usuario autenticado y el contador inicial de reportes pendientes.
+export default function ReportBadge() {
     const { auth, pendingReportsCount } = usePage<{
         auth: Auth;
         pendingReportsCount: number;

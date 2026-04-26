@@ -4,10 +4,10 @@ import { formatDate } from '@/lib/utils';
 import { Report } from '@/types/modules/report';
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import AdminReportNote from './admin-report-note';
-import AdminTablePagination from './admin-table-pagination';
+import AdminTablePagination from '../../admin-table-pagination';
+import ReportNote from './note';
 
-interface AdminReportListProps {
+interface ReportListProps {
     status: 'open' | 'closed'; // Estado de los reportes.
     reports: Report[]; // Listado de reportes.
     previous: string | null; // URL de la página anterior para la paginación.
@@ -17,8 +17,7 @@ interface AdminReportListProps {
 /**
  * Listado administrativo de reportes.
  */
-export default function AdminReportList({ status, reports, previous, next }: AdminReportListProps) {
-    // Función para traducir los textos de la interfaz.
+export default function ReportList({ status, reports, previous, next }: ReportListProps) {
     const { t } = useTranslation();
 
     // Mapa de etiquetas traducidas para los tipos de reportes.
@@ -110,7 +109,7 @@ export default function AdminReportList({ status, reports, previous, next }: Adm
 
                                     {/* Motivo del reporte */}
                                     <TableCell className="text-center">
-                                        <AdminReportNote report={report} userType="reporter" />
+                                        <ReportNote report={report} userType="reporter" />
                                     </TableCell>
 
                                     {/* Fecha de creación */}
@@ -131,7 +130,7 @@ export default function AdminReportList({ status, reports, previous, next }: Adm
 
                                             {/* Nota de resolución */}
                                             <TableCell className="text-center">
-                                                <AdminReportNote report={report} userType="resolver" />
+                                                <ReportNote report={report} userType="resolver" />
                                             </TableCell>
 
                                             {/* Fecha de cierre */}

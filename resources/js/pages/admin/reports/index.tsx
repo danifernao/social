@@ -1,5 +1,5 @@
-import AdminReportList from '@/components/app/admin-report-list';
-import AdminReportListSearchBar from '@/components/app/admin-report-list-search-bar';
+import ReportList from '@/components/app/admin/reports/list';
+import ReportSearchBar from '@/components/app/admin/reports/search-bar';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AdminLayout from '@/layouts/app/admin/layout';
 import AppLayout from '@/layouts/kit/app-layout';
@@ -50,7 +50,7 @@ export default function ReportsIndex() {
             <AdminLayout fullWidth>
                 <AppContentLayout noMargin fullWidth>
                     {/* Barra de búsqueda */}
-                    <AdminReportListSearchBar />
+                    <ReportSearchBar />
 
                     {/* Pestañas */}
                     <Tabs value={status} onValueChange={handleStatusChange}>
@@ -61,7 +61,7 @@ export default function ReportsIndex() {
                     </Tabs>
 
                     {/* Tabla */}
-                    <AdminReportList status={status} reports={reports.data} previous={reports.links.prev} next={reports.links.next} />
+                    <ReportList status={status} reports={reports.data} previous={reports.links.prev} next={reports.links.next} />
                 </AppContentLayout>
             </AdminLayout>
         </AppLayout>

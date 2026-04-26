@@ -7,8 +7,7 @@ import { useTranslation } from 'react-i18next';
 /**
  * Barra de búsqueda para reportes.
  */
-export default function AdminReportListSearchBar() {
-    // Función para traducir los textos de la interfaz.
+export default function ReportSearchBar() {
     const { t } = useTranslation();
 
     // Obtiene los parámetros de consulta pasado por URL.

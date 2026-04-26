@@ -1,10 +1,10 @@
 import { Report } from '@/types/modules/report';
 import { MessageSquareOff, MessageSquareText } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../ui/button';
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { Button } from '../../../ui/button';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../../../ui/dialog';
 
-interface AdminReportNoteProps {
+interface ReportNoteProps {
     report: Report;
     userType: 'reporter' | 'resolver';
 }
@@ -12,8 +12,7 @@ interface AdminReportNoteProps {
 /**
  * Botón y diálogo para ver la nota agregada en los reportes.
  */
-export default function AdminReportNote({ report, userType }: AdminReportNoteProps) {
-    // Función para traducir los textos de la interfaz.
+export default function ReportNote({ report, userType }: ReportNoteProps) {
     const { t } = useTranslation();
 
     // Determina si el tipo de usuario corresponde a quien realizó el reporte.

@@ -4,11 +4,11 @@ import { Report } from '@/types/modules/report';
 import { Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card';
-import AdminReportItemCloseDialog from './admin-report-item-close-dialog';
-import RichTextRenderer from './rich-text-renderer';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../../ui/card';
+import RichTextRenderer from '../../rich-text-renderer';
+import CloseReportDialog from './close-dialog';
 
-interface AdminReportItemProps {
+interface ReportItemProps {
     report: Report;
     related: {
         data: Report[];
@@ -18,8 +18,7 @@ interface AdminReportItemProps {
 /**
  * Información de un reporte.
  */
-export default function AdminReportItem({ report, related }: AdminReportItemProps) {
-    // Función para traducir los textos de la interfaz.
+export default function ReportItem({ report, related }: ReportItemProps) {
     const { t } = useTranslation();
 
     // Controla la visibilidad del diálogo de cerrar reporte.
@@ -194,7 +193,7 @@ export default function AdminReportItem({ report, related }: AdminReportItemProp
             </Card>
 
             {/* Diálogo para cerrar el reporte */}
-            <AdminReportItemCloseDialog open={closeOpen} onOpenChange={setCloseOpen} reportId={report.id} />
+            <CloseReportDialog open={closeOpen} onOpenChange={setCloseOpen} reportId={report.id} />
         </>
     );
 }

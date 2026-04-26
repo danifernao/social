@@ -2,7 +2,7 @@ import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, Sideba
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import AdminReportBadge from '../app/admin-report-badge';
+import ReportBadge from '../app/admin/reports/badge';
 import NotificationBadge from '../app/notification-badge';
 
 export function NavMain({ items = [] }: { items: NavItem[] }) {
@@ -22,7 +22,7 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                                 {item.icon && <item.icon />}
                                 <span>{item.title}</span>
                                 {item.name === 'notifications' && <NotificationBadge />}
-                                {item.name === 'settings' && <AdminReportBadge />}
+                                {item.name === 'settings' && <ReportBadge />}
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

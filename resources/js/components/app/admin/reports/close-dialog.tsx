@@ -7,24 +7,18 @@ import { LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import FormErrors from './form-errors';
+import FormErrors from '../../form-errors';
 
-interface AdminReportItemCloseDialogProps {
-    // Controla si el diálogo está abierto.
-    open: boolean;
-
-    // Callback para abrir o cerrar el diálogo.
-    onOpenChange: (open: boolean) => void;
-
-    // ID del reporte.
-    reportId: number;
+interface CloseReportDialogProps {
+    open: boolean; // Controla si el diálogo está abierto.
+    onOpenChange: (open: boolean) => void; // Callback para abrir o cerrar el diálogo.
+    reportId: number; // ID del reporte.
 }
 
 /**
  * Diálogo para cerrar un reporte administrativo.
  */
-export default function AdminReportItemCloseDialog({ open, onOpenChange, reportId }: AdminReportItemCloseDialogProps) {
-    // Función para traducir los textos de la interfaz.
+export default function CloseReportDialog({ open, onOpenChange, reportId }: CloseReportDialogProps) {
     const { t } = useTranslation();
 
     // Errores de validación.
