@@ -3,7 +3,7 @@ import type { User } from '@/types';
 import { Media } from '@/types/modules/media';
 import { DialogDescription } from '@radix-ui/react-dialog';
 import { useTranslation } from 'react-i18next';
-import MediaDialogAlbum from './media-dialog-album';
+import MediaAlbum from './album';
 
 interface MediaDialogProps {
     open: boolean;
@@ -17,7 +17,6 @@ interface MediaDialogProps {
  * Diálogo que muestra el historial de archivos multimedia subidos por un usuario.
  */
 export default function MediaDialog({ open, user, type, onClose, onSelect }: MediaDialogProps) {
-    // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
     return (
@@ -28,7 +27,7 @@ export default function MediaDialog({ open, user, type, onClose, onSelect }: Med
                     <DialogDescription>{t('use_or_delete_your_uploaded_files')}</DialogDescription>
                 </DialogHeader>
 
-                <MediaDialogAlbum
+                <MediaAlbum
                     user={user}
                     type={type}
                     onSelect={(media: Media) => {

@@ -43,7 +43,7 @@ import { Input } from '../../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 import { Separator } from '../../ui/separator';
 import EmojiPicker from '../emoji-picker';
-import MediaDialog from '../media-dialog';
+import MediaDialog from '../media/dialog';
 
 interface RichTextToolbarProps {
     user: User; // Usuario autenticado.

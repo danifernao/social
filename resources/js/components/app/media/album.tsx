@@ -5,10 +5,10 @@ import { LoaderCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import ListLoadMore from './list-load-more';
-import MediaDialogGrid from './media-dialog-album-grid';
+import ListLoadMore from '../list-load-more';
+import MediaAlbumGrid from './album-grid';
 
-interface MediaDialogAlbumProps {
+interface MediaAlbumProps {
     user: User; // Usuario propietario del álbum.
     type: 'image' | 'video'; // Tipo de archivos a mostrar en el álbum.
     onSelect: (media: Media) => void; // Callback para seleccionar un archivo del álbum.
@@ -19,8 +19,7 @@ interface MediaDialogAlbumProps {
  * Permite paginar a través de los archivos y eliminar aquellos que ya no
  * se deseen tener en el álbum.
  */
-export default function MediaDialogAlbum({ user, type, onSelect }: MediaDialogAlbumProps) {
-    // Función para traducir los textos de la interfaz.
+export default function MediaAlbum({ user, type, onSelect }: MediaAlbumProps) {
     const { t } = useTranslation();
 
     // Estados que contiene la lista de metadatos de los archivos multimedia.
@@ -98,7 +97,7 @@ export default function MediaDialogAlbum({ user, type, onSelect }: MediaDialogAl
             {items.length ? (
                 <>
                     {/* Parrilla de archivos */}
-                    <MediaDialogGrid items={items} onDelete={handleDelete} onSelect={onSelect} />
+                    <MediaAlbumGrid items={items} onDelete={handleDelete} onSelect={onSelect} />
 
                     {/* Cargar más */}
                     <ListLoadMore type="media" cursor={nextCursor} isProcessing={processing} onClick={loadMore} autoClick={false} />

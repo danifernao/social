@@ -3,7 +3,7 @@ import type { Media } from '@/types/modules/media';
 import { FileX, LoaderCircle, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-interface MediaDialogGridProps {
+interface MediaAlbumGridProps {
     items: Media[]; // Lista de archivos multimedia a mostrar en la parrilla.
     onDelete: (elem: HTMLButtonElement, id: number) => void; // Callback para eliminar un archivo del álbum.
     onSelect: (media: Media) => void; // Callback para seleccionar un archivo del álbum.
@@ -12,7 +12,7 @@ interface MediaDialogGridProps {
 /**
  * Parrilla que muestra los archivos multimedia subidos por un usuario.
  */
-export default function MediaDialogAlbumGrid({ items, onDelete, onSelect }: MediaDialogGridProps) {
+export default function MediaAlbumGrid({ items, onDelete, onSelect }: MediaAlbumGridProps) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
