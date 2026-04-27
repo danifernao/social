@@ -1,7 +1,6 @@
 import remarkCustomDirectives from '@/lib/remark-custom-directives';
 import remarkHashtag from '@/lib/remark-hashtag';
 import remarkMention from '@/lib/remark-mention';
-import remarkStrike from '@/lib/remark-strike';
 import { cn } from '@/lib/utils';
 import { EntryType } from '@/types';
 import { Link } from '@inertiajs/react';
@@ -11,6 +10,7 @@ import type { Components } from 'react-markdown';
 import Markdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import remarkDirective from 'remark-directive';
+import remarkGfm from 'remark-gfm';
 import { Button } from '../../ui/button';
 
 interface RichTextRendererProps {
@@ -239,14 +239,7 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
             {/* Contenedor del contenido con altura controlada */}
             <div ref={contentRef} className={cn(baseClass, expanded || forceExpanded.current ? 'max-h-full' : 'max-h-[600px]')}>
                 <Markdown
-                    remarkPlugins={[
-                        remarkStrike,
-                        remarkBreaks,
-                        remarkDirective,
-                        remarkCustomDirectives,
-                        remarkMention,
-                        [remarkHashtag, { entryType }],
-                    ]}
+                    remarkPlugins={[remarkGfm, remarkBreaks, remarkDirective, remarkCustomDirectives, remarkMention, [remarkHashtag, { entryType }]]}
                     allowedElements={[
                         'p',
                         'span',
