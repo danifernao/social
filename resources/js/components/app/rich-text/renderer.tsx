@@ -160,8 +160,17 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
             if (type === 'inline') {
                 return (
                     <span
-                        onClick={() => setShow(!show)}
-                        className="cursor-pointer rounded bg-gray-800 px-1 transition-colors duration-300"
+                        onClick={(e) => {
+                            if (!show) {
+                                setShow(true);
+                                e.preventDefault();
+                                e.stopPropagation();
+                            }
+                        }}
+                        className={cn(
+                            'cursor-pointer rounded bg-gray-800 px-1 transition-colors duration-300',
+                            !show && '[&_*]:!text-transparent [&_*]:!no-underline',
+                        )}
                         style={{ color: show ? undefined : '#1f2937' }}
                     >
                         {children}

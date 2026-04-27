@@ -138,12 +138,7 @@ export default function remarkCustomDirectives() {
 
           // Se obtiene el primer hijo, que se espera contenga la URL.
           const firstChild = imgNode.children?.[0];
-
-          // Si el hijo existe y es un nodo literal,
-          // se extrae el valor como URL de la imagen.
-          if (firstChild && isLiteral(firstChild)) {
-              src = firstChild.value;
-          }
+          src = extractDirectiveValue(firstChild);
 
           // Obtiene los atributos.
           const attrs = imgNode.attributes || {};
@@ -175,12 +170,7 @@ export default function remarkCustomDirectives() {
 
           // Se obtiene el primer hijo, que se espera contenga la URL.
           const firstChild =videoNode.children?.[0];
-          
-          // Si el hijo existe y es un nodo literal,
-          // se extrae el valor como URL del video.
-          if (firstChild && isLiteral(firstChild)) {
-              url = firstChild.value;
-          }
+          url = extractDirectiveValue(firstChild);
 
           // Obtiene los atributos.
           const attrs = videoNode.attributes || {};
@@ -230,6 +220,32 @@ export default function remarkCustomDirectives() {
       }
     });
   };
+}
+
+/**
+ * Extrae el contenido textual de una directiva Markdown.
+ */
+function extractDirectiveValue(node?: Node): string {
+  if (!node) {
+    return '';
+  }
+
+  // Texto plano normal.
+  if ('value' in node && typeof node.value === 'string') {
+    return node.value;
+  }
+
+  // URL transformada por autolink de remark-gfm.
+  if (node.type === 'link' && 'url' in node && typeof node.url === 'string') {
+    return node.url;
+  }
+
+  // Si tiene hijos, concatena su contenido.
+  if ('children' in node && Array.isArray(node.children)) {
+    return node.children.map(extractDirectiveValue).join('');
+  }
+
+  return '';
 }
 
 /**
