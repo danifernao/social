@@ -141,6 +141,18 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
         ol: ({ children }) => <ol className="mb-4 list-inside list-decimal pl-4 last:mb-0">{children}</ol>,
         li: ({ children }) => <li>{children}</li>,
 
+        // Renderiza tablas.
+        table: ({ children }) => (
+            <div className="mb-4 overflow-x-auto rounded-lg border last:mb-0">
+                <table className="w-full">{children}</table>
+            </div>
+        ),
+        thead: ({ children }) => <thead className="bg-muted">{children}</thead>,
+        tbody: ({ children }) => <tbody>{children}</tbody>,
+        tr: ({ children }) => <tr className="border-b text-sm last:border-0">{children}</tr>,
+        th: ({ children }) => <th className="px-4 py-3 text-left font-semibold">{children}</th>,
+        td: ({ children }) => <td className="px-4 py-3 align-top">{children}</td>,
+
         // Maneja bloques de contenido oculto definidos mediante directivas.
         hidden: ({ type, children }) => {
             const [show, setShow] = useState(false);
@@ -239,7 +251,7 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
             {/* Contenedor del contenido con altura controlada */}
             <div ref={contentRef} className={cn(baseClass, expanded || forceExpanded.current ? 'max-h-full' : 'max-h-[600px]')}>
                 <Markdown
-                    remarkPlugins={[remarkGfm, remarkBreaks, remarkDirective, remarkCustomDirectives, remarkMention, [remarkHashtag, { entryType }]]}
+                    remarkPlugins={[remarkBreaks, remarkDirective, remarkCustomDirectives, remarkMention, [remarkHashtag, { entryType }], remarkGfm]}
                     allowedElements={[
                         'p',
                         'span',
@@ -266,6 +278,12 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
                         'video',
                         'del',
                         'div',
+                        'table',
+                        'thead',
+                        'tbody',
+                        'tr',
+                        'th',
+                        'td',
                     ]}
                     components={components}
                 >

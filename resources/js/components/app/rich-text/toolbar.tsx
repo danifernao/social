@@ -33,6 +33,7 @@ import {
     SquareCode,
     SquarePlay,
     Strikethrough,
+    Table,
     Upload,
 } from 'lucide-react';
 import React, { ChangeEvent, useRef, useState } from 'react';
@@ -476,6 +477,9 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
         }
     };
 
+    // Inserta tabla.
+    const onTable = () => insertBlock('| H1 | H2 | H3 |\n|---|---|---|\n| A1 | A2 | A3 |\n| B1 | B2 | B3 |', 2, 2);
+
     // Inserta texto oculto en línea.
     const onHiddenInline = () =>
         applyOrInsert({
@@ -570,6 +574,11 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
             {/* Separador horizontal */}
             <Button type="button" variant="ghost" className="h-8 w-8" title={t('insert_separator')} onClick={onSeparator}>
                 <Minus />
+            </Button>
+
+            {/* Tabla */}
+            <Button type="button" variant="ghost" className="h-8 w-8" title={t('insert_table')} onClick={onTable}>
+                <Table />
             </Button>
 
             <Separator orientation="vertical" className="h-6" />
