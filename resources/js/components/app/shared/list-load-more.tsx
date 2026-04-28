@@ -26,6 +26,9 @@ export default function ListLoadMore({ type, cursor, isProcessing, autoClick = t
     // en el área visible del navegador.
     const ref = useRef<HTMLButtonElement | null>(null);
 
+    // Referencia para mantener actualizado el callback de carga.
+    const onClickRef = useRef(onClick);
+
     // Mapa que asocia cada tipo de lista con la clave de su
     // traducción correspondiente.
     const listType = {
@@ -47,7 +50,7 @@ export default function ListLoadMore({ type, cursor, isProcessing, autoClick = t
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
-                    onClick();
+                    onClickRef.current();
                 }
             },
             {
@@ -61,7 +64,12 @@ export default function ListLoadMore({ type, cursor, isProcessing, autoClick = t
         return () => {
             observer.disconnect();
         };
-    }, [isProcessing]);
+    }, [isProcessing, autoClick]);
+
+    // Sincroniza la referencia mutable con el callback actual.
+    useEffect(() => {
+        onClickRef.current = onClick;
+    }, [onClick]);
 
     return (
         // Botón para cargar más elementos.
