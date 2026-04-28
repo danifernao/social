@@ -18,7 +18,7 @@ i18n.use(initReactI18next).init({
 
 i18n.currentLang = i18n.resolvedLanguage ?? "en";
 
-i18n.on("languageChanged", (_) => {
+i18n.on("languageChanged", () => {
   i18n.currentLang = i18n.resolvedLanguage ?? "en";
 });
 

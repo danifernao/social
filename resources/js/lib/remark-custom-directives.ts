@@ -1,6 +1,5 @@
 import { visit } from 'unist-util-visit';
-import { VFile } from 'vfile';
-import { Root, Node, Literal, Image } from 'mdast';
+import { Root, Node } from 'mdast';
 import {
   TextDirective,
   LeafDirective,
@@ -44,18 +43,11 @@ function isDirective(node: Node): node is DirectiveNode {
   );
 }
 
-// Verifica si un nodo contiene un valor literal.
-// Se utiliza principalmente para extraer texto plano desde nodos hijos
-function isLiteral(node: Node): node is Literal {
-  return 'value' in node;
-}
-
-
 /**
  * Plugin remark que transforma directivas Markdown personalizadas en nodos HTML.
  */
 export default function remarkCustomDirectives() {
-  return (tree: Root, file: VFile) => {
+  return (tree: Root) => {
 
     // Recorre todos los nodos del árbol Markdown.
     visit(tree, (node: Node) => {

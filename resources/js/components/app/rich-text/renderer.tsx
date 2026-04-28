@@ -63,7 +63,7 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
 
     // Definición de componentes personalizados utilizados por react-markdown.
     const components: ExtendedComponents = {
-        p: ({ node, children }) => <p className="mb-4 last:mb-0">{children}</p>,
+        p: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
         strong: ({ children }) => <strong>{children}</strong>,
         em: ({ children }) => <em>{children}</em>,
         del: ({ children }) => <del className="line-through">{children}</del>,
@@ -78,7 +78,7 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
 
         // Renderiza enlaces internos con Inertia y enlaces externos
         // usando etiquetas <a> estándar.
-        a: ({ href, node, children }) => {
+        a: ({ href, children }) => {
             if (!href) return <>{children}</>;
 
             const handleClick: MouseEventHandler<Element> = (e) => {

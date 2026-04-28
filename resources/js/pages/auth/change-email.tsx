@@ -14,7 +14,7 @@ import { Trans, useTranslation } from 'react-i18next';
  * Vista que permite al usuario cambiar su dirección
  * de correo electrónico antes de la verificación del mismo.
  */
-export default function ChangeEmail({ status }: { status?: string }) {
+export default function ChangeEmail() {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 

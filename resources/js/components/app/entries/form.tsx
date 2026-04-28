@@ -36,7 +36,7 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
 
     // Captura el usuario autenticado y las páginas estáticas
     // especiales proporcionados por Inertia.
-    const { auth, specialPages, routeName } = usePage<{ auth: Auth; specialPages: SpecialPages; routeName: string }>().props;
+    const { auth, specialPages } = usePage<{ auth: Auth; specialPages: SpecialPages }>().props;
 
     // Referencia al elemento textarea del formulario.
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -54,14 +54,14 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
     const selectionRef = useRef<{ start: number; end: number } | null>(null);
 
     // Hook para gestionar la visibilidad de una publicación.
-    const { visibility, changeVisibility, isCreatePost } = usePostVisibility({
+    const { visibility, changeVisibility } = usePostVisibility({
         formType,
         entry: entry as Post | undefined,
         profileUserId,
     });
 
     // Hook para gestionar datos del formulario, errores y estados.
-    const { data, setData, post, patch, processing, errors, reset } = useForm({
+    const { data, setData, post, patch, processing, errors } = useForm({
         content: '',
         visibility,
         profile_user_id: profileUserId,
