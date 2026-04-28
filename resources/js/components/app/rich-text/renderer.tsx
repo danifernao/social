@@ -87,11 +87,12 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
 
             if (href.startsWith('/')) {
                 return (
-                    <Link href={href ?? '#'} onClick={handleClick} className="text-blue-600 hover:underline">
+                    <Link href={href} onClick={handleClick} className="text-blue-600 hover:underline">
                         {children}
                     </Link>
                 );
             }
+
             return (
                 <a href={href} className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
                     {children}
