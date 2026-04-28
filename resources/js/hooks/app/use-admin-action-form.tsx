@@ -1,5 +1,5 @@
 import { useForm } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
@@ -82,7 +82,7 @@ export function useAdminActionForm<T extends Record<string, any>>({
      * Envía los datos. Permite ejecutar un callback opcional tras
      * una respuesta exitosa.
      */
-    const sendData = () => {
+    const sendData = useCallback(() => {
         form.patch(typeof formRoute === 'function' ? formRoute() : formRoute, {
             preserveScroll: true,
             onSuccess: (page) => {
@@ -100,7 +100,7 @@ export function useAdminActionForm<T extends Record<string, any>>({
                 onFinish?.();
             },
         });
-    };
+    }, [form, formRoute, onSuccess, onFinish, t]);
 
     /**
      * Cierra el diálogo de confirmación, limpia la acción pendiente
@@ -120,7 +120,7 @@ export function useAdminActionForm<T extends Record<string, any>>({
         if (form.data.action) {
             sendData();
         }
-    }, [form.data.action]);
+    }, [form.data.action, sendData]);
 
     /**
      * Expone los valores y funciones necesarias para su consumo externo.
