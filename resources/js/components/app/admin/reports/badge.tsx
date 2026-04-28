@@ -13,18 +13,26 @@ export default function ReportBadge() {
         pendingReportsCount: number;
     }>().props;
 
-    // Estado local que almacena la cantidad actual de reportes pendientes.
-    const [pendingCount, setPendingCount] = useState<number>(pendingReportsCount);
-
     // Si no existe un usuario autenticado o el usuario
     // no tiene permisos de moderación, no se muestra el badge.
     if (!auth.user || !['admin', 'mod'].includes(auth.user.role)) {
         return null;
     }
 
+    return <ReportBadgeListener initialCount={pendingReportsCount} />;
+}
+
+/**
+ * Componente encargado de escuchar actualizaciones
+ * en tiempo real sobre reportes pendientes.
+ */
+function ReportBadgeListener({ initialCount }: { initialCount: number }) {
+    // Estado local que almacena la cantidad actual de reportes pendientes.
+    const [pendingCount, setPendingCount] = useState<number>(initialCount);
+
     // Se suscribe al canal privado de reportes.
-    // Escucha el evento que informa cambios en el número de reportes pendientes
-    // y actualiza el estado local en tiempo real.
+    // Cada vez que llega un evento con el nuevo conteo,
+    // se actualiza el estado local.
     useEcho('reports', ['.PendingReportsCountUpdated'], (event: { pending_count: number }) => {
         setPendingCount(event.pending_count);
     });
