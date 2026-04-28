@@ -25,6 +25,7 @@ import {
     Link2,
     List,
     ListOrdered,
+    ListTodo,
     LoaderCircle,
     Minus,
     PaintBucket,
@@ -477,6 +478,20 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
         }
     };
 
+    // Inserta lista de tareas.
+    const onTaskList = () => {
+        const sel = getSelection();
+
+        if (sel && sel.start !== sel.end) {
+            const lines = sel.value.split(/\r?\n/);
+            const replaced = lines.map((ln) => `- [ ] ${ln}`).join('\n');
+
+            insertBlock(replaced, 1, 2);
+        } else {
+            insertBlock(`- [ ] ${t('first_task')}\n- [ ] ${t('second_task')}\n- [x] ${t('completed_task')}`, 2, 2);
+        }
+    };
+
     // Inserta tabla.
     const onTable = () => insertBlock('| H1 | H2 | H3 |\n|---|---|---|\n| A1 | A2 | A3 |\n| B1 | B2 | B3 |', 2, 2);
 
@@ -620,6 +635,9 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                     </Button>
                     <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onUnorderedList}>
                         <List /> {t('unordered_list')}
+                    </Button>
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onTaskList}>
+                        <ListTodo /> {t('task_list')}
                     </Button>
                 </PopoverContent>
             </Popover>

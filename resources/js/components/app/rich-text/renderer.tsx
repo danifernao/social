@@ -139,7 +139,10 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
 
         ul: ({ children }) => <ul className="mb-4 list-inside list-disc pl-4 last:mb-0">{children}</ul>,
         ol: ({ children }) => <ol className="mb-4 list-inside list-decimal pl-4 last:mb-0">{children}</ol>,
-        li: ({ children }) => <li>{children}</li>,
+        li: ({ children, className }) => {
+            const isTask = className?.includes('task-list-item');
+            return <li className={cn(isTask ? 'flex list-none items-start gap-2' : '')}>{children}</li>;
+        },
 
         // Renderiza tablas.
         table: ({ children }) => (
@@ -152,6 +155,11 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
         tr: ({ children }) => <tr className="border-b text-sm last:border-0">{children}</tr>,
         th: ({ children }) => <th className="px-4 py-3 text-left font-semibold">{children}</th>,
         td: ({ children }) => <td className="px-4 py-3 align-top">{children}</td>,
+
+        // Renderiza casillas de verificación de listas de tareas como elementos deshabilitados.
+        input: ({ checked }) => {
+            return <input type="checkbox" checked={checked} disabled className="mt-1 h-4 w-4" />;
+        },
 
         // Maneja bloques de contenido oculto definidos mediante directivas.
         hidden: ({ type, children }) => {
@@ -293,6 +301,7 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
                         'tr',
                         'th',
                         'td',
+                        'input',
                     ]}
                     components={components}
                 >
