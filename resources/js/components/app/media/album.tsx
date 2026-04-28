@@ -31,11 +31,11 @@ export default function MediaAlbum({ user, type, onSelect }: MediaAlbumProps) {
     const [loading, setLoading] = useState(true);
     const [processing, setProcessing] = useState(false);
 
-    // Referencia para evitar llamadas concurrentes a la función fecthItems.
+    // Referencia para evitar llamadas concurrentes a la función fetchItems.
     const processingRef = useRef(false);
 
     // Obtiene la lista de metadatos de los archivos multimedia del usuario.
-    const fecthItems = useCallback(
+    const fetchItems = useCallback(
         (cursor: string | null = null) => {
             if (processingRef.current) {
                 return;
@@ -69,7 +69,7 @@ export default function MediaAlbum({ user, type, onSelect }: MediaAlbumProps) {
     // Cargar más elementos de la lista.
     const loadMore = () => {
         if (!nextCursor || processing) return;
-        fecthItems(nextCursor);
+        fetchItems(nextCursor);
     };
 
     // Elimina un archivo multimedia del álbum.
@@ -93,8 +93,8 @@ export default function MediaAlbum({ user, type, onSelect }: MediaAlbumProps) {
     };
 
     useEffect(() => {
-        fecthItems();
-    }, [fecthItems]);
+        fetchItems();
+    }, [fetchItems]);
 
     useEffect(() => {
         processingRef.current = processing;
