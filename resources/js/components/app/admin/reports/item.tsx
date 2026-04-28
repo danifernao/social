@@ -52,14 +52,11 @@ export default function ReportItem({ report, related }: ReportItemProps) {
     const getReportableText = () => {
         switch (report.reportable_type) {
             case 'user':
-                const user_snapshot = report.reportable_snapshot as User;
-                return report.reportable_exists ? t('user') : t('deleted_user_no', { id: user_snapshot.id });
+                return report.reportable_exists ? t('user') : t('deleted_user_no', { id: (report.reportable_snapshot as User).id });
             case 'post':
-                const post_snapshot = report.reportable_snapshot as Post;
-                return report.reportable_exists ? t('single_post') : t('deleted_post_no', { id: post_snapshot.id });
+                return report.reportable_exists ? t('single_post') : t('deleted_post_no', { id: (report.reportable_snapshot as Post).id });
             case 'comment':
-                const comment_snapshot = report.reportable_snapshot as Comment;
-                return report.reportable_exists ? t('single_comment') : t('deleted_comment_no', { id: comment_snapshot.id });
+                return report.reportable_exists ? t('single_comment') : t('deleted_comment_no', { id: (report.reportable_snapshot as Comment).id });
         }
     };
 
