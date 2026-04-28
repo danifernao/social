@@ -47,7 +47,7 @@ export default function PagesIndex() {
         if (message) {
             toast.message(message);
         }
-    }, []);
+    }, [message]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
