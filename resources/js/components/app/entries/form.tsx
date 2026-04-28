@@ -41,11 +41,8 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
     // Referencia al elemento textarea del formulario.
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    // Determina el tipo de formulario según el contexto.
+    // Determina el tipo de formulario.
     const formType = entry ? (entry.type === 'post' ? 'post' : 'comment') : postId ? 'comment' : 'post';
-
-    // Almacena la entrada retornada tras el envío del formulario.
-    const [entryFromResponse, setEntryFromResponse] = useState<Entry>();
 
     // Estado para alternar vista previa.
     const [previewMode, setPreviewMode] = useState(false);
@@ -87,8 +84,14 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
                 // Obtiene la entrada creada o actualizada desde la respuesta.
                 const pageProp = formType === 'post' ? (page.props.post as Post) : (page.props.comment as Comment);
 
-                // Guarda la entrada para notificar al contexto.
-                setEntryFromResponse(pageProp);
+                // Determina la acción a ejecutar en el contexto.
+                const action = entry ? 'update' : 'create';
+
+                // Informa al contexto del cambio realizado.
+                updateEntryList?.(action, pageProp);
+
+                // Ejecuta el callback externo si existe.
+                onSubmit?.();
 
                 // Limpia el contenido del formulario.
                 setData('content', '');
@@ -105,36 +108,15 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
         e.preventDefault();
     };
 
-    // Notifica al contexto cuando se recibe una nueva entrada.
-    useEffect(() => {
-        if (entryFromResponse) {
-            const action = entry ? 'update' : 'create';
-
-            // Informa al contexto del cambio realizado.
-            updateEntryList?.(action, entryFromResponse);
-
-            // Ejecuta el callback externo si existe.
-            onSubmit?.();
-        }
-    }, [entryFromResponse]);
-
     // Precarga el contenido cuando se edita una entrada existente.
     useEffect(() => {
         if (entry) {
             setData('content', entry.content);
-
             if (formType === 'post') {
                 setData('visibility', (entry as Post).visibility ?? 'public');
             }
         }
-    }, [entry]);
-
-    // Guarda la visibilidad de la publicación en el formulario.
-    useEffect(() => {
-        if (formType === 'post') {
-            setData('visibility', visibility);
-        }
-    }, [visibility]);
+    }, [entry, formType, setData]);
 
     // Restaura la posición del cursor al cambiar entre vista previa y edición.
     useEffect(() => {
@@ -212,7 +194,10 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
                                         {/* Visibilidad de la publicación */}
                                         <EntryPostVisibilityDropdown
                                             value={visibility as PostVisibility}
-                                            onChange={(value) => changeVisibility(value)}
+                                            onChange={(value) => {
+                                                changeVisibility(value);
+                                                setData('visibility', value);
+                                            }}
                                             variant="outline"
                                             iconSize={16}
                                         />
