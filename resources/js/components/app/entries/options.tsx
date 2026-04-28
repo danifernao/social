@@ -193,7 +193,7 @@ export default function EntryOptions({ entry }: EntryOptionsProps) {
                     {/* Opción para silenciar o dejar de silenciar las notificaciones asociadas a la publicación */}
                     {entry.type === 'post' && (
                         <DropdownMenuItem asChild>
-                            <Button variant="ghost" className="w-full justify-start" onClick={toggleMute}>
+                            <Button variant="ghost" className="w-full justify-start" disabled={isTogglingMute} onClick={toggleMute}>
                                 {isMuted ? t('unmute_post') : t('mute_post')}
                             </Button>
                         </DropdownMenuItem>
