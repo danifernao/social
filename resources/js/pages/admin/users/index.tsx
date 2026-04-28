@@ -32,7 +32,7 @@ export default function UsersIndex() {
         if (message) {
             toast.message(message);
         }
-    }, []);
+    }, [message]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
