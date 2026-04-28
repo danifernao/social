@@ -262,7 +262,7 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
 
         // Limpia el observador al desmontar el componente.
         return () => observer.disconnect();
-    }, [text]);
+    }, [text, alwaysExpanded]);
 
     return (
         <div className="relative">
