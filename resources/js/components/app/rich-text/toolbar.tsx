@@ -439,7 +439,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     const onInlineCode = () =>
         applyOrInsert({
             fnWhenSelected: (s) => `\`${s}\``,
-            fallback: `\`${t('text')}\``,
+            fallback: '`while(1);`',
         });
 
     // Inserta bloque de código.
@@ -447,7 +447,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
         const sel = getSelection();
         const content = sel && sel.start !== sel.end ? sel.value : t('text');
 
-        insertBlock(`\`\`\`\n${content}\n\`\`\``);
+        insertBlock('```\nwhile(1);\n```');
     };
 
     // Inserta lista ordenada.
@@ -586,78 +586,15 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                 </PopoverContent>
             </Popover>
 
-            {/* Separador horizontal */}
-            <Button type="button" variant="ghost" className="h-8 w-8" title={t('insert_separator')} onClick={onSeparator}>
-                <Minus />
-            </Button>
-
-            {/* Tabla */}
-            <Button type="button" variant="ghost" className="h-8 w-8" title={t('insert_table')} onClick={onTable}>
-                <Table />
-            </Button>
-
-            <Separator orientation="vertical" className="h-6" />
-
             {/* Cita en bloque */}
             <Button type="button" variant="ghost" className="h-8 w-8" title={t('quote')} onClick={onQuote}>
                 <Quote />
             </Button>
 
-            {/* Código */}
-            <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant="ghost" title={t('insert_code')} className="data-[state=open]:bg-accent h-8 w-8">
-                        <Code />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
-                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onInlineCode}>
-                        <Code />
-                        {t('inline_code')}
-                    </Button>
-                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onCodeBlock}>
-                        <SquareCode />
-                        {t('code_block')}
-                    </Button>
-                </PopoverContent>
-            </Popover>
-
-            {/* Lista */}
-            <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant="ghost" title={t('insert_list')} className="data-[state=open]:bg-accent h-8 w-8">
-                        <List />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
-                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onOrderedList}>
-                        <ListOrdered /> {t('ordered_list')}
-                    </Button>
-                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onUnorderedList}>
-                        <List /> {t('unordered_list')}
-                    </Button>
-                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onTaskList}>
-                        <ListTodo /> {t('task_list')}
-                    </Button>
-                </PopoverContent>
-            </Popover>
-
-            {/* Contenido oculto */}
-            <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant="ghost" title={t('hide_content')} className="data-[state=open]:bg-accent h-8 w-8">
-                        <EyeOff />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
-                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onHiddenInline}>
-                        <EyeOff /> {t('hidden_text')}
-                    </Button>
-                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onHiddenBlock}>
-                        <CaptionsOff /> {t('hidden_block')}
-                    </Button>
-                </PopoverContent>
-            </Popover>
+            {/* Separador horizontal */}
+            <Button type="button" variant="ghost" className="h-8 w-8" title={t('insert_separator')} onClick={onSeparator}>
+                <Minus />
+            </Button>
 
             <Separator orientation="vertical" className="h-6" />
 
@@ -708,6 +645,71 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                     <Button variant="ghost" className="flex w-full items-center justify-start gap-2" onClick={() => onAlign('justify')}>
                         <AlignJustify />
                         {t('align_justify')}
+                    </Button>
+                </PopoverContent>
+            </Popover>
+
+            <Separator orientation="vertical" className="h-6" />
+
+            {/* Lista */}
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" title={t('insert_list')} className="data-[state=open]:bg-accent h-8 w-8">
+                        <List />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onOrderedList}>
+                        <ListOrdered /> {t('ordered_list')}
+                    </Button>
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onUnorderedList}>
+                        <List /> {t('unordered_list')}
+                    </Button>
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onTaskList}>
+                        <ListTodo /> {t('task_list')}
+                    </Button>
+                </PopoverContent>
+            </Popover>
+
+            {/* Tabla */}
+            <Button type="button" variant="ghost" className="h-8 w-8" title={t('insert_table')} onClick={onTable}>
+                <Table />
+            </Button>
+
+            <Separator orientation="vertical" className="h-6" />
+
+            {/* Código */}
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" title={t('insert_code')} className="data-[state=open]:bg-accent h-8 w-8">
+                        <Code />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
+                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onInlineCode}>
+                        <Code />
+                        {t('inline_code')}
+                    </Button>
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onCodeBlock}>
+                        <SquareCode />
+                        {t('code_block')}
+                    </Button>
+                </PopoverContent>
+            </Popover>
+
+            {/* Contenido oculto */}
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" title={t('hide_content')} className="data-[state=open]:bg-accent h-8 w-8">
+                        <EyeOff />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onHiddenInline}>
+                        <EyeOff /> {t('hidden_text')}
+                    </Button>
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onHiddenBlock}>
+                        <CaptionsOff /> {t('hidden_block')}
                     </Button>
                 </PopoverContent>
             </Popover>
