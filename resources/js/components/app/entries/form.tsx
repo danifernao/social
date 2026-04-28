@@ -242,7 +242,7 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
                                                         </FieldContent>
                                                         <Switch
                                                             id="is-closed"
-                                                            checked={!Boolean(data.is_closed)}
+                                                            checked={!data.is_closed}
                                                             onCheckedChange={(checked) => setData('is_closed', !checked)}
                                                         />
                                                     </Field>

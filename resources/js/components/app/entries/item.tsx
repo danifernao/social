@@ -1,6 +1,5 @@
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
-import { useCanActOnUser, useIsAuthUser } from '@/hooks/app/use-auth';
-import { cn, formatDate } from '@/lib/utils';
+import { canActOnUser, cn, formatDate, isAuthUser } from '@/lib/utils';
 import type { Auth, Entry, Post } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
 import { formatDistanceToNowStrict, Locale } from 'date-fns';
@@ -47,10 +46,10 @@ export default function EntryItem({ entry }: EntryItemProps) {
     const isExternalAuthor = entry.type === 'post' && entry.profile_user_id !== null;
 
     // Determina si el usuario autenticado es el autor de la entrada.
-    const isEntryAuthor = useIsAuthUser(entry.user);
+    const isEntryAuthor = isAuthUser(auth, entry.user);
 
     // Determina si el usuario autenticado puede actualizar la entrada (publicación).
-    const canUpdateEntry = entry.type === 'post' && (isEntryAuthor || useCanActOnUser(entry.user));
+    const canUpdateEntry = entry.type === 'post' && (isEntryAuthor || canActOnUser(auth, entry.user));
 
     // Determina si la entrada se debe mostrar como fijada.
     const isPinned = entry.is_pinned && (routeName === 'profile.show' || (routeName === 'post.show' && entry.type === 'comment'));

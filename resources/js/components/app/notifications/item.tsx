@@ -1,6 +1,5 @@
-import { useIsAuthUser } from '@/hooks/app/use-auth';
-import { formatDate } from '@/lib/utils';
-import type { Notification, User } from '@/types';
+import { formatDate, isAuthUser } from '@/lib/utils';
+import type { Auth, Notification, User } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { formatDistanceToNow, Locale } from 'date-fns';
 import { enUS, es } from 'date-fns/locale';
@@ -20,7 +19,7 @@ export default function NotificationItem({ notification }: NotificationItemProps
 
     // Captura el token CSRF proporcionado por Inertia.
     // Este token es necesario para que Laravel acepte la solicitud PATCH.
-    const { csrfToken } = usePage<{ csrfToken: string }>().props;
+    const { csrfToken, auth } = usePage<{ csrfToken: string; auth: Auth }>().props;
 
     // Referencia del elemento HTML que contiene la notificaión.
     // Esta referencia se usará con IntersectionObserver para detectar cuándo está visible.
@@ -133,7 +132,7 @@ export default function NotificationItem({ notification }: NotificationItemProps
                 {/* Notificación de comentario */}
                 {type === 'comment' &&
                     context &&
-                    (useIsAuthUser({ id: context.author_id } as User) ? (
+                    (isAuthUser(auth, { id: context.author_id } as User) ? (
                         /* Comentario en una publicación propia */
                         <Trans
                             i18nKey="user_has_commented_in_your_post"

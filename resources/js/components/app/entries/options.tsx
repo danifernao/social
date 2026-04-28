@@ -1,6 +1,6 @@
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
-import { useCanActOnUser, useCheckPermission, useIsAuthUser } from '@/hooks/app/use-auth';
-import type { Entry, Post, User } from '@/types';
+import { canActOnUser, hasPermission, isAuthUser } from '@/lib/utils';
+import type { Auth, Entry, Post, User } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { EllipsisVertical } from 'lucide-react';
@@ -24,19 +24,19 @@ export default function EntryOptions({ entry }: EntryOptionsProps) {
     const { t } = useTranslation();
 
     // Captura el nombre de la ruta actual proporcionado por Inertia.
-    const { routeName } = usePage<{ routeName: string }>().props;
+    const { routeName, auth } = usePage<{ routeName: string; auth: Auth }>().props;
 
     // Determina si el usuario autenticado es el autor de la entrada y
     // tiene permiso para actualizarla.
-    const isEntryAuthor = useIsAuthUser(entry.user) && useCheckPermission(entry.type);
+    const isEntryAuthor = isAuthUser(auth, entry.user) && hasPermission(auth, entry.type);
 
     // Determina si el usuario autenticado puede actualizar la entrada.
-    const canUpdateEntry = useCanActOnUser(entry.user);
+    const canUpdateEntry = canActOnUser(auth, entry.user);
 
     // Determina si el usuario autenticado puede fijar la entrada.
     const canPinEntry =
         (routeName === 'profile.show' && entry.type === 'post' && !entry.profile_user_id && (isEntryAuthor || canUpdateEntry)) ||
-        (routeName === 'post.show' && entry.type === 'comment' && (useIsAuthUser({ id: entry.post_user_id } as User) || canUpdateEntry));
+        (routeName === 'post.show' && entry.type === 'comment' && (isAuthUser(auth, { id: entry.post_user_id } as User) || canUpdateEntry));
 
     // Controla la visibilidad del formulario de edición.
     const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);

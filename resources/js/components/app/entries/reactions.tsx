@@ -59,7 +59,7 @@ export default function EntryReactions({ entry }: EntryReactionsProps) {
 
                         // Como es una reacción nueva, elimina cualquier
                         // reacción previa del usuario.
-                        let updated = prev
+                        const updated = prev
                             .map((r) => {
                                 if (previousReaction && r.emoji === previousReaction.emoji) {
                                     return { ...r, count: r.count - 1, reactedByUser: false };

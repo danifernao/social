@@ -1,9 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useCanActOnUser } from '@/hooks/app/use-auth';
-import { formatDate } from '@/lib/utils';
-import { User } from '@/types';
+import { canActOnUser, formatDate } from '@/lib/utils';
+import { Auth, User } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import { SubmitEventHandler, useState } from 'react';
@@ -23,8 +22,11 @@ interface UserListProps {
 export default function UserList({ users, previous, next }: UserListProps) {
     const { t } = useTranslation();
 
-    // Captura la URL actual proporcionada por Inertia.
-    const { url } = usePage();
+    // Captura la URL actual y el usuario autenticado proporcionados por Inertia.
+    const {
+        url,
+        props: { auth },
+    } = usePage<{ auth: Auth }>();
 
     // Obtiene los parámetros de la consulta actual.
     const queryParams = new URLSearchParams(url.split('?')[1]);
@@ -91,8 +93,8 @@ export default function UserList({ users, previous, next }: UserListProps) {
 
     // Devuelve una clase de color si "value" tiene contenido.
     // Verde si el valor tiene contenido, rojo si no lo tiene.
-    const addTextColor = (value: any = null) => {
-        return !!value ? 'text-green-600' : 'text-red-600';
+    const addTextColor = (value: string | boolean | null = null) => {
+        return value ? 'text-green-600' : 'text-red-600';
     };
 
     return (
@@ -190,7 +192,7 @@ export default function UserList({ users, previous, next }: UserListProps) {
 
                                     {/* Acciones */}
                                     <TableCell className="text-center">
-                                        {useCanActOnUser(user) ? (
+                                        {canActOnUser(auth, user) ? (
                                             <Button variant="outline" asChild>
                                                 <Link href={route('admin.user.edit', user.id)}>{t('manage')}</Link>
                                             </Button>

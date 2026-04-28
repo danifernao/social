@@ -3,11 +3,11 @@ import EntryList from '@/components/app/entries/list';
 import ListLoadMore from '@/components/app/shared/list-load-more';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
-import { useCheckPermission } from '@/hooks/app/use-auth';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
-import type { BreadcrumbItem, Post, Posts } from '@/types';
+import { hasPermission } from '@/lib/utils';
+import type { Auth, BreadcrumbItem, Post, Posts } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
@@ -21,8 +21,9 @@ export default function HomeIndex() {
     // Captura la URL, el tipo de feed y la lista de publicaciones proporcionados por Inertia.
     const {
         url,
-        props: { feed, posts },
+        props: { auth, feed, posts },
     } = usePage<{
+        auth: Auth;
         feed: string;
         posts: Posts;
     }>();
@@ -82,7 +83,7 @@ export default function HomeIndex() {
                 {/* Contexto para sincronizar cambios en el feed de publicaciones */}
                 <EntryListUpdateContext.Provider value={applyItemChange}>
                     {/* Formulario para crear una nueva publicación */}
-                    {useCheckPermission('post') && <EntryForm />}
+                    {hasPermission(auth, 'post') && <EntryForm />}
 
                     {/* Pestañas */}
                     <Tabs value={feed} onValueChange={handleChange}>

@@ -1,4 +1,4 @@
-import { useCanActOnUser } from '@/hooks/app/use-auth';
+import { canActOnUser } from '@/lib/utils';
 import type { Auth, User } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { MessageSquareWarning, MoreVertical, UserCog } from 'lucide-react';
@@ -45,7 +45,7 @@ export default function UserActions({ user }: UserActionsProps) {
     const canBlock = !['admin', 'mod'].includes(auth.user.role) && !['admin', 'mod'].includes(user.role) && !user.blocked_me;
 
     // Determina si el usuario autenticado puede administrar al usuario del perfil.
-    const canAdmin = useCanActOnUser(user);
+    const canAdmin = canActOnUser(auth, user);
 
     // Controla la visibilidad del menú desplegable.
     const [open, setOpen] = useState(false);

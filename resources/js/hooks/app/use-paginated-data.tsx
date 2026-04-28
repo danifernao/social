@@ -152,7 +152,7 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
                 };
 
                 // Si el nuevo elemento está fijado, se desfijan los demás.
-                let newList = prev.map((i) => {
+                const newList = prev.map((i) => {
                     if (i.id === item.id) {
                         return updatedItem;
                     }

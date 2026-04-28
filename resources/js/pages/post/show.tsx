@@ -3,10 +3,10 @@ import EntryItem from '@/components/app/entries/item';
 import EntryList from '@/components/app/entries/list';
 import ListLoadMore from '@/components/app/shared/list-load-more';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
-import { useCheckPermission } from '@/hooks/app/use-auth';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
+import { hasPermission } from '@/lib/utils';
 import type { Auth, BreadcrumbItem, Comment, Comments, Post } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { Lock } from 'lucide-react';
@@ -50,7 +50,7 @@ export default function PostShow() {
     const canModerate = auth.user && ['admin', 'mod'].includes(auth.user.role);
 
     // Determina si el usuario autenticado puede comentar.
-    const canComment = (auth.user && (isAuthor || (useCheckPermission('comment') && !post.is_closed) || canModerate)) || false;
+    const canComment = (auth.user && (isAuthor || (hasPermission(auth, 'comment') && !post.is_closed) || canModerate)) || false;
 
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [

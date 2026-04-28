@@ -9,9 +9,9 @@ import InputError from '@/components/kit/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useCheckPermission } from '@/hooks/app/use-auth';
 import SettingsLayout from '@/layouts/app/settings/layout';
 import AppLayout from '@/layouts/kit/app-layout';
+import { hasPermission } from '@/lib/utils';
 import { Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -112,7 +112,7 @@ export default function Profile() {
                     {/* Formulario de edición del perfil */}
                     <form onSubmit={submit} className="space-y-6">
                         {/* Sección del avatar */}
-                        {useCheckPermission('update_avatar') && (
+                        {hasPermission(auth, 'update_avatar') && (
                             <div className="flex items-center gap-6">
                                 <div className="relative h-20 w-20">
                                     <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-neutral-200 text-4xl font-bold text-black dark:bg-neutral-700 dark:text-white">
@@ -141,7 +141,7 @@ export default function Profile() {
                         )}
 
                         {/* Campo de nombre de usuario */}
-                        {useCheckPermission('update_username') && (
+                        {hasPermission(auth, 'update_username') && (
                             <div className="grid gap-2">
                                 <Label htmlFor="username">{t('username')}</Label>
 

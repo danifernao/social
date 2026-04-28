@@ -5,10 +5,10 @@ import ListLoadMore from '@/components/app/shared/list-load-more';
 import { Tooltip } from '@/components/app/shared/tooltip';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
-import { useCheckPermission } from '@/hooks/app/use-auth';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
+import { hasPermission } from '@/lib/utils';
 import type { Auth, BreadcrumbItem, Post, Posts, User } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { Lock } from 'lucide-react';
@@ -30,7 +30,7 @@ export default function ProfileShow() {
     const filter = route().params.posts === 'others' ? 'others' : 'own';
 
     // Determina si el usuario autenticado tiene permiso para publicar.
-    const canPost = auth.user && useCheckPermission('post');
+    const canPost = auth.user && hasPermission(auth, 'post');
 
     // Determina si el usuario autenticado está visitando su propio perfil y
     // tiene permiso para publicar.
