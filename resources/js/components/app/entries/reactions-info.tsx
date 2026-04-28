@@ -1,7 +1,7 @@
 import { Entry, Reaction, Reactions, User, Users } from '@/types';
 import { Link, router } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../../ui/button';
 import UserAvatar from '../users/avatar';
@@ -52,49 +52,52 @@ export default function EntryReactionsInfo({ entry }: { entry: Entry }) {
 
     // Obtiene los emojis asociados a la entrada y los usuarios que han
     // reaccionado con el emoji seleccionado.
-    const fetchReactions = ({ emoji, mode }: { emoji?: string; mode: FetchMode }) => {
-        if (mode === 'initial') setInitialLoading(true);
-        if (mode === 'users') setUsersLoading(true);
-        if (mode === 'append') setLoadMoreLoading(true);
+    const fetchReactions = useCallback(
+        ({ emoji, mode, cursor }: { emoji?: string; mode: FetchMode; cursor?: string | null }) => {
+            if (mode === 'initial') setInitialLoading(true);
+            if (mode === 'users') setUsersLoading(true);
+            if (mode === 'append') setLoadMoreLoading(true);
 
-        router.get(
-            route('reaction.index'),
-            {
-                type: entry.type,
-                id: entry.id,
-                emoji: emoji,
-                cursor: nextCursor,
-            },
-            {
-                preserveScroll: true,
-                preserveState: true,
-                onSuccess: (page) => {
-                    const data = page.props.reactions_info as ReactionsInfo;
-
-                    // Los emojis solo se iniciaizan en la primera carga.
-                    if (mode === 'initial') {
-                        setEmojiList(data.reactions.data);
-                    }
-
-                    // Si se solicitó una página de usuarios, agrega los nuevos
-                    // elementos. De lo contrario, inicializa el estado.
-                    if (mode === 'append') {
-                        setUsers((prev) => [...prev, ...data.users.data]);
-                    } else {
-                        setUsers(data.users.data);
-                    }
-
-                    setSelectedEmoji(data.selected_emoji);
-                    setNextCursor(data.next_cursor);
+            router.get(
+                route('reaction.index'),
+                {
+                    type: entry.type,
+                    id: entry.id,
+                    emoji: emoji,
+                    cursor,
                 },
-                onFinish: () => {
-                    if (mode === 'initial') setInitialLoading(false);
-                    if (mode === 'users') setUsersLoading(false);
-                    if (mode === 'append') setLoadMoreLoading(false);
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    onSuccess: (page) => {
+                        const data = page.props.reactions_info as ReactionsInfo;
+
+                        // Los emojis solo se iniciaizan en la primera carga.
+                        if (mode === 'initial') {
+                            setEmojiList(data.reactions.data);
+                        }
+
+                        // Si se solicitó una página de usuarios, agrega los nuevos
+                        // elementos. De lo contrario, inicializa el estado.
+                        if (mode === 'append') {
+                            setUsers((prev) => [...prev, ...data.users.data]);
+                        } else {
+                            setUsers(data.users.data);
+                        }
+
+                        setSelectedEmoji(data.selected_emoji);
+                        setNextCursor(data.next_cursor);
+                    },
+                    onFinish: () => {
+                        if (mode === 'initial') setInitialLoading(false);
+                        if (mode === 'users') setUsersLoading(false);
+                        if (mode === 'append') setLoadMoreLoading(false);
+                    },
                 },
-            },
-        );
-    };
+            );
+        },
+        [entry.type, entry.id],
+    );
 
     // Cambia el emoji seleccionado.
     const changeEmoji = (emoji: string) => {
@@ -102,7 +105,7 @@ export default function EntryReactionsInfo({ entry }: { entry: Entry }) {
             return;
         }
 
-        fetchReactions({ emoji, mode: 'users' });
+        fetchReactions({ emoji, mode: 'users', cursor: nextCursor });
     };
 
     // Carga más usuarios.
@@ -110,13 +113,14 @@ export default function EntryReactionsInfo({ entry }: { entry: Entry }) {
         fetchReactions({
             emoji: selectedEmoji!,
             mode: 'append',
+            cursor: nextCursor,
         });
     };
 
     useEffect(() => {
         // Carga inicial.
         fetchReactions({ mode: 'initial' });
-    }, []);
+    }, [fetchReactions]);
 
     return (
         <div className="my-3 flex max-h-[70vh] min-h-64 flex-col">
