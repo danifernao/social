@@ -223,15 +223,15 @@ class PostController extends Controller
         // no tiene permisos para actualizar la publicación.
         $this->authorize('update', $post);
 
-        if ($request->filled('content')) {
+        if ($request->has('content')) {
             return $this->updateContent($request, $post);
         }
 
-        if (!$post->profile_user_id && $request->filled('visibility')) {
+        if ($request->has('visibility') && !$post->profile_user_id) {
             return $this->updateVisibility($request, $post);
         }
 
-        if ($request->filled('is_pinned')) {
+        if ($request->has('is_pinned')) {
             return $this->updateIsPinned($request, $post);
         }
 
