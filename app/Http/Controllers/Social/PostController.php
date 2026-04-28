@@ -227,7 +227,7 @@ class PostController extends Controller
             return $this->updateContent($request, $post);
         }
 
-        if ($request->filled('visibility')) {
+        if (!$post->profile_user_id && $request->filled('visibility')) {
             return $this->updateVisibility($request, $post);
         }
 
