@@ -3,7 +3,7 @@ import { useCanActOnUser, useIsAuthUser } from '@/hooks/app/use-auth';
 import { cn, formatDate } from '@/lib/utils';
 import type { Auth, Entry, Post } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
-import { formatDistanceToNow, Locale } from 'date-fns';
+import { formatDistanceToNowStrict, Locale } from 'date-fns';
 import { enUS, es } from 'date-fns/locale';
 import { MessageSquare, MessageSquareLock, Pin } from 'lucide-react';
 import { useContext, useState } from 'react';
@@ -100,7 +100,7 @@ export default function EntryItem({ entry }: EntryItemProps) {
     });
 
     // Tiempo relativo desde la creación de la entrada.
-    const distanceToNow = formatDistanceToNow(new Date(entry.created_at), {
+    const distanceToNow = formatDistanceToNowStrict(new Date(entry.created_at), {
         addSuffix: true,
         locale,
     });

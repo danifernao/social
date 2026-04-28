@@ -1,7 +1,7 @@
 import { formatDate } from '@/lib/utils';
 import type { EntryType } from '@/types';
 import { History } from '@/types/modules/entry/history';
-import { formatDistanceToNow, Locale } from 'date-fns';
+import { formatDistanceToNowStrict, Locale } from 'date-fns';
 import { enUS, es } from 'date-fns/locale';
 import { Trans, useTranslation } from 'react-i18next';
 import TextLink from '../../kit/text-link';
@@ -28,7 +28,7 @@ export default function HistoryItem({ first, history }: EntryItemProps) {
     const locale = localeMap[i18n.currentLang] ?? enUS;
 
     // Tiempo relativo desde la creación del registro.
-    const distanceToNow = formatDistanceToNow(new Date(history.created_at), {
+    const distanceToNow = formatDistanceToNowStrict(new Date(history.created_at), {
         addSuffix: true,
         locale,
     });
