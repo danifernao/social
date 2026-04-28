@@ -2,7 +2,7 @@ import type { User } from '@/types';
 import { Media, MediaCollection } from '@/types/modules/media';
 import { router } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import ListLoadMore from '../shared/list-load-more';
@@ -31,36 +31,40 @@ export default function MediaAlbum({ user, type, onSelect }: MediaAlbumProps) {
     const [loading, setLoading] = useState(true);
     const [processing, setProcessing] = useState(false);
 
+    // Referencia para evitar llamadas concurrentes a la función fecthItems.
+    const processingRef = useRef(false);
+
     // Obtiene la lista de metadatos de los archivos multimedia del usuario.
-    const fecthItems = (cursor: string | null = null) => {
-        if (processing) {
-            return;
-        }
+    const fecthItems = useCallback(
+        (cursor: string | null = null) => {
+            if (processingRef.current) {
+                return;
+            }
 
-        setProcessing(true);
+            setProcessing(true);
 
-        router.get(
-            route('media.index', user.id),
-            { type },
-            {
-                only: ['media'],
-                preserveState: true,
-                preserveScroll: true,
-                headers: cursor ? { 'X-Cursor': cursor } : {},
-                onSuccess: (page) => {
-                    const collection = page.props.media as MediaCollection;
-                    setItems((prev) => (cursor ? [...prev, ...collection.data] : collection.data));
-                    setNextCursor(collection.meta.next_cursor);
-                },
-                onFinish: () => {
-                    setProcessing(false);
-                    if (loading) {
+            router.get(
+                route('media.index', user.id),
+                { type },
+                {
+                    only: ['media'],
+                    preserveState: true,
+                    preserveScroll: true,
+                    headers: cursor ? { 'X-Cursor': cursor } : {},
+                    onSuccess: (page) => {
+                        const collection = page.props.media as MediaCollection;
+                        setItems((prev) => (cursor ? [...prev, ...collection.data] : collection.data));
+                        setNextCursor(collection.meta.next_cursor);
+                    },
+                    onFinish: () => {
+                        setProcessing(false);
                         setLoading(false);
-                    }
+                    },
                 },
-            },
-        );
-    };
+            );
+        },
+        [user.id, type],
+    );
 
     // Cargar más elementos de la lista.
     const loadMore = () => {
@@ -89,8 +93,12 @@ export default function MediaAlbum({ user, type, onSelect }: MediaAlbumProps) {
     };
 
     useEffect(() => {
-        fecthItems(null);
-    }, [user.id, type]);
+        fecthItems();
+    }, [fecthItems]);
+
+    useEffect(() => {
+        processingRef.current = processing;
+    }, [processing]);
 
     return (
         <div className="flex flex-col gap-4">
