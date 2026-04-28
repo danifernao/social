@@ -445,9 +445,9 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     // Inserta bloque de código.
     const onCodeBlock = () => {
         const sel = getSelection();
-        const content = sel && sel.start !== sel.end ? sel.value : t('text');
+        const content = sel && sel.start !== sel.end ? sel.value : 'while(1);';
 
-        insertBlock('```\nwhile(1);\n```');
+        insertBlock(`\`\`\`\n${content}\n\`\`\``);
     };
 
     // Inserta lista ordenada.
@@ -524,13 +524,6 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
         red: 'bg-red-500',
         green: 'bg-green-500',
         pink: 'bg-pink-400',
-    } as const;
-
-    const sizes = {
-        xsmall: { text: 'text-xs', icon: '!w-3 !h-3', tl: 'extra_small' },
-        small: { text: 'text-sm', icon: '!w-4 !h-4', tl: 'small' },
-        large: { text: 'text-lg', icon: '!w-5 !h-5', tl: 'large' },
-        xlarge: { text: 'text-xl', icon: '!w-6 !h-6', tl: 'extra_large' },
     } as const;
 
     // Aplica un color de fuente.
