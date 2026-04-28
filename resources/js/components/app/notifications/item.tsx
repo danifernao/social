@@ -110,7 +110,7 @@ export default function NotificationItem({ notification }: NotificationItemProps
         observer.observe(notificationRef.current);
 
         return () => observer.disconnect();
-    }, [notification]);
+    }, [notification, csrfToken]);
 
     return (
         <li
