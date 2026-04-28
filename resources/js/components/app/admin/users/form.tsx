@@ -53,11 +53,12 @@ export default function UserEditForm({ user }: UserEditFormProps) {
         route: () => route('admin.user.update', user.id),
         onSuccess: (action, page) => {
             switch (action) {
-                case 'change_username':
+                case 'change_username': {
                     // Sincroniza el nombre de usuario actualizado desde la respuesta del servidor.
                     const typedPage = page as unknown as { props: { user: User } };
                     form.setData((prev) => ({ ...prev, new_username: typedPage.props.user.username }));
                     break;
+                }
             }
         },
     });
