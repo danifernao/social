@@ -1,6 +1,6 @@
 import type { EntryAction } from '@/types';
 import { router, usePage } from '@inertiajs/react';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
@@ -38,16 +38,16 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
 
     // Asigna "_order" a los nuevos elementos de la lista
     // para conservar el orden original.
-    const mapWithOrder = (items: T[]): InternalItem<T>[] => {
+    const mapWithOrder = useCallback((items: T[]): InternalItem<T>[] => {
         return items.map((item) => ({
             ...item,
             _order: orderCounter.current++,
         }));
-    };
+    }, []);
 
     // Ordena la lista de elementos de acuerdo con el orden original.
     // El elemento fijado siempre va de primero.
-    const sortItems = (list: InternalItem<T>[]) => {
+    const sortItems = useCallback((list: InternalItem<T>[]) => {
         return [...list].sort((a, b) => {
             // Elemento fijado.
             if (a.is_pinned && !b.is_pinned) {
@@ -61,7 +61,7 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
             // Orden original.
             return a._order - b._order;
         });
-    };
+    }, []);
 
     // Lista de elementos.
     const [items, setItems] = useState<InternalItem<T>[]>(() => mapWithOrder(initialItems));
@@ -81,7 +81,7 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
     /**
      * Solicita la siguiente página de resultados al servidor.
      */
-    const loadMore = () => {
+    const loadMore = useCallback(() => {
         setProcessing(true);
 
         router.reload({
@@ -129,75 +129,81 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
                 setProcessing(false);
             },
         });
-    };
+    }, [propKey, nextCursor, mapWithOrder, sortItems, t]);
 
     /**
      * Aplica un cambio puntual sobre la colección actual:
      * creación, actualización o eliminación.
      */
-    const applyItemChange = (action: EntryAction, item: T) => {
-        setItems((prev) => {
-            // Reemplaza el elemento existente por su versión actualizada.
-            if (action === 'update') {
-                const existingItem = prev.find((i) => i.id === item.id);
+    const applyItemChange = useCallback(
+        (action: EntryAction, item: T) => {
+            setItems((prev) => {
+                // Reemplaza el elemento existente por su versión actualizada.
+                if (action === 'update') {
+                    const existingItem = prev.find((i) => i.id === item.id);
 
-                if (!existingItem) {
-                    return prev;
+                    if (!existingItem) {
+                        return prev;
+                    }
+
+                    // Agrega el orden original al nuevo elemento.
+                    const updatedItem: InternalItem<T> = {
+                        ...item,
+                        _order: existingItem._order,
+                    };
+
+                    // Si el nuevo elemento está fijado, se desfijan los demás.
+                    const newList = prev.map((i) => {
+                        if (i.id === item.id) {
+                            return updatedItem;
+                        }
+
+                        if (supportsPinnedItems && item.is_pinned && i.is_pinned) {
+                            return { ...i, is_pinned: false };
+                        }
+
+                        return i;
+                    });
+
+                    // Se ordenan los elementos de acuerdo al orden original.
+                    return sortItems(newList);
                 }
 
-                // Agrega el orden original al nuevo elemento.
-                const updatedItem: InternalItem<T> = {
+                // Elimina el elemento correspondiente según su ID.
+                if (action === 'delete') {
+                    return prev.filter((i) => i.id !== item.id);
+                }
+
+                // Si es un nuevo elemento, se le asigna el orden original.
+                const newItem: InternalItem<T> = {
                     ...item,
-                    _order: existingItem._order,
+                    _order: insertAtStart ? Math.min(...prev.map((i) => i._order), 0) - 1 : orderCounter.current++,
                 };
 
-                // Si el nuevo elemento está fijado, se desfijan los demás.
-                const newList = prev.map((i) => {
-                    if (i.id === item.id) {
-                        return updatedItem;
-                    }
-
-                    if (supportsPinnedItems && item.is_pinned && i.is_pinned) {
-                        return { ...i, is_pinned: false };
-                    }
-
-                    return i;
-                });
-
                 // Se ordenan los elementos de acuerdo al orden original.
-                return sortItems(newList);
-            }
-
-            // Elimina el elemento correspondiente según su ID.
-            if (action === 'delete') {
-                return prev.filter((i) => i.id !== item.id);
-            }
-
-            // Si es un nuevo elemento, se le asigna el orden original.
-            const newItem: InternalItem<T> = {
-                ...item,
-                _order: insertAtStart ? Math.min(...prev.map((i) => i._order), 0) - 1 : orderCounter.current++,
-            };
-
-            // Se ordenan los elementos de acuerdo al orden original.
-            return sortItems([...prev, newItem]);
-        });
-    };
+                return sortItems([...prev, newItem]);
+            });
+        },
+        [insertAtStart, supportsPinnedItems, sortItems],
+    );
 
     /**
      * Reemplaza manualmente la lista completa de elementos.
      */
-    const updateItems = (newItems: T[]) => {
-        setItems(() => mapWithOrder(newItems));
-    };
+    const updateItems = useCallback(
+        (newItems: T[]) => {
+            setItems(() => mapWithOrder(newItems));
+        },
+        [mapWithOrder],
+    );
 
     /**
      * Restablece los elementos y el cursor a sus valores iniciales.
      */
-    const resetProps = () => {
+    const resetProps = useCallback(() => {
         setItems(() => mapWithOrder(initialItems));
         setNextCursor(initialCursor);
-    };
+    }, [initialItems, initialCursor, mapWithOrder]);
 
     /**
      * Expone los valores y funciones necesarias para su consumo externo.
