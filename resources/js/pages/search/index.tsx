@@ -83,7 +83,7 @@ export default function SearchIndex() {
             resetProps();
             shouldReset.current = false;
         }
-    }, [props.results.data, props.results.meta.next_cursor]);
+    }, [props.results.data, props.results.meta.next_cursor, resetProps]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
