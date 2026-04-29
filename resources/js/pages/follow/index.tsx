@@ -13,7 +13,7 @@ interface PageProps {
     following: Users; // Lista de usuarios seguidos.
     followers: Users; // Lista de usuarios seguidores.
     routeName: string; // Nombre de la ruta actual.
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 /**
