@@ -23,7 +23,16 @@ interface UsePaginatedProps<T extends WithProps> {
     insertAtStart?: boolean;
 }
 
+// Define la estructura de cada elemento con su orden original.
 type InternalItem<T> = T & { _order: number };
+
+// Define la estructura de la respuesta paginada esperada del servidor.
+type PaginatedResponse<T> = {
+    data: T[];
+    meta: {
+        next_cursor: string | null;
+    };
+};
 
 /**
  * Hook genérico para gestionar datos paginados por cursor
@@ -98,7 +107,7 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
             // Combina los elementos previos con los nuevos,
             // evitando duplicados por ID.
             onSuccess: (page) => {
-                const pageData = (page.props as any)[propKey];
+                const pageData = (page.props as Record<string, unknown>)[propKey] as PaginatedResponse<T>;
                 const rawNewItems: T[] = pageData?.data ?? [];
 
                 // Asigna "_order" a los nuevos elementos para conservar
