@@ -16,10 +16,6 @@ interface ListLoadMoreProps {
  * Puede funcionar de forma manual o automática al entrar en el viewport del navegador.
  */
 export default function ListLoadMore({ type, cursor, isProcessing, autoClick = true, onClick }: ListLoadMoreProps) {
-    //  Si no existe un cursor disponible, significa que no hay más elementos
-    // que cargar, por lo que el botón no se renderiza.
-    if (!cursor) return null;
-
     const { t } = useTranslation();
 
     // Referencia al botón para poder observar cuándo entra
@@ -70,6 +66,10 @@ export default function ListLoadMore({ type, cursor, isProcessing, autoClick = t
     useEffect(() => {
         onClickRef.current = onClick;
     }, [onClick]);
+
+    //  Si no existe un cursor disponible, significa que no hay más elementos
+    // que cargar, por lo que el botón no se renderiza.
+    if (!cursor) return null;
 
     return (
         // Botón para cargar más elementos.
