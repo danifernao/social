@@ -6,7 +6,7 @@ import es from '@emoji-mart/data/i18n/es.json';
 import Picker from '@emoji-mart/react';
 
 interface EmojiPickerProps {
-    onSelect: (emoji: any) => void; // Callback que se ejecuta al seleccionar un emoji.
+    onSelect: (emoji: { native?: string }) => void; // Callback que se ejecuta al seleccionar un emoji.
     pickerProps?: Partial<React.ComponentProps<typeof Picker>>; // Propiedades adicionales.
 }
 
@@ -21,7 +21,7 @@ export default function EmojiPicker({ onSelect, pickerProps }: EmojiPickerProps)
     const theme: 'light' | 'dark' | 'auto' = appearance === 'system' ? 'auto' : appearance;
 
     // Mapa de idiomas aceptados en el selector.
-    const localeMap: Record<string, any> = {
+    const localeMap: Record<string, typeof en> = {
         es,
         en,
     };
