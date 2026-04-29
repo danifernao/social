@@ -374,7 +374,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     /**
      * Inserta el emoji seleccionado.
      */
-    function onEmojiSelect(emoji: any) {
+    function onEmojiSelect(emoji: { native?: string }) {
         const native = emoji.native;
 
         if (!native) {
