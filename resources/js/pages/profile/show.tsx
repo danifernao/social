@@ -4,7 +4,7 @@ import ProfileHeader from '@/components/app/profile/header';
 import ListLoadMore from '@/components/app/shared/list-load-more';
 import { Tooltip } from '@/components/app/shared/tooltip';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
+import { PostListUpdateContext } from '@/contexts/list-update-context';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
@@ -81,7 +81,7 @@ export default function ProfileShow() {
                 <ProfileHeader user={user} />
 
                 {/* Contexto para sincronizar cambios en el listado de publicaciones */}
-                <EntryListUpdateContext.Provider value={applyItemChange}>
+                <PostListUpdateContext.Provider value={applyItemChange}>
                     {/* Formulario para crear publicaciones */}
                     {!isBlocked && (isOwner || canPost) && <EntryForm profileUserId={profileUserId} />}
 
@@ -104,7 +104,7 @@ export default function ProfileShow() {
 
                     {/* Listado de publicaciones del perfil */}
                     <EntryList entries={entries} />
-                </EntryListUpdateContext.Provider>
+                </PostListUpdateContext.Provider>
 
                 {/* Botón para cargar más publicaciones */}
                 <ListLoadMore type="post" cursor={nextCursor} isProcessing={processing} onClick={loadMore} />

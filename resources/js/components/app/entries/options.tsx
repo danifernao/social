@@ -1,6 +1,6 @@
-import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
+import { CommentListUpdateContext, PostListUpdateContext } from '@/contexts/list-update-context';
 import { canActOnUser, hasPermission, isAuthUser } from '@/lib/utils';
-import type { Auth, Entry, Post, User } from '@/types';
+import type { Auth, Comment, Entry, Post, User } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { EllipsisVertical } from 'lucide-react';
@@ -47,8 +47,9 @@ export default function EntryOptions({ entry }: EntryOptionsProps) {
     // Controla la visibilidad del diálogo para reportar la entrada.
     const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
 
-    // Contexto para notificar cambios en la lista de entradas.
-    const updateEntryList = useContext(EntryListUpdateContext);
+    // Contextos para notificar cambios en la lista de entradas.
+    const updatePostList = useContext(PostListUpdateContext);
+    const updateCommentList = useContext(CommentListUpdateContext);
 
     // Cierra el formulario tras una edición exitosa.
     const closeFormDialog = () => {
@@ -101,7 +102,11 @@ export default function EntryOptions({ entry }: EntryOptionsProps) {
                     const updatedEntry = entry.type === 'post' ? (page.props.post as Post) : (page.props.comment as Comment);
 
                     // Informa al contexto del cambio realizado.
-                    updateEntryList?.('update', updatedEntry);
+                    if (entry.type === 'post') {
+                        updatePostList?.('update', updatedEntry as Post);
+                    } else {
+                        updateCommentList?.('update', updatedEntry as Comment);
+                    }
 
                     toast.success(pinnedMessage);
                 },
@@ -157,7 +162,11 @@ export default function EntryOptions({ entry }: EntryOptionsProps) {
             preserveScroll: true,
             onSuccess: () => {
                 // Notifica al contexto que la entrada fue eliminada.
-                updateEntryList?.('delete', entry);
+                if (entry.type === 'post') {
+                    updatePostList?.('delete', entry as Post);
+                } else {
+                    updateCommentList?.('delete', entry as Comment);
+                }
 
                 toast.success(deletedMessage);
             },

@@ -1,4 +1,4 @@
-import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
+import { PostListUpdateContext } from '@/contexts/list-update-context';
 import { canActOnUser, cn, formatDate, isAuthUser } from '@/lib/utils';
 import type { Auth, Entry, Post } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
@@ -57,8 +57,8 @@ export default function EntryItem({ entry }: EntryItemProps) {
     // Controla el icono cargando.
     const [processingVisibility, setProcessingVisibility] = useState(false);
 
-    // Contexto para notificar cambios en la lista de entradas.
-    const updateEntryList = useContext(EntryListUpdateContext);
+    // Contexto para notificar cambios en la lista de publicaciones.
+    const updatePostList = useContext(PostListUpdateContext);
 
     // Gestiona el cambio de visibilidad de la publicación.
     const handleVisibilityChange = (value: PostVisibility) => {
@@ -74,8 +74,8 @@ export default function EntryItem({ entry }: EntryItemProps) {
             {
                 preserveScroll: true,
                 onSuccess: (page) => {
-                    const entry = page.props.post as Post;
-                    updateEntryList?.('update', entry);
+                    const post = page.props.post as Post;
+                    updatePostList?.('update', post);
                 },
                 onFinish: () => {
                     setProcessingVisibility(false);

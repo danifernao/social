@@ -1,7 +1,7 @@
 import SearchBar from '@/components/app/search/bar';
 import Results from '@/components/app/search/results';
 import ListLoadMore from '@/components/app/shared/list-load-more';
-import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
+import { SearchResultsListUpdateContext } from '@/contexts/list-update-context';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
@@ -95,10 +95,10 @@ export default function SearchIndex() {
                 <SearchBar type={type} query={query} onSubmit={onSubmit} />
 
                 {/* Contexto para sincronizar cambios en los resultados */}
-                <EntryListUpdateContext.Provider value={applyItemChange}>
+                <SearchResultsListUpdateContext.Provider value={applyItemChange}>
                     {/* Listado de resultados según el tipo de búsqueda */}
                     <Results results={type === 'post' ? (results as Post[]) : (results as User[])} />
-                </EntryListUpdateContext.Provider>
+                </SearchResultsListUpdateContext.Provider>
 
                 {/* Botón para cargar más resultados */}
                 <ListLoadMore type="post" cursor={nextCursor} isProcessing={processing} onClick={loadMore} />

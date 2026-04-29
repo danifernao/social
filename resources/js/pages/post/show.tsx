@@ -2,7 +2,7 @@ import EntryForm from '@/components/app/entries/form';
 import EntryItem from '@/components/app/entries/item';
 import EntryList from '@/components/app/entries/list';
 import ListLoadMore from '@/components/app/shared/list-load-more';
-import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
+import { CommentListUpdateContext } from '@/contexts/list-update-context';
 import { usePaginatedData } from '@/hooks/app/use-paginated-data';
 import AppLayout from '@/layouts/kit/app-layout';
 import { AppContentLayout } from '@/layouts/kit/app/app-content-layout';
@@ -85,7 +85,7 @@ export default function PostShow() {
                     {/* Sección de comentarios */}
                     <section id="comments" ref={commentsRef} className="flex flex-col gap-8">
                         {/* Contexto para sincronizar cambios en el listado de comentarios */}
-                        <EntryListUpdateContext.Provider value={applyItemChange}>
+                        <CommentListUpdateContext.Provider value={applyItemChange}>
                             {/* Encabezado y listado de comentarios */}
                             {post.comments_count > 0 && (
                                 <>
@@ -123,7 +123,7 @@ export default function PostShow() {
 
                             {/* Formulario para añadir un nuevo comentario */}
                             <div id="comment-form">{canComment && <EntryForm postId={post.id} />}</div>
-                        </EntryListUpdateContext.Provider>
+                        </CommentListUpdateContext.Provider>
                     </section>
                 </article>
             </AppContentLayout>

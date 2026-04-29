@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
+import { CommentListUpdateContext, PostListUpdateContext } from '@/contexts/list-update-context';
 import { usePostVisibility } from '@/hooks/app/use-post-visibility';
 import type { Auth, Comment, Entry, Post } from '@/types';
 import { SpecialPages } from '@/types/modules/page';
@@ -65,8 +65,9 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
         is_closed: formType === 'post' ? (entry ? (entry as Post).is_closed : false) : null,
     });
 
-    // Contexto para notificar cambios en la lista de entradas.
-    const updateEntryList = useContext(EntryListUpdateContext);
+    // Contextos para notificar cambios en la lista de entradas.
+    const updatePostList = useContext(PostListUpdateContext);
+    const updateCommentList = useContext(CommentListUpdateContext);
 
     // Gestiona el envío del formulario.
     const submitForm: SubmitEventHandler<HTMLFormElement> = (e) => {
@@ -88,7 +89,11 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
                 const action = entry ? 'update' : 'create';
 
                 // Informa al contexto del cambio realizado.
-                updateEntryList?.(action, pageProp);
+                if (formType === 'post') {
+                    updatePostList?.(action, pageProp as Post);
+                } else {
+                    updateCommentList?.(action, pageProp as Comment);
+                }
 
                 // Ejecuta el callback externo si existe.
                 onSubmit?.();
