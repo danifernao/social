@@ -4,7 +4,7 @@ import SettingsLayout from '@/layouts/app/settings/layout';
 import AppLayout from '@/layouts/kit/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
@@ -24,7 +24,7 @@ export default function Appearance() {
     });
 
     // Envía la solicitud para actualizar el idioma del usuario.
-    const changeLanguage = () => {
+    const changeLanguage = useCallback(() => {
         patch(route('language.update'), {
             preserveScroll: true,
             onSuccess: () => {
@@ -40,7 +40,7 @@ export default function Appearance() {
                 }
             },
         });
-    };
+    }, [patch, t]);
 
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
@@ -55,7 +55,7 @@ export default function Appearance() {
         if (data.lang !== lang) {
             changeLanguage();
         }
-    }, [data.lang]);
+    }, [data.lang, lang, changeLanguage]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
