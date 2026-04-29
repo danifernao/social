@@ -14,7 +14,7 @@ interface PageProps {
     type: SearchType; // Tipo de búsqueda (publicación o usuario).
     query: string; // Término de búsqueda.
     results: SearchResults; // Resultados de la búsqueda.
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 /**
