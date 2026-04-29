@@ -1,9 +1,14 @@
 import { usePage } from '@inertiajs/react';
-import { useEffect } from 'react';
+import { ComponentType, useEffect } from 'react';
 import i18n from './i18n';
 import { Auth } from './types';
 
-export default function Lang({ Component, props }: any) {
+type LangProps = {
+    Component: ComponentType;
+    props: Record<string, unknown>;
+};
+
+export default function Lang({ Component, props }: LangProps) {
     const { auth } = usePage<{ auth: Auth }>().props;
     const navLocale = new Intl.Locale(navigator.language);
     const language = auth.user?.language ?? navLocale.language;
