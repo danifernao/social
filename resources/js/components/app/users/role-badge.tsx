@@ -8,12 +8,12 @@ interface UserRoleBadgeProps {
  * Insignia de rol del usuario.
  */
 export default function UserRoleBadge({ role }: UserRoleBadgeProps) {
+    const { t } = useTranslation();
+
     // Evita renderizar la insignia si el rol no es administrador ni moderador.
     if (!['admin', 'mod'].includes(role)) {
         return null;
     }
-
-    const { t } = useTranslation();
 
     // Define las clases de Tailwind según el rol del usuario.
     const styles = role === 'admin' ? 'bg-yellow-500 text-black' : 'bg-blue-500 text-white';
