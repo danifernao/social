@@ -11,7 +11,7 @@ interface UsePostActionOptions {
     onSuccess?: () => void;
 
     // Callback opcional que se ejecuta cuando la petición falla con errores.
-    onError?: (errors: any) => void;
+    onError?: (errors: Record<string, string>) => void;
 }
 
 /**
@@ -35,7 +35,7 @@ export function usePostAction() {
      * @param routeParams Parámetros utilizados para generar la URL.
      * @param options Callbacks opcionales para manejar el resultado de la petición.
      */
-    const execute = (routeName: string, routeParams: Record<string, any> = {}, options: UsePostActionOptions = {}) => {
+    const execute = (routeName: string, routeParams: Record<string, string | number | boolean> = {}, options: UsePostActionOptions = {}) => {
         setIsProcessing(true);
 
         router.post(
