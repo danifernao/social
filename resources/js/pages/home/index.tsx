@@ -28,6 +28,9 @@ export default function HomeIndex() {
         posts: Posts;
     }>();
 
+    // Función para traducir los textos de la interfaz.
+    const { t } = useTranslation();
+
     // Extrae la parte de búsqueda de la URL actual.
     const search = url.includes('?') ? url.split('?')[1] : '';
 
@@ -36,15 +39,6 @@ export default function HomeIndex() {
 
     // Recupera la última pestaña seleccionada del almacenamiento local.
     const storedFeed = localStorage.getItem(storageKey);
-
-    // Si no hay un parámetro 'feed' en la URL pero sí una pestaña almacenada, navega a esa pestaña.
-    if (!hasFeedParam && storedFeed && storedFeed !== feed) {
-        router.get(route('home.index'), { feed: storedFeed }, { preserveScroll: true });
-        return null;
-    }
-
-    // Función para traducir los textos de la interfaz.
-    const { t } = useTranslation();
 
     // Usa el hook de paginación para gestionar el feed de publicaciones.
     const {
@@ -65,6 +59,12 @@ export default function HomeIndex() {
         localStorage.setItem(storageKey, value);
         router.get(route('home.index'), { feed: value }, { preserveScroll: true });
     };
+
+    // Si no hay un parámetro 'feed' en la URL pero sí una pestaña almacenada, navega a esa pestaña.
+    if (!hasFeedParam && storedFeed && storedFeed !== feed) {
+        router.get(route('home.index'), { feed: storedFeed }, { preserveScroll: true });
+        return null;
+    }
 
     // Migas de pan de la vista actual.
     const breadcrumbs: BreadcrumbItem[] = [
