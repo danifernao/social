@@ -28,9 +28,15 @@ interface RichTextRendererProps {
     disableLinks?: boolean;
 }
 
-// Extiende los componentes de react-markdown para permitir directivas personalizadas.
+// Tipado del componente Hidden.
+type HiddenProps = {
+    type?: 'inline' | 'block';
+    children: React.ReactNode;
+};
+
+// Extiende los componentes permitidos por react-markdown para incluir "hidden".
 type ExtendedComponents = Components & {
-    [key: string]: React.ComponentType<any>;
+    hidden?: React.ComponentType<HiddenProps>;
 };
 
 /**
@@ -163,49 +169,17 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
         },
 
         // Maneja bloques de contenido oculto definidos mediante directivas.
-        hidden: ({ type, children }) => {
-            const [show, setShow] = useState(false);
-
-            if (type === 'inline') {
-                return (
-                    <span
-                        onClick={(e) => {
-                            if (!show) {
-                                setShow(true);
-                                e.preventDefault();
-                                e.stopPropagation();
-                            }
-                        }}
-                        className={cn(
-                            'cursor-pointer rounded bg-gray-800 px-1 transition-colors duration-300',
-                            !show && '[&_*]:!text-transparent [&_*]:!no-underline',
-                        )}
-                        style={{ color: show ? undefined : '#1f2937' }}
-                    >
-                        {children}
-                    </span>
-                );
-            }
-
-            if (type === 'block') {
-                return (
-                    <div className="mb-4 last:mb-0">
-                        <button
-                            onClick={() => {
-                                setShow(!show);
-                                forceExpanded.current = true;
-                            }}
-                            className="text-blue-600 hover:underline"
-                        >
-                            {show ? t('hide_content') : t('show_hidden_content')}
-                        </button>
-
-                        {show && <div>{children}</div>}
-                    </div>
-                );
-            }
-
-            return <>{children}</>;
+        hidden: (props: HiddenProps) => {
+            return (
+                <HiddenNode
+                    type={props.type}
+                    onForceExpand={() => {
+                        forceExpanded.current = true;
+                    }}
+                >
+                    {props.children}
+                </HiddenNode>
+            );
         },
 
         // Renderiza iframes embebidos (por ejemplo YouTube).
@@ -320,4 +294,53 @@ export default function RichTextRenderer({ entryType, text, alwaysExpanded = fal
             )}
         </div>
     );
+}
+
+/**
+ * Componente encargado de renderizar nodos ocultos personalizados en Markdown.
+ */
+function HiddenNode({ type, children, onForceExpand }: { type?: string; children: React.ReactNode; onForceExpand?: () => void }) {
+    const { t } = useTranslation();
+    const [show, setShow] = useState(false);
+
+    if (type === 'inline') {
+        return (
+            <span
+                onClick={(e) => {
+                    if (!show) {
+                        setShow(true);
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                }}
+                className={cn(
+                    'cursor-pointer rounded bg-gray-800 px-1 transition-colors duration-300',
+                    !show && '[&_*]:!text-transparent [&_*]:!no-underline',
+                )}
+                style={{ color: show ? undefined : '#1f2937' }}
+            >
+                {children}
+            </span>
+        );
+    }
+
+    if (type === 'block') {
+        return (
+            <div className="mb-4 last:mb-0">
+                <button
+                    onClick={() => {
+                        setShow(!show);
+                        onForceExpand?.();
+                    }}
+                    className="text-blue-600 hover:underline"
+                >
+                    {show ? t('hide_content') : t('show_hidden_content')}
+                </button>
+
+                {show && <div>{children}</div>}
+            </div>
+        );
+    }
+
+    return <>{children}</>;
 }
