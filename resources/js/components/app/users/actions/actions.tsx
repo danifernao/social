@@ -25,6 +25,9 @@ export default function UserActions({ user }: UserActionsProps) {
     const { t } = useTranslation();
     const { auth } = usePage<{ auth: Auth }>().props;
 
+    // Controla la visibilidad del menú desplegable.
+    const [open, setOpen] = useState(false);
+
     // Si no hay usuario autenticado, no se muestran acciones.
     if (!auth.user) {
         return null;
@@ -46,9 +49,6 @@ export default function UserActions({ user }: UserActionsProps) {
 
     // Determina si el usuario autenticado puede administrar al usuario del perfil.
     const canAdmin = canActOnUser(auth, user);
-
-    // Controla la visibilidad del menú desplegable.
-    const [open, setOpen] = useState(false);
 
     return (
         <div className="flex items-center gap-2">
