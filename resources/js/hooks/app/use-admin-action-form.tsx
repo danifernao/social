@@ -9,21 +9,27 @@ interface UseAdminActionFormOptions<T> {
 
     // Ruta a la que se enviará el formulario.
     // Puede ser una string directa o una función que devuelva la ruta.
-    route: string | ((...args: any[]) => string);
+    route: string | ((...args: unknown[]) => string);
 
     // Callback opcional que se ejecuta cuando la acción se completa con éxito.
-    onSuccess?: (action: string, response: any) => void;
+    onSuccess?: (action: string, response: unknown) => void;
 
     // Callback opcional que se ejecuta cuando la petición finaliza.
     onFinish?: () => void;
 }
+
+// Define la estructura base del formulario administrativo.
+type AdminActionFormBase = {
+    action: string;
+    privileged_password: string;
+};
 
 /**
  * Hook genérico para manejar formularios administrativos
  * que requieren confirmación mediante contraseña privilegiada
  * antes de ejecutar una acción sensible.
  */
-export function useAdminActionForm<T extends Record<string, any>>({
+export function useAdminActionForm<T extends Record<string, unknown>>({
     initialData,
     route: formRoute,
     onSuccess,
@@ -33,7 +39,7 @@ export function useAdminActionForm<T extends Record<string, any>>({
     const { t } = useTranslation();
 
     // Inicializa el formulario de Inertia.
-    const form = useForm({ ...initialData, action: '', privileged_password: '' });
+    const form = useForm({ ...initialData, action: '', privileged_password: '' } as AdminActionFormBase);
 
     // Controla la visibilidad del diálogo de confirmación de contraseña.
     const [isDialogOpen, setIsDialogOpen] = useState(false);
