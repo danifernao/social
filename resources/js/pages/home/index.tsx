@@ -16,14 +16,11 @@ import { useTranslation } from 'react-i18next';
  */
 export default function HomeIndex() {
     // Captura la URL, el tipo de feed y la lista de publicaciones proporcionados por Inertia.
-    const {
-        url,
-        props: { auth, feed, posts },
-    } = usePage<{
+    const { auth, feed, posts } = usePage<{
         auth: Auth;
         feed: string;
         posts: Posts;
-    }>();
+    }>().props;
 
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();

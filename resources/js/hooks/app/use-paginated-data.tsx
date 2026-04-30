@@ -54,29 +54,6 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
         }));
     }, []);
 
-    // Ordena la lista de elementos de acuerdo con el orden original.
-    // El elemento fijado siempre va de primero.
-    const sortItems = useCallback((list: InternalItem<T>[]) => {
-        // Si la vista no soporta fijados, mantener orden original.
-        if (!shouldPrioritizePinnedItems) {
-            return [...list].sort((a, b) => a._order - b._order);
-        }
-
-        return [...list].sort((a, b) => {
-            // Elemento fijado.
-            if (a.is_pinned && !b.is_pinned) {
-                return -1;
-            }
-
-            if (!a.is_pinned && b.is_pinned) {
-                return 1;
-            }
-
-            // Orden original.
-            return a._order - b._order;
-        });
-    }, []);
-
     // Lista de elementos.
     const [items, setItems] = useState<InternalItem<T>[]>(() => mapWithOrder(initialItems));
 
@@ -92,6 +69,32 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
     // Determina si la vista actual prioriza los elementos fijados,
     // colocándolos siempre al inicio.
     const shouldPrioritizePinnedItems = ['profile.show', 'post.show'].includes(routeName);
+
+    // Ordena la lista de elementos de acuerdo con el orden original.
+    // El elemento fijado siempre va de primero.
+    const sortItems = useCallback(
+        (list: InternalItem<T>[]) => {
+            // Si la vista no soporta fijados, mantener orden original.
+            if (!shouldPrioritizePinnedItems) {
+                return [...list].sort((a, b) => a._order - b._order);
+            }
+
+            return [...list].sort((a, b) => {
+                // Elemento fijado.
+                if (a.is_pinned && !b.is_pinned) {
+                    return -1;
+                }
+
+                if (!a.is_pinned && b.is_pinned) {
+                    return 1;
+                }
+
+                // Orden original.
+                return a._order - b._order;
+            });
+        },
+        [shouldPrioritizePinnedItems],
+    );
 
     /**
      * Solicita la siguiente página de resultados al servidor.
