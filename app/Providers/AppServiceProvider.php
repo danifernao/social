@@ -5,10 +5,12 @@ namespace App\Providers;
 use App\Models\Comment;
 use App\Models\Media;
 use App\Models\Post;
+use App\Models\Report;
 use App\Models\User;
 use App\Observers\CommentObserver;
 use App\Observers\DatabaseNotificationObserver;
 use App\Observers\PostObserver;
+use App\Observers\ReportObserver;
 use App\Observers\UserObserver;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Gate;
@@ -77,6 +79,7 @@ class AppServiceProvider extends ServiceProvider
         Comment::observe(CommentObserver::class);
         DatabaseNotification::observe(DatabaseNotificationObserver::class);
         Post::observe(PostObserver::class);
+        Report::observe(ReportObserver::class);
         User::observe(UserObserver::class);
     }
 }
