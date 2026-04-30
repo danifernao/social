@@ -57,6 +57,11 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
     // Ordena la lista de elementos de acuerdo con el orden original.
     // El elemento fijado siempre va de primero.
     const sortItems = useCallback((list: InternalItem<T>[]) => {
+        // Si la vista no soporta fijados, mantener orden original.
+        if (!shouldPrioritizePinnedItems) {
+            return [...list].sort((a, b) => a._order - b._order);
+        }
+
         return [...list].sort((a, b) => {
             // Elemento fijado.
             if (a.is_pinned && !b.is_pinned) {
@@ -84,8 +89,9 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
     // Nombre de la ruta actual proporcionada por Inertia.
     const { routeName } = usePage<{ routeName: string }>().props;
 
-    // Determina si es un perfil de usuario o la página de una publicación.
-    const supportsPinnedItems = ['profile.show', 'post.show'].includes(routeName);
+    // Determina si la vista actual prioriza los elementos fijados,
+    // colocándolos siempre al inicio.
+    const shouldPrioritizePinnedItems = ['profile.show', 'post.show'].includes(routeName);
 
     /**
      * Solicita la siguiente página de resultados al servidor.
@@ -167,7 +173,7 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
                             return updatedItem;
                         }
 
-                        if (supportsPinnedItems && item.is_pinned && i.is_pinned) {
+                        if (shouldPrioritizePinnedItems && item.is_pinned && i.is_pinned) {
                             return { ...i, is_pinned: false };
                         }
 
@@ -193,7 +199,7 @@ export function usePaginatedData<T extends WithProps>({ initialItems, initialCur
                 return sortItems([...prev, newItem]);
             });
         },
-        [insertAtStart, supportsPinnedItems, sortItems],
+        [insertAtStart, shouldPrioritizePinnedItems, sortItems],
     );
 
     /**
